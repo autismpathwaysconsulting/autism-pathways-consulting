@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Booking Confirmed | Autism Pathways Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#2a9d8f;--teal-d:#1e7268;--text:#1a1a2e;--muted:#6b7280;--bg:#faf9f7;--card:#fff;--border:#e8e4df}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-in{max-width:980px;margin:0 auto;display:flex;align-items:center;height:58px;gap:20px}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:17px;color:var(--teal);font-weight:600}
+.nav-links{display:flex;gap:18px;margin-left:auto;font-size:14px;font-weight:700;color:var(--muted)}
+.nav-links a:hover{color:var(--teal)}
+.nav-cta{background:var(--teal);color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:.02em;transition:background .2s}
+.nav-cta:hover{background:var(--teal-d)!important}
+
+.page{max-width:600px;margin:0 auto;padding:64px 24px 80px}
+
+/* Animated checkmark */
+.check-wrap{display:flex;justify-content:center;margin-bottom:32px}
+.check-circle{width:80px;height:80px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;animation:pop .45s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes pop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.check-circle svg{width:38px;height:38px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.check-path{stroke-dasharray:50;stroke-dashoffset:50;animation:draw .35s .4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);text-align:center;margin-bottom:10px}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.2;text-align:center;margin-bottom:12px}
+.subtitle{text-align:center;color:var(--muted);font-size:15px;margin-bottom:40px}
+
+.info-card{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--teal);border-radius:14px;padding:28px 28px 24px;margin-bottom:16px}
+.info-card h3{font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:14px;color:var(--text)}
+.info-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.info-row:last-child{margin-bottom:0}
+.info-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.info-text{font-size:14px;color:var(--muted);line-height:1.6}
+.info-text strong{color:var(--text);display:block;font-size:13px;font-weight:700;margin-bottom:2px}
+
+.note-box{background:#f0faf9;border:1px solid #b2dfdb;border-radius:10px;padding:16px 18px;font-size:13px;color:#1e7268;line-height:1.6;margin-bottom:32px}
+.note-box strong{display:block;margin-bottom:4px;font-weight:700}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+.btn-primary{background:var(--teal);color:#fff;padding:13px 26px;border-radius:8px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:8px;transition:background .2s}
+.btn-primary:hover{background:var(--teal-d)}
+.btn-secondary{background:transparent;color:var(--teal);padding:13px 26px;border-radius:8px;font-weight:700;font-size:15px;border:2px solid var(--teal);display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-secondary:hover{background:var(--teal);color:#fff}
+
+.divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+.cj-row{display:flex;align-items:center;gap:16px;margin-bottom:32px}
+.cj-avatar{width:56px;height:56px;border-radius:50%;background:var(--teal);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:22px;color:#fff}
+.cj-text{font-size:14px;color:var(--muted);line-height:1.6}
+.cj-text strong{color:var(--text);font-size:15px;display:block;margin-bottom:2px}
+
+footer{background:var(--text);color:#fff;padding:36px 20px}
+.footer-in{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.footer-brand{font-family:'DM Serif Display',serif;color:var(--teal);font-size:1.1rem;margin-bottom:6px;font-weight:600}
+.footer-tagline{font-size:13px;color:rgba(255,255,255,.55);max-width:220px;line-height:1.5}
+.footer-links{display:flex;flex-direction:column;gap:6px;margin-left:auto}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.65);font-weight:600}
+.footer-links a:hover{color:#fff}
+.footer-contact{display:flex;flex-direction:column;gap:6px}
+.footer-contact span{font-size:12px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.footer-contact a{font-size:14px;color:rgba(255,255,255,.75);font-weight:700}
+.footer-contact a:hover{color:#fff}
+.footer-bottom{width:100%;font-size:11px;color:rgba(255,255,255,.3);margin-top:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+
+@media(max-width:600px){
+  .page{padding:40px 16px 60px}
+  .info-card{padding:20px 18px}
+  .actions{flex-direction:column}
+  .btn-primary,.btn-secondary{justify-content:center;width:100%}
+  .footer-in{flex-direction:column;gap:16px}
+  .footer-links{margin-left:0}
+  .nav-links a:not(.nav-cta){display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo">APC</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="pay.html" class="nav-cta">Book a session</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="check-wrap">
+    <div class="check-circle">
+      <svg viewBox="0 0 24 24"><polyline class="check-path" points="4,12 9,17 20,7"/></svg>
+    </div>
+  </div>
+
+  <div class="label">You're booked</div>
+  <h1>Your call is confirmed.</h1>
+  <p class="subtitle">CJ will call you at your provided number at the scheduled time.</p>
+
+  <div class="info-card">
+    <h3>What to expect</h3>
+    <div class="info-row">
+      <span class="info-icon">📞</span>
+      <div class="info-text"><strong>CJ calls you</strong>You don't need to do anything. CJ will call the number you provided at the exact scheduled time.</div>
+    </div>
+    <div class="info-row">
+      <span class="info-icon">⏰</span>
+      <div class="info-text"><strong>Reminder email</strong>You'll receive a reminder email 24 hours before your call.</div>
+    </div>
+    <div class="info-row">
+      <span class="info-icon">📋</span>
+      <div class="info-text"><strong>This call is free</strong>This is a 15-minute introductory chat to understand your situation. No commitment needed.</div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <strong>Need to reschedule?</strong>
+    Use the reschedule link in your confirmation email. Please do so at least a few hours in advance so CJ can adjust.
+  </div>
+
+  <div class="actions">
+    <a href="https://wa.me/601172998168" class="btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp CJ
+    </a>
+    <a href="index.html" class="btn-secondary">Back to home</a>
+  </div>
+
+  <hr class="divider">
+
+  <div class="cj-row">
+    <div class="cj-avatar">CJ</div>
+    <div class="cj-text">
+      <strong>CJ Lim</strong>
+      MA Special &amp; Inclusive Education &middot; Hanen Certified &middot; 10 years experience<br>
+      Autism Pathways Consulting &middot; Petaling Jaya &amp; KL
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-in">
+    <div>
+      <div class="footer-brand">Autism Pathways Consulting</div>
+      <div class="footer-tagline">Helping parents and schools support autistic children in PJ and KL.</div>
+      <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6">
+        CJ Special and Inclusive Consultancy (003030209-T)<br>
+        SSM Reg. 201903282307 &middot; Petaling Jaya &amp; KL
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="pay.html">Book and Pay</a>
+      <a href="https://tiktok.com/@autismpathwaysconsulting" target="_blank">TikTok</a>
+      <a href="https://instagram.com/autismpathwaysconsulting" target="_blank">Instagram</a>
+    </div>
+    <div class="footer-contact">
+      <span>Contact CJ</span>
+      <a href="https://wa.me/601172998168">WhatsApp: 011-7299 8168</a>
+      <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Autism Pathways Consulting &middot; CJ Lim &middot; Petaling Jaya, Malaysia</div>
+  </div>
+</footer>
+
+</body>
+</html>
