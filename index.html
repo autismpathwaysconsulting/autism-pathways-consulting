@@ -7,6 +7,7 @@
 <meta name="description" content="Helping Malaysian parents understand and support their autistic child. Free guide, parent coaching and school consulting by CJ Lim."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"/><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap"/></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -47,7 +48,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,.97);backdrop-
 /* ── SHARED LAYOUT ── */
 .wrap{max-width:980px;margin:0 auto;padding:0 20px}
 .section{padding:64px 0}
-.section-tag{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.section-tag{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:10px;margin-top:4px}
 .section-title{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,3.5vw,2.2rem);line-height:1.25;margin-bottom:16px}
 .section-body{color:var(--muted);font-size:15px;max-width:560px}
 
@@ -135,8 +136,10 @@ details p{margin-top:8px;font-size:13px;color:var(--muted);line-height:1.65}
 @media(max-width:680px){
   .faq-left{border-right:none;padding-right:0}
   .faq-right{padding-left:0}
-  .faq-grid{padding:0 4px}
+  .faq-grid{padding:0}
   details summary{font-size:13px;padding-right:8px}
+  .faq-grid .faq-left,
+  .faq-grid .faq-right{padding-left:0;padding-right:0}
 }
 
 /* ── FOOTER ── */
@@ -175,7 +178,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 @media(max-width:480px){
   .hero-card{padding:24px 18px}
   .section{padding:40px 0}
-  .wrap{padding:0 16px}
+  .wrap{padding:0 20px}
   .guide-form-box{position:static}
   .free-call{flex-direction:column;align-items:flex-start;gap:14px}
   .free-call .btn-warm{width:100%;text-align:center}
@@ -187,6 +190,12 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   .footer-in{flex-direction:column;gap:20px}
   .footer-links{margin-left:0}
   details summary{font-size:13px}
+  .section-tag{margin-top:8px}
+  .faq-grid{padding:0}
+  details{padding:16px 0}
+  .g-step{gap:12px}
+  #picker{padding:28px 20px}
+  .about-strip{padding:40px 20px}
 }
 @media(max-width:360px){
   .hero-card{padding:18px 14px}
@@ -214,7 +223,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 <main id="main-content"><!-- AUDIENCE PICKER -->
 <div id="picker">
   <h2>Who are you? We will show you what is most useful.</h2>
-  <p>Choose below. The page will change to show what is most helpful for you.</p>
+  <p>Most parents find what they need in under 2 minutes. Choose below.</p>
   <div class="pick-btns">
     <button class="pick-btn" onclick="showPanel('parent')"><span class="emoji">👨‍👩‍👧</span>I am a parent</button>
     <button class="pick-btn" onclick="showPanel('educator')"><span class="emoji">🏫</span>I am a teacher or school</button>
@@ -328,7 +337,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 
 <!-- GUIDE PANEL -->
 <div id="panel-guide" class="panel">
-  <div class="wrap section" id="guide-section">
+  <div class="wrap section" id="guide-section" style="padding-top:40px;padding-bottom:40px">
     <div class="guide-wrap">
       <div>
         <div class="section-tag">Free resource</div>
@@ -356,7 +365,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
           <div style="font-size:28px;flex-shrink:0">▶️</div>
           <div>
             <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">Watch: Why CJ made this guide</div>
-            <a href="https://www.tiktok.com/@autismpathwaysconsulting/video/7636817083153616148" target="_blank" style="font-size:12px;color:var(--teal);font-weight:600">Watch on TikTok (Ep 30) →</a>
+            <a href="https://www.instagram.com/p/DYAQ9_0OflA/" target="_blank" style="font-size:12px;color:var(--teal);font-weight:600">Watch on Instagram →</a>
           </div>
         </div>
       </div>
@@ -454,24 +463,26 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 </div>
 
 <!-- FREE CALL BANNER -->
-<div style="padding:48px 20px;background:var(--warm-l);border-top:1px solid #fddcb5;border-bottom:1px solid #fddcb5">
-  <div class="wrap" style="text-align:center;max-width:600px">
-    <div style="font-size:36px;margin-bottom:12px">☎️</div>
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:10px;color:var(--text)">Not sure if this is right for you?</h3>
-    <p style="font-size:15px;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.7">Book a free 15-minute chat with CJ. He will listen to your situation and tell you honestly whether and how he can help. No cost, no commitment.</p>
-    <a href="https://calendly.com/cjlim-autismpathwaysconsulting/free-call" target="_blank" class="btn-warm" style="font-size:15px;padding:14px 32px">Book a free 15-min chat</a>
-    <div style="font-size:12px;color:var(--muted);margin-top:10px">Opens Calendly &middot; Pick a time that works for you &middot; No cost</div>
+<div style="padding:56px 20px;background:var(--warm-l);border-top:1px solid #fddcb5;border-bottom:1px solid #fddcb5">
+  <div class="wrap" style="text-align:center;max-width:560px">
+    <div style="display:inline-block;background:#fddcb5;color:#7a4f1e;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px">Free · No commitment</div>
+    <h3 style="font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,3vw,1.8rem);margin-bottom:10px;color:var(--text);line-height:1.3">Not sure if this is right for your situation?</h3>
+    <p style="font-size:15px;color:var(--muted);max-width:440px;margin:0 auto 10px;line-height:1.7">Book a free 15-minute call. CJ will listen to what's happening with your child and tell you honestly what would help — whether that's working with him or not.</p>
+    <p style="font-size:13px;color:var(--teal);font-weight:700;margin-bottom:20px">Most parents say they wish they had called sooner.</p>
+    <a href="https://calendly.com/cjlim-autismpathwaysconsulting/free-call" target="_blank" class="btn-warm" style="font-size:15px;padding:14px 32px">Book a free 15-min call →</a>
+    <div style="font-size:12px;color:var(--muted);margin-top:12px">Opens Calendly &middot; Pick a time that suits you &middot; No cost</div>
   </div>
 </div>
 
 <!-- TRUST STATS -->
-<div style="background:var(--teal-l);padding:48px 20px">
+<div style="background:var(--teal-l);padding:52px 20px">
   <div class="wrap">
-    <div style="text-align:center;margin-bottom:8px" class="section-tag">Why parents and schools trust CJ</div>
+    <div style="text-align:center;margin-bottom:4px" class="section-tag">Why parents and schools trust CJ</div>
+    <p style="text-align:center;font-size:14px;color:var(--muted);margin-bottom:24px">Qualifications you can verify. Experience you can feel.</p>
     <div class="stats">
-      <div><div class="stat-num" id="cnt-years">0</div><div class="stat-label">Years working with autistic children</div></div>
-      <div><div class="stat-num">3</div><div class="stat-label">Hanen certifications</div></div>
-      <div><div class="stat-num">M.A.</div><div class="stat-label">Special and Inclusive Education, Nottingham</div></div>
+      <div><div class="stat-num" id="cnt-years">0</div><div class="stat-label">Years working directly with autistic children in PJ & KL</div></div>
+      <div><div class="stat-num">3</div><div class="stat-label">Hanen certifications — internationally recognised</div></div>
+      <div><div class="stat-num">M.A.</div><div class="stat-label">Special & Inclusive Education, University of Nottingham</div></div>
     </div>
   </div>
 </div>
@@ -530,6 +541,13 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       </details>
     </div>
   </div>
+  <!-- Post-FAQ CTA — captures high-intent readers who scrolled all the way down -->
+  <div style="margin-top:48px;text-align:center;padding:36px 24px;background:var(--teal-l);border-radius:16px">
+    <p style="font-size:13px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Still have a question?</p>
+    <h3 style="font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:8px;color:var(--text)">Just ask CJ directly.</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px">Message on WhatsApp and he will reply personally. No bots, no team — just CJ.</p>
+    <a href="https://wa.me/601172998168" style="display:inline-block;background:var(--teal);color:#fff;padding:12px 28px;border-radius:30px;font-size:14px;font-weight:800">WhatsApp CJ →</a>
+  </div>
 </div>
 
 </main><!-- FOOTER -->
@@ -548,8 +566,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       <a href="services.html">Services</a>
       <a href="pay.html">Book and Pay</a>
       <a href="index.html#guide-section" onclick="showPanel('guide')">Free Guide</a>
-      <a href="https://tiktok.com/@autismpathwaysconsulting">TikTok</a>
-      <a href="https://instagram.com/autismpathwaysconsulting">Instagram</a>
+      <a href="https://instagram.com/autismpathwaysconsulting" target="_blank">Instagram</a>
     </div>
     <div class="footer-contact">
       <span>Contact CJ</span>
