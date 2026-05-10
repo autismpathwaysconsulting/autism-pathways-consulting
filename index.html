@@ -6,13 +6,14 @@
 <title>Autism Pathways Consulting | CJ Lim</title>
 <meta name="description" content="Helping Malaysian parents understand and support their autistic child. Free guide, parent coaching and school consulting by CJ Lim."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"/><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap"/></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --teal:#2a9d8f;--teal-d:#1e7268;--teal-l:#e8f7f5;
   --warm:#f4a261;--warm-l:#fff5ec;
-  --text:#1a1a2e;--muted:#5c6575;--bg:#faf9f7;--card:#fff;--border:#e5e2dc;
+  --text:#1a1a2e;--muted:#4a5568;--bg:#faf9f7;--card:#fff;--border:#e5e2dc;
   --r:14px;
 }
 html{scroll-behavior:smooth}
@@ -112,13 +113,13 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,.97);backdrop-
 /* ── FAQ ── */
 .faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:32px}
 @media(max-width:680px){.faq-grid{grid-template-columns:1fr}}
-details{border-bottom:1px solid var(--border);padding:18px 0}
+details{border-bottom:1px solid var(--border);padding:14px 0}
 details:last-child{border-bottom:none}
-details summary{font-size:14px;font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding-right:4px}
+details summary{font-size:14px;font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding-right:4px;line-height:1.4}
 details summary::-webkit-details-marker{display:none}
 details summary::after{content:'+';font-size:18px;color:var(--teal);flex-shrink:0;transition:transform .2s}
-details[open] summary::after{content:'x';font-size:14px}
-details p{margin-top:10px;font-size:13px;color:var(--muted);line-height:1.7}
+details[open] summary::after{content:'×';font-size:18px}
+details p{margin-top:8px;font-size:13px;color:var(--muted);line-height:1.65}
 .faq-left{padding-right:24px;border-right:1px solid var(--border)}
 .faq-right{padding-left:24px}
 /* Extra interactivity */
@@ -131,14 +132,19 @@ details p{margin-top:10px;font-size:13px;color:var(--muted);line-height:1.7}
 .hv-item{cursor:default}
 /* Smooth panel transitions */
 .panel{transition:opacity .3s}
-@media(max-width:680px){.faq-left{border-right:none;padding-right:0}.faq-right{padding-left:0}}
+@media(max-width:680px){
+  .faq-left{border-right:none;padding-right:0}
+  .faq-right{padding-left:0}
+  .faq-grid{padding:0 4px}
+  details summary{font-size:13px;padding-right:8px}
+}
 
 /* ── FOOTER ── */
 footer{background:var(--text);color:#fff;padding:36px 20px}
 .footer-in{max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
 .footer-brand{font-family:'DM Serif Display',serif;color:var(--teal);font-size:1.1rem;margin-bottom:6px;font-weight:600}
 .footer-tagline{font-size:13px;color:rgba(255,255,255,.55);max-width:220px;line-height:1.5}
-.footer-links{display:flex;flex-direction:column;gap:6px;margin-left:auto}
+.footer-links{display:flex;flex-direction:column;gap:4px;margin-left:auto}
 .footer-links a{font-size:13px;color:rgba(255,255,255,.65);font-weight:600}
 .footer-links a:hover{color:#fff}
 .footer-contact{display:flex;flex-direction:column;gap:6px}
@@ -169,6 +175,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 @media(max-width:480px){
   .hero-card{padding:24px 18px}
   .section{padding:40px 0}
+  .wrap{padding:0 16px}
   .guide-form-box{position:static}
   .free-call{flex-direction:column;align-items:flex-start;gap:14px}
   .free-call .btn-warm{width:100%;text-align:center}
@@ -189,6 +196,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 </style>
 </head>
 <body>
+<a href="#main-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999;background:var(--teal);color:#fff;padding:8px 16px;border-radius:4px;font-weight:700" onfocus="this.style.left='16px';this.style.width='auto';this.style.height='auto'" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px'">Skip to main content</a>
 
 <!-- NAV -->
 <nav>
@@ -203,7 +211,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   </div>
 </nav>
 
-<!-- AUDIENCE PICKER -->
+<main id="main-content"><!-- AUDIENCE PICKER -->
 <div id="picker">
   <h2>Who are you? We will show you what is most useful.</h2>
   <p>Choose below. The page will change to show what is most helpful for you.</p>
@@ -329,19 +337,19 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <div class="guide-steps">
           <div class="g-step">
             <div class="g-num">1</div>
-            <div class="g-text"><strong>What to look for</strong><span>What to look for in your child</span></div>
+            <div class="g-text"><strong>What to look for</strong><span>Signs to watch for in your child (based on DSM-5)</span></div>
           </div>
           <div class="g-step">
             <div class="g-num">2</div>
-            <div class="g-text"><strong>What to do next</strong><span>Where to go for help in Malaysia</span></div>
+            <div class="g-text"><strong>What to do next</strong><span>Exactly where to go for help in Malaysia, step by step</span></div>
           </div>
           <div class="g-step">
             <div class="g-num">3</div>
-            <div class="g-text"><strong>What helps at home</strong><span>Simple things you can start doing today</span></div>
+            <div class="g-text"><strong>What to say at each appointment</strong><span>Scripts for the clinic, the specialist, and the therapist</span></div>
           </div>
           <div class="g-step">
             <div class="g-num">4</div>
-            <div class="g-text"><strong>What to say to the school</strong><span>How to talk to your child's school</span></div>
+            <div class="g-text"><strong>How to protect your child</strong><span>How to spot unqualified therapists and avoid common mistakes</span></div>
           </div>
         </div>
         <div style="margin-top:28px;background:var(--teal-l);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px">
@@ -437,7 +445,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
             }
           }
         </script>
-        <script src="https://groot.mailerlite.com/js/w/webforms.min.js?vb397d78ebaa8a0f631d35384c46d781b" type="text/javascript"></script>
+        <script src="https://groot.mailerlite.com/js/w/webforms.min.js?vb397d78ebaa8a0f631d35384c46d781b" type="text/javascript" defer></script>
         <script>fetch("https://assets.mailerlite.com/jsonp/2332936/forms/187035417044846039/takel")</script>
         <!-- /MailerLite embed -->
       </div>
@@ -524,7 +532,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   </div>
 </div>
 
-<!-- FOOTER -->
+</main><!-- FOOTER -->
 <footer>
   <div class="footer-in">
     <div>
