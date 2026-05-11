@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Autism Pathways Consulting | CJ Lim</title>
-<meta name="description" content="Helping Malaysian parents understand and support their autistic child. Free guide, parent coaching and school consulting by CJ Lim."/>
+<meta name="description" content="Helping Malaysian parents understand and support their autistic child. Free guide, parent support sessions and school consulting by CJ Lim."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -14,7 +14,7 @@
 :root{
   --teal:#2a9d8f;--teal-d:#1e7268;--teal-l:#e8f7f5;
   --warm:#f4a261;--warm-l:#fff5ec;
-  --text:#1a1a2e;--muted:#4a5568;--bg:#faf9f7;--card:#fff;--border:#e5e2dc;
+  --text:#1a1a2e;--muted:#3d4a5c;--bg:#faf9f7;--card:#fff;--border:#e5e2dc;
   --r:14px;
 }
 html{scroll-behavior:smooth}
@@ -100,7 +100,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,.97);backdrop-
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px;text-align:center}
 @media(max-width:500px){.stats{grid-template-columns:1fr 1fr}}
 .stat-num{font-family:'DM Serif Display',serif;font-size:2.4rem;color:var(--teal);line-height:1}
-.stat-label{font-size:13px;color:var(--muted);margin-top:4px}
+.stat-label{font-size:13px;color:#3d4a5c;margin-top:4px}
 
 /* ── ABOUT STRIP ── */
 .about-strip{background:linear-gradient(135deg,#0d6b60,#2a9d8f);color:#fff;padding:56px 20px}
@@ -223,11 +223,11 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 <main id="main-content"><!-- AUDIENCE PICKER -->
 <div id="picker">
   <h2>Who are you? We will show you what is most useful.</h2>
-  <p>Most parents find what they need in under 2 minutes. Choose below.</p>
+  <p>Choose below. The page will change to show what is most helpful for you.</p>
   <div class="pick-btns">
-    <button class="pick-btn" onclick="showPanel('parent')"><span class="emoji">👨‍👩‍👧</span>I am a parent</button>
-    <button class="pick-btn" onclick="showPanel('educator')"><span class="emoji">🏫</span>I am a teacher or school</button>
-    <button class="pick-btn" onclick="showPanel('guide')"><span class="emoji">📄</span>I want the free guide</button>
+    <button class="pick-btn" onclick="showPanel('parent')" aria-pressed="false"><span class="emoji">👨‍👩‍👧</span>I am a parent</button>
+    <button class="pick-btn" onclick="showPanel('educator')" aria-pressed="false"><span class="emoji">🏫</span>I am a teacher or school</button>
+    <button class="pick-btn" onclick="showPanel('guide')" aria-pressed="false"><span class="emoji">📄</span>I want the free guide</button>
   </div>
 </div>
 
@@ -337,7 +337,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 
 <!-- GUIDE PANEL -->
 <div id="panel-guide" class="panel">
-  <div class="wrap section" id="guide-section" style="padding-top:40px;padding-bottom:40px">
+  <div class="wrap section" id="guide-section" style="padding-top:64px">
     <div class="guide-wrap">
       <div>
         <div class="section-tag">Free resource</div>
@@ -463,26 +463,24 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 </div>
 
 <!-- FREE CALL BANNER -->
-<div style="padding:56px 20px;background:var(--warm-l);border-top:1px solid #fddcb5;border-bottom:1px solid #fddcb5">
-  <div class="wrap" style="text-align:center;max-width:560px">
-    <div style="display:inline-block;background:#fddcb5;color:#7a4f1e;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px">Free · No commitment</div>
-    <h3 style="font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,3vw,1.8rem);margin-bottom:10px;color:var(--text);line-height:1.3">Not sure if this is right for your situation?</h3>
-    <p style="font-size:15px;color:var(--muted);max-width:440px;margin:0 auto 10px;line-height:1.7">Book a free 15-minute call. CJ will listen to what's happening with your child and tell you honestly what would help — whether that's working with him or not.</p>
-    <p style="font-size:13px;color:var(--teal);font-weight:700;margin-bottom:20px">Most parents say they wish they had called sooner.</p>
-    <a href="https://calendly.com/cjlim-autismpathwaysconsulting/free-call" target="_blank" class="btn-warm" style="font-size:15px;padding:14px 32px">Book a free 15-min call →</a>
-    <div style="font-size:12px;color:var(--muted);margin-top:12px">Opens Calendly &middot; Pick a time that suits you &middot; No cost</div>
+<div style="padding:48px 20px;background:var(--warm-l);border-top:1px solid #fddcb5;border-bottom:1px solid #fddcb5">
+  <div class="wrap" style="text-align:center;max-width:600px">
+    <div style="font-size:36px;margin-bottom:12px">☎️</div>
+    <h3 style="font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:10px;color:var(--text)">Not sure if this is right for you?</h3>
+    <p style="font-size:15px;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.7">Book a free 15-minute chat with CJ. He will listen to your situation and tell you honestly whether and how he can help. No cost, no commitment.</p>
+    <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-warm" style="font-size:15px;padding:14px 32px">Book a free 15-min chat</a>
+    <div style="font-size:12px;color:var(--muted);margin-top:10px">Opens Cal.com &middot; Pick a time that works for you &middot; No cost</div>
   </div>
 </div>
 
 <!-- TRUST STATS -->
-<div style="background:var(--teal-l);padding:52px 20px">
+<div style="background:var(--teal-l);padding:48px 20px">
   <div class="wrap">
-    <div style="text-align:center;margin-bottom:4px" class="section-tag">Why parents and schools trust CJ</div>
-    <p style="text-align:center;font-size:14px;color:var(--muted);margin-bottom:24px">Qualifications you can verify. Experience you can feel.</p>
+    <div style="text-align:center;margin-bottom:8px" class="section-tag">Why parents and schools trust CJ</div>
     <div class="stats">
-      <div><div class="stat-num" id="cnt-years">0</div><div class="stat-label">Years working directly with autistic children in PJ & KL</div></div>
-      <div><div class="stat-num">3</div><div class="stat-label">Hanen certifications — internationally recognised</div></div>
-      <div><div class="stat-num">M.A.</div><div class="stat-label">Special & Inclusive Education, University of Nottingham</div></div>
+      <div><div class="stat-num" id="cnt-years">0</div><div class="stat-label">Years working with autistic children</div></div>
+      <div><div class="stat-num">3</div><div class="stat-label">Hanen certifications</div></div>
+      <div><div class="stat-num">M.A.</div><div class="stat-label">Special and Inclusive Education, Nottingham</div></div>
     </div>
   </div>
 </div>
@@ -490,11 +488,11 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 <!-- ABOUT STRIP -->
 <div class="about-strip">
   <div class="about-in">
-    <img class="about-photo" src="cj-photo.JPG" alt="CJ Lim"/>
+    <img class="about-photo" src="cj-photo.JPG" alt="CJ Lim" width="100" height="100"/>
     <div class="about-text">
       <h3>CJ Lim</h3>
       <p>I spent over 10 years as a shadow aide working in classrooms, homes, and therapy settings in Petaling Jaya and Kuala Lumpur. I have seen what helps and what does not. Now I help parents and schools directly so more children can get the right support.</p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px"><a href="about.html" class="about-link">Read more about CJ →</a><a href="https://calendly.com/cjlim-autismpathwaysconsulting/free-call" target="_blank" style="font-size:14px;font-weight:800;color:rgba(255,255,255,.85);text-decoration:underline;text-underline-offset:3px">Book free 15-min chat →</a></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px"><a href="about.html" class="about-link">Read more about CJ →</a><a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" style="font-size:14px;font-weight:800;color:rgba(255,255,255,.85);text-decoration:underline;text-underline-offset:3px">Book free 15-min chat →</a></div>
     </div>
   </div>
 </div>
@@ -519,13 +517,13 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       </details>
       <details>
         <summary>Do sessions happen online or in person?</summary>
-        <p>All parent coaching sessions are online via video call. This means you can join from anywhere in Malaysia.</p>
+        <p>The 1:1 Parent Support & Strategy Session is online via video call and runs for 45 minutes, so you can join from anywhere in Malaysia.</p>
       </details>
     </div>
     <div class="faq-right">
       <details>
         <summary>How much does it cost?</summary>
-        <p>A single session is RM350. A 3-session starter pack is RM950 (save RM100). A 6-session 3-month programme is RM1,800 (save RM300). See the <a href="services.html" style="color:var(--teal)">Services page</a> for full details.</p>
+        <p>A 45-minute 1:1 Parent Support & Strategy Session is RM350. See the <a href="services.html" style="color:var(--teal)">Services page</a> for full details.</p>
       </details>
       <details>
         <summary>My child is doing okay at home. Can you help with school problems?</summary>
@@ -540,13 +538,6 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <p>Yes. CJ works with teachers, shadow aides, and school staff. Go to the <a href="services.html#schools" style="color:var(--teal)">Schools section</a> or WhatsApp to discuss your situation.</p>
       </details>
     </div>
-  </div>
-  <!-- Post-FAQ CTA — captures high-intent readers who scrolled all the way down -->
-  <div style="margin-top:48px;text-align:center;padding:36px 24px;background:var(--teal-l);border-radius:16px">
-    <p style="font-size:13px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Still have a question?</p>
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:8px;color:var(--text)">Just ask CJ directly.</h3>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:20px">Message on WhatsApp and he will reply personally. No bots, no team — just CJ.</p>
-    <a href="https://wa.me/601172998168" style="display:inline-block;background:var(--teal);color:#fff;padding:12px 28px;border-radius:30px;font-size:14px;font-weight:800">WhatsApp CJ →</a>
   </div>
 </div>
 
@@ -606,11 +597,11 @@ statsObs.observe(document.getElementById('cnt-years'));
 // Audience picker
 function showPanel(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('show'));
-  document.querySelectorAll('.pick-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.pick-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
   document.getElementById('panel-' + name).classList.add('show');
   const btns = document.querySelectorAll('.pick-btn');
   const map = {parent:0, educator:1, guide:2};
-  if (map[name] !== undefined) btns[map[name]].classList.add('active');
+  if (map[name] !== undefined) { btns[map[name]].classList.add('active'); btns[map[name]].setAttribute('aria-pressed','true'); }
   if (name !== 'default') {
     document.getElementById('picker').scrollIntoView({behavior:'smooth', block:'start'});
   }
