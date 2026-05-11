@@ -18,7 +18,7 @@ nav{background:var(--teal);padding:0 24px}
 .container{max-width:480px;margin:0 auto;padding:28px 16px 0}
 /* Step label */
 .step-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-/* Package cards */
+/* Session card */
 .pkg-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
 .pkg-card{border:2px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all .18s;background:var(--card)}
 .pkg-card:hover{border-color:var(--teal)}
@@ -117,53 +117,21 @@ nav{background:var(--teal);padding:0 24px}
 
 <div class="container">
 
-  <!-- STEP 1: PACKAGE -->
-  <div class="step-label">Step 1: Choose your support option</div>
+  <!-- STEP 1: SESSION -->
+  <div class="step-label">Step 1: Parent support session</div>
   <div class="pkg-grid" id="pkgGrid">
 
-    <div class="pkg-card active" onclick="selectPkg(this,'RM 350','1:1 Parent Support Session','45-minute session')">
+    <div class="pkg-card active" onclick="selectPkg(this,'RM 350','1:1 Parent Support & Strategy Session','45-minute session')">
       <div class="pkg-top">
-        <div class="pkg-name">1:1 Parent Support Session</div>
+        <div class="pkg-name">1:1 Parent Support &amp; Strategy Session</div>
         <div><span class="pkg-price">RM350</span></div>
       </div>
-      <div class="pkg-desc">45-minute video call. Best if you want to try one session first or have a specific situation to work through.</div>
+      <div class="pkg-desc">Focused 45-minute online session for parents seeking practical, evidence-based strategies and clearer next steps.</div>
       <ul class="pkg-includes">
-        <li>Focused discussion of your main concern</li>
-        <li>Practical strategy suggestions</li>
-        <li>Clear next step for home or school</li>
-        <li>Direct, honest guidance</li>
-      </ul>
-    </div>
-
-    <div class="pkg-card" onclick="selectPkg(this,'RM 950','Starter Pack','3 sessions, 2 weeks apart')">
-      <div class="pkg-top">
-        <div class="pkg-name">Starter Pack <span class="pkg-save">Most popular</span></div>
-        <div><span class="pkg-price">RM950</span></div>
-      </div>
-      <div class="pkg-desc">3 sessions, 2 weeks apart. Gives you time to try strategies at home and come back with real results so we can refine and go deeper.</div>
-      <ul class="pkg-includes">
-        <li>Everything in 1:1 Parent Support Session</li>
-        <li>Progress review each session</li>
-        <li>Strategy refinement as you go</li>
-        <li>WhatsApp check-in between sessions</li>
-        <li>Save RM100</li>
-        <li>Best for most families</li>
-      </ul>
-    </div>
-
-    <div class="pkg-card" onclick="selectPkg(this,'RM 1,800','3-Month Programme','6 sessions, 2 weeks apart')">
-      <div class="pkg-top">
-        <div class="pkg-name">3-Month Programme</div>
-        <div><span class="pkg-price">RM1,800</span></div>
-      </div>
-      <div class="pkg-desc">6 sessions over 3 months. For families dealing with complex behaviours or navigating school situations that need sustained, structured support.</div>
-      <ul class="pkg-includes">
-        <li>Everything in Starter Pack</li>
-        <li>Behaviour tracking over 3 months</li>
-        <li>School coordination support</li>
-        <li>Ongoing WhatsApp access</li>
-        <li>Written progress report</li>
-        <li>Save RM300</li>
+        <li>Personalised guidance</li>
+        <li>Practical strategies</li>
+        <li>Actionable next steps</li>
+        <li>Support for home or school concerns</li>
       </ul>
     </div>
 
@@ -172,8 +140,8 @@ nav{background:var(--teal);padding:0 24px}
   <!-- STEP 2: BOOK TIME -->
   <div class="step-label">Step 2: Book your session time</div>
   <div class="cal-box">
-    <p>Choose a date and time that works for you. Sessions are 45 minutes and held online via video call.</p>
-    <a href="https://cal.com/autismpathwaysconsulting/parent-support-session" target="_blank" class="cal-btn">Open Cal.com to book your 45-minute session</a>
+    <p>Choose a date and time that works for you. The session is 45 minutes and held online via video call.</p>
+    <a href="https://cal.com/autismpathwaysconsulting/parent-support-session" target="_blank" class="cal-btn">Open Cal.com to book your session</a>
     <p class="cal-note">After booking, complete payment in Step 3 below. Your session is confirmed once payment is received.</p>
   </div>
 
@@ -182,7 +150,7 @@ nav{background:var(--teal);padding:0 24px}
   <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px">
     <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Paying for:</div>
     <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--teal)" id="payAmt">RM 350</div>
-    <div style="font-size:13px;color:var(--muted)" id="payLabel">1:1 Parent Support Session</div>
+    <div style="font-size:13px;color:var(--muted)" id="payLabel">1:1 Parent Support &amp; Strategy Session</div>
   </div>
 
   <div class="method-tabs">
@@ -193,7 +161,7 @@ nav{background:var(--teal);padding:0 24px}
   <div id="panel-qr" class="panel active">
     <div class="qr-card">
       <div class="qr-amount" id="qrAmt">RM 350</div>
-      <div class="qr-label" id="qrLabel">1:1 Parent Support Session</div>
+      <div class="qr-label" id="qrLabel">1:1 Parent Support &amp; Strategy Session</div>
       <div class="qr-img-wrap">
         <img src="QR_Payment.JPG" alt="DuitNow QR - CJ Special and Inclusive"/>
       </div>
@@ -214,7 +182,7 @@ nav{background:var(--teal);padding:0 24px}
           <button class="copy-btn" onclick="copyText('564874606832',this)">Copy</button>
         </div>
         <div class="bank-row"><span class="lbl">Amount</span><span class="val" id="bankAmt" style="color:var(--teal)">RM 350</span></div>
-        <div class="bank-row"><span class="lbl">Reference</span><span class="val">Your name + package</span></div>
+        <div class="bank-row"><span class="lbl">Reference</span><span class="val">Your name + session</span></div>
       </div>
     </div>
   </div>
@@ -235,7 +203,8 @@ nav{background:var(--teal);padding:0 24px}
   <div style="text-align:center;padding:24px 0 12px;font-size:11px;color:#aaa;line-height:1.8">
     CJ Special and Inclusive Consultancy (003030209-T) &middot; SSM Reg. 201903282307 &middot; Petaling Jaya &amp; KL<br>
     <a href="mailto:cjlim@autismpathwaysconsulting.com" style="color:#aaa">cjlim@autismpathwaysconsulting.com</a> &middot;
-    <a href="https://wa.me/601172998168" style="color:#aaa">011-7299 8168</a>
+    <a href="https://wa.me/601172998168" style="color:#aaa">011-7299 8168</a><br>
+    <a href="privacy.html" style="color:#aaa">Privacy Policy</a> &middot; <a href="disclaimer.html" style="color:#aaa">Disclaimer</a> &middot; <a href="terms.html" style="color:#aaa">Terms &amp; Conditions</a> &middot; <a href="cancellation-policy.html" style="color:#aaa">Cancellation Policy</a>
   </div>
 
 </div>
