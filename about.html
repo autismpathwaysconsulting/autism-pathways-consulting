@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About CJ Lim | Autism Pathways Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"/><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap"/></noscript>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#2a9d8f;--teal-d:#1e7268;--text:#1a1a2e;--muted:#3d4a5c;--bg:#faf9f7;--card:#fff;--border:#e8e4df}
+body{overflow-x:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+a{color:inherit;text-decoration:none}
+nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-in{max-width:980px;margin:0 auto;display:flex;align-items:center;height:58px;gap:20px}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:17px;color:var(--teal);font-weight:600}
+.nav-links{display:flex;gap:18px;margin-left:auto;font-size:14px;font-weight:700;color:var(--muted)}
+.nav-links a:hover{color:var(--teal)}
+.nav-cta{background:var(--teal);color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:.02em;transition:background .2s}
+.nav-cta:hover{background:var(--teal-d)!important}
+.container{max-width:720px;margin:0 auto;padding:64px 24px}
+.hero-label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-height:1.2;margin-bottom:24px}
+.lead{font-size:1.05rem;color:var(--muted);margin-bottom:40px;border-left:3px solid var(--teal);padding-left:20px;font-style:italic}
+h2{font-family:'DM Serif Display',serif;font-size:1.5rem;margin:40px 0 12px}
+p{color:var(--muted);margin-bottom:16px;font-size:15px}
+.research-note{background:#f0faf9;border:1px solid #b2dfdb;border-radius:10px;padding:14px 18px;font-size:13px;color:#2a9d8f;margin:16px 0}
+.research-note strong{color:#1e7268}
+.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0}
+@media(max-width:500px){.cred-grid{grid-template-columns:1fr}}
+.cred-card{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--teal);border-radius:12px;padding:24px;text-align:center}
+.cred-card .icon{font-size:32px;margin-bottom:10px;display:block}
+.cred-card h4{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.cred-card p{font-size:13px;margin:0;color:var(--muted);line-height:1.5}
+.hanen-list{list-style:none;padding:0;margin:8px 0 0;text-align:left;display:inline-block}
+.hanen-list li{font-size:13px;color:var(--muted);padding:3px 0;padding-left:14px;position:relative}
+.hanen-list li::before{content:'·';position:absolute;left:0;color:var(--teal)}
+.cta-box{background:var(--teal);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:48px}
+.cta-box h3{font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:8px}
+.cta-box p{color:rgba(255,255,255,.85);margin-bottom:24px}
+.cta-box a{display:inline-block;background:#fff;color:var(--teal);padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px}
+footer{background:var(--text);color:#fff;padding:32px 24px;text-align:center}
+footer a{color:rgba(255,255,255,.7);margin:0 12px;font-size:14px}
+.footer-brand{font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--teal)}
+
+@media(max-width:480px){
+  .container{padding:40px 16px}
+  h1{font-size:1.7rem}
+  .cred-grid{grid-template-columns:1fr}
+  .cta-box{padding:24px 18px}
+}
+
+@media(max-width:600px){
+  .container{padding:32px 16px}
+  .page-header{padding:40px 16px 20px}
+  h1{font-size:1.7rem}
+  .cred-grid{grid-template-columns:1fr}
+  .service-section{padding:24px 18px}
+  .pricing-grid{grid-template-columns:1fr}
+  .svc-cta{flex-direction:column}
+  .svc-cta a{text-align:center}
+  .btn-primary,.btn-secondary,.btn-main,.btn-ghost{width:100%;text-align:center;padding:13px 20px}
+  .form-row{flex-direction:column}
+  .pkg-grid .pkg-card{padding:16px}
+  .pkg-includes{grid-template-columns:1fr}
+  .method-tabs{gap:6px}
+  .tab-btn{font-size:12px;padding:9px}
+  .nav-links a:not(.nav-cta){display:none}
+  .about-inner,.about-in{flex-direction:column;text-align:center}
+  .cta-box{padding:24px 18px}
+  .unsure{padding:28px 20px}
+  .school-form-wrap{padding:18px 16px}
+  details summary{font-size:13px}
+  .steps-label{font-size:11px}
+}
+@media(max-width:360px){
+  h1{font-size:1.5rem}
+  .service-section{padding:18px 14px}
+  .price-amount{font-size:1.6rem}
+}
+
+/* ── FOOTER ── */
+footer{background:var(--text);color:#fff;padding:36px 20px}
+.footer-in{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.footer-brand{font-family:'DM Serif Display',serif;color:var(--teal);font-size:1.1rem;margin-bottom:6px;font-weight:600}
+.footer-tagline{font-size:13px;color:rgba(255,255,255,.55);max-width:220px;line-height:1.5}
+.footer-links{display:flex;flex-direction:column;gap:6px;margin-left:auto}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.65);font-weight:600}
+.footer-links a:hover{color:#fff}
+.footer-contact{display:flex;flex-direction:column;gap:6px}
+.footer-contact span{font-size:12px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.footer-contact a{font-size:14px;color:rgba(255,255,255,.75);font-weight:700}
+.footer-contact a:hover{color:#fff}
+.footer-bottom{width:100%;font-size:11px;color:rgba(255,255,255,.3);margin-top:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+@media(max-width:600px){.footer-in{flex-direction:column;gap:16px}.footer-links{margin-left:0}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo">APC</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="pay.html" class="nav-cta">Book a session</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+  <div style="text-align:center;margin-bottom:32px">
+  <img src="cj-photo.JPG" alt="CJ Lim" width="160" height="160" style="width:160px;height:160px;border-radius:50%;object-fit:cover;object-position:center 30%;border:3px solid #e8e4df">
+</div>
+<div class="hero-label">About CJ</div>
+  <h1>I spent 10 years inside the classroom. Here's what I learned.</h1>
+  <p class="lead">"Every behaviour is communication. Once you understand what your child is trying to say, everything changes."</p>
+
+  <p>I started my career as a shadow aide, sitting alongside autistic children in mainstream classrooms, day after day, figuring out what they needed to survive and thrive in an environment not built for them.</p>
+
+  <p>Over the next decade I worked with children and families in Petaling Jaya and Kuala Lumpur in classrooms, homes, and briefly in centres. I also supported children attending speech therapy and occupational therapy sessions, working alongside their therapists to carry strategies into everyday settings.</p>
+
+  <p>The problem was never that parents didn't care. They cared deeply. The problem was that nobody had explained the <em>why</em> behind the behaviour. Without understanding the why, it's impossible to respond effectively.</p>
+
+  <h2>Why I started Autism Pathways Consulting</h2>
+  <p>After completing my Master's in Special and Inclusive Education and earning my Hanen certifications, I realised I could support more families by helping parents and schools understand autistic behaviour, communication, emotional regulation, and learning needs through practical, evidence-based strategies.</p>
+
+  <p>The research is clear: parent involvement is one of the strongest predictors of child outcomes in early intervention. A landmark review in the <em>Journal of Autism and Developmental Disorders</em> found that parent-implemented interventions produced meaningful gains in communication, behaviour, and quality of life, especially when parents were coached with consistent, structured frameworks rather than generic tips.</p>
+
+  <div class="research-note">
+    <strong>Why this matters for you:</strong> The Hanen approach I use is built on decades of evidence that parents are the most powerful agents of change in their child's development. You don't need to be a therapist. You need to understand your child's communication and behaviour patterns, and know how to respond. That's exactly what these sessions teach.
+  </div>
+
+  <p>APC is built on this: when parents and schools understand what a child may be communicating through behaviour, they can respond with more clarity, confidence, and compassion. My work focuses on practical strategies grounded in research and adapted for Malaysian families and school settings.</p>
+
+  <div class="cred-grid">
+    <div class="cred-card">
+      <div class="icon">🎓</div>
+      <h4>M.A. Degree</h4>
+      <p>M.A. in Special and Inclusive Education, University of Nottingham</p>
+    </div>
+    <div class="cred-card">
+      <div class="icon">📜</div>
+      <h4>Hanen Certified</h4>
+      <ul class="hanen-list">
+        <li>ABC and Beyond™</li>
+        <li>SPARK Communication™</li>
+        <li>Learning Language and Loving It™</li>
+      </ul>
+    </div>
+    <div class="cred-card">
+      <div class="icon">👥</div>
+      <h4>10+ Years Experience</h4>
+      <p>Shadow aide and consultant in classrooms, homes, and therapy settings in Petaling Jaya and Kuala Lumpur</p>
+    </div>
+    <div class="cred-card">
+      <div class="icon">🇲🇾</div>
+      <h4>Malaysian Context</h4>
+      <p>Deep knowledge of the Malaysian school system, local resources, and cultural nuances that international resources often miss</p>
+    </div>
+  </div>
+
+  <h2>How I work</h2>
+  <p>I don't give generic advice. Every session starts with understanding your specific situation: what behaviours you're seeing, when they happen, what's been tried, and what your family's day actually looks like. From there, I help you identify the possible why and build practical next steps around your child.</p>
+
+  <p>I also work directly in academic support, particularly Maths. Not every learning difficulty is a behaviour problem. Sometimes the way a subject is taught simply does not connect with how an autistic child processes information. Finding that access point is something I do regularly, either by guiding parents on how to support learning at home or working with the school directly.</p>
+  <p>For schools, learning centres, and kindergartens, visit the <a href="services.html#schools" style="color:var(--teal)">Schools section</a> or WhatsApp me directly.</p>
+
+  <div class="cta-box">
+    <h3>Ready to talk?</h3>
+    <p>Book a free 15-minute discovery call to see if CJ can help, or send a WhatsApp message directly.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank">Book free discovery call</a>
+    <a href="https://wa.me/601172998168" style="background:rgba(255,255,255,.2);color:#fff;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px">WhatsApp CJ</a>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="footer-in">
+    <div>
+      <div class="footer-brand">Autism Pathways Consulting</div>
+      <div class="footer-tagline">Helping parents and schools support autistic children in PJ and KL.</div>
+      <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6">
+        CJ Special and Inclusive Consultancy (003030209-T)<br>
+        SSM Reg. 201903282307 &middot; Petaling Jaya &amp; KL
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="pay.html">Book and Pay</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="cancellation-policy.html">Cancellation Policy</a>
+      <a href="https://instagram.com/autismpathwaysconsulting" target="_blank">Instagram</a>
+    </div>
+    <div class="footer-contact">
+      <span>Contact CJ</span>
+      <a href="https://wa.me/601172998168">WhatsApp: 011-7299 8168</a>
+      <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Autism Pathways Consulting &middot; CJ Lim &middot; Petaling Jaya, Malaysia</div>
+  </div>
+</footer>
+
+</body>
+</html>

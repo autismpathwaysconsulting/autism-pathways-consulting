@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book Parent Support | Autism Pathways Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#2a9d8f;--teal-d:#1e7268;--text:#1a1a2e;--muted:#6b7280;--bg:#faf9f7;--card:#fff;--border:#e8e4df;--pink:#e84393}
+body{overflow-x:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding-bottom:60px}
+a{color:inherit;text-decoration:none}
+nav{background:var(--teal);padding:0 24px}
+.nav-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;height:56px;gap:16px}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:16px;color:#fff}
+.nav-back{font-size:14px;color:rgba(255,255,255,.8);margin-left:auto}
+.container{max-width:480px;margin:0 auto;padding:28px 16px 0}
+/* Step label */
+.step-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+/* Session card */
+.pkg-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.pkg-card{border:2px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all .18s;background:var(--card)}
+.pkg-card:hover{border-color:var(--teal)}
+.pkg-card.active{border-color:var(--teal);background:#f0faf9}
+.pkg-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.pkg-name{font-weight:700;font-size:15px}
+.pkg-price{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--teal)}
+.pkg-save{font-size:11px;font-weight:700;color:var(--teal);background:#d4f0eb;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.pkg-desc{font-size:13px;color:var(--muted);margin-bottom:10px}
+.pkg-includes{list-style:none;padding:0;border-top:1px solid var(--border);padding-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.pkg-includes li{font-size:12px;color:var(--muted);padding-left:14px;position:relative}
+.pkg-includes li::before{content:'✓';position:absolute;left:0;color:var(--teal);font-weight:700}
+/* Cal.com step */
+.cal-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px}
+.cal-box p{font-size:14px;color:var(--muted);margin-bottom:16px}
+.cal-btn{display:block;background:var(--teal);color:#fff;text-align:center;padding:14px;border-radius:10px;font-weight:700;font-size:15px}
+.cal-btn:hover{background:var(--teal-d)}
+.cal-note{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+/* Method tabs */
+.method-tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s;text-align:center}
+.tab-btn.active{border-color:var(--teal);background:var(--teal);color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+/* QR */
+.qr-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+.qr-amount{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--teal);margin-bottom:4px}
+.qr-label{font-size:13px;color:var(--muted);margin-bottom:16px}
+.qr-img-wrap{display:inline-block;background:#fff;border-radius:10px;padding:6px;border:1px solid var(--border)}
+.qr-img-wrap img{width:240px;height:auto;display:block}
+.qr-caption{margin-top:12px;font-size:13px;color:var(--muted)}
+.duitnow-badge{margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:#fff0f6;border:1px solid #fbc8df;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--pink)}
+/* Bank */
+.bank-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.bank-header{background:var(--teal);color:#fff;padding:12px 18px;font-weight:700;font-size:14px}
+.bank-body{overflow-x:hidden;padding:16px 18px}
+.bank-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
+.bank-row:last-child{border-bottom:none}
+.bank-row .lbl{font-size:12px;color:var(--muted);font-weight:500;min-width:90px}
+.bank-row .val{font-size:14px;font-weight:700;text-align:right;flex:1}
+.copy-btn{background:var(--teal);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer}
+.copy-btn.copied{background:#10b981}
+/* Notice */
+.notice-box{margin-top:20px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:16px;font-size:13px;color:#92400e}
+/* Trust */
+.trust-bar{margin-top:20px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500}
+
+@media(max-width:480px){
+  .container{padding:20px 14px 0}
+  .pkg-includes{grid-template-columns:1fr}
+  .method-tabs{gap:6px}
+  .tab-btn{font-size:12px;padding:8px}
+  .qr-img-wrap img{width:200px}
+  .trust-bar{gap:12px}
+}
+
+@media(max-width:600px){
+  .container{padding:32px 16px}
+  .page-header{padding:40px 16px 20px}
+  h1{font-size:1.7rem}
+  .cred-grid{grid-template-columns:1fr}
+  .service-section{padding:24px 18px}
+  .pricing-grid{grid-template-columns:1fr}
+  .svc-cta{flex-direction:column}
+  .svc-cta a{text-align:center}
+  .btn-primary,.btn-secondary,.btn-main,.btn-ghost{width:100%;text-align:center;padding:13px 20px}
+  .form-row{flex-direction:column}
+  .pkg-grid .pkg-card{padding:16px}
+  .pkg-includes{grid-template-columns:1fr}
+  .method-tabs{gap:6px}
+  .tab-btn{font-size:12px;padding:9px}
+  .nav-links a:not(.nav-cta){display:none}
+  .about-inner,.about-in{flex-direction:column;text-align:center}
+  .cta-box{padding:24px 18px}
+  .unsure{padding:28px 20px}
+  .school-form-wrap{padding:18px 16px}
+  details summary{font-size:13px}
+  .steps-label{font-size:11px}
+}
+@media(max-width:360px){
+  h1{font-size:1.5rem}
+  .service-section{padding:18px 14px}
+  .price-amount{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">APC</span>
+    <a href="services.html" class="nav-back">← Back to services</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- STEP 1: SESSION -->
+  <div class="step-label">Step 1: Parent support session</div>
+  <div class="pkg-grid" id="pkgGrid">
+
+    <div class="pkg-card active" onclick="selectPkg(this,'RM 350','1:1 Parent Support & Strategy Session','45-minute session')">
+      <div class="pkg-top">
+        <div class="pkg-name">1:1 Parent Support &amp; Strategy Session</div>
+        <div><span class="pkg-price">RM350</span></div>
+      </div>
+      <div class="pkg-desc">Focused 45-minute online session for parents seeking practical, evidence-based strategies and clearer next steps.</div>
+      <ul class="pkg-includes">
+        <li>Personalised guidance</li>
+        <li>Practical strategies</li>
+        <li>Actionable next steps</li>
+        <li>Support for home or school concerns</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- STEP 2: BOOK TIME -->
+  <div class="step-label">Step 2: Book your session time</div>
+  <div class="cal-box">
+    <p>Choose a date and time that works for you. The session is 45 minutes and held online via video call.</p>
+    <a href="https://cal.com/autismpathwaysconsulting/parent-support-session" target="_blank" class="cal-btn">Open Cal.com to book your session</a>
+    <p class="cal-note">After booking, complete payment in Step 3 below. Your session is confirmed once payment is received.</p>
+  </div>
+
+  <!-- STEP 3: PAY -->
+  <div class="step-label">Step 3: Complete payment</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Paying for:</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--teal)" id="payAmt">RM 350</div>
+    <div style="font-size:13px;color:var(--muted)" id="payLabel">1:1 Parent Support &amp; Strategy Session</div>
+  </div>
+
+  <div class="method-tabs">
+    <div class="tab-btn active" onclick="switchTab('qr')">DuitNow QR</div>
+    <div class="tab-btn" onclick="switchTab('bank')">Bank Transfer</div>
+  </div>
+
+  <div id="panel-qr" class="panel active">
+    <div class="qr-card">
+      <div class="qr-amount" id="qrAmt">RM 350</div>
+      <div class="qr-label" id="qrLabel">1:1 Parent Support &amp; Strategy Session</div>
+      <div class="qr-img-wrap">
+        <img src="QR_Payment.JPG" alt="DuitNow QR - CJ Special and Inclusive"/>
+      </div>
+      <div class="qr-caption">Screenshot and pay from Maybank2u, CIMB, RHB, Touch 'n Go, Boost and more.</div>
+      <div class="duitnow-badge">🇲🇾 Malaysia National QR · DuitNow</div>
+    </div>
+  </div>
+
+  <div id="panel-bank" class="panel">
+    <div class="bank-card">
+      <div class="bank-header">Maybank Direct Transfer</div>
+      <div class="bank-body">
+        <div class="bank-row"><span class="lbl">Bank</span><span class="val">Maybank</span></div>
+        <div class="bank-row"><span class="lbl">Account Name</span><span class="val">CJ Special and Inclusive Consultancy</span></div>
+        <div class="bank-row">
+          <span class="lbl">Account No.</span>
+          <span class="val">5648 7460 6832</span>
+          <button class="copy-btn" onclick="copyText('564874606832',this)">Copy</button>
+        </div>
+        <div class="bank-row"><span class="lbl">Amount</span><span class="val" id="bankAmt" style="color:var(--teal)">RM 350</span></div>
+        <div class="bank-row"><span class="lbl">Reference</span><span class="val">Your name + session</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notice-box">
+    <strong>After payment:</strong> Screenshot your receipt and WhatsApp it to CJ at <a href="https://wa.me/601172998168" style="color:var(--teal)">01172998168</a>. Your booking is confirmed once payment is received.
+    <div style="margin-top:14px">
+      <a href="booking-confirmed-session.html" style="display:inline-block;background:var(--teal);color:#fff;padding:11px 22px;border-radius:8px;font-weight:700;font-size:14px">View session details →</a>
+    </div>
+  </div>
+
+  <div class="trust-bar">
+    <div class="trust-item">🔒 Secure payment</div>
+    <div class="trust-item">🎓 M.A. in Special and Inclusive Education</div>
+    <div class="trust-item">⭐ 10+ years experience</div>
+  </div>
+
+  <div style="text-align:center;padding:24px 0 12px;font-size:11px;color:#aaa;line-height:1.8">
+    CJ Special and Inclusive Consultancy (003030209-T) &middot; SSM Reg. 201903282307 &middot; Petaling Jaya &amp; KL<br>
+    <a href="mailto:cjlim@autismpathwaysconsulting.com" style="color:#aaa">cjlim@autismpathwaysconsulting.com</a> &middot;
+    <a href="https://wa.me/601172998168" style="color:#aaa">011-7299 8168</a><br>
+    <a href="privacy.html" style="color:#aaa">Privacy Policy</a> &middot; <a href="disclaimer.html" style="color:#aaa">Disclaimer</a> &middot; <a href="terms.html" style="color:#aaa">Terms &amp; Conditions</a> &middot; <a href="cancellation-policy.html" style="color:#aaa">Cancellation Policy</a>
+  </div>
+
+</div>
+
+<script>
+function selectPkg(el, amt, name, desc) {
+  document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('payAmt').textContent = amt;
+  document.getElementById('payLabel').textContent = name + ' · ' + desc;
+  document.getElementById('qrAmt').textContent = amt;
+  document.getElementById('qrLabel').textContent = name;
+  document.getElementById('bankAmt').textContent = amt;
+}
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[onclick="switchTab(\''+tab+'\')"]').classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

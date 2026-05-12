@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About CJ Lim | Autism Pathways Consulting</title>
+<meta name="description" content="Meet CJ Lim, shadow aide, special needs practitioner, and founder of Autism Pathways Consulting. 10 years of direct field experience working with children and families in Malaysia." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #FDFAF5;
+    --warm-white: #FFFFFF;
+    --ink: #1C1C1C;
+    --ink-soft: #3D3D3D;
+    --ink-muted: #767676;
+    --teal: #2A7A6A;
+    --teal-light: #EAF4F1;
+    --teal-mid: #3D9B87;
+    --border: #E8E2D9;
+    --accent: #C4532A;
+    --accent-light: #FAF0EC;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .nav-brand {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--teal); }
+  .nav-links a.active { color: var(--teal); font-weight: 500; }
+
+  /* ── HERO BAND ── */
+  .hero-band {
+    background: var(--teal);
+    color: white;
+    text-align: center;
+    padding: 14px 24px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-band a {
+    color: white;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── PAGE WRAPPER ── */
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+
+  /* ── INTRO ── */
+  .intro-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .intro-photo-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 36px;
+    margin-bottom: 48px;
+  }
+
+  .photo-wrap {
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #4A90D9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .photo-placeholder {
+    font-size: 13px;
+    color: var(--teal);
+    text-align: center;
+    padding: 16px;
+    line-height: 1.5;
+  }
+
+  .intro-text h1 {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .intro-text .title-line {
+    font-size: 14px;
+    color: var(--teal-mid);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+  }
+
+  .intro-text p {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  /* ── CREDENTIAL PILLS ── */
+  .cred-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 32px 0 48px;
+  }
+
+  .cred-pill {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .cred-pill .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 52px;
+  }
+
+  .section h2 {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .section p {
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+
+  .section p:last-child { margin-bottom: 0; }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    border-left: 3px solid var(--teal);
+    padding: 16px 24px;
+    margin: 32px 0;
+    background: var(--teal-light);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .pull-quote p {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--teal);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── BELIEF LIST ── */
+  .belief-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .belief-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 16px;
+    color: var(--ink-soft);
+  }
+
+  .belief-list .check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    border: 1.5px solid var(--teal-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .belief-list .check::after {
+    content: '';
+    width: 6px;
+    height: 10px;
+    border-right: 2px solid var(--teal);
+    border-bottom: 2px solid var(--teal);
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 52px 0;
+  }
+
+  /* ── WHO I WORK WITH ── */
+  .audience-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .audience-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .audience-card .aud-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .audience-card p {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* ── CTA BOX ── */
+  .cta-box {
+    background: var(--teal);
+    border-radius: 14px;
+    padding: 36px 40px;
+    text-align: center;
+    margin-top: 56px;
+  }
+
+  .cta-box h3 {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 10px;
+  }
+
+  .cta-box p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 24px;
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: white;
+    color: var(--teal);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+
+  .btn-outline {
+    display: inline-block;
+    background: transparent;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: border-color 0.2s;
+  }
+
+  .btn-outline:hover { border-color: white; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-brand {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--teal);
+    text-decoration: none;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover { color: var(--teal); }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--ink-muted);
+    width: 100%;
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .disclaimer {
+    font-size: 12px;
+    color: var(--ink-muted);
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 48px;
+    line-height: 1.6;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .intro-photo-row { flex-direction: column; align-items: center; text-align: center; }
+    .intro-text h1 { font-size: 26px; }
+    .audience-grid { grid-template-columns: 1fr; }
+    .cta-box { padding: 28px 24px; }
+    .nav-links { display: none; }
+    .footer-inner { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-brand">Autism Pathways Consulting</a>
+  <ul class="nav-links">
+    <li><a href="/">Free Guide</a></li>
+    <li><a href="/about.html" class="active">About</a></li>
+    <li><a href="/services.html">Work With Me</a></li>
+    <li><a href="https://calendly.com/cjlim-autismpathwaysconsulting/parent-coaching-session" target="_blank" rel="noopener" class="nav-cta">Book a session</a></li>
+  </ul>
+</nav>
+
+<!-- HERO BAND -->
+<div class="hero-band">
+  New to this? Start with the free guide for Malaysian parents. <a href="/">Get it here →</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page">
+
+  <span class="intro-label">About</span>
+
+  <!-- PHOTO + INTRO -->
+  <div class="intro-photo-row">
+    <div class="photo-wrap">
+      <img src="cj-photo.JPG" alt="CJ Lim" />
+    </div>
+    <div class="intro-text">
+      <h1>CJ Lim</h1>
+      <p class="title-line">Shadow Aide · Special Needs Practitioner · Founder, APC</p>
+      <p>I've spent the last 10 years working directly with children on the spectrum, in classrooms, in therapy rooms, and in living rooms with families who didn't know where to start. My work has taken children from non-verbal to verbal, from home into school, and from daily meltdowns to genuine stability.</p>
+    </div>
+  </div>
+
+  <!-- CREDENTIALS -->
+  <div class="cred-row">
+    <div class="cred-pill"><span class="dot"></span> MA Special and Inclusive Education, University of Nottingham Malaysia</div>
+    <div class="cred-pill"><span class="dot"></span> Hanen Certified: ABC and Beyond, SPARK Communication, Learning Language and Loving It</div>
+    <div class="cred-pill"><span class="dot"></span> 10 Years as Shadow Aide and Practitioner</div>
+    <div class="cred-pill"><span class="dot"></span> Working with Families in Petaling Jaya and Kuala Lumpur</div>
+  </div>
+
+  <!-- MY STORY -->
+  <div class="section">
+    <h2>My story</h2>
+    <p>I didn't start out planning to build a consultancy. I started as a shadow aide, sitting beside children in classrooms, interpreting what their behaviour was really saying, and bridging the gap between what a child needed and what the adults around them understood.</p>
+    <p>Over a decade, I worked with families across the full range: children newly diagnosed who had no idea what came next, non-verbal children who needed a pathway to communication, students attending international schools who needed home-based support to bridge what was happening in the classroom, and families navigating the transition from home into a school setting for the first time.</p>
+    <p>I've worked on feeding challenges, behaviour that looked defiant but was actually sensory or communicative, and the kind of day-to-day overwhelm that parents carry alone because they don't know who to ask.</p>
+    <p>What I kept seeing, in every setting, was the same gap. Parents and schools both wanted to help. But they were speaking different languages, working from different assumptions, and neither side had a clear map.</p>
+
+    <div class="pull-quote">
+      <p>"Behaviour is communication. Once you understand that one principle, everything else changes: your response, your relationship, and your results."</p>
+    </div>
+
+    <p>That's why I founded Autism Pathways Consulting. Not to add another layer of theory, but to give parents and schools a practical pathway built from real hours in real classrooms, not textbook case studies.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- WHAT I BELIEVE -->
+  <div class="section">
+    <h2>What I believe</h2>
+    <ul class="belief-list">
+      <li>
+        <span class="check"></span>
+        <span>Every child has the right to learn. Every child has potential. The job is finding the right method for that specific child.</span>
+      </li>
+      <li>
+        <span class="check"></span>
+        <span>Behaviour is communication. Before trying to change a behaviour, understand what it is saying.</span>
+      </li>
+      <li>
+        <span class="check"></span>
+        <span>Parents are the single biggest factor in a child's progress. When parents are equipped and consistent, children move faster than any intervention alone can produce.</span>
+      </li>
+      <li>
+        <span class="check"></span>
+        <span>Schools don't fail children on purpose. They fail them when they don't have the right tools or training.</span>
+      </li>
+      <li>
+        <span class="check"></span>
+        <span>Early action is not about rushing a diagnosis. It's about building support while you wait for one.</span>
+      </li>
+    </ul>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- WHO I WORK WITH -->
+  <div class="section">
+    <h2>Who I work with</h2>
+    <p>My work sits at the intersection of two groups who both need support, but rarely get it at the same time.</p>
+    <div class="audience-grid">
+      <div class="audience-card">
+        <span class="aud-label">Parents</span>
+        <p>Families navigating an autism diagnosis or suspected diagnosis in Malaysia, who need a clear, practical path through a confusing system.</p>
+      </div>
+      <div class="audience-card">
+        <span class="aud-label">Schools &amp; Educators</span>
+        <p>International school staff, learning support coordinators, shadow aides, and teachers who want evidence-based strategies they can use in the classroom today.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- MY APPROACH -->
+  <div class="section">
+    <h2>My approach</h2>
+    <p>At the core of everything I do is one belief: every child has the right to learn, and every child has potential. Progress with autism often takes more time and more effort than it does for neurotypical children, and that reality deserves honesty, not glossing over. But given the right method, the right environment, and the right support around them, children move forward.</p>
+    <p>Over 10 years of direct practice, I've worked across a range of approaches, from structured strategies to naturalistic and communication-based methods. I hold Hanen certifications in ABC and Beyond, SPARK Communication, and Learning Language and Loving It. I've also worked closely alongside speech therapists and occupational therapists, and I draw on those partnerships in how I observe, plan, and support across communication and sensory needs, including feeding.</p>
+    <p>On behaviour, my position is clear: behaviour is communication first. Before looking for ways to change or eliminate a behaviour, I look for what it is telling us. This means getting to the root cause rather than managing surface symptoms. In my experience, that shift in framing produces more durable change and far less distress for the child.</p>
+    <p>My practice leans naturalistic. I work within the child's real environment, using everyday moments as opportunities for learning rather than pulling development into a separate clinical space. Progress built in the context of real life tends to stick in ways that isolated drills don't.</p>
+    <p>And above all: parents are the single biggest factor in a child's progress. Not the therapist, not the school, not the programme. The parent who understands what their child needs and knows how to respond consistently at home is more powerful than any intervention. My job is to put that understanding and those tools in your hands.</p>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    The information shared through Autism Pathways Consulting reflects personal experience and professional knowledge. It is not a substitute for medical advice, clinical diagnosis, or formal psychological assessment. For diagnosis, please consult a licensed doctor or clinical psychologist.
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h3>Ready to take the next step?</h3>
+    <p>Whether you're a parent who doesn't know where to start, or a school looking for practical staff training, there's a pathway for you.</p>
+    <div class="cta-row">
+      <a href="/" class="btn-primary">Get the free parent guide</a>
+      <a href="/services.html" class="btn-outline">See how to work with me</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">Autism Pathways Consulting</a>
+    <ul class="footer-links">
+      <li><a href="/">Free Guide</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/services.html">Work With Me</a></li>
+    </ul>
+    <p class="footer-copy">© 2026 Autism Pathways Consulting · Kuala Lumpur, Malaysia</p>
+  </div>
+</footer>
+
+</body>
+</html>
