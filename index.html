@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="manifest" href="/manifest.webmanifest" />
-<meta name="theme-color" content="#0f766e" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content="APC Calm" />
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Autism Pathways Consulting | CJ Lim</title>
@@ -74,6 +70,35 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,.97);backdrop-
 .hv-icon{font-size:22px;flex-shrink:0}
 .hv-text strong{display:block;font-size:14px;font-weight:800}
 .hv-text span{font-size:12px;color:var(--muted)}
+
+
+
+/* ── FREE TOOL + INSTALL GUIDE ── */
+.tool-section{background:linear-gradient(135deg,#f0faf9 0%,#fff 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:36px;display:grid;grid-template-columns:1.05fr .95fr;gap:32px;align-items:center;box-shadow:0 10px 30px rgba(42,157,143,.08)}
+@media(max-width:760px){.tool-card{grid-template-columns:1fr;padding:24px}}
+.tool-eyebrow{font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.tool-card h2{font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,3.4vw,2.4rem);line-height:1.18;margin-bottom:12px}
+.tool-card p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:18px}
+.tool-benefits{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0 26px}
+@media(max-width:460px){.tool-benefits{grid-template-columns:1fr}}
+.tool-benefit{background:var(--teal-l);color:var(--text);border:1px solid rgba(42,157,143,.18);border-radius:12px;padding:11px 13px;font-size:13px;font-weight:700}
+.tool-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.tool-open{background:linear-gradient(135deg,#0f766e,#3b82c4);color:#fff;padding:16px 28px;border-radius:24px;font-size:15px;font-weight:900;display:inline-block;box-shadow:0 12px 26px rgba(15,118,110,.22)}
+.tool-install-link{color:#0f766e;font-weight:900;text-decoration:underline;text-underline-offset:5px;font-size:15px}
+.tool-phone{background:#111827;color:#fff;border-radius:22px;padding:26px;border:1px solid rgba(255,255,255,.1)}
+.tool-phone h3{font-family:'DM Serif Display',serif;font-size:1.35rem;margin-bottom:10px;color:#fff}
+.tool-phone ul{list-style:none;margin-top:16px;display:grid;gap:11px}
+.tool-phone li{font-size:14px;color:#d1d5db;display:flex;gap:9px;align-items:flex-start}
+.tool-note{margin-top:18px;font-size:13px;color:#6b7280}
+.install-section{background:var(--bg)}
+.install-intro{max-width:700px;color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:28px}
+.install-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:680px){.install-grid{grid-template-columns:1fr}}
+.install-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px}
+.install-card h3{font-size:1.1rem;margin-bottom:12px;color:var(--teal);font-weight:900}
+.install-card ol{padding-left:20px;color:var(--muted);font-size:14px;line-height:1.9}
+.install-card li strong{color:var(--text)}
 
 /* ── GUIDE SECTION ── */
 .guide-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
@@ -217,12 +242,11 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   .nav-logo{font-size:15px}
 }
 
-/* APC Calm Companion CTA mobile layout */
-@media(max-width:760px){
-  #apc-calm-companion{padding:48px 16px!important;}
-  #apc-calm-companion > div > div{grid-template-columns:1fr!important;padding:28px 20px!important;gap:28px!important;}
-  #apc-calm-companion a{width:100%;text-align:center;justify-content:center;}
-}
+/* Homepage free tool section: compact by design */
+.compact-tool-card{grid-template-columns:1.2fr .8fr;padding:30px}
+.compact-tool-phone{padding:22px}
+.compact-tool-phone ul{gap:9px}
+@media(max-width:760px){.compact-tool-card{grid-template-columns:1fr;padding:22px}.compact-tool-phone{display:none}}
 
 </style>
 </head>
@@ -237,7 +261,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       <a href="index.html">Home</a>
       <a href="about.html">About CJ</a>
       <a href="services.html">Services</a>
-      <a href="#apc-calm-companion">Free Tool</a>
+      <a href="free-tool.html">Free Tool</a>
       <a href="pay.html" class="nav-cta">Book a session</a>
     </div>
   </div>
@@ -299,47 +323,31 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   </div>
 </div>
 
-<!-- APC Calm Companion CTA -->
-<section id="apc-calm-companion" aria-label="APC Calm Companion free parent tool" style="padding:80px 20px;background:#f7fbfa;">
-  <div style="max-width:1100px;margin:0 auto;">
-    <div style="background:white;border:1px solid #d9ece8;border-radius:32px;padding:50px 40px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,0.04);">
+
+
+<!-- COMPACT FREE TOOL SECTION -->
+<section id="free-tool" class="tool-section">
+  <div class="wrap section">
+    <div class="tool-card compact-tool-card">
       <div>
-        <div style="display:inline-flex;align-items:center;gap:10px;background:#e8f7f4;color:#147a73;padding:10px 18px;border-radius:999px;font-weight:700;margin-bottom:24px;">✨ Free Parent Tool</div>
-        <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;margin-bottom:24px;color:#132238;">Try the APC Calm Companion</h2>
-        <p style="font-size:1.15rem;line-height:1.8;color:#4a5568;margin-bottom:32px;max-width:680px;">
-          A practical calm support companion designed for autism families during meltdowns, transitions, routines, sensory overwhelm, aggression, communication breakdowns, and difficult moments.
-        </p>
-        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:30px;">
-          <div style="background:#f5faf9;padding:12px 16px;border-radius:16px;font-weight:600;color:#2d3748;">✅ Visual routines</div>
-          <div style="background:#f5faf9;padding:12px 16px;border-radius:16px;font-weight:600;color:#2d3748;">✅ Calm down tools</div>
-          <div style="background:#f5faf9;padding:12px 16px;border-radius:16px;font-weight:600;color:#2d3748;">✅ Parent scripts</div>
-          <div style="background:#f5faf9;padding:12px 16px;border-radius:16px;font-weight:600;color:#2d3748;">✅ Communication support</div>
+        <div class="tool-eyebrow">Free parent resource</div>
+        <h2>Need support between sessions?</h2>
+        <p>The APC Calm Companion is a free parent-friendly tool for routines, communication, emotional regulation, and difficult moments.</p>
+        <div class="tool-actions">
+          <a class="tool-open" href="https://apc-calm-companion.pages.dev" target="_blank" rel="noopener">Open Free Tool</a>
+          <a class="tool-install-link" href="free-tool.html">How to install →</a>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;">
-          <a href="https://apc-calm-companion.pages.dev/" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(135deg,#12756f,#1589d1);color:white;padding:18px 32px;border-radius:18px;text-decoration:none;font-weight:700;font-size:1.05rem;box-shadow:0 10px 20px rgba(21,137,209,0.18);">Open Free Tool</a>
-          <a href="https://apc-calm-companion.pages.dev/" target="_blank" rel="noopener noreferrer" style="color:#147a73;font-weight:800;text-decoration:underline;text-underline-offset:4px;">Install on phone →</a>
-          <div style="color:#5b6472;font-size:0.95rem;line-height:1.6;">📱 Installable on iPhone & Android<br>No download required</div>
-        </div>
+        <div class="tool-note">The free tool supports parents with practical educational strategies. It does not replace medical, therapy, diagnostic, or crisis services.</div>
       </div>
-      <div>
-        <div style="background:linear-gradient(180deg,#f9fcfb,#eef7f6);border:1px solid #dceeea;border-radius:30px;padding:30px;">
-          <img src="https://apc-calm-companion.pages.dev/cj-photo.JPG" alt="CJ Lim from Autism Pathways Consulting" style="width:110px;height:110px;object-fit:cover;border-radius:28px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,0.08);">
-          <h3 style="font-size:2rem;color:#132238;margin-bottom:18px;">APC Calm Companion</h3>
-          <p style="color:#526071;line-height:1.8;margin-bottom:24px;">
-            I’ll guide you step-by-step during difficult moments and help you know what to say, what to do, and which support tool to use next.
-          </p>
-          <div style="display:grid;gap:14px;">
-            <div style="background:white;border-radius:18px;padding:16px;font-weight:600;color:#1f2937;">🌬️ Guided calm breathing</div>
-            <div style="background:white;border-radius:18px;padding:16px;font-weight:600;color:#1f2937;">⏳ Visual timers & routines</div>
-            <div style="background:white;border-radius:18px;padding:16px;font-weight:600;color:#1f2937;">💬 AAC communication support</div>
-            <div style="background:white;border-radius:18px;padding:16px;font-weight:600;color:#1f2937;">❤️ Parent reassurance & scripts</div>
-          </div>
-        </div>
+      <div class="tool-phone compact-tool-phone">
+        <h3>Quick support when you need it</h3>
+        <ul>
+          <li>🫁 <span>Calm-down support</span></li>
+          <li>⏳ <span>Routines and transitions</span></li>
+          <li>💬 <span>Communication prompts</span></li>
+        </ul>
       </div>
     </div>
-    <p style="max-width:900px;margin:18px auto 0;text-align:center;color:#6b7280;font-size:13px;line-height:1.6;">
-      APC Calm Companion provides educational support tools only. It is not medical advice, diagnosis, therapy, or crisis intervention.
-    </p>
   </div>
 </section>
 
@@ -354,7 +362,6 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <div class="btns">
           <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-main">Book free discovery call</a>
           <a href="services.html" class="btn-ghost">View services</a>
-          <a href="#apc-calm-companion" class="btn-ghost">Try free calm tool</a>
         </div>
       </div>
       <div class="hero-visual">
@@ -639,7 +646,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       <a href="services.html">Services</a>
       <a href="pay.html">Book and Pay</a>
       <a href="index.html#guide-section" onclick="showPanel('guide')">Free Guide</a>
-      <a href="https://apc-calm-companion.pages.dev/" target="_blank">Free APC Calm Companion</a>
+      <a href="free-tool.html">Free Tool</a>
       <a href="privacy.html">Privacy Policy</a>
       <a href="disclaimer.html">Disclaimer</a>
       <a href="terms.html">Terms &amp; Conditions</a>
