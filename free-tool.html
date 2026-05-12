@@ -23,9 +23,9 @@ a{color:inherit;text-decoration:none}
 
 /* ── NAV ── */
 nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 20px}
-.nav-in{max-width:980px;margin:0 auto;display:flex;align-items:center;height:58px;gap:20px}
+.nav-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;height:58px;gap:18px}
 .nav-logo{font-family:'DM Serif Display',serif;font-size:17px;color:var(--teal);font-weight:600}
-.nav-links{display:flex;gap:18px;margin-left:auto;font-size:14px;font-weight:700;color:var(--muted)}
+.nav-links{display:flex;gap:16px;margin-left:auto;font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap}
 .nav-links a:hover{color:var(--teal)}
 .nav-cta{background:var(--teal);color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:.02em;transition:background .2s}
 .nav-cta:hover{background:var(--teal-d)!important}
@@ -47,7 +47,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,.97);backdrop-
 
 /* ── SHARED LAYOUT ── */
 .wrap{max-width:980px;margin:0 auto;padding:0 20px}
-.section{padding:64px 0}
+.section{padding:52px 0}
 .section-tag{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:10px;margin-top:4px}
 .section-title{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,3.5vw,2.2rem);line-height:1.25;margin-bottom:16px}
 .section-body{color:var(--muted);font-size:15px;max-width:560px}
@@ -92,13 +92,23 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,.97);backdrop-
 .tool-phone li{font-size:14px;color:#d1d5db;display:flex;gap:9px;align-items:flex-start}
 .tool-note{margin-top:18px;font-size:13px;color:#6b7280}
 .install-section{background:var(--bg)}
+.install-section .section{padding-top:42px;padding-bottom:42px}
+.install-section .section-title{margin-bottom:10px}
+.install-section .section-body{max-width:700px}
 .install-intro{max-width:700px;color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:28px}
-.install-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.install-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:22px}
 @media(max-width:680px){.install-grid{grid-template-columns:1fr}}
-.install-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px}
+.install-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px}
 .install-card h3{font-size:1.1rem;margin-bottom:12px;color:var(--teal);font-weight:900}
-.install-card ol{padding-left:20px;color:var(--muted);font-size:14px;line-height:1.9}
+.install-card ol{padding-left:20px;color:var(--muted);font-size:14px;line-height:1.75}
 .install-card li strong{color:var(--text)}
+
+
+.free-tool-next-step{margin-top:34px;background:linear-gradient(135deg,#f0faf9,#fff);border:1px solid rgba(42,157,143,.18);border-radius:20px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+.free-tool-next-step h2{font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,3vw,2rem);line-height:1.2;margin-bottom:6px}
+.free-tool-next-step p{color:var(--muted);font-size:14px;line-height:1.65;max-width:580px}
+.free-tool-next-step .btns{display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0}
+@media(max-width:760px){.free-tool-next-step{flex-direction:column;align-items:flex-start}.free-tool-next-step .btns{width:100%}.free-tool-next-step .btn-main,.free-tool-next-step .btn-ghost{text-align:center;width:100%}}
 
 /* ── GUIDE SECTION ── */
 .guide-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
@@ -333,16 +343,16 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
           </ol>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="wrap section">
-    <div class="cta-band">
-      <h2>Need more personalised guidance?</h2>
-      <p>The free tool is a helpful starting point. For support tailored to your child’s needs, start with a free discovery call.</p>
-      <div class="btns" style="justify-content:center">
-        <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-main">Book Free Discovery Call</a>
-        <a href="services.html" class="btn-ghost">View Services</a>
+      <div class="free-tool-next-step">
+        <div>
+          <h2>Need more personalised guidance?</h2>
+          <p>The free tool is a helpful starting point. For support tailored to your child’s needs, start with a free discovery call.</p>
+        </div>
+        <div class="btns">
+          <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-main">Book Free Discovery Call</a>
+          <a href="services.html" class="btn-ghost">View Services</a>
+        </div>
       </div>
     </div>
   </section>
