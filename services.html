@@ -339,7 +339,8 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 </div>
 </main>
 
-<script>(e) {
+<script>
+function submitSchoolForm(e) {
   e.preventDefault();
   const name = document.getElementById('sf-name').value;
   const school = document.getElementById('sf-school').value;
