@@ -686,18 +686,28 @@ statsObs.observe(document.getElementById('cnt-years'));
 function showPanel(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('show'));
   document.querySelectorAll('.pick-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
-  if (name !== 'guide') {
-    document.getElementById('panel-' + name).classList.add('show');
+
+  const guideSection = document.getElementById('panel-guide');
+  if (guideSection) {
+    guideSection.style.display = (name === 'parent' || name === 'educator') ? 'none' : 'block';
   }
+
+  if (name !== 'guide') {
+    document.getElementById('panel-' + name)?.classList.add('show');
+  }
+
   const btns = document.querySelectorAll('.pick-btn');
   const map = {parent:0, educator:1, guide:2};
   if (map[name] !== undefined) { btns[map[name]].classList.add('active'); btns[map[name]].setAttribute('aria-pressed','true'); }
+
   if (name === 'guide') {
     window.setTimeout(() => {
       document.getElementById('guide-section')?.scrollIntoView({behavior:'smooth', block:'start'});
     }, 80);
-  } else if (name !== 'default') {
-    document.getElementById('picker').scrollIntoView({behavior:'smooth', block:'start'});
+  } else if (name === 'parent' || name === 'educator') {
+    window.setTimeout(() => {
+      document.getElementById('panel-' + name)?.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 80);
   }
 }
 </script>
