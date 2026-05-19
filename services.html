@@ -120,6 +120,17 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-he
 
 @media(max-width:720px){.test-grid{grid-template-columns:1fr}}
 
+/* ── ONBOARDING STEPS ── */
+.onboarding-section{max-width:980px;margin:24px auto 32px;padding:0 20px}
+.onboard-intro{max-width:760px;margin:0 auto 24px;text-align:center;color:var(--muted);font-size:15px;line-height:1.7}
+.onboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.onboard-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 10px 24px rgba(42,157,143,.06);min-height:170px}
+.onboard-step{display:flex;align-items:flex-start;gap:14px}
+.onboard-step-num{width:38px;height:38px;background:var(--teal);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.onboard-step-content{flex:1}
+.onboard-step-content h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.onboard-step-content p{font-size:14px;color:var(--muted);line-height:1.7;margin:0}
+@media(max-width:720px){.onboard-grid{grid-template-columns:1fr}}
 
 /* Not sure */
 .unsure{background:var(--teal);color:#fff;border-radius:20px;padding:40px;text-align:center;margin-top:40px}
@@ -403,6 +414,68 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   </div>
 
   <p style="text-align:center;margin-top:10px;font-size:14px;color:var(--muted);max-width:760px;margin-left:auto;margin-right:auto;line-height:1.6">Programs are structured based on the level of support, implementation guidance, and family needs.</p>
+
+  <div class="onboarding-section" aria-label="What happens after you decide to start">
+    <h3 style="font-family:'DM Serif Display',serif;font-size:1.6rem;text-align:center;color:var(--text);margin-bottom:16px">What Happens After You Decide To Start</h3>
+    <p class="onboard-intro">If the Parent Support Program feels like the right fit after the discovery call, the next step is a simple onboarding process so support feels clear, calm, and structured from the beginning.</p>
+    <div class="onboard-grid">
+      <div class="onboard-card">
+        <div class="onboard-step">
+          <div class="onboard-step-num">1</div>
+          <div class="onboard-step-content">
+            <h4>Confirm Support Fit</h4>
+            <p>We confirm the support structure, focus areas, timeline, and whether the program feels manageable for your family right now.</p>
+          </div>
+        </div>
+      </div>
+      <div class="onboard-card">
+        <div class="onboard-step">
+          <div class="onboard-step-num">2</div>
+          <div class="onboard-step-content">
+            <h4>Complete Parent Intake</h4>
+            <p>You complete a short intake form so I can understand your child’s current needs, routines, communication, regulation patterns, and family priorities more clearly.</p>
+          </div>
+        </div>
+      </div>
+      <div class="onboard-card">
+        <div class="onboard-step">
+          <div class="onboard-step-num">3</div>
+          <div class="onboard-step-content">
+            <h4>Begin Week 1: Pattern Mapping</h4>
+            <p>We start by identifying what may be happening underneath the behaviour, including possible triggers, communication breakdowns, overwhelm patterns, and parent-child response cycles.</p>
+          </div>
+        </div>
+      </div>
+      <div class="onboard-card">
+        <div class="onboard-step">
+          <div class="onboard-step-num">4</div>
+          <div class="onboard-step-content">
+            <h4>Weekly Parent Support Sessions</h4>
+            <p>Each week, we focus on implementation, troubleshooting, and helping you know what to try, what to adjust, and what to observe next.</p>
+          </div>
+        </div>
+      </div>
+      <div class="onboard-card">
+        <div class="onboard-step">
+          <div class="onboard-step-num">5</div>
+          <div class="onboard-step-content">
+            <h4>WhatsApp Guidance Between Sessions</h4>
+            <p>You can check in between sessions for implementation questions, updates, and support when something feels unclear or difficult to apply at home.</p>
+          </div>
+        </div>
+      </div>
+      <div class="onboard-card">
+        <div class="onboard-step">
+          <div class="onboard-step-num">6</div>
+          <div class="onboard-step-content">
+            <h4>End-of-Program Summary</h4>
+            <p>At the end, you receive a structured summary of key patterns, strategies, recommendations, and next steps so you are not left guessing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="micro-trust" style="margin-top:24px">The goal is not to overwhelm parents with more information. The goal is to help families feel clearer, calmer, and more supported while implementing strategies at home.</p>
+  </div>
 
   <div style="text-align:center;margin-top:16px;margin-bottom:36px">
     <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-secondary" style="margin-right:10px">Start with a free discovery call</a>
