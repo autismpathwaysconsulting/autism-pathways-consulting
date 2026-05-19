@@ -120,6 +120,18 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-he
 
 @media(max-width:720px){.test-grid{grid-template-columns:1fr}}
 
+/* ── ADDITIONAL SUPPORT INCLUDED ── */
+.support-included{background:#f7fbfa;border:1px solid #d4e9e2;border-radius:18px;padding:28px;overflow:hidden;margin-top:24px}
+.support-included h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:18px;text-align:center;color:var(--text)}
+.support-item{margin-top:18px}
+.support-item:first-child{margin-top:0}
+.support-item h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px}
+.support-item p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.support-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.support-list li{position:relative;padding-left:18px;color:var(--muted);line-height:1.7;font-size:14px}
+.support-list li::before{content:'•';position:absolute;left:0;top:0;color:var(--teal);font-weight:700}
+@media(max-width:720px){.onboard-grid{grid-template-columns:1fr}}
+
 /* ── ONBOARDING STEPS ── */
 .onboarding-section{max-width:980px;margin:24px auto 32px;padding:0 20px}
 .onboard-intro{max-width:760px;margin:0 auto 24px;text-align:center;color:var(--muted);font-size:15px;line-height:1.7}
@@ -304,6 +316,40 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       <strong>Important note:</strong> This session is educational and supportive in nature. It does not replace medical, psychological, diagnostic, or emergency services. Recommendations are based on the information shared during the session.
     </div>
 
+    <div class="support-included">
+      <h3>Additional Support Included</h3>
+      <div class="support-item">
+        <h4>Guided Parent Interaction Reflection</h4>
+        <p>Parents may have the option to submit short home interaction videos between sessions.</p>
+        <p>This allows us to gently review:</p>
+        <ul class="support-list">
+          <li>communication pacing</li>
+          <li>regulation signals</li>
+          <li>interaction patterns</li>
+          <li>overwhelm moments</li>
+          <li>support opportunities</li>
+          <li>environmental triggers</li>
+        </ul>
+        <p>The goal is not to judge parenting, but to help parents notice patterns that are often difficult to see while managing everything in real time.</p>
+        <p>This helps support become more specific, practical, and personalized for the family over time.</p>
+      </div>
+      <div class="support-item">
+        <h4>Mini Parent Learning Moments</h4>
+        <p>Throughout the program, parents may also receive short guided explanations based on their child’s needs.</p>
+        <p>These may include:</p>
+        <ul class="support-list">
+          <li>communication support</li>
+          <li>emotional regulation</li>
+          <li>sensory overwhelm</li>
+          <li>transitions and rigidity</li>
+          <li>responsive interaction approaches</li>
+          <li>reducing escalation cycles</li>
+          <li>understanding behaviour underneath the behaviour</li>
+        </ul>
+        <p>The goal is not to overwhelm parents with theory, but to help families understand why certain approaches may help and how to apply them more consistently at home.</p>
+      </div>
+    </div>
+
     <!-- pricing moved below pattern-method to allow testimonial placement -->
   </div>
 
@@ -403,11 +449,13 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       <div class="price-amount">Structured Parent Support Programs<br><span style="font-size:0.95rem;font-weight:700;display:block;margin-top:6px">Starting from RM2,500</span></div>
       <div class="price-desc">Comprehensive support and guidance</div>
       <ul class="price-includes">
-        <li>Personalised assessment of your child's patterns and needs</li>
-        <li>Pattern-based understanding instead of generic advice</li>
-        <li>Practical strategies tailored to your family and child</li>
-        <li>Clarity on what's happening underneath the behaviour</li>
-        <li>Support for implementation and consistency</li>
+        <li>Weekly parent support sessions</li>
+        <li>WhatsApp guidance between sessions</li>
+        <li>APC Pattern Mapping Method™</li>
+        <li>Guided parent interaction reflection</li>
+        <li>Mini parent learning moments</li>
+        <li>Personalized implementation resources</li>
+        <li>End-of-program summary and next steps</li>
       </ul>
       <a href="https://preview.mailerlite.io/forms/2332936/187788223167071625/share" target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Apply for Support</a>
     </div>
