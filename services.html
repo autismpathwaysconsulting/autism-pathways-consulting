@@ -110,7 +110,9 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-he
 .helpful-if-item{background:#faf9f7;border-left:3px solid var(--teal);border-radius:8px;padding:14px 16px;font-size:14px;color:var(--text);line-height:1.5}
 
 /* ── HOW SUPPORT WORKS ── */
-.how-works-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:28px 0;max-width:900px;margin-left:auto;margin-right:auto}
+.how-works-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:28px 0;max-width:1100px;margin-left:auto;margin-right:auto}
+@media(max-width:900px){.how-works-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.how-works-steps{grid-template-columns:1fr}}
 .hw-step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
 .hw-step-num{font-size:32px;font-weight:700;color:var(--teal);margin-bottom:8px}
 .hw-step h4{font-size:13px;font-weight:700;color:var(--text);line-height:1.5}
@@ -273,7 +275,10 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <p>Complete the APC Parent Intake Form so CJ can recommend the right support option.</p>
       </div>
     </div>
-    <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-primary" style="margin-top:12px">Start with a free Discovery Call</a>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-primary">Start with a free Discovery Call</a>
+      <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20complete%20the%20APC%20Parent%20Intake%20Form%20for%20structured%20parent%20support." target="_blank" class="btn-primary" style="background:#fff;color:var(--teal);border:1.5px solid var(--teal)">Apply for support</a>
+    </div>
   </div>
 </div>
 
@@ -481,7 +486,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
     <p style="font-size:14px;color:var(--muted);max-width:760px;margin:0 auto 24px;line-height:1.7">The most suitable option is usually discussed after the free discovery call, so support can be matched to your family’s current needs.</p>
     <p style="font-size:14px;color:var(--muted);max-width:760px;margin:0 auto 0;line-height:1.7">Already had a Discovery Call? CJ may recommend a Progress Check Call if one focused follow-up is suitable. For concerns that need repeated guidance, strategy planning, implementation support, or WhatsApp guidance, the APC Parent Intake Form or a Parent Support Program is usually the better next step.</p>
   </div>
-  <div class="pricing-grid" style="max-width:980px;margin:0 auto 18px">
+  <div class="pricing-grid" style="max-width:980px;margin:32px auto 18px">
     <div class="price-card">
       <div class="price-name">APC Starter Support</div>
       <div class="price-amount">RM1,000</div>
@@ -495,7 +500,8 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <li>One simple support direction</li>
         <li>Option to continue into the full program</li>
       </ul>
-      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Start with a free discovery call</a>
+      <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20complete%20the%20APC%20Parent%20Intake%20Form%20for%20structured%20parent%20support." target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Apply for support</a>
+      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Not sure which option fits? Start with a free Discovery Call first.</div>
     </div>
     <div class="price-card featured">
       <div class="price-badge">Most Popular</div>
@@ -512,7 +518,8 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <li>Personalized implementation resources</li>
         <li>End-of-program summary and next steps</li>
       </ul>
-      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Start with a free discovery call</a>
+      <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20complete%20the%20APC%20Parent%20Intake%20Form%20for%20structured%20parent%20support." target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Apply for support</a>
+      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Not sure which option fits? Start with a free Discovery Call first.</div>
     </div>
     <div class="price-card">
       <div class="price-name">APC Complete Support</div>
@@ -529,7 +536,8 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <li>End-of-program summary</li>
         <li>30-day post-program check-in</li>
       </ul>
-      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Start with a free discovery call</a>
+      <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20complete%20the%20APC%20Parent%20Intake%20Form%20for%20structured%20parent%20support." target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Apply for support</a>
+      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Not sure which option fits? Start with a free Discovery Call first.</div>
     </div>
   </div>
 
