@@ -262,6 +262,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <h2 class="section-title">Wondering if your child might be autistic?</h2>
         <p style="color:var(--muted);font-size:15px;margin-bottom:12px">Get the free Malaysian Autism Parent Guide by email. It explains signs to watch for, what to say at Klinik Kesihatan, referral steps, therapy options, and how to choose therapists safely in Malaysia.</p>
         <p style="color:var(--muted);font-size:15px;margin-bottom:24px">You’ll also get access to APC Calm Companion, a free parent support tool for routines, communication, meltdowns, transitions, and difficult moments.</p>
+      <p style="color:var(--muted);font-size:15px;margin-bottom:24px">APC Calm Companion is a free web-based parent support tool. It is not live chat, medical advice, emergency support, or crisis intervention.</p>
         <div class="guide-steps">
           <div class="g-step">
             <div class="g-num">1</div>
@@ -409,6 +410,9 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <div class="tag">Get it free →</div>
       </div>
     </div>
+    <div style="text-align:center;margin:24px 0">
+      <a href="services.html" class="btn-main">Explore Parent Support Programs</a>
+    </div>
     <div class="help-box">
       <h3>This may help if your child…</h3>
       <p class="intro">Parents often come to APC when they know something is not working, but are not sure what their child needs or what to do next.</p>
@@ -477,12 +481,11 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   <div class="wrap section">
     <div class="hero-card">
       <div>
-        <div class="section-tag">For teachers and schools</div>
-        <h2>You care about this student. Let's give you the tools to help.</h2>
-        <p>CJ works with schools, learning centres, and kindergartens to help teams better understand autistic students and implement practical supports in real classroom environments.</p>
+        <div class="section-tag">School support enquiries</div>
+        <h2>For school, teacher, or learning centre support, please WhatsApp CJ directly.</h2>
+        <p>CJ can discuss what your school, classroom, or learning centre needs and help you identify the most practical next step.</p>
         <div class="btns">
-          <a href="schools.html" class="btn-main">Register interest</a>
-          <a href="https://wa.me/601172998168" class="btn-ghost">Ask CJ directly</a>
+          <a href="https://wa.me/601172998168" class="btn-main">WhatsApp CJ about school support</a>
         </div>
       </div>
       <div class="hero-visual">
@@ -541,11 +544,12 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
             <div style="background:white;border-radius:18px;padding:16px;font-weight:600;color:#1f2937;">💬 AAC communication support</div>
             <div style="background:white;border-radius:18px;padding:16px;font-weight:600;color:#1f2937;">❤️ Parent reassurance & scripts</div>
           </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:14px;line-height:1.7">AAC means communication support such as visuals, gestures, picture choices, or tools that help a child communicate even when speech is difficult.</p>
         </div>
       </div>
     </div>
     <p style="max-width:900px;margin:18px auto 0;text-align:center;color:#6b7280;font-size:13px;line-height:1.6;">
-      APC Calm Companion provides educational support tools only. It is not medical advice, diagnosis, therapy, or crisis intervention.
+      APC Calm Companion is a free web-based parent support tool. It is not live chat, medical advice, emergency support, or crisis intervention.
     </p>
   </div>
 </section>
@@ -566,7 +570,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   <div class="wrap">
     <div style="text-align:center;margin-bottom:8px" class="section-tag">Why parents and schools trust CJ</div>
     <div class="stats">
-      <div><div class="stat-num" id="cnt-years">0</div><div class="stat-label">Years working with autistic children</div></div>
+      <div><div class="stat-num">10+</div><div class="stat-label">Years working with autistic children</div></div>
       <div><div class="stat-num">3</div><div class="stat-label">Hanen certifications</div></div>
       <div><div class="stat-num">M.A.</div><div class="stat-label">Special and Inclusive Education, Nottingham</div></div>
     </div>
@@ -601,7 +605,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       </details>
       <details>
         <summary>Is the session in English?</summary>
-        <p>Yes, sessions are in English. If you need Malay or a mix, message CJ on WhatsApp first to discuss.</p>
+        <p>Sessions are conducted in English. Bahasa Malaysia can be accommodated on request.</p>
       </details>
       <details>
         <summary>Do sessions happen online or in person?</summary>
@@ -667,26 +671,6 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 </a>
 
 <script>
-// Animated counter
-function animateCount(el, target, duration) {
-  let start = 0, step = target / (duration / 16);
-  const timer = setInterval(() => {
-    start = Math.min(start + step, target);
-    el.textContent = Math.floor(start) + '+';
-    if (start >= target) clearInterval(timer);
-  }, 16);
-}
-// Run when stats come into view
-const statsObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      animateCount(document.getElementById('cnt-years'), 10, 1200);
-      statsObs.disconnect();
-    }
-  });
-});
-statsObs.observe(document.getElementById('cnt-years'));
-
 // Audience picker
 function showPanel(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('show'));
