@@ -117,21 +117,50 @@ nav{background:var(--teal);padding:0 24px}
 
 <div class="container">
 
-  <!-- STEP 1: SESSION -->
-  <div class="step-label">Step 1: APC Parent Support Program</div>
+  <!-- STEP 1: SUPPORT OPTIONS -->
+  <div class="step-label">Step 1: Choose the current support option</div>
+  <p style="font-size:14px;color:var(--muted);margin:12px 0 20px;line-height:1.7">Payment is usually arranged after a discovery call and parent intake form, so the support option matches the family’s current needs.</p>
   <div class="pkg-grid" id="pkgGrid">
 
-    <div class="pkg-card active" onclick="selectPkg(this,'RM 2,500','APC Parent Support Program','Comprehensive support and guidance')">
+    <div class="pkg-card" onclick="selectPkg(this,'RM 1,000','APC Starter Support','Focused starting support')">
+      <div class="pkg-top">
+        <div class="pkg-name">APC Starter Support</div>
+        <div><span class="pkg-price">RM1,000</span></div>
+      </div>
+      <div class="pkg-desc">30-day focused starting support for one priority concern.</div>
+      <ul class="pkg-includes">
+        <li>2 parent support sessions</li>
+        <li>Between-session WhatsApp guidance</li>
+        <li>Focused APC Pattern Mapping</li>
+        <li>One mini parent learning moment</li>
+      </ul>
+    </div>
+
+    <div class="pkg-card active" onclick="selectPkg(this,'RM 1,800','APC Parent Support Program','Main support option')">
       <div class="pkg-top">
         <div class="pkg-name">APC Parent Support Program</div>
+        <div><span class="pkg-price">RM1,800</span></div>
+      </div>
+      <div class="pkg-desc">4-week structured support for clearer patterns, practical strategies, and ongoing adjustment.</div>
+      <ul class="pkg-includes">
+        <li>4 parent support sessions</li>
+        <li>4 weeks WhatsApp guidance</li>
+        <li>APC Pattern Mapping Method™</li>
+        <li>Guided parent interaction reflection, if relevant</li>
+      </ul>
+    </div>
+
+    <div class="pkg-card" onclick="selectPkg(this,'RM 2,500','APC Complete Support','Deeper support')">
+      <div class="pkg-top">
+        <div class="pkg-name">APC Complete Support</div>
         <div><span class="pkg-price">RM2,500</span></div>
       </div>
-      <div class="pkg-desc">Comprehensive support and guidance to help you move from confusion toward understanding, structure, and calmer implementation.</div>
+      <div class="pkg-desc">6-week deeper support and follow-up for families needing more continuity.</div>
       <ul class="pkg-includes">
-        <li>Pattern-based understanding</li>
-        <li>Practical strategies for your family</li>
-        <li>Clarity on behaviour patterns</li>
-        <li>Implementation support</li>
+        <li>6 parent support sessions</li>
+        <li>6 weeks WhatsApp guidance</li>
+        <li>Deeper pattern mapping</li>
+        <li>30-day post-program check-in</li>
       </ul>
     </div>
 
@@ -149,8 +178,8 @@ nav{background:var(--teal);padding:0 24px}
   <div class="step-label">Step 3: Complete payment</div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px">
     <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Paying for:</div>
-    <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--teal)" id="payAmt">RM 350</div>
-    <div style="font-size:13px;color:var(--muted)" id="payLabel">1:1 Parent Support &amp; Strategy Session</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--teal)" id="payAmt">RM 1,800</div>
+    <div style="font-size:13px;color:var(--muted)" id="payLabel">APC Parent Support Program · Main support option</div>
   </div>
 
   <div class="method-tabs">
@@ -160,8 +189,8 @@ nav{background:var(--teal);padding:0 24px}
 
   <div id="panel-qr" class="panel active">
     <div class="qr-card">
-      <div class="qr-amount" id="qrAmt">RM 350</div>
-      <div class="qr-label" id="qrLabel">1:1 Parent Support &amp; Strategy Session</div>
+      <div class="qr-amount" id="qrAmt">RM 1,800</div>
+      <div class="qr-label" id="qrLabel">APC Parent Support Program</div>
       <div class="qr-img-wrap">
         <img src="QR_Payment.JPG" alt="DuitNow QR - CJ Special and Inclusive"/>
       </div>
@@ -181,7 +210,7 @@ nav{background:var(--teal);padding:0 24px}
           <span class="val">5648 7460 6832</span>
           <button class="copy-btn" onclick="copyText('564874606832',this)">Copy</button>
         </div>
-        <div class="bank-row"><span class="lbl">Amount</span><span class="val" id="bankAmt" style="color:var(--teal)">RM 350</span></div>
+        <div class="bank-row"><span class="lbl">Amount</span><span class="val" id="bankAmt" style="color:var(--teal)">RM 1,800</span></div>
         <div class="bank-row"><span class="lbl">Reference</span><span class="val">Your name + session</span></div>
       </div>
     </div>
