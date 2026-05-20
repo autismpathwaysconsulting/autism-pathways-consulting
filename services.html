@@ -99,6 +99,30 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-he
 .one-thing-notice h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:24px;color:var(--text)}
 .one-thing-notice p{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:12px;max-width:600px;margin-left:auto;margin-right:auto}
 
+/* ── PATHWAY CARDS ── */
+.pathway-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:32px 0;max-width:900px;margin-left:auto;margin-right:auto}
+.pathway-card{background:var(--card);border:1.5px solid var(--teal);border-radius:16px;padding:24px;text-align:center}
+.pathway-card h4{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:8px;color:var(--text)}
+.pathway-card p{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ── HELPFUL IF SECTION ── */
+.helpful-if-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:28px 0;max-width:900px;margin-left:auto;margin-right:auto}
+.helpful-if-item{background:#faf9f7;border-left:3px solid var(--teal);border-radius:8px;padding:14px 16px;font-size:14px;color:var(--text);line-height:1.5}
+
+/* ── HOW SUPPORT WORKS ── */
+.how-works-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:28px 0;max-width:900px;margin-left:auto;margin-right:auto}
+.hw-step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+.hw-step-num{font-size:32px;font-weight:700;color:var(--teal);margin-bottom:8px}
+.hw-step h4{font-size:13px;font-weight:700;color:var(--text);line-height:1.5}
+
+/* ── WHICH OPTION TABLE ── */
+.which-option-table{width:100%;margin:28px 0;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.which-option-table td{padding:16px;border-bottom:1px solid var(--border);font-size:14px}
+.which-option-table tr:last-child td{border-bottom:none}
+.which-option-table td:first-child{font-weight:600;color:var(--text);width:40%}
+.which-option-table td:last-child{color:var(--teal);font-weight:600}
+@media(max-width:600px){.which-option-table{font-size:13px}.which-option-table td{padding:12px}.which-option-table td:first-child{width:35%}}
+
 /* ── PATTERN MAPPING METHOD ── */
 .pattern-method{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:24px}
 .pattern-method h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:16px;text-align:center}
@@ -226,15 +250,71 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 
 <main>
 <div class="page-header">
-  <div class="hero-label">Work with CJ</div>
+  <div class="hero-label">Parent Support</div>
   <h1>Services</h1>
-  <p>Practical, evidence-based support for parents who want clearer understanding, calmer support strategies, and actionable next steps for autistic children.</p>
-</div>
-<div style="max-width:760px;margin:0 auto 36px;text-align:center">
-  <p style="font-size:14px;color:var(--muted);line-height:1.7">Parent-focused support for families in PJ, KL and Southeast Asia, grounded in practical autism-informed guidance.</p>
+  <p>Parent support for autism-related behaviour, communication, routines, and regulation. APC helps parents understand what may be happening underneath daily challenges, then build practical next steps for home, school, and family routines.</p>
 </div>
 
-<!-- WHAT PARENTS OFTEN FEEL -->
+<!-- QUICK PATHWAY SECTION -->
+<div style="background:var(--teal-l);padding:48px 20px;margin-bottom:48px">
+  <div style="max-width:900px;margin:0 auto;text-align:center">
+    <h2 style="font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:28px;color:var(--text)">What do you need right now?</h2>
+    <div class="pathway-grid">
+      <div class="pathway-card">
+        <h4>New to APC?</h4>
+        <p>Start with a free Discovery Call.</p>
+      </div>
+      <div class="pathway-card">
+        <h4>Already had a Discovery Call?</h4>
+        <p>CJ may recommend a Progress Check Call if one focused follow-up is suitable.</p>
+      </div>
+      <div class="pathway-card">
+        <h4>Need ongoing support?</h4>
+        <p>Complete the APC Parent Intake Form so CJ can recommend the right support option.</p>
+      </div>
+    </div>
+    <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-primary" style="margin-top:12px">Start with a free Discovery Call</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- APC MAY BE HELPFUL IF -->
+<div style="margin-bottom:48px">
+  <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;text-align:center;margin-bottom:24px;color:var(--text)">APC may be helpful if you are seeing</h2>
+  <div class="helpful-if-grid">
+    <div class="helpful-if-item">Meltdowns or shutdowns</div>
+    <div class="helpful-if-item">Communication breakdowns</div>
+    <div class="helpful-if-item">Struggles with transitions and routines</div>
+    <div class="helpful-if-item">School-related stress</div>
+    <div class="helpful-if-item">Emotional regulation challenges</div>
+    <div class="helpful-if-item">Behaviour that feels confusing</div>
+  </div>
+</div>
+
+<!-- HOW SUPPORT WORKS -->
+<div style="margin-bottom:48px">
+  <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;text-align:center;margin-bottom:24px;color:var(--text)">How Support Works</h2>
+  <div class="how-works-steps">
+    <div class="hw-step">
+      <div class="hw-step-num">1</div>
+      <h4>Start with a Discovery Call</h4>
+    </div>
+    <div class="hw-step">
+      <div class="hw-step-num">2</div>
+      <h4>Complete the Parent Intake Form</h4>
+    </div>
+    <div class="hw-step">
+      <div class="hw-step-num">3</div>
+      <h4>CJ reviews your situation</h4>
+    </div>
+    <div class="hw-step">
+      <div class="hw-step-num">4</div>
+      <h4>Begin structured parent support</h4>
+    </div>
+  </div>
+</div>
+
 <div class="parents-feel-section">
   <h2>What Parents Often Tell Me</h2>
   <div class="parents-feel-list">
@@ -245,6 +325,8 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
     <div class="pf-item">"I don't know if I'm doing this right."</div>
   </div>
   <p class="body-text">APC exists to help parents move from confusion and constant reacting toward understanding, structure, and calmer implementation.</p>
+</div>
+
 </div>
 
 <div class="container">
