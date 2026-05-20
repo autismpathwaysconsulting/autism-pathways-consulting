@@ -106,16 +106,19 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-he
 .pathway-card p{font-size:14px;color:var(--muted);line-height:1.6}
 
 /* ── HELPFUL IF SECTION ── */
-.helpful-if-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:28px 0;max-width:900px;margin-left:auto;margin-right:auto}
-.helpful-if-item{background:#faf9f7;border-left:3px solid var(--teal);border-radius:8px;padding:14px 16px;font-size:14px;color:var(--text);line-height:1.5}
+.helpful-if-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px auto 0;max-width:980px}
+.helpful-if-item{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 18px;font-size:15px;color:var(--text);line-height:1.45;text-align:left;box-shadow:0 8px 24px rgba(31,41,55,.04)}
+.helpful-if-item::before{content:"✓";flex:0 0 auto;color:var(--teal);font-weight:800;font-size:16px;line-height:1.3}
+@media(max-width:900px){.helpful-if-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.helpful-if-grid{grid-template-columns:1fr}.helpful-if-item{padding:16px}}
 
 /* ── HOW SUPPORT WORKS ── */
-.how-works-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:28px 0;max-width:1100px;margin-left:auto;margin-right:auto}
-@media(max-width:900px){.how-works-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:600px){.how-works-steps{grid-template-columns:1fr}}
-.hw-step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
-.hw-step-num{font-size:32px;font-weight:700;color:var(--teal);margin-bottom:8px}
-.hw-step h4{font-size:13px;font-weight:700;color:var(--text);line-height:1.5}
+.how-works-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:24px auto 0;max-width:1080px}
+@media(max-width:960px){.how-works-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.how-works-steps{grid-template-columns:1fr}}
+.hw-step{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px 18px;text-align:left;box-shadow:0 10px 28px rgba(31,41,55,.04);min-height:150px}
+.hw-step-num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:var(--teal-l);font-size:20px;font-weight:800;color:var(--teal);margin-bottom:18px}
+.hw-step h4{font-size:15px;font-weight:800;color:var(--text);line-height:1.45;margin:0}
 
 /* ── WHICH OPTION TABLE ── */
 .which-option-table{width:100%;margin:28px 0;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
@@ -286,7 +289,10 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 
 <!-- APC MAY BE HELPFUL IF -->
 <div style="margin-bottom:48px">
-  <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;text-align:center;margin-bottom:24px;color:var(--text)">APC may be helpful if you are seeing</h2>
+  <div style="text-align:center;max-width:760px;margin:0 auto 24px">
+    <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:10px;color:var(--text)">APC may be helpful if your child is experiencing</h2>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0">These are common signs that your family may need clearer pattern mapping and practical next steps.</p>
+  </div>
   <div class="helpful-if-grid">
     <div class="helpful-if-item">Meltdowns or shutdowns</div>
     <div class="helpful-if-item">Communication breakdowns</div>
@@ -299,7 +305,10 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 
 <!-- HOW SUPPORT WORKS -->
 <div style="margin-bottom:48px">
-  <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;text-align:center;margin-bottom:24px;color:var(--text)">How Support Works</h2>
+  <div style="text-align:center;max-width:760px;margin:0 auto 24px">
+    <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:10px;color:var(--text)">How Support Works</h2>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0">You do not need to know the right package first. Start with the pathway that fits your current stage.</p>
+  </div>
   <div class="how-works-steps">
     <div class="hw-step">
       <div class="hw-step-num">1</div>
