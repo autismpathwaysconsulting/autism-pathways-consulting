@@ -338,6 +338,315 @@ nav{background:var(--teal);padding:0 24px}
   }
 }
 
+
+/* APC Pay page polish */
+.payment-alert {
+  background: #fff7f0;
+  border: 1px solid #f2d2a2;
+  border-radius: 18px;
+  padding: 1.1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #6f4a1d;
+  line-height: 1.65;
+}
+
+.payment-alert strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #5f3f18;
+  font-size: 0.95rem;
+}
+
+.payment-alert p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.payment-intro {
+  margin: 0.75rem 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.paying-for-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.paying-for-label {
+  margin-bottom: 0.25rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.paying-for-amount {
+  color: var(--teal);
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  line-height: 1.15;
+}
+
+.paying-for-description {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.pay-bank-amount {
+  color: var(--teal);
+}
+
+.after-payment-note {
+  line-height: 1.65;
+}
+
+.after-payment-note strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+
+.after-payment-note p {
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+}
+
+.after-payment-note a {
+  color: var(--teal);
+  font-weight: 800;
+}
+
+.session-details-btn {
+  display: inline-block;
+  background: var(--teal);
+  color: #ffffff !important;
+  padding: 0.72rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+
+/* APC Pay package mobile polish */
+.pkg-card {
+  border-radius: 20px !important;
+  padding: 22px !important;
+}
+
+.pkg-card.active {
+  background: #f0faf8 !important;
+}
+
+.pkg-card .pkg-name {
+  font-size: 1rem !important;
+  line-height: 1.35 !important;
+}
+
+.pkg-card .pkg-price {
+  font-size: clamp(1.35rem, 4vw, 1.8rem) !important;
+  line-height: 1.1 !important;
+}
+
+.pkg-card ul {
+  gap: 10px 18px !important;
+}
+
+.pkg-card li {
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 680px) {
+  .pkg-card {
+    padding: 20px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .pkg-card > div:first-child {
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .pkg-card .pkg-price {
+    font-size: 1.55rem !important;
+    white-space: nowrap !important;
+  }
+
+  .pkg-card ul {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .pkg-card li {
+    font-size: 0.9rem !important;
+  }
+}
+
+
+/* APC Pay desktop layout polish */
+.pay-wrap,
+.container,
+main > .wrap {
+  max-width: 860px !important;
+}
+
+.pkg-card {
+  border-radius: 24px !important;
+  padding: 26px 28px !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 12px 34px rgba(31, 75, 71, 0.045) !important;
+}
+
+.pkg-card.active {
+  background: #f0faf8 !important;
+  border-color: rgba(31, 143, 131, 0.28) !important;
+}
+
+.pkg-card > div:first-child {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 24px !important;
+  margin-bottom: 18px !important;
+}
+
+.pkg-card .pkg-name {
+  font-size: 1.08rem !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.pkg-card .pkg-price {
+  font-size: clamp(1.45rem, 2.2vw, 1.8rem) !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+.pkg-card > p {
+  max-width: 680px !important;
+  margin-bottom: 20px !important;
+  line-height: 1.65 !important;
+}
+
+.pkg-card ul {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px 32px !important;
+  margin-top: 0 !important;
+}
+
+.pkg-card li {
+  line-height: 1.5 !important;
+  font-size: 0.92rem !important;
+}
+
+@media (max-width: 680px) {
+  .pay-wrap,
+  .container,
+  main > .wrap {
+    max-width: calc(100% - 28px) !important;
+  }
+
+  .pkg-card {
+    padding: 20px !important;
+  }
+
+  .pkg-card > div:first-child {
+    gap: 12px !important;
+  }
+
+  .pkg-card ul {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+}
+
+
+/* APC Pay confirmation-first flow */
+#confirm-before-paying {
+  scroll-margin-top: 90px;
+}
+
+#complete-payment {
+  scroll-margin-top: 90px;
+}
+
+.payment-alert {
+  background: #fff7f0;
+  border: 1px solid #f2d2a2;
+  border-radius: 18px;
+  padding: 1.1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #6f4a1d;
+  line-height: 1.65;
+}
+
+.payment-alert strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #5f3f18;
+  font-size: 0.95rem;
+}
+
+.payment-alert p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.payment-intro {
+  margin: 0.75rem 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+
+/* APC Pay step flow polish */
+#confirm-before-paying,
+#complete-payment,
+#send-receipt {
+  scroll-margin-top: 90px;
+}
+
+.after-payment-note {
+  margin-top: 1.1rem;
+  line-height: 1.65;
+}
+
+.after-payment-note .step-label {
+  margin-bottom: 0.75rem;
+}
+
+.after-payment-note p {
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+}
+
+.after-payment-note a {
+  color: var(--teal);
+  font-weight: 800;
+}
+
+
+/* APC Pay visible step labels fix */
+#confirm-before-paying,
+#complete-payment,
+#send-receipt {
+  scroll-margin-top: 90px;
+}
+
+.after-payment-note .step-label {
+  margin-bottom: 0.75rem;
+}
+
 </style>
 </head>
 <body>
@@ -350,13 +659,14 @@ nav{background:var(--teal);padding:0 24px}
 </nav>
 
 <div class="container">
-  <div style="background:#fff7f0;border:1px solid #f8d7a3;border-radius:14px;padding:18px;margin-bottom:24px;color:#7a4f1b;font-size:14px;line-height:1.7">
-    This page is only for families who have already completed the APC intake process and received confirmation from CJ. Please do not make payment before your support option, fee, and start date have been reviewed and confirmed. If you have not received confirmation from CJ yet, please message CJ before making payment.
+  <div class="payment-alert">
+    <strong>Please pay only after confirmation.</strong>
+    <p>This page is only for families who have already received confirmation from CJ. Please do not make payment until your support option, fee, and start date have been reviewed and confirmed.</p>
   </div>
 
   <!-- STEP 1: SUPPORT OPTIONS -->
   <div class="step-label">Step 1: Choose the current support option</div>
-  <p style="font-size:14px;color:var(--muted);margin:12px 0 20px;line-height:1.7">Payment is usually arranged after a discovery call and parent intake form, so the support option matches the family’s current needs.</p>
+  <p class="payment-intro">Please select only the support option CJ has confirmed for your family.</p>
   <div class="pkg-grid" id="pkgGrid">
 
     <div class="pkg-card" onclick="selectPkg(this,'RM 1,000','APC Quick Clarity','Clearer starting point')">
@@ -404,19 +714,19 @@ nav{background:var(--teal);padding:0 24px}
   </div>
 
   <!-- STEP 2: APPLY -->
-  <div class="step-label">Need confirmation first?</div>
+  <div class="step-label" id="confirm-before-paying">Step 2: Check your confirmed option</div>
   <div class="cal-box">
-    <p>APC Parent Support is offered by confirmation so each family receives thoughtful, personalised support matched to their specific situation. Please only make payment after CJ has confirmed your support option, fee, and next step.</p>
-    <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20am%20on%20the%20APC%20payment%20page%20and%20would%20like%20to%20confirm%20whether%20I%20should%20make%20payment." target="_blank" class="cal-btn">Message CJ before paying</a>
+    <p>Please continue only if this matches the support option, fee, and next step CJ has already confirmed with you. If anything looks different, message CJ before making payment.</p>
+    <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20am%20on%20the%20APC%20payment%20page%20and%20would%20like%20to%20confirm%20whether%20I%20should%20make%20payment." target="_blank" class="cal-btn">Message CJ if unsure</a>
     <p class="cal-note">After you apply, I'll review your circumstances and discuss whether this support option is the right fit.</p>
   </div>
 
   <!-- STEP 3: PAY -->
-  <div class="step-label">Step 3: Complete payment</div>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px">
-    <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Paying for:</div>
-    <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--teal)" id="payAmt">RM 1,800</div>
-    <div style="font-size:13px;color:var(--muted)" id="payLabel">APC Full Implementation · Structured implementation support</div>
+  <div class="step-label" id="complete-payment">Step 3: Complete payment</div>
+  <div class="paying-for-card">
+    <div class="paying-for-label">Paying for</div>
+    <div class="paying-for-amount" id="payAmt">RM 1,800</div>
+    <div class="paying-for-description" id="payLabel">APC Full Implementation · Structured implementation support</div>
   </div>
 
   <div class="method-tabs">
@@ -447,16 +757,17 @@ nav{background:var(--teal);padding:0 24px}
           <span class="val">5648 7460 6832</span>
           <button class="copy-btn" onclick="copyText('564874606832',this)">Copy</button>
         </div>
-        <div class="bank-row"><span class="lbl">Amount</span><span class="val" id="bankAmt" style="color:var(--teal)">RM 1,800</span></div>
+        <div class="bank-row"><span class="lbl">Amount</span><span class="val pay-bank-amount" id="bankAmt">RM 1,800</span></div>
         <div class="bank-row"><span class="lbl">Reference</span><span class="val">Your name + session</span></div>
       </div>
     </div>
   </div>
 
   <div class="notice-box">
-    <strong>After payment:</strong> Screenshot your receipt and WhatsApp it to CJ at <a href="https://wa.me/601172998168" style="color:var(--teal)">01172998168</a>. Your booking is confirmed once payment is received.
-    <div style="margin-top:14px">
-      <a href="booking-confirmed-session.html" style="display:inline-block;background:var(--teal);color:#fff;padding:11px 22px;border-radius:8px;font-weight:700;font-size:14px">View session details →</a>
+    <div class="after-payment-note" id="send-receipt">
+      <div class="step-label">Step 4: Send your receipt</div>
+      <p>Screenshot your payment receipt and send it to CJ at <a href="https://wa.me/601172998168">011-7299 8168</a>. Your booking is confirmed once payment is received.</p>
+      <a href="booking-confirmed-session.html" class="session-details-btn">View session details →</a>
     </div>
   </div>
 
@@ -484,7 +795,14 @@ function selectPkg(el, amt, name, desc) {
   document.getElementById('qrAmt').textContent = amt;
   document.getElementById('qrLabel').textContent = name;
   document.getElementById('bankAmt').textContent = amt;
+  const confirmSection = document.getElementById('confirm-before-paying');
+  if (confirmSection) {
+    setTimeout(() => {
+      confirmSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+  }
 }
+
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
