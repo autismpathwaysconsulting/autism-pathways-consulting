@@ -359,6 +359,163 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 </style>
 <!-- APC_CLARITY_CSS_END -->
 
+
+<style>
+/* APC simplified services page */
+.compact-section {
+  padding-top: clamp(3rem, 6vw, 5rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.hero-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.hero-content {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-subtitle {
+  max-width: 760px;
+  margin: 1rem auto 0;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.section-header {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.simple-list-card,
+.reassurance-card,
+.service-card,
+.step-card,
+.reassurance-box,
+.final-cta-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(31, 75, 71, 0.14);
+  border-radius: 24px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  box-shadow: 0 14px 36px rgba(31, 75, 71, 0.08);
+}
+
+.check-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.check-list li {
+  line-height: 1.55;
+}
+
+.two-column-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.cards-grid,
+.steps-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.three-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.steps-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.service-card,
+.step-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.featured-card {
+  border-color: rgba(31, 75, 71, 0.32);
+}
+
+.card-label,
+.eyebrow {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent, #52796f);
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  background: rgba(82, 121, 111, 0.12);
+  color: var(--accent, #52796f);
+  font-weight: 700;
+}
+
+.reassurance-box,
+.final-cta-card {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.final-cta-card {
+  background: var(--soft-bg, #f7f2ea);
+}
+
+.soft-section {
+  background: var(--soft-bg, #f7f2ea);
+}
+
+@media (max-width: 860px) {
+  .two-column-grid,
+  .three-cards,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn,
+  .final-cta-card .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .section-header,
+  .hero-content,
+  .reassurance-box,
+  .final-cta-card {
+    text-align: left;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -375,679 +532,160 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   </div>
 </nav>
 
+
 <main>
-<div class="page-header">
-  <div class="hero-label">Parent Support</div>
-  <h1>Services</h1>
-  <p>Parent support for autism-related behaviour, communication, routines, and regulation. APC helps parents understand what may be happening underneath daily challenges, then build practical next steps for home, school, and family routines.</p>
-</div>
-
-<!-- QUICK PATHWAY SECTION -->
-<div style="background:var(--teal-l);padding:48px 20px;margin-bottom:48px">
-  <div style="max-width:900px;margin:0 auto;text-align:center">
-    <h2 style="font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:28px;color:var(--text)">Not sure where to start?</h2>
-    <div class="pathway-grid">
-      <div class="pathway-card">
-        <h4>New to APC?</h4>
-        <p>Start with a Free Discovery Call.</p>
-      </div>
-      <div class="pathway-card">
-        <h4>Already had a Discovery Call?</h4>
-        <p>CJ may recommend a Progress Check Call if one focused follow-up is suitable.</p>
-        <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20already%20had%20an%20APC%20Discovery%20Call%20and%20would%20like%20to%20check%20whether%20a%20Progress%20Check%20Call%20is%20suitable." target="_blank" style="display:inline-block;margin-top:14px;font-size:13px;font-weight:800;color:var(--teal);text-decoration:underline;text-underline-offset:4px">Message CJ about a follow-up</a>
-      </div>
-      <div class="pathway-card">
-        <h4>Need ongoing support?</h4>
-        <p>Complete the APC Parent Intake Form so CJ can recommend the right support option.</p>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px">
-      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-primary">Start with a Free Discovery Call</a>
-      <a href="https://forms.gle/uHhYKgP6V3tuvtgm6" target="_blank" class="btn-primary" style="background:#fff;color:var(--teal);border:1.5px solid var(--teal)">Complete Parent Intake Form</a>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-
-<!-- APC MAY BE HELPFUL IF -->
-<div style="margin-bottom:48px">
-  <div style="text-align:center;max-width:760px;margin:0 auto 24px">
-    <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:10px;color:var(--text)">APC may be helpful if your child is experiencing</h2>
-    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0">These are common signs that your family may need clearer pattern mapping and practical next steps.</p>
-  </div>
-  <div class="helpful-if-grid">
-    <div class="helpful-if-item">Meltdowns or shutdowns</div>
-    <div class="helpful-if-item">Communication breakdowns</div>
-    <div class="helpful-if-item">Struggles with transitions and routines</div>
-    <div class="helpful-if-item">School-related stress</div>
-    <div class="helpful-if-item">Emotional regulation challenges</div>
-    <div class="helpful-if-item">Behaviour that feels confusing</div>
-  </div>
-</div>
-
-<!-- HOW SUPPORT WORKS -->
-<div style="margin-bottom:48px">
-  <div style="text-align:center;max-width:760px;margin:0 auto 24px">
-    <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:10px;color:var(--text)">How Support Works</h2>
-    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0">You do not need to know the right package first. Start with the pathway that fits your current stage.</p>
-  </div>
-  <div class="how-works-steps">
-    <div class="hw-step">
-      <div class="hw-step-num">1</div>
-      <h4>Choose your starting point</h4>
-    </div>
-    <div class="hw-step">
-      <div class="hw-step-num">2</div>
-      <h4>Discovery Call or Intake Form</h4>
-    </div>
-    <div class="hw-step">
-      <div class="hw-step-num">3</div>
-      <h4>CJ reviews your situation</h4>
-    </div>
-    <div class="hw-step">
-      <div class="hw-step-num">4</div>
-      <h4>Begin structured parent support</h4>
-    </div>
-  </div>
-</div>
-
-<div class="parents-feel-section">
-  <h2>What Parents Often Tell Me</h2>
-  <div class="parents-feel-list">
-    <div class="pf-item">"I feel like I'm constantly reacting, and I don't know if I'm helping or making it worse."</div>
-    <div class="pf-item">"Nobody explains WHY this is happening with my child."</div>
-    <div class="pf-item">"Everything I try works for a few days, then falls apart."</div>
-    <div class="pf-item">"I get advice everywhere, but it all feels generic."</div>
-    <div class="pf-item">"I don't know if I'm doing this right."</div>
-  </div>
-  <p class="body-text">APC exists to help parents move from confusion and constant reacting toward understanding, structure, and calmer implementation.</p>
-</div>
-
-</div>
-
-<div class="container">
-
-  <!-- PARENT SUPPORT PROGRAM -->
-  <div class="service-section">
-    <div class="svc-header">
-      <div class="svc-icon">👨&zwj;👩&zwj;👧</div>
-      <div class="svc-title">
-        <h2>APC Parent Support Program</h2>
-        <p>Ongoing support and partnership · Malaysia and Southeast Asia</p>
-      </div>
-    </div>
-
-    <p class="svc-intro">The APC Parent Support Program helps you move from confusion and constant reacting toward understanding, structure, and calmer implementation. Sessions are focused, practical, and evidence-informed, helping parents apply clearer strategies at home, in daily routines, and in school conversations.</p>
-    <div class="why-box">
-      <strong>What does Hanen mean?</strong> Hanen focuses on helping adults support children’s communication through everyday interaction. For parents, this means the support is practical, relationship-based, and focused on real home routines.
-      <br><br>
-      <strong>About APC</strong> Autism Pathways Consulting is a Malaysia-based parent education and support service. APC provides structured parent guidance, not medical diagnosis, therapy, or clinical assessment.
-    </div>
-
-    <div class="why-box">
-      <strong>Parent-focused session:</strong> APC support starts with the parent because parents are the ones managing the daily routines, transitions, communication breakdowns, and emotional moments at home. CJ does not need to meet your child first to begin helping you understand patterns and plan practical next steps. The session is based on the information you share, including your concerns, routines, examples from daily life, school feedback, therapy reports, and optional short video clips.
-    </div>
-
-    <div class="steps">
-      <div class="steps-label">What you can expect</div>
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>You share what is happening</h4>
-          <p>Tell CJ about your child’s current challenges, what you have tried, and what you are hoping to understand or improve.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>CJ helps you understand the possible why</h4>
-          <p>Behaviour, communication, and learning difficulties are explored through a practical, evidence-informed lens.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>You leave with actionable next steps</h4>
-          <p>You receive practical strategies and clearer direction that can be applied at home, in daily routines, or in school conversations.</p>
+  <section class="section hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <p class="eyebrow">Autism Pathways Consulting Services</p>
+        <h1>Parent support for when you are not sure what to do next</h1>
+        <p class="hero-subtitle">APC helps parents understand what may be happening behind their child’s behaviour, communication, regulation, routines, or learning challenges, then plan practical next steps.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book a Free Discovery Call</a>
+          <a class="btn btn-secondary" href="#parent-support-options">View Parent Support Options</a>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="why-box">
-      <strong>Important note:</strong> This session is educational and supportive in nature. It does not replace medical, psychological, diagnostic, or emergency services. Recommendations are based on the information shared during the session.
-    </div>
-
-    <div class="support-included">
-      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0">Additional support may include guided parent interaction reflection, short parent learning moments, WhatsApp guidance, and personalized implementation resources depending on your family’s needs.</p>
-    </div>
-
-    <!-- pricing moved below pattern-method to allow testimonial placement -->
-  </div>
-
-  <!-- HOW APC IS DIFFERENT -->
-  <div class="how-different">
-    <h3>How APC Is Different</h3>
-    <p class="how-different-intro">Therapy often focuses directly on the child during sessions.</p>
-        <p style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.7;font-weight:600">The key difference: APC focuses on helping parents become experts on their own child, rather than creating dependency on ongoing therapy.</p>
-
-    <p class="how-different-intro" style="margin-bottom:8px">APC focuses on helping parents:</p>
-    <ul class="how-different-list">
-      <li>Understand patterns underneath behaviour</li>
-      <li>Reduce overwhelm at home</li>
-      <li>Build clearer implementation systems</li>
-      <li>Adjust support strategies over time</li>
-      <li>Feel more confident and less alone</li>
-    </ul>
-    <div class="how-different-note">
-      APC does not replace therapy. It complements the day-to-day implementation side that many parents struggle with.
-    </div>
-  </div>
-
-  <!-- support planning process -->
-  <div class="pattern-method">
-    <h3>How APC plans parent support</h3>
-    <p class="pattern-method-intro">APC helps parents move beyond reacting to behaviour by looking at patterns across communication, regulation, routines, environment, and parent responses.</p>
-    <p class="pattern-method-intro" style="margin-bottom:28px">This is what APC identifies together:</p>
-    <div class="pattern-steps">
-      <div class="pstep">
-        <div class="pstep-num">1</div>
-        <div class="pstep-text"><strong>What triggers escalation or shutdown</strong></div>
+  <section class="section compact-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Who this is for</p>
+        <h2>Support for parents who want clarity without judgement</h2>
       </div>
-      <div class="pstep">
-        <div class="pstep-num">2</div>
-        <div class="pstep-text"><strong>What communication may be happening underneath the behaviour</strong></div>
-      </div>
-      <div class="pstep">
-        <div class="pstep-num">3</div>
-        <div class="pstep-text"><strong>What environmental changes reduce stress and overload</strong></div>
-      </div>
-      <div class="pstep">
-        <div class="pstep-num">4</div>
-        <div class="pstep-text"><strong>What sequence of support works best for THIS child</strong></div>
-      </div>
-      <div class="pstep">
-        <div class="pstep-num">5</div>
-        <div class="pstep-text"><strong>How to reduce parent-child power cycles over time</strong></div>
+
+      <div class="simple-list-card">
+        <ul class="check-list">
+          <li>You feel unsure what your child’s behaviour is communicating</li>
+          <li>You want practical guidance without blame or judgement</li>
+          <li>You need help seeing patterns at home, school, or daily routines</li>
+          <li>You want support that focuses on understanding, not fixing your child</li>
+        </ul>
       </div>
     </div>
-    <p style="text-align:center;margin-top:28px;font-size:14px;color:var(--muted);line-height:1.7">This becomes the foundation of the support plan, instead of relying on random strategies or generic advice.</p>
-  </div>
+  </section>
 
-  <!-- TESTIMONIALS -->
-  <div class="testimonials" aria-label="What parents have shared">
-      <div style="max-width:820px;margin:0 auto 24px;text-align:center">
-    <p style="font-size:14px;color:var(--muted);line-height:1.7;font-style:italic">Real parents share how APC helped them move from confusion to clarity.</p>
-  </div>
-
-    <h3 style="text-align:center;font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:18px;color:var(--text)">What Parents Have Shared</h3>
-    <div class="test-grid">
-      <div class="test-card">
-        <p class="quote">"For the first time, I felt like someone actually understood what was happening with my child."</p>
-        <div class="quote-attr">Parent Feedback</div>
-      </div>
-      <div class="test-card">
-        <p class="quote">"I came to APC after receiving very generic advice elsewhere. What helped most was finally understanding the patterns underneath the behaviour."</p>
-        <div class="quote-attr">Parent Feedback</div>
-      </div>
-      <div class="test-card">
-        <p class="quote">"The clarity helped me stop feeling constantly frustrated and overwhelmed."</p>
-        <div class="quote-attr">Discovery Call Parent</div>
-      </div>
-      <div class="test-card">
-        <p class="quote">"What I appreciated most was that the strategies felt realistic and manageable for our family."</p>
-        <div class="quote-attr">Parent Feedback</div>
-      </div>
-    </div>
-    <div class="micro-trust">Many parents who reach out to APC are not looking for more generic advice. They are looking for clearer understanding, calmer implementation, and support that feels specific to their child and family.</div>
-  </div>
-
-  <div class="service-section">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:16px;color:var(--text)">What happens in an APC parent support session?</h3>
-    <p class="svc-intro">APC sessions are online parent support sessions with CJ Lim. Each session is usually 60 minutes and focuses on helping you understand your child’s behaviour, communication, regulation, routines, or learning challenges more clearly.</p>
-    <p class="svc-intro">Sessions are conducted in English. Bahasa Malaysia can be accommodated on request.</p>
-    <p class="svc-intro">Your child does not need to attend the session. We begin by understanding what you are seeing at home or school, then we map possible patterns and decide on practical strategies you can try during the week.</p>
-    <p class="svc-intro">After the session, you will have a clearer idea of:</p>
-    <ul style="margin:0 0 16px 18px;color:var(--muted);font-size:14px;line-height:1.7">
-      <li>what may be happening underneath the behaviour</li>
-      <li>what to try next</li>
-      <li>what to observe</li>
-      <li>when to adjust the strategy</li>
-    </ul>
-    <p class="svc-intro">This is not therapy, diagnosis, or assessment. It is structured parent support to help you respond with more clarity and confidence. APC does not replace occupational therapy, speech therapy, psychology, medical care, or diagnostic assessment.</p>
-  </div>
-
-  <!-- PRICING (moved below testimonials) -->
-  <div style="max-width:820px;margin:18px auto 0;text-align:center">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:8px">Structured Parent Support Programs</h3>
-    <p style="font-size:1rem;color:var(--muted);margin-bottom:8px;font-weight:700">Starting from RM1,000</p>
-    <p style="font-size:14px;color:var(--muted);max-width:760px;margin:0 auto 24px;line-height:1.7">The most suitable option is usually confirmed after a Discovery Call or Parent Intake review, so support can be matched to your family’s current needs.</p>
-    <p style="font-size:14px;color:var(--muted);max-width:760px;margin:0 auto 0;line-height:1.7">Already had a Discovery Call? CJ may recommend a Progress Check Call if one focused follow-up is suitable. For concerns that need repeated guidance, strategy planning, implementation support, or WhatsApp guidance, the APC Parent Intake Form or a Parent Support Program is usually the better next step.</p>
-  </div>
-  <div class="pricing-grid" style="max-width:980px;margin:32px auto 18px">
-    <div class="price-card">
-      <div class="price-name">APC Starter Support</div>
-      <div class="price-amount">RM1,000</div>
-      <div class="price-desc">Focused starting support</div>
-      <div class="price-save" style="margin-bottom:10px">30-day focused starting support for one priority concern.</div>
-      <ul class="price-includes">
-        <li>2 parent support sessions</li>
-        <li>Between-session WhatsApp guidance</li>
-        <li>Focused pattern review</li>
-        <li>One mini parent learning moment</li>
-        <li>One simple support direction</li>
-        <li>Option to continue into the full program</li>
-      </ul>
-      <a href="https://forms.gle/uHhYKgP6V3tuvtgm6" target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Complete Parent Intake Form</a>
-      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Not sure which option fits? Start with a Free Discovery Call first.</div>
-    </div>
-    <div class="price-card featured">
-      <div class="price-badge">Most Popular</div>
-      <div class="price-name">APC Parent Support Program</div>
-      <div class="price-amount">RM1,800</div>
-      <div class="price-desc">Main support option</div>
-      <div class="price-save" style="margin-bottom:10px">4-week structured implementation support for families who want clearer patterns, practical strategies, and ongoing adjustment.</div>
-      <ul class="price-includes">
-        <li>4 parent support sessions</li>
-        <li>4 weeks WhatsApp guidance</li>
-        <li>Structured parent support process</li>
-        <li>Guided parent interaction reflection, if relevant</li>
-        <li>Mini parent learning moments</li>
-        <li>Personalized implementation resources</li>
-        <li>End-of-program summary and next steps</li>
-      </ul>
-      <a href="https://forms.gle/uHhYKgP6V3tuvtgm6" target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Complete Parent Intake Form</a>
-      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Not sure which option fits? Start with a Free Discovery Call first.</div>
-    </div>
-    <div class="price-card">
-      <div class="price-name">APC Complete Support</div>
-      <div class="price-amount">RM2,500</div>
-      <div class="price-desc">Deeper support</div>
-      <div class="price-save" style="margin-bottom:10px">6-week deeper support and follow-up for families needing more adjustment, guidance, and continuity.</div>
-      <ul class="price-includes">
-        <li>6 parent support sessions</li>
-        <li>6 weeks WhatsApp guidance</li>
-        <li>Deeper pattern mapping</li>
-        <li>Guided parent interaction reflection</li>
-        <li>Mini parent learning moments</li>
-        <li>Personalized implementation resources</li>
-        <li>End-of-program summary</li>
-        <li>30-day post-program check-in</li>
-      </ul>
-      <a href="https://forms.gle/uHhYKgP6V3tuvtgm6" target="_blank" style="display:block;margin-top:14px;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:700">Complete Parent Intake Form</a>
-      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Not sure which option fits? Start with a Free Discovery Call first.</div>
-    </div>
-  </div>
-
-  <p style="text-align:center;margin-top:10px;font-size:14px;color:var(--muted);max-width:760px;margin-left:auto;margin-right:auto;line-height:1.6">Payment is arranged only after CJ reviews your intake and confirms the most suitable support option. Instalments may be available for longer support options.</p>
-
-  <div style="max-width:820px;margin:28px auto 0;text-align:center;background:#f0faf9;border:1px solid #d4efeb;border-radius:16px;padding:28px 32px">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--text);margin-bottom:12px">Flexible Payment Options</h3>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.7">Can't do lump sum right now? We understand.</p>
-    <ul style="font-size:14px;color:var(--muted);list-style:none;padding:0;text-align:left;max-width:500px;margin:0 auto">
-      <li style="margin-bottom:10px">✓ 2-payment plan available (50% at booking, 50% at first session)</li>
-      <li style="margin-bottom:10px">✓ Custom payment arrangements for longer programs</li>
-      <li>✓ Message CJ to discuss what works for your family</li>
-    </ul>
-    <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I'd%20like%20to%20discuss%20payment%20options%20for%20the%20APC%20programs." target="_blank" style="display:inline-block;margin-top:16px;background:var(--teal);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none">Message CJ About Payment Options</a>
-  </div>
-
-  <div class="onboarding-section" aria-label="What happens after you decide to start">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.6rem;text-align:center;color:var(--text);margin-bottom:16px">What Happens After You Decide To Start</h3>
-    <p class="onboard-intro">If a Parent Support Program feels like the right fit after a Discovery Call or Parent Intake review, the next step is a simple onboarding process so support feels clear, calm, and structured from the beginning.</p>
-    <div class="onboard-grid">
-      <div class="onboard-card">
-        <div class="onboard-step">
-          <div class="onboard-step-num">1</div>
-          <div class="onboard-step-content">
-            <h4>Confirm Support Fit</h4>
-            <p>We check the right support level, focus areas, timeline, and whether this feels manageable for your family.</p>
-          </div>
+  <section class="section compact-section soft-section">
+    <div class="container">
+      <div class="two-column-grid">
+        <div>
+          <p class="eyebrow">Start here</p>
+          <h2>Free Discovery Call</h2>
+          <p>The free Discovery Call is a 15-minute clarity and fit check. It is not a full consultation or behaviour plan.</p>
+          <p>You will leave with one useful reframe, one initial direction, and one recommended next step.</p>
+          <p><strong>Each family receives one free Discovery Call.</strong></p>
+          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free Discovery Call</a>
         </div>
-      </div>
-      <div class="onboard-card">
-        <div class="onboard-step">
-          <div class="onboard-step-num">2</div>
-          <div class="onboard-step-content">
-            <h4>Complete Parent Intake</h4>
-            <p>You share key details about routines, communication, regulation, and family priorities so the support is grounded in your current needs.</p>
-          </div>
-        </div>
-      </div>
-      <div class="onboard-card">
-        <div class="onboard-step">
-          <div class="onboard-step-num">3</div>
-          <div class="onboard-step-content">
-            <h4>Begin Weekly Support</h4>
-            <p>We start with pattern mapping and then focus on practical strategies, troubleshooting, and clearer next steps each week.</p>
-          </div>
-        </div>
-      </div>
-      <div class="onboard-card">
-        <div class="onboard-step">
-          <div class="onboard-step-num">4</div>
-          <div class="onboard-step-content">
-            <h4>Receive Summary & Next Steps</h4>
-            <p>You receive a clear summary of key patterns, recommendations, and what to do next after this phase of support.</p>
-          </div>
+
+        <div class="reassurance-card">
+          <h3>What the call helps with</h3>
+          <p>We briefly understand your situation, clarify whether APC is the right fit, and suggest the most appropriate next step.</p>
         </div>
       </div>
     </div>
-    <p class="micro-trust" style="margin-top:24px">The goal is not to overwhelm parents with more information. The goal is to help families feel clearer, calmer, and more supported while implementing strategies at home.</p>
-  </div>
+  </section>
 
-    <div style="background:linear-gradient(135deg,#fafaf7,#f0faf9);border:1px solid #d4efeb;border-radius:20px;padding:40px;margin-bottom:40px;max-width:820px;margin-left:auto;margin-right:auto">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--text);margin-bottom:18px;text-align:center">Why Parents Choose APC</h3>
-    <p style="font-size:15px;color:var(--muted);margin-bottom:20px;line-height:1.7;text-align:center">You've probably tried everything -- read articles, watched videos, asked for advice. But nothing clicks because every child is different.</p>
-    <p style="font-size:15px;color:var(--muted);margin-bottom:24px;line-height:1.7;text-align:center;font-weight:600">CJ doesn't give generic advice. She sees YOUR child. She creates patterns specific to your family. She coaches you to be the expert on your own child.</p>
-    <ul style="font-size:14px;color:var(--muted);list-style:none;padding:0;max-width:600px;margin:0 auto">
-      <li style="margin-bottom:12px">✓ Experienced with 100+ families (not theoretical)</li>
-      <li style="margin-bottom:12px">✓ Specialized in autism and overwhelmed parents (not generic coaching)</li>
-      <li style="margin-bottom:12px">✓ Structured approach to parent support (not random strategies or borrowed techniques)</li>
-      <li style="margin-bottom:12px">✓ You get the tools forever (not dependent on ongoing sessions)</li>
-      <li>✓ Emotionally safe space (no judgment, just support)</li>
-    </ul>
-  </div>
-
-<div style="text-align:center;margin-top:16px;margin-bottom:36px">
-    <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-secondary" style="margin-right:10px">Start with a Free Discovery Call</a>
-    <a href="https://forms.gle/uHhYKgP6V3tuvtgm6" target="_blank" class="btn-primary">Complete Parent Intake Form</a>
-  </div>
-
-    <div style="background:#f8f5ef;border:1px solid #e8e4df;border-radius:20px;padding:40px;margin-bottom:40px;max-width:820px;margin-left:auto;margin-right:auto">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--text);margin-bottom:28px;text-align:center">Frequently Asked Questions</h3>
-    
-    <div style="margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #e8e4df">
-      <h4 style="font-size:1.05rem;color:var(--text);margin-bottom:10px;margin-top:0">How long before I see changes?</h4>
-      <p style="font-size:14px;color:var(--muted);margin:0;line-height:1.7">Most parents report noticing shifts within 2-3 weeks of implementing strategies consistently. Some changes happen sooner, others take longer depending on your child's needs.</p>
-    </div>
-    
-    <div style="margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #e8e4df">
-      <h4 style="font-size:1.05rem;color:var(--text);margin-bottom:10px;margin-top:0">Do I need to have my child diagnosed first?</h4>
-      <p style="font-size:14px;color:var(--muted);margin:0;line-height:1.7">A formal autism diagnosis helps, but it's not always required. If you're seeing signs of autism or your child is struggling with communication, regulation, or routines, APC can help you understand patterns regardless of diagnosis status.</p>
-    </div>
-    
-    <div style="margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #e8e4df">
-      <h4 style="font-size:1.05rem;color:var(--text);margin-bottom:10px;margin-top:0">Can I cancel or pause my program?</h4>
-      <p style="font-size:14px;color:var(--muted);margin:0;line-height:1.7">Life happens. If you need to pause or adjust your program timeline, message CJ to discuss options. We work with families, not against them.</p>
-    </div>
-    
-    <div style="margin-bottom:0;padding-bottom:0">
-      <h4 style="font-size:1.05rem;color:var(--text);margin-bottom:10px;margin-top:0">What if APC isn't the right fit?</h4>
-      <p style="font-size:14px;color:var(--muted);margin:0;line-height:1.7">Payment is only arranged after CJ reviews your situation and confirms the fit. If during a Discovery Call or after your first session you realize it's not right, we can discuss alternatives or refer you to resources that might work better.</p>
-    </div>
-  </div>
-
-
-  <div class="service-section" id="schools">
-    <div class="svc-header">
-      <div class="svc-icon">🏫</div>
-      <div class="svc-title">
-        <h2>Looking for school or educator support?</h2>
-        <p>APC also supports schools, learning centres, kindergartens, educators, and shadow aides with autism-informed guidance, classroom strategies, and staff support.</p>
-      </div>
-    </div>
-    <div class="svc-cta">
-      <a href="schools.html" class="btn-primary">View School &amp; Educator Support</a>
-    </div>
-  </div>
-
-  <!-- NOT SURE -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:40px;max-width:820px;margin-left:auto;margin-right:auto">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--text);margin-bottom:20px;text-align:center">APC Coaching vs Therapy -- What's the Difference?</h3>
-    <div style="margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)">
-      <p style="font-size:15px;color:var(--muted);margin-bottom:8px;line-height:1.7"><strong>Therapy</strong> focuses on your child's emotions, diagnoses, and clinical treatment.</p>
-      <p style="font-size:15px;color:var(--muted);line-height:1.7"><strong>APC Coaching</strong> focuses on understanding your child's actual patterns and giving YOU the tools to manage daily life.</p>
-    </div>
-    <h4 style="font-size:1.05rem;color:var(--text);margin-bottom:14px;margin-top:0">We're Not Therapy Because:</h4>
-    <ul style="font-size:14px;color:var(--muted);list-style:none;padding:0;margin-bottom:24px;max-width:600px">
-      <li style="margin-bottom:10px">✓ We don't diagnose or treat clinical conditions</li>
-      <li style="margin-bottom:10px">✓ We focus on practical daily strategies (not clinical treatment)</li>
-      <li>✓ You become the expert, not dependent on weekly sessions</li>
-    </ul>
-    <h4 style="font-size:1.05rem;color:var(--text);margin-bottom:14px;margin-top:0">We Work Best When:</h4>
-    <ul style="font-size:14px;color:var(--muted);list-style:none;padding:0;max-width:600px">
-      <li style="margin-bottom:10px">✓ Your child is already diagnosed</li>
-      <li style="margin-bottom:10px">✓ You need practical strategies for right now</li>
-      <li style="margin-bottom:10px">✓ You want to understand your child deeply</li>
-      <li>✓ You're ready to try a different approach</li>
-    </ul>
-    <p style="font-size:14px;color:var(--muted);margin-top:24px;line-height:1.7;font-style:italic;text-align:center">Many families do therapy AND coaching -- they complement each other.</p>
-  </div>
-
-  <div style="background:#f8f5ef;border:1px solid #e8e4df;border-radius:20px;padding:36px;margin-bottom:40px;max-width:820px;margin-left:auto;margin-right:auto">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--text);margin-bottom:8px">Investing in Understanding Your Child</h3>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.7;font-style:italic">These aren't hourly rates. These are complete packages designed to move you from confusion to clarity.</p>
-    <div style="margin-bottom:20px;padding:18px;background:#fff;border-radius:12px;border-left:3px solid var(--teal)">
-      <p style="font-size:14px;color:var(--text);margin-bottom:6px;font-weight:600">APC Quick Clarity (RM1,000)</p>
-      <p style="font-size:13px;color:var(--muted);margin:0">Best for: You want to understand patterns, don't need ongoing support</p>
-      <p style="font-size:13px;color:var(--muted);margin-top:6px">Timeline: 1 month intensive | ROI: Answers you've been seeking for years</p>
-    </div>
-    <div style="margin-bottom:20px;padding:18px;background:#fff;border-radius:12px;border-left:3px solid var(--teal)">
-      <p style="font-size:14px;color:var(--text);margin-bottom:6px;font-weight:600">APC Full Implementation (RM1,800)</p>
-      <p style="font-size:13px;color:var(--muted);margin:0">Best for: You want deep understanding + ongoing support for 4 weeks</p>
-      <p style="font-size:13px;color:var(--muted);margin-top:6px">Timeline: 2-3 months with weekly sessions | ROI: Transformation + sustained change</p>
-    </div>
-    <div style="margin-bottom:20px;padding:18px;background:#fff;border-radius:12px;border-left:3px solid var(--teal)">
-      <p style="font-size:14px;color:var(--text);margin-bottom:6px;font-weight:600">APC Intensive (RM2,500)</p>
-      <p style="font-size:13px;color:var(--muted);margin:0">Best for: You want complete transformation + 6 months of support</p>
-      <p style="font-size:13px;color:var(--muted);margin-top:6px">Timeline: 3-4 months with sustained coaching | ROI: Expert-level understanding you'll use forever</p>
-    </div>
-    <p style="font-size:13px;color:var(--muted);margin-top:20px;padding-top:20px;border-top:1px solid #e8e4df;text-align:center;line-height:1.6">Compare to: Typical therapy sessions in Malaysia cost RM200-400/session with no ongoing support. APC Complete Support gives you 6 sessions + 6 weeks of guidance for RM2,500.</p>
-  </div>
-
-  <div style="background:linear-gradient(135deg,#f0faf9,#f8f5ef);border:1px solid #d4efeb;border-radius:20px;padding:40px;margin-bottom:40px;max-width:820px;margin-left:auto;margin-right:auto;text-align:center">
-    <h3 style="font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--text);margin-bottom:16px">A Note On APC's Approach</h3>
-    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px">CJ has supported 100+ families over the past decade. Every family is different. That's why APC doesn't give one-size-fits-all advice.</p>
-    <p style="font-size:14px;color:var(--muted);line-height:1.7;font-weight:600">Instead, we listen to YOUR child, YOUR home, YOUR challenges -- and build a plan that actually fits your life.</p>
-    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px;font-style:italic">That's why parents come back. Not because the advice was perfect. Because the advice was for THEM.</p>
-  </div>
-
-<div class="unsure">
-    <h3>Not sure which option is right?</h3>
-    <p>Just message CJ. Tell him what's going on with your child and he'll tell you honestly what would help most.</p>
-    <a href="https://wa.me/601172998168">WhatsApp CJ</a>
-  </div>
-
-</div>
-
-<!-- APC_METHOD_SOFTENING_NOTE_START -->
-<section style="padding:42px 20px;background:#F8F5EF;">
-  <div style="max-width:920px;margin:0 auto;text-align:left;">
-    <div style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:#2F6F6D;margin-bottom:10px;">How support is planned</div>
-    <h2 style="font-family:'DM Serif Display',serif;color:#173F3F;font-size:clamp(1.8rem,3vw,2.5rem);line-height:1.1;margin:0 0 12px;">APC looks for patterns before giving strategies.</h2>
-    <p style="color:#536262;font-size:1rem;line-height:1.7;margin:0;max-width:760px;">
-      APC does not give generic advice. We look at patterns across communication, regulation, routines, environment, and parent responses, then help families decide what to adjust next.
-    </p>
-  </div>
-</section>
-<!-- APC_METHOD_SOFTENING_NOTE_END -->
-
-<!-- APC_SERVICE_SUPPORT_START -->
-
-<style id="apc-credentials-support-css">
-  .apc-info-section {
-    padding: 72px 20px;
-    background: #F8F5EF;
-  }
-
-  .apc-info-section.apc-white {
-    background: #FFFFFF;
-  }
-
-  .apc-info-wrap {
-    max-width: 1120px;
-    margin: 0 auto;
-  }
-
-  .apc-kicker {
-    font-size: 0.82rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: #2F6F6D;
-    margin-bottom: 12px;
-  }
-
-  .apc-info-section h2 {
-    color: #173F3F;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.08;
-    margin: 0 0 18px;
-  }
-
-  .apc-info-section p {
-    color: #354545;
-    font-size: 1.03rem;
-    line-height: 1.72;
-    margin: 0 0 18px;
-  }
-
-  .apc-card-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 28px;
-  }
-
-  .apc-card {
-    background: #FFFFFF;
-    border: 1px solid rgba(23, 63, 63, 0.12);
-    border-radius: 22px;
-    padding: 24px;
-    box-shadow: 0 12px 34px rgba(23, 63, 63, 0.08);
-  }
-
-  .apc-white .apc-card {
-    background: #F8F5EF;
-  }
-
-  .apc-card h3 {
-    color: #173F3F;
-    font-size: 1.08rem;
-    margin: 0 0 10px;
-  }
-
-  .apc-card p {
-    font-size: 0.96rem;
-    line-height: 1.62;
-    margin: 0;
-  }
-
-  .apc-scope-note {
-    margin-top: 28px;
-    padding: 18px 20px;
-    border-left: 4px solid #8FB9A8;
-    background: rgba(143, 185, 168, 0.12);
-    border-radius: 16px;
-    color: #354545;
-  }
-
-  @media (max-width: 900px) {
-    .apc-card-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .apc-info-section {
-      padding: 56px 18px;
-    }
-  }
-</style>
-
-<section class="apc-info-section" id="how-apc-supports-families">
-  <div class="apc-info-wrap">
-    <div class="apc-kicker">How APC Supports Families</div>
-    <h2>Support that helps parents understand what to do at home.</h2>
-
-    <p>
-      Many parents receive advice from schools, therapists, or online resources, but still feel unsure how to apply it during real daily moments. APC helps bridge that gap with structured, practical parent guidance.
-    </p>
-
-    <div class="apc-card-grid">
-      <div class="apc-card">
-        <h3>Communication Support</h3>
-        <p>Helping parents use responsive interaction, visual supports, choices, modelling, waiting, and everyday routines to support communication.</p>
+  <section class="section compact-section" id="parent-support-options">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Parent support options</p>
+        <h2>Choose the level of support that fits your family’s needs</h2>
       </div>
 
-      <div class="apc-card">
-        <h3>Regulation & Behaviour Patterns</h3>
-        <p>Helping parents identify what may be driving meltdowns, shutdowns, refusal, anxiety, or emotional escalation, then build calmer responses.</p>
-      </div>
+      <div class="cards-grid three-cards">
+        <article class="service-card">
+          <h3>APC Quick Clarity</h3>
+          <p><strong>Best for:</strong> Parents who want a clearer starting point.</p>
+          <p><strong>Includes:</strong> 2 sessions, initial pattern review, practical next steps, and short WhatsApp clarification during the support period.</p>
+        </article>
 
-      <div class="apc-card">
-        <h3>Routines & Independence</h3>
-        <p>Helping families build practical routines for mornings, transitions, hygiene, homework, mealtimes, and daily independence.</p>
-      </div>
+        <article class="service-card featured-card">
+          <p class="card-label">Most structured</p>
+          <h3>APC Full Implementation</h3>
+          <p><strong>Best for:</strong> Parents ready to work through patterns and practise changes over several weeks.</p>
+          <p><strong>Includes:</strong> 4 sessions, structured support planning, implementation guidance, and WhatsApp clarification during the support period.</p>
+        </article>
 
-      <div class="apc-card">
-        <h3>Learning Readiness</h3>
-        <p>Using structured teaching, movement-informed strategies, visual supports, and parent coaching to support attention, participation, and confidence.</p>
-      </div>
-
-      <div class="apc-card">
-        <h3>Parent Carryover</h3>
-        <p>Helping parents turn recommendations into simple home strategies that can be repeated, adjusted, and maintained.</p>
-      </div>
-
-      <div class="apc-card">
-        <h3>Professional Coordination</h3>
-        <p>Helping parents understand when to coordinate with school teams, OTs, SLTs, psychologists, doctors, or other relevant professionals.</p>
+        <article class="service-card">
+          <h3>APC Intensive</h3>
+          <p><strong>Best for:</strong> Families who need deeper support and more follow-up.</p>
+          <p><strong>Includes:</strong> 6 sessions, extended support planning, implementation guidance, WhatsApp clarification during the support period, and a follow-up check-in.</p>
+        </article>
       </div>
     </div>
-  </div>
-</section>
-<!-- APC_SERVICE_SUPPORT_END -->
+  </section>
 
-<!-- APC_ADOLESCENT_SUPPORT_START -->
-<section class="apc-info-section apc-white" id="adolescent-parent-support">
-  <div class="apc-info-wrap">
-    <div class="apc-kicker">Older Children & Adolescents</div>
-    <h2>Support for parents navigating puberty, independence, and teenage changes.</h2>
-
-    <p>
-      APC also supports parents of older autistic children and adolescents who are navigating changes in regulation, hygiene, privacy, friendships, school expectations, and independence.
-    </p>
-
-    <div class="apc-card-grid">
-      <div class="apc-card">
-        <h3>Puberty & Body Changes</h3>
-        <p>Helping parents explain changes calmly, prepare routines, and support their child with dignity and predictability.</p>
+  <section class="section compact-section soft-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">What happens in a session</p>
+        <h2>A simple, structured process</h2>
       </div>
 
-      <div class="apc-card">
-        <h3>Hygiene & Self-Care</h3>
-        <p>Building practical visual routines for showering, deodorant, grooming, clothing, and daily self-care.</p>
-      </div>
+      <div class="steps-grid">
+        <article class="step-card">
+          <span class="step-number">1</span>
+          <h3>You share what is happening</h3>
+          <p>Tell CJ about your child’s current challenges, what you have tried, and what you are hoping to understand.</p>
+        </article>
 
-      <div class="apc-card">
-        <h3>Privacy & Boundaries</h3>
-        <p>Helping parents teach public and private rules, personal space, consent, and body safety in a developmentally respectful way.</p>
-      </div>
+        <article class="step-card">
+          <span class="step-number">2</span>
+          <h3>We look for patterns</h3>
+          <p>Together, we look at patterns across communication, regulation, routines, environment, and parent responses.</p>
+        </article>
 
-      <div class="apc-card">
-        <h3>Friendships & Social Safety</h3>
-        <p>Supporting parents with friendship challenges, teasing, bullying, online safety, and social misunderstanding.</p>
-      </div>
-
-      <div class="apc-card">
-        <h3>Emotional Regulation</h3>
-        <p>Helping parents understand how adolescence may affect stress, shutdowns, meltdowns, anxiety, and recovery time.</p>
-      </div>
-
-      <div class="apc-card">
-        <h3>School & Life Transitions</h3>
-        <p>Supporting parents with transition planning, school expectations, independence routines, and gradual responsibility building.</p>
+        <article class="step-card">
+          <span class="step-number">3</span>
+          <h3>You leave with a practical next step</h3>
+          <p>You will know what to observe, what to adjust, and what to try next at home or in daily routines.</p>
+        </article>
       </div>
     </div>
+  </section>
 
-    <div class="apc-scope-note">
-      This support is parent-focused and practical. APC does not provide medical care, sexuality therapy, diagnostic services, or crisis intervention.
+  <section class="section compact-section">
+    <div class="container">
+      <div class="reassurance-box">
+        <p class="eyebrow">What APC is not</p>
+        <h2>A parent education and guidance service</h2>
+        <p>APC does not diagnose, provide therapy, replace OT, speech therapy, psychology, or medical care, or provide crisis support. APC focuses on parent education, pattern review, support planning, and practical guidance.</p>
+      </div>
     </div>
-  </div>
-</section>
-<!-- APC_ADOLESCENT_SUPPORT_END -->
+  </section>
 
+  <section class="section compact-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Why parents choose APC</p>
+        <h2>Calm, practical guidance that respects both the child and the parent</h2>
+      </div>
+
+      <div class="simple-list-card">
+        <ul class="check-list">
+          <li>Autism-specific parent support</li>
+          <li>Practical strategies for real family routines</li>
+          <li>Emotionally safe, non-judgemental guidance</li>
+          <li>Structured support without overwhelming parents</li>
+          <li>A clear goal: helping more families understand what is happening and what to do next</li>
+        </ul>
+        <p>CJ supports parents to understand their child more clearly and respond with more confidence.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta-section">
+    <div class="container">
+      <div class="final-cta-card">
+        <h2>Not sure where to start?</h2>
+        <p>Start with a free 15-minute Discovery Call. We will briefly understand your situation, clarify whether APC is the right fit, and suggest the next step.</p>
+        <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free Discovery Call</a>
+      </div>
+    </div>
+  </section>
 </main>
+
 
 <footer>
   <div class="footer-in">
