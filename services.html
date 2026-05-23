@@ -236,6 +236,55 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
 .footer-contact a:hover{color:#fff}
 .footer-bottom{width:100%;font-size:11px;color:rgba(255,255,255,.3);margin-top:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
 @media(max-width:600px){.footer-in{flex-direction:column;gap:16px}.footer-links{margin-left:0}}
+
+.service-price {
+  margin: -0.2rem 0 0.15rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--teal, #1f4b47);
+}
+
+.service-meta {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--muted, #6f7f7a);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.detail-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(31, 75, 71, 0.14);
+  border-radius: 22px;
+  padding: clamp(1.1rem, 2.5vw, 1.6rem);
+  box-shadow: 0 12px 30px rgba(31, 75, 71, 0.07);
+}
+
+.detail-card h3 {
+  margin-top: 0;
+}
+
+.detail-card p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 980px) {
+  .details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 
 <!-- APC_CLARITY_CSS_START -->
@@ -596,6 +645,8 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       <div class="cards-grid three-cards">
         <article class="service-card">
           <h3>APC Quick Clarity</h3>
+          <p class="service-price">RM1,000</p>
+          <p class="service-meta">2 parent support sessions</p>
           <p><strong>Best for:</strong> Parents who want a clearer starting point.</p>
           <p><strong>Includes:</strong> 2 sessions, initial pattern review, practical next steps, and short WhatsApp clarification during the support period.</p>
         </article>
@@ -603,12 +654,16 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
         <article class="service-card featured-card">
           <p class="card-label">Most structured</p>
           <h3>APC Full Implementation</h3>
+          <p class="service-price">RM1,800</p>
+          <p class="service-meta">4 parent support sessions</p>
           <p><strong>Best for:</strong> Parents ready to work through patterns and practise changes over several weeks.</p>
           <p><strong>Includes:</strong> 4 sessions, structured support planning, implementation guidance, and WhatsApp clarification during the support period.</p>
         </article>
 
         <article class="service-card">
           <h3>APC Intensive</h3>
+          <p class="service-price">RM2,500</p>
+          <p class="service-meta">6 parent support sessions</p>
           <p><strong>Best for:</strong> Families who need deeper support and more follow-up.</p>
           <p><strong>Includes:</strong> 6 sessions, extended support planning, implementation guidance, WhatsApp clarification during the support period, and a follow-up check-in.</p>
         </article>
@@ -645,6 +700,38 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
     </div>
   </section>
 
+
+  <section class="section compact-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Practical details</p>
+        <h2>What parents usually want to know before starting</h2>
+      </div>
+
+      <div class="details-grid">
+        <article class="detail-card">
+          <h3>Session format</h3>
+          <p>Sessions are online parent support sessions with CJ. Each session is usually 60 minutes.</p>
+        </article>
+
+        <article class="detail-card">
+          <h3>Your child does not need to attend</h3>
+          <p>Support begins with what you share about home, school, routines, communication, regulation, and current concerns.</p>
+        </article>
+
+        <article class="detail-card">
+          <h3>Language</h3>
+          <p>Sessions are conducted in English. Bahasa Malaysia can be accommodated on request.</p>
+        </article>
+
+        <article class="detail-card">
+          <h3>Payment timing</h3>
+          <p>Payment is arranged only after CJ reviews your situation and confirms the suitable support option.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section class="section compact-section">
     <div class="container">
       <div class="reassurance-box">
@@ -671,6 +758,42 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
           <li>A clear goal: helping more families understand what is happening and what to do next</li>
         </ul>
         <p>CJ supports parents to understand their child more clearly and respond with more confidence.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section compact-section soft-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">How to start</p>
+        <h2>A simple path from enquiry to support</h2>
+      </div>
+
+      <div class="steps-grid">
+        <article class="step-card">
+          <span class="step-number">1</span>
+          <h3>Book a Discovery Call</h3>
+          <p>Start with a short clarity and fit check.</p>
+        </article>
+
+        <article class="step-card">
+          <span class="step-number">2</span>
+          <h3>Confirm the right option</h3>
+          <p>CJ recommends the support level that fits your current needs.</p>
+        </article>
+
+        <article class="step-card">
+          <span class="step-number">3</span>
+          <h3>Complete intake and payment</h3>
+          <p>You complete the needed details before sessions begin.</p>
+        </article>
+
+        <article class="step-card">
+          <span class="step-number">4</span>
+          <h3>Begin parent support</h3>
+          <p>You work through patterns, planning, and practical next steps.</p>
+        </article>
       </div>
     </div>
   </section>
