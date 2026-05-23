@@ -8,4 +8,277 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,0.95);backdrop
 .container{max-width:760px;margin:0 auto;padding:64px 24px 80px}.hero-label{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:12px}h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-height:1.2;margin-bottom:12px}.subtitle{color:var(--muted);font-size:16px;margin-bottom:40px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:18px}.card h2{font-family:'DM Serif Display',serif;font-size:1.35rem;margin-bottom:10px}.card p{color:var(--muted);font-size:15px;margin-bottom:12px}.card ul{padding-left:20px;color:var(--muted);font-size:15px}.card li{margin-bottom:6px}.contact-box{background:#f0faf9;border:1px solid #b2dfdb;border-radius:12px;padding:18px;margin-top:24px;color:var(--muted);font-size:14px}.contact-box a{color:var(--teal);font-weight:700}
 footer{background:var(--text);color:#fff;padding:36px 20px}.footer-in{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}.footer-brand{font-family:'DM Serif Display',serif;color:var(--teal);font-size:1.1rem;margin-bottom:6px;font-weight:600}.footer-tagline{font-size:13px;color:rgba(255,255,255,.55);max-width:220px;line-height:1.5}.footer-links{display:flex;flex-direction:column;gap:6px;margin-left:auto}.footer-links a{font-size:13px;color:rgba(255,255,255,.65);font-weight:600}.footer-links a:hover{color:#fff}.footer-contact{display:flex;flex-direction:column;gap:6px}.footer-contact span{font-size:12px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}.footer-contact a{font-size:14px;color:rgba(255,255,255,.75);font-weight:700}.footer-bottom{width:100%;font-size:11px;color:rgba(255,255,255,.3);margin-top:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
 @media(max-width:600px){.nav-links a:not(.nav-cta){display:none}.container{padding:40px 16px 60px}.card{padding:22px 18px}.footer-in{flex-direction:column;gap:16px}.footer-links{margin-left:0}}
-</style></head><body><nav><div class="nav-in"><a href="index.html" class="nav-logo">APC</a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="free-tool.html">Free Tool</a></div></div></nav><main><div class="container"><div class="hero-label">Autism Pathways Consulting</div><h1>Privacy Policy</h1><p class="subtitle">Last updated: May 2026</p><div class="card"><p>Autism Pathways Consulting (“APC”, “we”, “our”, or “us”) respects your privacy and is committed to protecting your personal information.</p></div><div class="card"><h2>Information We Collect</h2><ul><li>Name</li><li>Email address</li><li>Phone number</li><li>Information shared through enquiry forms or booking forms</li><li>Information voluntarily shared during consultations or communication</li></ul></div><div class="card"><h2>How Information Is Used</h2><ul><li>Respond to enquiries</li><li>Schedule appointments and consultations</li><li>Provide services and support</li><li>Send relevant resources, updates, or newsletters</li><li>Improve our services and website experience</li></ul></div><div class="card"><h2>Confidentiality</h2><ul><li>Information shared with Autism Pathways Consulting will be treated respectfully and confidentially. However, electronic communication and online platforms may not always be completely secure.</li></ul></div><div class="card"><h2>Third-Party Services</h2><ul><li>We may use trusted third-party services such as Cal.com, MailerLite, Google Workspace, and Zoho Mail. These platforms may process your information according to their own privacy policies.</li></ul></div><div class="card"><h2>Your Rights</h2><ul><li>Request access to your information</li><li>Correct inaccurate information</li><li>Unsubscribe from emails</li><li>Request deletion of your information where appropriate</li></ul></div><div class="contact-box"><strong>Contact:</strong><br>For questions about these policies, email <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>.</div></div></main><footer><div class="footer-in"><div><div class="footer-brand">Autism Pathways Consulting</div><div class="footer-tagline">Helping parents and schools support autistic children in PJ and KL.</div><div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6">CJ Special and Inclusive Consultancy (003030209-T)<br>SSM Reg. 201903282307 &middot; Petaling Jaya &amp; KL</div></div><div class="footer-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="services.html">Parent Services</a><a href="privacy.html">Privacy Policy</a><a href="disclaimer.html">Disclaimer</a><a href="terms.html">Terms &amp; Conditions</a><a href="cancellation-policy.html">Cancellation Policy</a><a href="https://instagram.com/autismpathwaysconsulting" target="_blank">Instagram</a></div><div class="footer-contact"><span>Contact CJ</span><a href="https://wa.me/601172998168">WhatsApp: 011-7299 8168</a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a></div><div class="footer-bottom">&copy; 2026 Autism Pathways Consulting &middot; CJ Lim &middot; Petaling Jaya, Malaysia</div></div></footer></body></html>
+
+/* APC Apple-inspired footer */
+.apc-footer {
+  background: #f6f2ea;
+  color: #1f2a2a;
+  border-top: 1px solid rgba(31, 75, 71, 0.12);
+  padding: 48px 20px 24px;
+}
+
+.apc-footer-inner {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 0.9fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.apc-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.apc-footer-logo {
+  display: inline-block;
+  font-weight: 800;
+  color: #1f7a70;
+  margin-bottom: 0.75rem;
+}
+
+.apc-footer-brand p {
+  max-width: 340px;
+  margin: 0 0 0.85rem;
+  color: rgba(31, 42, 42, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.apc-footer-small {
+  font-size: 0.78rem !important;
+  color: rgba(31, 42, 42, 0.52) !important;
+}
+
+.apc-footer-column h3 {
+  margin: 0 0 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(31, 42, 42, 0.58);
+}
+
+.apc-footer-column a {
+  display: block;
+  width: fit-content;
+  margin: 0 0 0.62rem;
+  color: rgba(31, 42, 42, 0.74);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.apc-footer-column a:hover {
+  color: #1f7a70;
+  transform: translateX(2px);
+}
+
+.apc-footer-bottom {
+  width: min(1120px, 100%);
+  margin: 32px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(31, 75, 71, 0.12);
+}
+
+.apc-footer-bottom p {
+  margin: 0;
+  color: rgba(31, 42, 42, 0.55);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .apc-footer {
+    padding: 40px 20px 88px;
+  }
+
+  .apc-footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1.5rem;
+  }
+
+  .apc-footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .apc-footer-brand p {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .apc-footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .apc-footer-column a {
+    width: 100%;
+  }
+}
+
+
+/* APC footer refinement */
+.apc-footer {
+  background: #f7f3eb !important;
+  color: #1f2a2a !important;
+  padding: 46px 20px 22px !important;
+  border-top: 1px solid rgba(31, 75, 71, 0.10) !important;
+  text-align: left !important;
+}
+
+.apc-footer-inner {
+  width: min(1080px, 100%) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 1.45fr 0.75fr 0.95fr 1.05fr !important;
+  gap: clamp(2rem, 5vw, 4.5rem) !important;
+  align-items: start !important;
+}
+
+.apc-footer-brand,
+.apc-footer-column {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.apc-footer-logo {
+  display: inline-block !important;
+  margin-bottom: 0.8rem !important;
+  color: #1f6f66 !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.apc-footer-brand p {
+  max-width: 360px !important;
+  margin: 0 0 0.85rem !important;
+  color: rgba(31, 42, 42, 0.66) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.65 !important;
+}
+
+.apc-footer-small {
+  color: rgba(31, 42, 42, 0.48) !important;
+  font-size: 0.74rem !important;
+  line-height: 1.55 !important;
+}
+
+.apc-footer-column h3 {
+  margin: 0 0 0.9rem !important;
+  color: rgba(31, 42, 42, 0.46) !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+}
+
+.apc-footer-column a {
+  display: block !important;
+  width: fit-content !important;
+  margin: 0 0 0.62rem !important;
+  color: rgba(31, 42, 42, 0.68) !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  text-align: left !important;
+  text-decoration: none !important;
+  transition: color 160ms ease, transform 160ms ease !important;
+}
+
+.apc-footer-column a:hover {
+  color: #1f6f66 !important;
+  transform: translateX(2px) !important;
+}
+
+.apc-footer-bottom {
+  width: min(1080px, 100%) !important;
+  margin: 34px auto 0 !important;
+  padding-top: 18px !important;
+  border-top: 1px solid rgba(31, 75, 71, 0.10) !important;
+  text-align: left !important;
+}
+
+.apc-footer-bottom p {
+  margin: 0 !important;
+  color: rgba(31, 42, 42, 0.48) !important;
+  font-size: 0.74rem !important;
+  line-height: 1.5 !important;
+  text-align: left !important;
+}
+
+@media (max-width: 860px) {
+  .apc-footer {
+    padding: 40px 20px 28px !important;
+  }
+
+  .apc-footer-inner {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem 1.75rem !important;
+  }
+
+  .apc-footer-brand {
+    grid-column: 1 / -1 !important;
+  }
+
+  .apc-footer-brand p {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .apc-footer-inner {
+    grid-template-columns: 1fr !important;
+    gap: 1.8rem !important;
+  }
+
+  .apc-footer-column a {
+    width: auto !important;
+  }
+}
+
+</style></head><body><nav><div class="nav-in"><a href="index.html" class="nav-logo">APC</a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="free-tool.html">Free Tool</a></div></div></nav><main><div class="container"><div class="hero-label">Autism Pathways Consulting</div><h1>Privacy Policy</h1><p class="subtitle">Last updated: May 2026</p><div class="card"><p>Autism Pathways Consulting (“APC”, “we”, “our”, or “us”) respects your privacy and is committed to protecting your personal information.</p></div><div class="card"><h2>Information We Collect</h2><ul><li>Name</li><li>Email address</li><li>Phone number</li><li>Information shared through enquiry forms or booking forms</li><li>Information voluntarily shared during consultations or communication</li></ul></div><div class="card"><h2>How Information Is Used</h2><ul><li>Respond to enquiries</li><li>Schedule appointments and consultations</li><li>Provide services and support</li><li>Send relevant resources, updates, or newsletters</li><li>Improve our services and website experience</li></ul></div><div class="card"><h2>Confidentiality</h2><ul><li>Information shared with Autism Pathways Consulting will be treated respectfully and confidentially. However, electronic communication and online platforms may not always be completely secure.</li></ul></div><div class="card"><h2>Third-Party Services</h2><ul><li>We may use trusted third-party services such as Cal.com, MailerLite, Google Workspace, and Zoho Mail. These platforms may process your information according to their own privacy policies.</li></ul></div><div class="card"><h2>Your Rights</h2><ul><li>Request access to your information</li><li>Correct inaccurate information</li><li>Unsubscribe from emails</li><li>Request deletion of your information where appropriate</li></ul></div><div class="contact-box"><strong>Contact:</strong><br>For questions about these policies, email <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>.</div></div></main>
+<footer class="apc-footer">
+  <div class="apc-footer-inner">
+    <div class="apc-footer-brand">
+      <a href="index.html" class="apc-footer-logo">Autism Pathways Consulting</a>
+      <p>Helping parents understand and support their autistic child through structured parent education and practical guidance.</p>
+      <p class="apc-footer-small">CJ Special and Inclusive Consultancy (003030209-T)<br>SSM Reg. 201903282307 · Petaling Jaya and KL</p>
+    </div>
+
+    <nav class="apc-footer-column" aria-label="Explore">
+      <h3>Explore</h3>
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="start.html">Start Here</a>
+      <a href="free-tool.html">Free Tool</a>
+    </nav>
+
+    <nav class="apc-footer-column" aria-label="Support">
+      <h3>Support</h3>
+      <a href="services.html">Parent Support Options</a>
+      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Discovery Call</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="cancellation-policy.html">Cancellation Policy</a>
+    </nav>
+
+    <div class="apc-footer-column">
+      <h3>Contact</h3>
+      <a href="https://wa.me/601172998168" target="_blank" rel="noopener">WhatsApp: 011-7299 8168</a>
+      <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>
+      <a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+
+  <div class="apc-footer-bottom">
+    <p>© 2026 Autism Pathways Consulting. Parent education and guidance, not therapy or diagnosis.</p>
+  </div>
+</footer>
+</body></html>
