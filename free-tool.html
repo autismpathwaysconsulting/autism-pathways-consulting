@@ -490,6 +490,444 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   }
 }
 
+
+/* APC Free Tool clean redesign */
+.free-clean-page {
+  background: #f7f3eb;
+  color: #20232f;
+}
+
+.free-container {
+  width: min(1080px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.free-clean-hero {
+  padding: clamp(4rem, 8vw, 7rem) 0;
+}
+
+.free-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.75fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.free-kicker {
+  margin: 0 0 0.85rem;
+  color: #1f6f66;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.free-clean-hero h1,
+.free-clean-section h2 {
+  margin: 0;
+  color: #20232f;
+  font-family: 'DM Serif Display', serif;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.free-clean-hero h1 {
+  max-width: 720px;
+  font-size: clamp(2.75rem, 6vw, 5rem);
+}
+
+.free-clean-section h2 {
+  max-width: 760px;
+  font-size: clamp(2rem, 4.4vw, 3.35rem);
+}
+
+.free-hero-sub {
+  max-width: 600px;
+  margin: 1.15rem 0 0;
+  color: rgba(32, 35, 47, 0.70);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.free-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.6rem;
+}
+
+.free-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.9rem;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.free-btn:hover {
+  transform: translateY(-2px);
+}
+
+.free-btn.primary {
+  background: #1f8f83;
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(31, 143, 131, 0.16);
+}
+
+.free-btn.secondary {
+  background: #edf3ef;
+  color: #1f6f66;
+}
+
+.free-preview-card,
+.free-list-card,
+.free-final-card,
+.free-steps-grid article {
+  background: #ffffff;
+  border: 1px solid rgba(31, 75, 71, 0.13);
+  border-radius: 30px;
+  box-shadow: 0 12px 34px rgba(31, 75, 71, 0.055);
+}
+
+.free-preview-card {
+  padding: clamp(1.4rem, 3vw, 2rem);
+}
+
+.preview-label {
+  margin: 0 0 1rem;
+  color: #1f6f66;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.preview-row {
+  padding: 1rem 0;
+  border-top: 1px solid rgba(31, 75, 71, 0.12);
+  color: rgba(32, 35, 47, 0.74);
+  font-weight: 700;
+}
+
+.free-clean-section {
+  padding: clamp(4rem, 7vw, 6rem) 0;
+}
+
+.free-clean-section.soft {
+  background: #ffffff;
+}
+
+.free-split {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.free-list-card {
+  padding: clamp(1.35rem, 3vw, 2rem);
+}
+
+.free-list-card div {
+  padding: 1.15rem 0;
+  border-bottom: 1px solid rgba(31, 75, 71, 0.12);
+}
+
+.free-list-card div:first-child {
+  padding-top: 0;
+}
+
+.free-list-card div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.free-list-card h3,
+.free-steps-grid h3 {
+  margin: 0 0 0.5rem;
+  color: #173936;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.free-list-card p,
+.free-section-heading p,
+.free-steps-grid p,
+.free-final-card p {
+  margin: 0;
+  color: rgba(32, 35, 47, 0.70);
+  line-height: 1.65;
+}
+
+.free-section-heading {
+  max-width: 760px;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.free-section-heading p {
+  max-width: 620px;
+  margin-top: 1rem;
+}
+
+.free-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.free-steps-grid article {
+  padding: clamp(1.35rem, 3vw, 2rem);
+}
+
+.free-steps-grid span {
+  display: block;
+  margin-bottom: 1.2rem;
+  color: rgba(31, 111, 102, 0.72);
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.free-final-card {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  padding: clamp(2rem, 5vw, 3.2rem);
+}
+
+.free-final-card p {
+  max-width: 600px;
+  margin: 1rem auto 1.5rem;
+}
+
+/* Soften floating Message CJ button */
+a[aria-label="Message CJ"] {
+  width: 50px !important;
+  height: 50px !important;
+  bottom: 22px !important;
+  right: 22px !important;
+  opacity: 0.88 !important;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.28) !important;
+}
+
+@media (max-width: 860px) {
+  .free-hero-grid,
+  .free-split,
+  .free-steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .free-clean-hero h1 {
+    font-size: clamp(2.4rem, 10vw, 3.8rem);
+  }
+
+  .free-clean-section h2 {
+    font-size: clamp(2rem, 9vw, 2.9rem);
+  }
+
+  .free-actions,
+  .free-btn {
+    width: 100%;
+  }
+
+  .free-final-card {
+    text-align: left;
+  }
+
+  .free-final-card p {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+
+/* APC Free Tool hero alignment correction */
+.free-clean-hero {
+  padding-top: clamp(3.5rem, 6vw, 5.5rem) !important;
+  padding-bottom: clamp(3.5rem, 6vw, 5.5rem) !important;
+}
+
+.free-hero-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.78fr) !important;
+  gap: clamp(2.25rem, 6vw, 5rem) !important;
+  align-items: center !important;
+}
+
+.free-hero-grid > div:first-child {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  text-align: left !important;
+}
+
+.free-hero-grid > .free-preview-card {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  max-width: 420px !important;
+  margin-left: auto !important;
+}
+
+.free-clean-hero h1 {
+  max-width: 720px !important;
+  font-size: clamp(2.7rem, 5.7vw, 4.85rem) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.035em !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+.free-hero-sub {
+  max-width: 600px !important;
+}
+
+.free-actions {
+  justify-content: flex-start !important;
+}
+
+.free-preview-card {
+  transform: none !important;
+}
+
+@media (max-width: 860px) {
+  .free-hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .free-hero-grid > div:first-child,
+  .free-hero-grid > .free-preview-card {
+    grid-column: 1 !important;
+  }
+
+  .free-hero-grid > div:first-child {
+    grid-row: 1 !important;
+  }
+
+  .free-hero-grid > .free-preview-card {
+    grid-row: 2 !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .free-clean-hero h1 {
+    font-size: clamp(2.35rem, 10vw, 3.8rem) !important;
+  }
+}
+
+
+/* APC Free Tool final hero fix */
+.free-clean-page {
+  overflow-x: hidden !important;
+}
+
+.free-clean-hero {
+  min-height: auto !important;
+  padding-top: clamp(4rem, 7vw, 6rem) !important;
+  padding-bottom: clamp(4rem, 7vw, 6rem) !important;
+}
+
+.free-clean-hero .final-free-hero {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px) !important;
+  column-gap: clamp(2.5rem, 7vw, 6rem) !important;
+  row-gap: 2rem !important;
+  align-items: center !important;
+}
+
+.free-clean-hero .free-hero-copy {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  min-width: 0 !important;
+  text-align: left !important;
+}
+
+.free-clean-hero .free-preview-card {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 !important;
+  align-self: center !important;
+}
+
+.free-clean-hero h1 {
+  display: block !important;
+  max-width: 720px !important;
+  margin: 0 !important;
+  font-size: clamp(2.8rem, 5.8vw, 5rem) !important;
+  line-height: 1.03 !important;
+  letter-spacing: -0.035em !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.free-clean-hero .free-hero-sub {
+  max-width: 600px !important;
+  margin-top: 1.15rem !important;
+}
+
+.free-clean-hero .free-actions {
+  justify-content: flex-start !important;
+  margin-top: 1.6rem !important;
+}
+
+@media (max-width: 860px) {
+  .free-clean-hero .final-free-hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  .free-clean-hero .free-hero-copy {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+
+  .free-clean-hero .free-preview-card {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    max-width: 100% !important;
+  }
+
+  .free-clean-hero h1 {
+    font-size: clamp(2.4rem, 10vw, 3.8rem) !important;
+  }
+}
+
+
+/* APC Free Tool hero final polish */
+.free-clean-hero {
+  padding-top: clamp(3.2rem, 5.5vw, 4.6rem) !important;
+  padding-bottom: clamp(3.5rem, 5.5vw, 4.8rem) !important;
+}
+
+.free-clean-hero h1 {
+  font-size: clamp(2.6rem, 5.2vw, 4.45rem) !important;
+  line-height: 1.04 !important;
+}
+
+.free-preview-card {
+  padding-top: clamp(1.25rem, 2.6vw, 1.7rem) !important;
+  padding-bottom: clamp(1.25rem, 2.6vw, 1.7rem) !important;
+}
+
+.preview-row {
+  padding-top: 0.85rem !important;
+  padding-bottom: 0.85rem !important;
+}
+
+@media (max-width: 860px) {
+  .free-clean-hero h1 {
+    font-size: clamp(2.3rem, 9.5vw, 3.5rem) !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -507,89 +945,91 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
     </div>
   </div>
 </nav>
-<main id="main-content">
-  <section class="tool-section">
-    <div class="wrap section">
-      <div style="text-align:center;max-width:780px;margin:0 auto 34px">
-        <div class="section-tag">Free parent support tool</div>
-        <h1 class="section-title">APC Calm Companion</h1>
-        <p class="section-body" style="margin:0 auto">A free, mobile-friendly parent tool for routines, communication, emotional regulation, transitions, and difficult moments. No download from the App Store is required.</p>
-        <div class="btns" style="justify-content:center;margin-top:24px">
-          <a href="https://calm.autismpathwaysconsulting.com" target="_blank" rel="noopener" class="btn-main">Open Free Tool</a>
-          <a href="#install-guide" class="btn-ghost">Install on phone</a>
+
+<main id="main-content" class="free-clean-page">
+  
+  <section class="free-clean-hero">
+    <div class="free-container free-hero-grid final-free-hero">
+      <div class="free-hero-copy">
+        <p class="free-kicker">Free parent tool</p>
+        <h1>APC Calm Companion</h1>
+        <p class="free-hero-sub">A free, mobile-friendly tool for routines, communication, emotional regulation, transitions, and difficult moments.</p>
+        <div class="free-actions">
+          <a href="https://calm.autismpathwaysconsulting.com" target="_blank" rel="noopener" class="free-btn primary">Open Free Tool</a>
+          <a href="#save-tool" class="free-btn secondary">Save It to Your Phone</a>
         </div>
       </div>
 
-      <div class="tool-card">
+      <div class="free-preview-card">
+        <p class="preview-label">Quick support</p>
+        <div class="preview-row">Visual routines</div>
+        <div class="preview-row">Parent scripts</div>
+        <div class="preview-row">First, then support</div>
+        <div class="preview-row">Calm-down guidance</div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="free-clean-section">
+    <div class="free-container free-split">
+      <div>
+        <p class="free-kicker">When to use it</p>
+        <h2>Quick support when you are not sure what to say or do next.</h2>
+      </div>
+
+      <div class="free-list-card">
         <div>
-          <div class="tool-eyebrow">What it helps with</div>
-          <h2>Quick support when you are not sure what to say or do next.</h2>
-          <p>The tool is designed for parents who need simple, practical prompts during daily challenges. It is not therapy, diagnosis, medical advice, or crisis support.</p>
-          <div class="tool-benefits">
-            <div class="tool-benefit">✓ Visual routines</div>
-            <div class="tool-benefit">✓ Calm-down tools</div>
-            <div class="tool-benefit">✓ Parent scripts</div>
-            <div class="tool-benefit">✓ Communication support</div>
-            <div class="tool-benefit">✓ iPhone & Android friendly</div>
-            <div class="tool-benefit">✓ No download required</div>
-          </div>
+          <h3>During transitions</h3>
+          <p>Use visual steps and simple language when moving between activities.</p>
         </div>
-        <div class="tool-phone">
-          <h3>Use it like an app</h3>
-          <p style="color:#d1d5db;margin-bottom:0">Open the tool from your phone home screen once installed.</p>
-          <ul>
-            <li>🫁 <span>Calm breathing support</span></li>
-            <li>⏳ <span>Visual timers and routines</span></li>
-            <li>💬 <span>Communication prompts</span></li>
-            <li>❤️ <span>Parent reassurance</span></li>
-          </ul>
+        <div>
+          <h3>During overwhelm</h3>
+          <p>Find calmer scripts and options when your child is struggling to regulate.</p>
+        </div>
+        <div>
+          <h3>During routines</h3>
+          <p>Support daily tasks like getting ready, hygiene, bedtime, or leaving the house.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="install-guide" class="install-section">
-    <div class="wrap section">
-      <div class="section-tag">Install on phone</div>
-      <h2 class="section-title">Save the free tool to your phone in about 1 minute.</h2>
-      <p class="section-body">Parents can add the APC Calm Companion to the phone home screen so it opens like a normal app. This is useful during stressful moments when you need quick access.</p>
-      <div class="install-grid">
-        <div class="install-card">
-          <h3>iPhone / iPad</h3>
-          <ol>
-            <li>Open the tool in <strong>Safari</strong>.</li>
-            <li>Tap the <strong>Share</strong> button.</li>
-            <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
-            <li>Tap <strong>Add</strong>.</li>
-            <li>Open it from your home screen anytime.</li>
-          </ol>
-        </div>
-        <div class="install-card">
-          <h3>Android</h3>
-          <ol>
-            <li>Open the tool in <strong>Chrome</strong>.</li>
-            <li>Tap the <strong>3-dot menu</strong>.</li>
-            <li>Tap <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</li>
-            <li>Tap <strong>Install</strong> or <strong>Add</strong>.</li>
-            <li>Open it from your home screen anytime.</li>
-          </ol>
-        </div>
+  <section class="free-clean-section soft" id="save-tool">
+    <div class="free-container">
+      <div class="free-section-heading">
+        <p class="free-kicker">Use it like an app</p>
+        <h2>Save the free tool to your phone in about 1 minute.</h2>
+        <p>Parents can add APC Calm Companion to the phone home screen, so it opens quickly during stressful moments.</p>
       </div>
 
-      <div class="free-tool-next-step">
-        <div>
-          <h2>Need more personalised guidance?</h2>
-          <p>The free tool is a helpful starting point. New to APC? Start with a free Discovery Call. Already had a Discovery Call? CJ may recommend a Progress Check Call if one focused follow-up is suitable. Need ongoing support? Complete the APC Parent Intake Form so CJ can recommend the right support option.</p>
-        </div>
-        <div class="btns">
-          <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="btn-main">Book Free Discovery Call</a>
-          <a href="services.html" class="btn-ghost">View Services</a>
-        </div>
+      <div class="free-steps-grid">
+        <article>
+          <span>iPhone / iPad</span>
+          <h3>Open in Safari</h3>
+          <p>Tap the share button, choose “Add to Home Screen,” then tap Add.</p>
+        </article>
+
+        <article>
+          <span>Android</span>
+          <h3>Open in Chrome</h3>
+          <p>Tap the three-dot menu, choose “Add to Home screen,” then confirm.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="free-clean-section">
+    <div class="free-container">
+      <div class="free-final-card">
+        <p class="free-kicker">Need more personalised guidance?</p>
+        <h2>Start with a free Discovery Call.</h2>
+        <p>The free tool can help in the moment. If you need support understanding repeated patterns, book a free 15-minute Discovery Call.</p>
+        <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener" class="free-btn primary">Book Free Discovery Call</a>
       </div>
     </div>
   </section>
 </main>
-<!-- FOOTER -->
 
 <footer class="apc-footer">
   <div class="apc-footer-inner">
