@@ -423,75 +423,256 @@
   }
 }
 
+
+/* APC Start Here clean redesign */
+.start-clean-page {
+  background: #f7f3eb;
+  color: #20232f;
+}
+
+.start-container {
+  width: min(1080px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.start-hero {
+  padding: clamp(4rem, 8vw, 7rem) 0 clamp(2.5rem, 5vw, 4rem);
+}
+
+.start-kicker {
+  margin: 0 0 0.85rem;
+  color: #1f6f66;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.start-hero h1,
+.start-section h2 {
+  margin: 0;
+  color: #20232f;
+  font-family: 'DM Serif Display', serif;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.start-hero h1 {
+  max-width: 780px;
+  font-size: clamp(2.75rem, 6vw, 5rem);
+}
+
+.start-sub {
+  max-width: 680px;
+  margin: 1.15rem 0 0;
+  color: rgba(32, 35, 47, 0.70);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.start-section {
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+}
+
+.start-section.soft {
+  background: #ffffff;
+}
+
+.start-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.start-card {
+  display: flex;
+  min-height: 280px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border-radius: 30px;
+  background: #ffffff;
+  border: 1px solid rgba(31, 75, 71, 0.13);
+  box-shadow: 0 12px 34px rgba(31, 75, 71, 0.055);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.start-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(31, 75, 71, 0.24);
+  box-shadow: 0 16px 42px rgba(31, 75, 71, 0.075);
+}
+
+.start-card span {
+  color: rgba(31, 111, 102, 0.68);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.start-card h2 {
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+}
+
+.start-card p,
+.start-scope p,
+.start-final-card p {
+  margin: 0;
+  color: rgba(32, 35, 47, 0.70);
+  line-height: 1.65;
+}
+
+.start-card strong {
+  color: #1f6f66;
+  font-size: 0.9rem;
+}
+
+.start-scope {
+  max-width: 820px;
+}
+
+.start-scope h2 {
+  max-width: 720px;
+  font-size: clamp(2rem, 4.4vw, 3.25rem);
+}
+
+.start-scope p {
+  max-width: 720px;
+  margin-top: 1rem;
+}
+
+.start-section.final {
+  background: #f7f3eb;
+}
+
+.start-final-card {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid rgba(31, 75, 71, 0.14);
+  border-radius: 34px;
+  padding: clamp(2rem, 5vw, 3.2rem);
+  box-shadow: 0 22px 60px rgba(31, 75, 71, 0.08);
+}
+
+.start-final-card h2 {
+  font-size: clamp(2rem, 4.4vw, 3.25rem);
+}
+
+.start-final-card p {
+  max-width: 580px;
+  margin: 1rem auto 1.5rem;
+}
+
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.start-btn.primary {
+  background: #1f8f83;
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(31, 143, 131, 0.16);
+}
+
+@media (max-width: 860px) {
+  .start-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .start-card {
+    min-height: auto;
+  }
+
+  .start-hero h1 {
+    font-size: clamp(2.4rem, 10vw, 3.8rem);
+  }
+
+  .start-final-card {
+    text-align: left;
+  }
+
+  .start-final-card p {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .start-btn {
+    width: 100%;
+  }
+}
+
 </style>
 </head>
 <body>
-  <main class="page">
-    <div class="wrap">
-      <nav class="brand">
-        <div class="logo">APC</div>
-        <a class="small-link" href="index.html">Main website</a>
-      </nav>
+  
 
-      <section class="hero">
-        <div class="kicker">Start here</div>
-        <h1>Need help understanding your autistic child?</h1>
-        <p class="sub">
-          Start here for free tools, parent support, and practical next steps from Autism Pathways Consulting.
-        </p>
-
-        <div class="actions">
-          <a class="btn primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank">Book Free Discovery Call</a>
-          <a class="btn secondary" href="services.html">View Parent Support Options</a>
-          <a class="btn secondary" href="index.html#free-guide">Get Free Parent Guide</a>
-          <a class="btn secondary" href="free-tool.html">Open Calm Companion</a>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>What APC helps with</h2>
-        <div class="grid">
-          <div class="card">
-            <strong>Meltdowns and shutdowns</strong>
-            <span>Understand overwhelm, escalation, recovery, and what to do next.</span>
-          </div>
-          <div class="card">
-            <strong>Communication</strong>
-            <span>Support expression, understanding, choices, and everyday interaction.</span>
-          </div>
-          <div class="card">
-            <strong>Routines and independence</strong>
-            <span>Build clearer routines for transitions, school mornings, hygiene, and daily life.</span>
-          </div>
-          <div class="card">
-            <strong>Puberty and adolescence</strong>
-            <span>Support body changes, privacy, boundaries, friendships, and growing independence.</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>About CJ</h2>
-        <p class="about">
-          CJ Lim holds a Master’s in Special and Inclusive Education, active Hanen credentials, and years of experience supporting autistic children with practical home and school strategies.
-        </p>
-      </section>
-
-      <section class="section">
-        <h2>Not sure where to start?</h2>
-        <p class="about">
-          Book the free 15-minute Discovery Call. We will clarify your main concern, see whether APC is the right fit, and recommend the most helpful next step.
-        </p>
-        <div class="actions">
-          <a class="btn primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank">Book Free Discovery Call</a>
-          <a class="btn secondary" href="services.html">View Parent Support Options</a>
-        </div>
-      </section>
-
-      <p class="footer">
-        APC provides parent education and practical autism support. APC does not replace occupational therapy, speech therapy, psychology, medical care, or diagnostic assessment.
-      </p>
+<main class="start-clean-page">
+  <section class="start-hero">
+    <div class="start-container">
+      <p class="start-kicker">Start here</p>
+      <h1>Need help understanding your autistic child?</h1>
+      <p class="start-sub">Choose the option that fits what you need today. APC helps parents understand patterns across behaviour, communication, regulation, routines, and learning, then plan practical next steps.</p>
     </div>
-  </main>
+  </section>
+
+  <section class="start-section">
+    <div class="start-container">
+      <div class="start-grid">
+        <a class="start-card primary-card" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">
+          <span>01</span>
+          <h2>Book a Free Discovery Call</h2>
+          <p>Best if you are unsure where to start and want a short clarity and fit check.</p>
+          <strong>Book Free Discovery Call</strong>
+        </a>
+
+        <a class="start-card" href="services.html">
+          <span>02</span>
+          <h2>View Parent Support Options</h2>
+          <p>Best if you want to compare APC Quick Clarity, APC Full Implementation, and APC Intensive.</p>
+          <strong>View Parent Support Options</strong>
+        </a>
+
+        <a class="start-card" href="free-tool.html">
+          <span>03</span>
+          <h2>Use the Free Tool</h2>
+          <p>Best if you need quick support for routines, communication, transitions, or overwhelm.</p>
+          <strong>Open Free Tool</strong>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="start-section soft">
+    <div class="start-container start-scope">
+      <p class="start-kicker">Clear scope</p>
+      <h2>APC is parent education and practical guidance.</h2>
+      <p>APC does not diagnose, provide therapy, replace OT, speech therapy, psychology, or medical care, or provide crisis support.</p>
+    </div>
+  </section>
+
+  <section class="start-section final">
+    <div class="start-container">
+      <div class="start-final-card">
+        <p class="start-kicker">Not sure where to start?</p>
+        <h2>Start with the free Discovery Call.</h2>
+        <p>We will briefly understand your situation, check whether APC is the right fit, and recommend the most helpful next step.</p>
+        <a class="start-btn primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Book Free Discovery Call</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+
 </body>
 </html>
