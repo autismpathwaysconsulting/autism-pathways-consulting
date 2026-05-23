@@ -242,7 +242,164 @@ footer{background:var(--text);color:#fff;padding:36px 20px}.footer-in{max-width:
   }
 }
 
-</style></head><body><nav><div class="nav-in"><a href="index.html" class="nav-logo">APC</a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="free-tool.html">Free Tool</a></div></div></nav><main><div class="container"><div class="hero-label">Autism Pathways Consulting</div><h1>Terms &amp; Conditions</h1><p class="subtitle">Website and service terms for Autism Pathways Consulting</p><div class="card"><p>By using this website or booking services with Autism Pathways Consulting, you agree to the following terms.</p></div><div class="card"><h2>Services</h2><ul><li>APC provides educational consultation and support services related to autism, communication, emotional regulation, learning support, routines, behaviour, and school-related challenges.</li></ul></div><div class="card"><h2>Bookings</h2><ul><li>Bookings are managed through third-party scheduling platforms. APC reserves the right to reschedule appointments where necessary, decline bookings where appropriate, and refuse repeated misuse of free consultation services.</li></ul></div><div class="card"><h2>Payments</h2><ul><li>Payment instructions will be provided for paid services. Sessions must be paid for before the scheduled consultation unless otherwise agreed.</li></ul></div><div class="card"><h2>Intellectual Property</h2><ul><li>All website content, guides, downloadable resources, and materials remain the intellectual property of Autism Pathways Consulting unless otherwise stated. Materials may not be copied, redistributed, or commercially reproduced without written permission.</li></ul></div><div class="card"><h2>Limitation of Liability</h2><ul><li>Autism Pathways Consulting shall not be held liable for decisions made based on consultation discussions, outcomes related to implementation of strategies, or indirect or consequential losses arising from use of the website or services. Use of APC services is voluntary and at the user’s discretion.</li></ul></div><div class="contact-box"><strong>Contact:</strong><br>For questions about these policies, email <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>.</div></div></main>
+
+/* APC legal pages clean polish */
+.legal-clean-page {
+  background: #f7f3eb;
+  color: #20232f;
+}
+
+.legal-container {
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.legal-hero {
+  padding: clamp(4rem, 8vw, 6.5rem) 0 clamp(2rem, 5vw, 3rem);
+}
+
+.legal-kicker {
+  margin: 0 0 0.85rem;
+  color: #1f6f66;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.legal-hero h1 {
+  margin: 0;
+  color: #20232f;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.legal-subtitle {
+  max-width: 660px;
+  margin: 1rem 0 0;
+  color: rgba(32, 35, 47, 0.70);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.legal-section {
+  padding: 0 0 clamp(4rem, 7vw, 6rem);
+}
+
+.legal-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.legal-card {
+  background: #ffffff;
+  border: 1px solid rgba(31, 75, 71, 0.13);
+  border-radius: 26px;
+  padding: clamp(1.35rem, 3vw, 2rem);
+  box-shadow: 0 12px 34px rgba(31, 75, 71, 0.055);
+}
+
+.legal-card h2 {
+  margin: 0 0 0.8rem;
+  color: #173936;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.legal-card ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: rgba(32, 35, 47, 0.72);
+  line-height: 1.7;
+}
+
+.legal-card li + li {
+  margin-top: 0.45rem;
+}
+
+.legal-card p {
+  margin: 0;
+  color: rgba(32, 35, 47, 0.72);
+  line-height: 1.7;
+}
+
+.legal-contact {
+  margin-top: 1rem;
+  background: #edf3ef;
+  border: 1px solid rgba(31, 75, 71, 0.12);
+  border-radius: 24px;
+  padding: 1.25rem;
+  color: rgba(32, 35, 47, 0.72);
+  line-height: 1.65;
+}
+
+.legal-contact strong {
+  display: block;
+  color: #173936;
+  margin-bottom: 0.25rem;
+}
+
+.legal-contact a {
+  color: #1f6f66;
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .legal-hero {
+    padding-top: 3rem;
+  }
+}
+
+</style></head><body><nav><div class="nav-in"><a href="index.html" class="nav-logo">APC</a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="free-tool.html">Free Tool</a></div></div></nav>
+<main class="legal-clean-page">
+  <section class="legal-hero">
+    <div class="legal-container">
+      <p class="legal-kicker">Terms</p>
+      <h1>Terms & Conditions</h1>
+      <p class="legal-subtitle">Website and service terms for Autism Pathways Consulting.</p>
+    </div>
+  </section>
+
+  <section class="legal-section">
+    <div class="legal-container">
+      <div class="legal-grid">
+
+        <article class="legal-card">
+          <h2>Overview</h2>
+          <p>By using this website or booking services with Autism Pathways Consulting, you agree to the following terms.</p>
+        </article>
+        <article class="legal-card">
+          <h2>Services</h2>
+          <p>APC provides educational consultation and parent support services related to autism, communication, emotional regulation, learning support, routines, behaviour, and school-related challenges.</p>
+        </article>
+        <article class="legal-card">
+          <h2>Bookings</h2>
+          <p>Bookings are managed through third-party scheduling platforms. APC reserves the right to reschedule appointments where necessary, decline bookings where appropriate, and refuse repeated misuse of free consultation services.</p>
+        </article>
+        <article class="legal-card">
+          <h2>Payments</h2>
+          <p>Payment instructions are provided after intake review and confirmation by CJ. Paid sessions must be paid for before the scheduled consultation unless otherwise agreed.</p>
+        </article>
+        <article class="legal-card">
+          <h2>Intellectual Property</h2>
+          <p>All website content, guides, downloadable resources, and materials remain the intellectual property of Autism Pathways Consulting unless otherwise stated. Materials may not be copied, redistributed, or commercially reproduced without written permission.</p>
+        </article>
+        <article class="legal-card">
+          <h2>Limitation of Liability</h2>
+          <p>Autism Pathways Consulting shall not be held liable for decisions made based on consultation discussions, outcomes related to implementation of strategies, or indirect or consequential losses arising from use of the website or services. Use of APC services is voluntary and at the user’s discretion.</p>
+        </article>
+      </div>
+
+      <div class="legal-contact">
+        <strong>Contact</strong>
+        For questions about these policies, email <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>.
+      </div>
+    </div>
+  </section>
+</main>
+
 <footer class="apc-footer">
   <div class="apc-footer-inner">
     <div class="apc-footer-brand">
