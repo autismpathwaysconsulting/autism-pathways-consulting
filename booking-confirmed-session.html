@@ -315,6 +315,170 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   }
 }
 
+
+/* APC booking confirmation polish */
+.confirm-page {
+  background: #f7f3eb;
+  color: #20232f;
+}
+
+.confirm-wrap {
+  width: min(860px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) 0;
+}
+
+.confirm-card {
+  background: #ffffff;
+  border: 1px solid rgba(31, 75, 71, 0.13);
+  border-radius: 34px;
+  padding: clamp(2rem, 5vw, 3.2rem);
+  box-shadow: 0 22px 60px rgba(31, 75, 71, 0.08);
+}
+
+.confirm-label {
+  margin: 0 0 0.85rem;
+  color: #1f6f66;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.confirm-card h1 {
+  margin: 0;
+  color: #20232f;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.4rem, 5.6vw, 4.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.confirm-subtitle {
+  max-width: 640px;
+  margin: 1rem 0 0;
+  color: rgba(32, 35, 47, 0.70);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.confirm-info {
+  margin-top: 2rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.confirm-info h3 {
+  margin: 0 0 0.35rem;
+  color: #173936;
+  font-size: 1rem;
+}
+
+.confirm-info-item {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.85rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(31, 75, 71, 0.12);
+}
+
+.confirm-number {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #e8f0eb;
+  color: #1f6f66;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.confirm-info-item strong {
+  display: block;
+  color: #173936;
+  margin-bottom: 0.25rem;
+}
+
+.confirm-info-item p {
+  margin: 0;
+  color: rgba(32, 35, 47, 0.70);
+  line-height: 1.65;
+}
+
+.confirm-actions {
+  margin-top: 1.7rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.confirm-btn.primary {
+  background: #1f8f83;
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(31, 143, 131, 0.16);
+}
+
+.confirm-btn.secondary {
+  background: #edf3ef;
+  color: #1f6f66;
+}
+
+.confirm-profile {
+  margin-top: 1.7rem;
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(31, 75, 71, 0.12);
+}
+
+.confirm-profile img {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: center 30%;
+  flex-shrink: 0;
+  border: 2px solid rgba(31, 75, 71, 0.13);
+}
+
+.confirm-profile strong {
+  display: block;
+  color: #173936;
+}
+
+.confirm-profile span {
+  display: block;
+  margin-top: 0.15rem;
+  color: rgba(32, 35, 47, 0.62);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .confirm-actions,
+  .confirm-btn {
+    width: 100%;
+  }
+
+  .confirm-info-item {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -332,65 +496,46 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   </div>
 </nav>
 
-<main>
-<div class="page">
 
-  <div class="check-wrap">
-    <div class="check-circle">
-      <svg viewBox="0 0 24 24"><polyline class="check-path" points="4,12 9,17 20,7"/></svg>
-    </div>
+<main class="confirm-page">
+  <div class="confirm-wrap">
+    <section class="confirm-card">
+      <p class="confirm-label">Parent support session confirmed</p>
+      <h1>Your parent support session is booked.</h1>
+      <p class="confirm-subtitle">Your session is focused on understanding patterns and planning practical next steps.</p>
+
+      <div class="confirm-info">
+        <h3>Before your session</h3>
+        <div class="confirm-info-item">
+          <span class="confirm-number">1</span>
+          <p><strong>Check your calendar invite</strong>Your Google Meet link will be in the calendar invitation. Please use that link to join the session.</p>
+        </div>
+        <div class="confirm-info-item">
+          <span class="confirm-number">2</span>
+          <p><strong>Prepare key examples</strong>Bring your main questions, recent examples, what you have tried, and what you want to understand more clearly.</p>
+        </div>
+        <div class="confirm-info-item">
+          <span class="confirm-number">3</span>
+          <p><strong>Send your receipt if needed</strong>If payment was just completed, please send the receipt to CJ so your booking record can be confirmed.</p>
+        </div>
+      </div>
+
+      <div class="confirm-actions">
+        <a class="confirm-btn primary" href="https://wa.me/601172998168" target="_blank" rel="noopener">Message CJ</a>
+        <a class="confirm-btn secondary" href="services.html">View Parent Support Options</a>
+      </div>
+
+      <div class="confirm-profile">
+        <img src="https://autismpathwaysconsulting.com/cj-photo.JPG" alt="CJ Lim">
+        <div>
+          <strong>CJ Lim</strong>
+          <span>Founder of Autism Pathways Consulting</span>
+        </div>
+      </div>
+    </section>
   </div>
-
-  <div class="label">Session confirmed</div>
-  <h1>Your parent support session is booked.</h1>
-  <p class="subtitle">You'll receive a Google Meet link in your calendar invitation.</p>
-
-  <div class="info-card">
-    <h3>Before your session</h3>
-    <div class="info-row">
-      <span class="info-icon">💻</span>
-      <div class="info-text"><strong>Google Meet link in your calendar</strong>Check your calendar invitation for the meeting link. You'll use this to join the session.</div>
-    </div>
-    <div class="info-row">
-      <span class="info-icon">🔇</span>
-      <div class="info-text"><strong>Find a quiet space</strong>Please be in a quiet space with stable internet. This helps CJ focus fully on your situation.</div>
-    </div>
-    <div class="info-row">
-      <span class="info-icon">🕐</span>
-      <div class="info-text"><strong>Session preparation</strong>Come prepared with your main questions or concerns. CJ will guide the session and focus on practical next steps.</div>
-    </div>
-    <div class="info-row">
-      <span class="info-icon">📧</span>
-      <div class="info-text"><strong>Reminder email</strong>You'll receive a reminder email 24 hours before your session.</div>
-    </div>
-  </div>
-
-  <div class="note-box">
-    <strong>Need to reschedule?</strong>
-    Please reschedule at least 48 hours in advance using the link in your confirmation email. Late cancellations may not be eligible for rescheduling.
-  </div>
-
-  <div class="actions">
-    <a href="https://wa.me/601172998168" class="btn-primary">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Message CJ
-    </a>
-    <a href="index.html" class="btn-secondary">Back to home</a>
-  </div>
-
-  <hr class="divider">
-
-  <div class="cj-row">
-    <img src="https://autismpathwaysconsulting.com/cj-photo.JPG" alt="CJ Lim" style="width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:center 30%;flex-shrink:0;border:2px solid var(--border)">
-    <div class="cj-text">
-      <strong>CJ Lim</strong>
-      MA Special &amp; Inclusive Education &middot; Hanen Certified &middot; 10+ years experience<br>
-      Autism Pathways Consulting &middot; Petaling Jaya &amp; KL
-    </div>
-  </div>
-
-</div>
 </main>
+
 
 
 <footer class="apc-footer">
