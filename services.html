@@ -1007,6 +1007,79 @@ html {
   }
 }
 
+
+
+/* APC strengthened assurance layout */
+.assurance-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.assurance-section + .assurance-section {
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+
+.assurance-section .section-header {
+  max-width: 920px;
+}
+
+.assurance-section .section-header p {
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.assurance-cards {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.path-cards {
+  max-width: 980px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.assurance-section .info-card {
+  min-height: 260px;
+  padding: clamp(1.6rem, 2.4vw, 2.25rem);
+}
+
+.path-section .info-card {
+  min-height: 250px;
+}
+
+.assurance-section .info-card h3 {
+  font-size: clamp(1.15rem, 1.45vw, 1.35rem);
+  line-height: 1.25;
+}
+
+.assurance-section .info-card p {
+  font-size: clamp(0.98rem, 1.08vw, 1.05rem);
+  line-height: 1.7;
+}
+
+.assurance-section .section-note {
+  max-width: 980px;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+@media (max-width: 900px) {
+  .path-cards,
+  .assurance-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .assurance-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .assurance-section .info-card,
+  .path-section .info-card {
+    min-height: auto;
+  }
+}
+
 </style>
 
 <!-- APC_CLARITY_CSS_START -->
@@ -1357,42 +1430,42 @@ html {
     </div>
   </section>
 
-  <section class="section compact-section soft-section">
+  
+      <section class="section assurance-section">
         <div class="section-header">
           <p class="eyebrow">Research-informed structure</p>
           <h2>Why parent support matters</h2>
           <p>
-            Parents are part of the child’s everyday support system. Many important patterns happen at
-            home, during routines, transitions, communication moments, sensory overwhelm, and emotional
-            situations. APC helps parents slow down, understand what may be happening, and choose clearer
-            next steps.
+            Parents are not outside the support process. They are part of the child’s everyday support
+            system. APC helps parents understand what is happening in real routines, so support becomes
+            clearer, more consistent, and easier to apply at home.
           </p>
         </div>
 
-        <div class="cards-grid three">
+        <div class="cards-grid three assurance-cards">
           <article class="info-card">
             <h3>Parents see the daily patterns</h3>
             <p>
-              Parents often notice what happens before, during, and after difficult moments. This everyday
-              information helps support feel more specific than general advice.
+              Many important moments happen at home: routines, transitions, communication breakdowns,
+              sensory overwhelm, refusal, shutdowns, and emotional escalation. Parents often notice the
+              details that help explain what is building up.
             </p>
           </article>
 
           <article class="info-card">
             <h3>Guidance supports implementation</h3>
             <p>
-              Research on parent-mediated and telehealth autism support points to the value of guided
-              parent involvement, parent implementation, self-efficacy, and stress support. APC applies
-              this carefully as parent education and practical guidance.
+              Research on parent-mediated and telehealth autism support highlights the role of guided
+              parent involvement, implementation, parent confidence, and stress support. APC turns that
+              principle into structured, practical guidance for your family context.
             </p>
           </article>
 
           <article class="info-card">
             <h3>Time allows review and adjustment</h3>
             <p>
-              Support across several weeks gives parents time to try one step, observe what happens,
-              review the pattern, and adjust. Guidance also recognises that families need information,
-              advice, training, and support.
+              Real support is rarely one piece of advice. Several weeks gives parents time to try one
+              practical step, observe what happens, review the pattern, and adjust without rushing.
             </p>
           </article>
         </div>
@@ -1402,60 +1475,62 @@ html {
           guidance on family information, advice, training, and support; Project ImPACT parent coaching
           model; Hanen More Than Words everyday routines and parent interaction principles.
         </p>
-
       </section>
 
 
-      <section class="section">
+
+      
+      <section class="section assurance-section path-section">
         <div class="section-header">
           <p class="eyebrow">APC parent support pathway</p>
           <h2>The APC PATH Process</h2>
           <p>
-            PATH gives parents a simple structure for understanding what is happening and choosing one
-            practical next step. It keeps support calm, clear, and realistic.
+            PATH is the structure APC uses to help parents move from guessing to understanding.
+            It keeps support practical, paced, and connected to what is actually happening at home.
           </p>
         </div>
 
-        <div class="cards-grid four">
+        <div class="cards-grid four path-cards">
           <article class="info-card">
             <h3>P: Pause and understand</h3>
             <p>
-              We begin by slowing down the situation. Instead of reacting only to the behaviour, we look
-              at what your child may be communicating and what you are experiencing too.
+              We slow the situation down first. Instead of reacting only to the behaviour, we look at what
+              your child may be communicating, what happened before the moment, and what you are managing
+              as the parent.
             </p>
           </article>
 
           <article class="info-card">
             <h3>A: Assess the pattern</h3>
             <p>
-              We look at what tends to happen before, during, and after the difficult moment. This may
-              include communication, regulation, routines, environment, or adult responses.
+              We look across communication, regulation, routines, environment, and adult responses. This
+              helps separate the visible behaviour from the pattern that may be driving it.
             </p>
           </article>
 
           <article class="info-card">
             <h3>T: Try one practical step</h3>
             <p>
-              We choose one realistic step to try at home. The focus is not doing everything at once,
-              but testing one clear change and noticing what happens.
+              We choose one realistic step to test at home. The goal is not to overhaul everything at once,
+              but to make one clear adjustment and observe what changes.
             </p>
           </article>
 
           <article class="info-card">
             <h3>H: Help it carry over</h3>
             <p>
-              We review what happened and adjust the plan so it can carry over into routines,
-              transitions, school-related moments, or family situations.
+              We review what worked, what did not, and what needs to be adjusted. Then we help the idea
+              carry over into routines, transitions, school-related moments, and family life.
             </p>
           </article>
         </div>
 
         <p class="section-note">
-          This is not a proprietary method, therapy, diagnosis, or a guaranteed outcome process.
-          It is a simple parent support pathway that helps families reduce guesswork and choose clearer
-          next steps.
+          This is not therapy, diagnosis, or a guaranteed outcome process. It is a simple parent support
+          pathway that helps families reduce guesswork and choose clearer next steps.
         </p>
       </section>
+
 
 
   <section class="section compact-section soft-section">
