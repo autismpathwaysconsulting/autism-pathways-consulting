@@ -920,6 +920,93 @@ html {
   }
 }
 
+
+
+/* APC assurance card layout fix */
+.cards-grid {
+  width: min(1120px, calc(100% - 48px));
+  margin: clamp(2rem, 5vw, 3.5rem) auto 0;
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: stretch;
+}
+
+.cards-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cards-grid.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.info-card {
+  height: 100%;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.4rem, 2vw, 2rem);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.06);
+  padding: clamp(1.35rem, 2.4vw, 2rem);
+  text-align: left;
+  overflow: hidden;
+}
+
+.info-card h3 {
+  margin: 0 0 0.75rem;
+  color: #151827;
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.info-card p {
+  margin: 0;
+  color: rgba(21, 24, 39, 0.72);
+  font-size: clamp(0.95rem, 1vw, 1rem);
+  line-height: 1.75;
+}
+
+.section-note {
+  width: min(980px, calc(100% - 48px));
+  margin: clamp(1.25rem, 3vw, 2rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.5rem;
+  background: rgba(247, 243, 235, 0.72);
+  padding: clamp(1rem, 2vw, 1.35rem);
+  color: rgba(21, 24, 39, 0.72);
+  font-size: clamp(0.9rem, 1vw, 0.98rem);
+  line-height: 1.7;
+  text-align: center;
+}
+
+.section > .section-header {
+  width: min(980px, calc(100% - 48px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 1180px) {
+  .cards-grid.four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .cards-grid.three,
+  .cards-grid.four {
+    grid-template-columns: 1fr;
+  }
+
+  .cards-grid,
+  .section-note,
+  .section > .section-header {
+    width: min(100% - 32px, 680px);
+  }
+
+  .info-card {
+    border-radius: 1.4rem;
+  }
+}
+
 </style>
 
 <!-- APC_CLARITY_CSS_START -->
