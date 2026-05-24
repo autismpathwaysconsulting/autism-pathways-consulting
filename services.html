@@ -1638,6 +1638,407 @@ html {
   }
 }
 
+
+
+/* APC full services visual polish */
+.fit-section,
+.pricing-section,
+.assurance-section {
+  padding-top: clamp(4rem, 7vw, 6rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+}
+
+.fit-section + .section,
+.pricing-section + .section,
+.assurance-section + .section {
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+}
+
+.fit-section .section-header,
+.pricing-section .section-header,
+.assurance-section .section-header {
+  max-width: 960px;
+}
+
+.fit-section .section-header p,
+.pricing-section .section-header p,
+.assurance-section .section-header p {
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Fit section */
+.fit-cards {
+  width: min(1080px, calc(100% - 48px));
+  margin: clamp(2.25rem, 4.5vw, 3.5rem) auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.fit-card {
+  position: relative;
+  min-height: 500px;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.4vw, 2.35rem);
+  padding: clamp(1.6rem, 2.7vw, 2.4rem);
+  text-align: left;
+  overflow: hidden;
+  box-shadow: 0 26px 80px rgba(15, 23, 42, 0.065);
+}
+
+.fit-card-primary {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(247, 243, 235, 0.72)),
+    radial-gradient(circle at top left, rgba(107, 158, 122, 0.22), transparent 42%);
+}
+
+.fit-card-muted {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 243, 235, 0.9)),
+    radial-gradient(circle at top right, rgba(232, 153, 122, 0.16), transparent 42%);
+}
+
+.fit-card-label {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.09);
+  color: #1F6F66;
+  padding: 0.46rem 0.82rem;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.fit-card-muted .fit-card-label {
+  background: rgba(232, 153, 122, 0.14);
+  color: #8f4f35;
+}
+
+.fit-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 1.8vw, 1.72rem);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.fit-card-intro {
+  margin: 0.85rem 0 0;
+  max-width: 92%;
+  color: rgba(21, 24, 39, 0.64);
+  font-size: clamp(0.95rem, 1.05vw, 1rem);
+  line-height: 1.65;
+}
+
+.fit-list {
+  list-style: none;
+  margin: 1.3rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.82rem;
+}
+
+.fit-list li {
+  position: relative;
+  padding-left: 1.75rem;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: clamp(0.98rem, 1.05vw, 1.04rem);
+  line-height: 1.55;
+}
+
+.fit-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.74em;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 5px rgba(31, 111, 102, 0.08);
+}
+
+.fit-card-muted .fit-list li::before {
+  background: #E8997A;
+  box-shadow: 0 0 0 5px rgba(232, 153, 122, 0.12);
+}
+
+.fit-note,
+.pricing-note {
+  width: min(860px, calc(100% - 48px));
+  margin: clamp(1.35rem, 2.8vw, 2rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.35rem;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 1rem 1.25rem;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: clamp(0.94rem, 1vw, 1rem);
+  line-height: 1.65;
+  text-align: center;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.035);
+}
+
+/* Pricing section */
+.pricing-grid {
+  width: min(1120px, calc(100% - 48px));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2vw, 1.6rem);
+  align-items: stretch;
+}
+
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.2vw, 2.2rem);
+  background:
+    radial-gradient(circle at top right, rgba(107, 158, 122, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.06);
+  padding: clamp(1.35rem, 2.1vw, 2rem);
+  text-align: left;
+  overflow: hidden;
+}
+
+.pricing-card-featured {
+  border-color: rgba(31, 111, 102, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(31, 111, 102, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 243, 235, 0.78));
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.09);
+  transform: translateY(-0.7rem);
+}
+
+.pricing-badge {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.1);
+  color: #1F6F66;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.pricing-card-top {
+  border-bottom: 1px solid rgba(23, 57, 54, 0.1);
+  padding-bottom: 1.2rem;
+}
+
+.pricing-kicker {
+  margin: 0 0 0.6rem;
+  color: #1F6F66;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.pricing-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 1.75vw, 1.7rem);
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+}
+
+.pricing-price {
+  margin: 1rem 0 0;
+  color: #1F6F66;
+  font-size: clamp(2rem, 3vw, 2.55rem);
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+
+.pricing-duration {
+  margin: 0.8rem 0 0;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 750;
+}
+
+.pricing-best {
+  margin-top: 1.25rem;
+  border-radius: 1.25rem;
+  background: rgba(247, 243, 235, 0.72);
+  padding: 1rem;
+}
+
+.pricing-best span {
+  display: block;
+  color: #1F6F66;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.pricing-best p {
+  margin: 0;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.pricing-list {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1.4rem;
+  padding: 0;
+}
+
+.pricing-list li {
+  position: relative;
+  padding-left: 1.55rem;
+  color: rgba(21, 24, 39, 0.76);
+  font-size: 0.97rem;
+  line-height: 1.5;
+}
+
+.pricing-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  box-shadow: 0 0 0 5px rgba(31, 111, 102, 0.08);
+  transform: translateY(-50%);
+}
+
+.pricing-link {
+  margin-top: auto;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 3.25rem;
+  border: 1px solid rgba(23, 57, 54, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #173936;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 850;
+  padding: 0.85rem 1rem;
+}
+
+.pricing-link-primary {
+  background: #1F6F66;
+  color: #fff;
+  border-color: #1F6F66;
+}
+
+/* PATH section */
+.path-steps {
+  width: min(980px, calc(100% - 48px));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.path-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.4rem, 2vw, 2rem);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.055);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  text-align: left;
+}
+
+.path-letter {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  background: #1F6F66;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.path-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.08rem, 1.35vw, 1.3rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.path-card p {
+  margin: 0.65rem 0 0;
+  color: rgba(21, 24, 39, 0.72);
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 980px) {
+  .fit-cards,
+  .pricing-grid,
+  .path-steps {
+    grid-template-columns: 1fr;
+    width: min(100% - 32px, 680px);
+  }
+
+  .fit-card,
+  .pricing-card-featured {
+    min-height: auto;
+    transform: none;
+  }
+
+  .fit-note,
+  .pricing-note {
+    width: min(100% - 32px, 680px);
+  }
+}
+
+@media (max-width: 640px) {
+  .fit-section,
+  .pricing-section,
+  .assurance-section {
+    padding-top: 3.4rem;
+    padding-bottom: 3.4rem;
+  }
+
+  .fit-card,
+  .pricing-card,
+  .path-card {
+    border-radius: 1.45rem;
+    padding: 1.3rem;
+  }
+
+  .path-card {
+    grid-template-columns: 1fr;
+  }
+
+  .fit-list,
+  .pricing-list {
+    gap: 0.72rem;
+  }
+}
+
 </style>
 
 <!-- APC_CLARITY_CSS_START -->
@@ -1954,6 +2355,7 @@ html {
 
   
       
+      
       <section class="section fit-section">
         <div class="section-header">
           <p class="eyebrow">Who this is for</p>
@@ -2003,6 +2405,7 @@ html {
           If APC is not the right fit, CJ will be clear about what kind of support may be more suitable.
         </p>
       </section>
+
 
 
 
@@ -2056,6 +2459,7 @@ html {
 
 
       
+      
       <section class="section assurance-section path-section">
         <div class="section-header">
           <p class="eyebrow">APC parent support pathway</p>
@@ -2066,38 +2470,50 @@ html {
           </p>
         </div>
 
-        <div class="cards-grid four path-cards">
-          <article class="info-card">
-            <h3>P: Pause and understand</h3>
-            <p>
-              We slow the situation down first. Instead of reacting only to the behaviour, we look at what
-              your child may be communicating, what happened before the moment, and what you are managing
-              as the parent.
-            </p>
+        <div class="path-steps">
+          <article class="path-card">
+            <div class="path-letter">P</div>
+            <div>
+              <h3>Pause and understand</h3>
+              <p>
+                We slow the situation down first. Instead of reacting only to the behaviour, we look at what
+                your child may be communicating, what happened before the moment, and what you are managing
+                as the parent.
+              </p>
+            </div>
           </article>
 
-          <article class="info-card">
-            <h3>A: Assess the pattern</h3>
-            <p>
-              We look across communication, regulation, routines, environment, and adult responses. This
-              helps separate the visible behaviour from the pattern that may be driving it.
-            </p>
+          <article class="path-card">
+            <div class="path-letter">A</div>
+            <div>
+              <h3>Assess the pattern</h3>
+              <p>
+                We look across communication, regulation, routines, environment, and adult responses. This
+                helps separate the visible behaviour from the pattern that may be driving it.
+              </p>
+            </div>
           </article>
 
-          <article class="info-card">
-            <h3>T: Try one practical step</h3>
-            <p>
-              We choose one realistic step to test at home. The goal is not to overhaul everything at once,
-              but to make one clear adjustment and observe what changes.
-            </p>
+          <article class="path-card">
+            <div class="path-letter">T</div>
+            <div>
+              <h3>Try one practical step</h3>
+              <p>
+                We choose one realistic step to test at home. The goal is not to overhaul everything at once,
+                but to make one clear adjustment and observe what changes.
+              </p>
+            </div>
           </article>
 
-          <article class="info-card">
-            <h3>H: Help it carry over</h3>
-            <p>
-              We review what worked, what did not, and what needs to be adjusted. Then we help the idea
-              carry over into routines, transitions, school-related moments, and family life.
-            </p>
+          <article class="path-card">
+            <div class="path-letter">H</div>
+            <div>
+              <h3>Help it carry over</h3>
+              <p>
+                We review what worked, what did not, and what needs to be adjusted. Then we help the idea
+                carry over into routines, transitions, school-related moments, and family life.
+              </p>
+            </div>
           </article>
         </div>
 
@@ -2106,6 +2522,7 @@ html {
           pathway that helps families reduce guesswork and choose clearer next steps.
         </p>
       </section>
+
 
 
 
@@ -2159,6 +2576,7 @@ html {
   </section>
 
   
+      
       <section class="section pricing-section" id="parent-support-options">
         <div class="section-header">
           <p class="eyebrow">Parent support options</p>
@@ -2247,6 +2665,7 @@ html {
           Not sure which option fits? The free Discovery Call helps confirm whether APC is suitable and which level of support makes sense.
         </p>
       </section>
+
 
 
   <section class="section compact-section soft-section">
