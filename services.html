@@ -1080,6 +1080,135 @@ html {
   }
 }
 
+
+
+/* APC fit section polish */
+.fit-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.fit-section .section-header {
+  max-width: 940px;
+}
+
+.fit-section .section-header p {
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fit-cards {
+  width: min(1080px, calc(100% - 48px));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: stretch;
+}
+
+.fit-card {
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.5vw, 2.4rem);
+  padding: clamp(1.6rem, 3vw, 2.5rem);
+  box-shadow: 0 26px 80px rgba(15, 23, 42, 0.07);
+  text-align: left;
+}
+
+.fit-card-primary {
+  background:
+    radial-gradient(circle at top left, rgba(107, 158, 122, 0.16), transparent 38%),
+    rgba(255, 255, 255, 0.9);
+}
+
+.fit-card-muted {
+  background:
+    radial-gradient(circle at top right, rgba(232, 153, 122, 0.12), transparent 38%),
+    rgba(247, 243, 235, 0.78);
+}
+
+.fit-card-label {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.09);
+  color: #1F6F66;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.fit-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+}
+
+.fit-list {
+  list-style: none;
+  margin: 1.35rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.fit-list li {
+  position: relative;
+  padding-left: 1.7rem;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: clamp(1rem, 1.15vw, 1.08rem);
+  line-height: 1.6;
+}
+
+.fit-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  transform: translateY(-50%);
+}
+
+.fit-card-muted .fit-list li::before {
+  background: rgba(232, 153, 122, 0.95);
+}
+
+.fit-note {
+  width: min(860px, calc(100% - 48px));
+  margin: clamp(1.5rem, 3vw, 2.25rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 1rem 1.25rem;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: clamp(0.95rem, 1vw, 1rem);
+  line-height: 1.7;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .fit-cards {
+    grid-template-columns: 1fr;
+    width: min(100% - 32px, 680px);
+  }
+
+  .fit-note {
+    width: min(100% - 32px, 680px);
+  }
+
+  .fit-card {
+    border-radius: 1.5rem;
+  }
+}
+
 </style>
 
 <!-- APC_CLARITY_CSS_START -->
@@ -1394,41 +1523,49 @@ html {
     </div>
   </section>
 
-  <section class="section compact-section">
-    <div class="container">
-      <div class="section-header">
-        <p class="eyebrow">Who this is for</p>
-        <h2>For parents who want clarity without judgement</h2>
-        <p>
-          APC is for parents who want to understand what may be happening, what to focus on first, and how to support their child in real home routines.
+  
+      <section class="section fit-section">
+        <div class="section-header">
+          <p class="eyebrow">Who this is for</p>
+          <h2>For parents who want clarity without judgement</h2>
+          <p>
+            APC is for parents who feel stuck between too much advice and no clear next step.
+            The focus is understanding what may be happening at home, what to prioritise first,
+            and how to support your child in real routines.
+          </p>
+        </div>
+
+        <div class="fit-cards">
+          <article class="fit-card fit-card-primary">
+            <div class="fit-card-label">A good fit</div>
+            <h3>This may be for you if</h3>
+            <ul class="fit-list">
+              <li>You feel unsure what your child’s behaviour is communicating</li>
+              <li>You want to understand meltdowns, shutdowns, refusal, or routine struggles</li>
+              <li>You need help deciding what to focus on first</li>
+              <li>Your child already has therapy, but home still feels difficult</li>
+              <li>You want calm, practical, autism-specific parent guidance</li>
+            </ul>
+          </article>
+
+          <article class="fit-card fit-card-muted">
+            <div class="fit-card-label">Not the right fit</div>
+            <h3>This is not for you if</h3>
+            <ul class="fit-list">
+              <li>You are looking for a diagnosis or formal assessment</li>
+              <li>You need direct speech therapy, occupational therapy, psychology, or medical care</li>
+              <li>Your child has urgent safety concerns that need immediate professional support</li>
+              <li>You want guaranteed behaviour change</li>
+              <li>You want someone to make your child comply</li>
+            </ul>
+          </article>
+        </div>
+
+        <p class="fit-note">
+          If APC is not the right fit, CJ will be clear about what kind of support may be more suitable.
         </p>
-      </div>
+      </section>
 
-      <div class="two-column-grid">
-        <div class="simple-list-card">
-          <h3>This may be for you if</h3>
-          <ul class="check-list">
-            <li>You feel unsure what your child’s behaviour is communicating</li>
-            <li>You want to understand meltdowns, shutdowns, refusal, or routine struggles</li>
-            <li>You need help choosing what to focus on first</li>
-            <li>Your child already has therapy, but home still feels difficult</li>
-            <li>You want calm, practical, autism-specific parent guidance</li>
-          </ul>
-        </div>
-
-        <div class="simple-list-card">
-          <h3>This is not for you if</h3>
-          <ul class="check-list">
-            <li>You are looking for a diagnosis or formal assessment</li>
-            <li>You need speech therapy, occupational therapy, psychology, or medical care</li>
-            <li>Your child has urgent safety concerns that need immediate professional support</li>
-            <li>You want guaranteed behaviour change</li>
-            <li>You want someone to make your child comply</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
 
   
       <section class="section assurance-section">
