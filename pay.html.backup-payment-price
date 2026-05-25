@@ -669,7 +669,7 @@ main > .wrap {
   <p class="payment-intro">Please select only the support option CJ has confirmed for your family.</p>
   <div class="pkg-grid" id="pkgGrid">
 
-    <div class="pkg-card" onclick="selectPkg(this,'RM800','APC Quick Clarity','Clearer starting point')">
+    <div class="pkg-card" onclick="selectPkg(this,'RM 1,000','APC Quick Clarity','Clearer starting point')">
       <div class="pkg-top">
         <div class="pkg-name">APC Quick Clarity</div>
         <div><span class="pkg-price">RM800</span></div>
