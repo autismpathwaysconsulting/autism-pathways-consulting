@@ -915,6 +915,55 @@
 }
 </style>
 
+
+<style>
+/* APC_START_CARD_BUTTON_FIX_V1 */
+
+/* Remove 01, 02, 03 only from the starting point cards */
+#choose-starting-point .apc-start-v3-card .apc-start-v3-number {
+  display: none !important;
+}
+
+/* Make the card links look like clear buttons */
+#choose-starting-point .apc-start-v3-card-cta {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: fit-content !important;
+  min-height: 46px !important;
+  margin-top: auto !important;
+  padding: 12px 18px !important;
+  border-radius: 999px !important;
+  background: #1d8f82 !important;
+  color: #ffffff !important;
+  font-size: 0.96rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  border: 1px solid rgba(29, 112, 101, 0.18) !important;
+  box-shadow: 0 10px 22px rgba(29, 112, 101, 0.14) !important;
+}
+
+/* Secondary cards use a softer button so the first option still feels primary */
+#choose-starting-point .apc-start-v3-card:not(.featured) .apc-start-v3-card-cta {
+  background: #eef7f3 !important;
+  color: #176f65 !important;
+  box-shadow: none !important;
+}
+
+/* Give headings a little more breathing room now that numbers are removed */
+#choose-starting-point .apc-start-v3-card h2,
+#choose-starting-point .apc-start-v3-card h3 {
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+}
+
+/* Slightly improve vertical balance in the cards */
+#choose-starting-point .apc-start-v3-card {
+  min-height: 245px !important;
+}
+</style>
+
 </head>
 <body>
   
