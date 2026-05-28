@@ -923,6 +923,136 @@
 }
 </style>
 
+
+<style>
+/* APC_START_PAGE_WIDTH_OVERRIDE_V2 */
+
+/* Contain wide sections */
+.start-section,
+.section,
+.start-options,
+.discovery-section {
+  overflow-x: hidden !important;
+}
+
+.start-container,
+.container,
+.start-section > div,
+.start-options > div {
+  max-width: 1120px !important;
+  width: min(1120px, calc(100% - 48px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Fix the option cards section */
+.start-card-grid,
+.feature-grid,
+.steps-grid {
+  max-width: 1080px !important;
+  width: 100% !important;
+  margin: 32px auto 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 24px !important;
+  align-items: stretch !important;
+}
+
+.start-card,
+.feature-card,
+.step-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: auto !important;
+  padding: 28px !important;
+  border-radius: 26px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(20, 63, 58, 0.14) !important;
+  box-shadow: 0 18px 40px rgba(31, 48, 58, 0.055) !important;
+}
+
+/* Reduce oversized card titles */
+.start-card h2,
+.start-card h3,
+.feature-card h2,
+.feature-card h3,
+.step-card h2,
+.step-card h3 {
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(1.45rem, 2vw, 2rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  margin: 0 0 14px !important;
+  max-width: 100% !important;
+}
+
+/* Reduce paragraph width inside cards */
+.start-card p,
+.feature-card p,
+.step-card p {
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  max-width: 100% !important;
+  color: #5f6875 !important;
+}
+
+/* Discovery Call section should not become full-width cards */
+#discovery-call-flow,
+#choose-starting-point {
+  width: 100% !important;
+}
+
+#discovery-call-flow .steps-grid,
+#choose-starting-point .start-card-grid,
+#choose-starting-point .feature-grid {
+  max-width: 1080px !important;
+}
+
+/* Keep main headings contained */
+.start-section h1,
+.start-section h2,
+.section h1,
+.section h2 {
+  max-width: 820px !important;
+}
+
+/* Button styling inside cards */
+.start-card a,
+.feature-card a,
+.step-card a {
+  display: inline-flex !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  margin-top: 18px !important;
+  font-size: 0.98rem !important;
+  font-weight: 800 !important;
+  text-decoration: none !important;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .start-container,
+  .container,
+  .start-section > div,
+  .start-options > div {
+    width: min(100% - 32px, 680px) !important;
+  }
+
+  .start-card-grid,
+  .feature-grid,
+  .steps-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .start-card,
+  .feature-card,
+  .step-card {
+    padding: 24px !important;
+  }
+}
+</style>
+
 </head>
 <body>
   
