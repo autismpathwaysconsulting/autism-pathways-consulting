@@ -747,6 +747,182 @@
 }
 </style>
 
+
+<style>
+/* APC_START_PAGE_FINAL_COMPACT_FIX */
+.apc-start-compact-section {
+  padding: clamp(48px, 6vw, 82px) 0;
+}
+
+.apc-start-compact-section.apc-soft {
+  background: #fbf8f1;
+}
+
+.apc-start-compact-wrap {
+  width: min(1080px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.apc-start-eyebrow {
+  margin: 0 0 12px;
+  color: #1d7065;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.apc-start-title {
+  max-width: 760px;
+  margin: 0;
+  color: #143f3a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.1rem, 4vw, 3.75rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+.apc-start-copy {
+  max-width: 760px;
+  margin: 16px 0 0;
+  color: #5f6875;
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  line-height: 1.65;
+}
+
+.apc-start-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.apc-start-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 270px;
+  padding: 28px;
+  border: 1px solid rgba(20, 63, 58, 0.14);
+  border-radius: 26px;
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(31, 48, 58, 0.055);
+}
+
+.apc-start-card.apc-featured {
+  border-color: rgba(29, 112, 101, 0.30);
+  box-shadow: 0 22px 48px rgba(29, 112, 101, 0.10);
+}
+
+.apc-start-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+  background: #e7f2ed;
+  color: #1d7065;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.apc-start-card h3 {
+  margin: 0 0 12px;
+  color: #1f2230;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.apc-start-card p {
+  margin: 0;
+  color: #5f6875;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.apc-start-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin-top: auto;
+  padding: 13px 20px;
+  border-radius: 999px;
+  background: #1d8f82;
+  color: #ffffff !important;
+  font-size: 0.98rem;
+  font-weight: 800;
+  text-decoration: none !important;
+}
+
+.apc-start-link.secondary {
+  background: #edf6f2;
+  color: #176f65 !important;
+}
+
+.apc-start-link:hover {
+  transform: translateY(-1px);
+}
+
+.apc-discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.apc-discovery-step {
+  padding: 26px;
+  border: 1px solid rgba(20, 63, 58, 0.14);
+  border-radius: 24px;
+  background: #ffffff;
+}
+
+.apc-discovery-step h3 {
+  margin: 0 0 10px;
+  color: #1f2230;
+  font-size: clamp(1.2rem, 1.6vw, 1.55rem);
+  line-height: 1.18;
+}
+
+.apc-discovery-step p {
+  margin: 0;
+  color: #5f6875;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.apc-discovery-note {
+  max-width: 900px;
+  margin-top: 24px;
+  color: #67707b;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .apc-start-compact-wrap {
+    width: min(100% - 32px, 680px);
+  }
+
+  .apc-start-grid,
+  .apc-discovery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .apc-start-card {
+    min-height: auto;
+  }
+
+  .apc-start-compact-section {
+    padding: 44px 0;
+  }
+}
+</style>
+
 </head>
 <body>
   
@@ -760,49 +936,43 @@
     </div>
   </section>
 
-  <section class="section compact-section soft-section" id="what-happens-discovery-call">
-    <div class="container">
-      <div class="section-header">
-        <p class="eyebrow">Discovery Call</p>
-        <h2>What happens during a 15-minute Discovery Call</h2>
-        <p>
-          The Discovery Call is a short clarity and fit check. It helps us understand your main concern and decide whether APC support is the right next step.
-        </p>
-      </div>
+  
+<section class="apc-start-compact-section" id="discovery-call-flow">
+  <div class="apc-start-compact-wrap">
+    <p class="apc-start-eyebrow">Discovery Call</p>
+    <h2 class="apc-start-title">What happens during a 15-minute Discovery Call</h2>
+    <p class="apc-start-copy">
+      The Discovery Call is a short clarity and fit check. CJ listens to your main concern, checks whether APC support is the right next step, and recommends what makes sense next.
+    </p>
 
-      <div class="cards-grid three-cards">
-        <article class="step-card">
-          <span class="step-number">1</span>
-          <h3>We understand the concern</h3>
-          <p>CJ briefly listens to what is happening, what feels difficult, and what you are hoping to understand.</p>
-        </article>
+    <div class="apc-discovery-grid">
+      <article class="apc-discovery-step">
+        <span class="apc-start-number">1</span>
+        <h3>We understand the concern</h3>
+        <p>CJ briefly listens to what is happening, what feels difficult, and what you are hoping to understand.</p>
+      </article>
 
-        <article class="step-card">
-          <span class="step-number">2</span>
-          <h3>We look for one possible pattern</h3>
-          <p>You receive one useful reframe and one initial direction, not a full consultation or mini-programme.</p>
-        </article>
+      <article class="apc-discovery-step">
+        <span class="apc-start-number">2</span>
+        <h3>We look for one possible pattern</h3>
+        <p>You receive one useful reframe and one initial direction, not a full consultation or mini-programme.</p>
+      </article>
 
-        <article class="step-card">
-          <span class="step-number">3</span>
-          <h3>We recommend the next step</h3>
-          <p>If APC support is suitable, CJ may recommend a Parent Strategy Session, Full Implementation Support, or another suitable next step. If not, CJ may suggest another type of support to look for.</p>
-        </article>
-      </div>
-
-      <div class="reassurance-box" style="margin-top: 1.5rem;">
-        <p>
-          Towards the end of the call, if you are interested in moving forward, CJ can explain the recommended programme and share the booking link.
-        </p>
-        <p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.75rem;">
-          APC is parent education and guidance. The Discovery Call is not therapy, diagnosis, crisis support, or a personalised behaviour plan.
-        </p>
-      </div>
+      <article class="apc-discovery-step">
+        <span class="apc-start-number">3</span>
+        <h3>We recommend the next step</h3>
+        <p>CJ may recommend a Parent Strategy Session, a parent support option, observation first, or another suitable direction.</p>
+      </article>
     </div>
-  </section>
+
+    <p class="apc-discovery-note">
+      APC is parent education and guidance. The Discovery Call is not therapy, diagnosis, crisis support, or a personalised behaviour plan.
+    </p>
+  </div>
+</section>
 
 
-  <section class="start-section">
+<section class="start-section">
     <div class="start-container">
       <div class="start-grid">
         <a class="start-card primary-card" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">
