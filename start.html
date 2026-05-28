@@ -617,23 +617,40 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 <style>
-/* APC_START_PAGE_FINAL_COMPACT_FIX */
-.apc-start-compact-section {
-  padding: clamp(48px, 6vw, 82px) 0;
-}
-
-.apc-start-compact-section.apc-soft {
+/* APC_START_PAGE_RESET_V3 */
+.apc-start-v3 {
   background: #fbf8f1;
+  color: #1f2230;
 }
 
-.apc-start-compact-wrap {
+.apc-start-v3-section {
+  padding: clamp(54px, 7vw, 92px) 0;
+}
+
+.apc-start-v3-section.white {
+  background: #ffffff;
+}
+
+.apc-start-v3-wrap {
   width: min(1080px, calc(100% - 48px));
   margin: 0 auto;
 }
 
-.apc-start-eyebrow {
-  margin: 0 0 12px;
+.apc-start-v3-eyebrow {
+  margin: 0 0 14px;
   color: #1d7065;
   font-size: 0.82rem;
   font-weight: 800;
@@ -641,422 +658,162 @@
   text-transform: uppercase;
 }
 
-.apc-start-title {
-  max-width: 760px;
+.apc-start-v3-title {
+  max-width: 820px;
   margin: 0;
   color: #143f3a;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.1rem, 4vw, 3.75rem);
-  line-height: 1.04;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.25rem, 4.4vw, 4.4rem);
+  line-height: 1.03;
+  letter-spacing: -0.045em;
 }
 
-.apc-start-copy {
+.apc-start-v3-lead {
   max-width: 760px;
-  margin: 16px 0 0;
+  margin: 18px 0 0;
   color: #5f6875;
-  font-size: clamp(1rem, 1.35vw, 1.18rem);
-  line-height: 1.65;
+  font-size: clamp(1.05rem, 1.4vw, 1.22rem);
+  line-height: 1.7;
 }
 
-.apc-start-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
+.apc-start-v3-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
   margin-top: 30px;
 }
 
-.apc-start-card {
+.apc-start-v3-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(29, 112, 101, 0.18);
+  background: #1d8f82;
+  color: #ffffff !important;
+  font-weight: 800;
+  text-decoration: none !important;
+}
+
+.apc-start-v3-btn.secondary {
+  background: #eef7f3;
+  color: #176f65 !important;
+}
+
+.apc-start-v3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 34px;
+}
+
+.apc-start-v3-card {
   display: flex;
   flex-direction: column;
-  min-height: 270px;
-  padding: 28px;
+  min-height: 300px;
+  padding: 30px;
+  border-radius: 28px;
   border: 1px solid rgba(20, 63, 58, 0.14);
-  border-radius: 26px;
   background: #ffffff;
   box-shadow: 0 18px 40px rgba(31, 48, 58, 0.055);
 }
 
-.apc-start-card.apc-featured {
-  border-color: rgba(29, 112, 101, 0.30);
+.apc-start-v3-card.featured {
+  border-color: rgba(29, 112, 101, 0.28);
   box-shadow: 0 22px 48px rgba(29, 112, 101, 0.10);
 }
 
-.apc-start-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
+.apc-start-v3-number {
   margin-bottom: 18px;
-  border-radius: 999px;
-  background: #e7f2ed;
   color: #1d7065;
+  font-size: 0.85rem;
   font-weight: 800;
-  font-size: 0.95rem;
+  letter-spacing: 0.10em;
 }
 
-.apc-start-card h3 {
-  margin: 0 0 12px;
-  color: #1f2230;
+.apc-start-v3-card h2,
+.apc-start-v3-card h3 {
+  margin: 0 0 16px;
+  color: #143f3a;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-size: clamp(1.55rem, 2.1vw, 2.25rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 
-.apc-start-card p {
-  margin: 0;
+.apc-start-v3-card p {
+  margin: 0 0 20px;
   color: #5f6875;
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
-.apc-start-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
+.apc-start-v3-card a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.apc-start-v3-card-cta {
   margin-top: auto;
-  padding: 13px 20px;
-  border-radius: 999px;
-  background: #1d8f82;
-  color: #ffffff !important;
-  font-size: 0.98rem;
+  color: #176f65 !important;
   font-weight: 800;
   text-decoration: none !important;
 }
 
-.apc-start-link.secondary {
-  background: #edf6f2;
-  color: #176f65 !important;
-}
-
-.apc-start-link:hover {
-  transform: translateY(-1px);
-}
-
-.apc-discovery-grid {
+.apc-start-v3-steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
-  margin-top: 30px;
+  margin-top: 32px;
 }
 
-.apc-discovery-step {
-  padding: 26px;
+.apc-start-v3-step {
+  padding: 28px;
+  border-radius: 26px;
   border: 1px solid rgba(20, 63, 58, 0.14);
-  border-radius: 24px;
   background: #ffffff;
+  box-shadow: 0 16px 34px rgba(31, 48, 58, 0.045);
 }
 
-.apc-discovery-step h3 {
-  margin: 0 0 10px;
+.apc-start-v3-step h3 {
+  margin: 0 0 12px;
   color: #1f2230;
-  font-size: clamp(1.2rem, 1.6vw, 1.55rem);
-  line-height: 1.18;
+  font-size: clamp(1.2rem, 1.55vw, 1.55rem);
+  line-height: 1.2;
 }
 
-.apc-discovery-step p {
+.apc-start-v3-step p {
   margin: 0;
   color: #5f6875;
   font-size: 1rem;
   line-height: 1.6;
 }
 
-.apc-discovery-note {
+.apc-start-v3-note {
   max-width: 900px;
-  margin-top: 24px;
-  color: #67707b;
+  margin-top: 26px;
+  color: #68717b;
   font-size: 0.98rem;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 @media (max-width: 900px) {
-  .apc-start-compact-wrap {
+  .apc-start-v3-wrap {
     width: min(100% - 32px, 680px);
   }
 
-  .apc-start-grid,
-  .apc-discovery-grid {
+  .apc-start-v3-grid,
+  .apc-start-v3-steps {
     grid-template-columns: 1fr;
   }
 
-  .apc-start-card {
+  .apc-start-v3-card {
     min-height: auto;
   }
 
-  .apc-start-compact-section {
-    padding: 44px 0;
-  }
-}
-</style>
-
-
-
-
-
-<style>
-/* APC_START_PAGE_FINAL_WIDTH_FIX */
-
-/* Force Start page sections into a contained readable width */
-body {
-  overflow-x: hidden;
-}
-
-.start-section,
-.section,
-.start-options,
-.discovery-section {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-.start-container,
-.container,
-.start-section > div,
-.section > div {
-  width: min(1080px, calc(100% - 48px)) !important;
-  max-width: 1080px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Fix overly wide card groups */
-.steps-grid,
-.feature-grid,
-.start-card-grid {
-  width: 100% !important;
-  max-width: 1080px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 24px !important;
-  align-items: stretch !important;
-}
-
-/* Fix cards becoming huge full-width blocks */
-.step-card,
-.feature-card,
-.start-card {
-  width: 100% !important;
-  max-width: none !important;
-  min-width: 0 !important;
-  min-height: auto !important;
-  padding: 28px !important;
-  border-radius: 26px !important;
-  background: #ffffff !important;
-  border: 1px solid rgba(20, 63, 58, 0.14) !important;
-  box-shadow: 0 16px 36px rgba(31, 48, 58, 0.055) !important;
-}
-
-/* Fix oversized card titles */
-.step-card h2,
-.step-card h3,
-.feature-card h2,
-.feature-card h3,
-.start-card h2,
-.start-card h3 {
-  font-family: Georgia, "Times New Roman", serif !important;
-  font-size: clamp(1.35rem, 1.8vw, 1.9rem) !important;
-  line-height: 1.12 !important;
-  letter-spacing: -0.025em !important;
-  margin: 0 0 14px !important;
-  max-width: 100% !important;
-}
-
-/* Keep main page headings readable */
-.start-section h1,
-.start-section h2,
-.section h1,
-.section h2 {
-  max-width: 820px !important;
-}
-
-/* Fix Discovery Call step cards specifically */
-#discovery-call-flow .steps-grid,
-#choose-starting-point .steps-grid,
-#choose-starting-point .feature-grid,
-#choose-starting-point .start-card-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  max-width: 1080px !important;
-}
-
-#discovery-call-flow .step-card {
-  min-height: 220px !important;
-}
-
-/* Card copy */
-.step-card p,
-.feature-card p,
-.start-card p {
-  max-width: 100% !important;
-  font-size: 1rem !important;
-  line-height: 1.6 !important;
-  color: #5f6875 !important;
-}
-
-/* Card links should not turn into huge underlined text */
-.step-card a,
-.feature-card a,
-.start-card a {
-  display: inline-flex !important;
-  width: fit-content !important;
-  max-width: 100% !important;
-  margin-top: 18px !important;
-  font-size: 0.98rem !important;
-  font-weight: 800 !important;
-  text-decoration: none !important;
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  .start-container,
-  .container,
-  .start-section > div,
-  .section > div {
-    width: min(100% - 32px, 680px) !important;
-  }
-
-  .steps-grid,
-  .feature-grid,
-  .start-card-grid,
-  #discovery-call-flow .steps-grid,
-  #choose-starting-point .steps-grid,
-  #choose-starting-point .feature-grid,
-  #choose-starting-point .start-card-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .step-card,
-  .feature-card,
-  .start-card {
-    padding: 24px !important;
-  }
-}
-</style>
-
-
-<style>
-/* APC_START_OPTION_CARD_POLISH_V1 */
-
-/* Fix the Start page option cards only */
-#choose-starting-point .start-card,
-#choose-starting-point .feature-card,
-#choose-starting-point .step-card {
-  padding: 34px !important;
-  border-radius: 28px !important;
-  background: #ffffff !important;
-  border: 1px solid rgba(20, 63, 58, 0.14) !important;
-  box-shadow: 0 18px 40px rgba(31, 48, 58, 0.055) !important;
-}
-
-/* Remove default purple link styling inside the cards */
-#choose-starting-point .start-card a,
-#choose-starting-point .feature-card a,
-#choose-starting-point .step-card a,
-#choose-starting-point .start-card a:visited,
-#choose-starting-point .feature-card a:visited,
-#choose-starting-point .step-card a:visited {
-  color: inherit !important;
-  text-decoration: none !important;
-}
-
-/* Make card headings look like headings, not browser links */
-#choose-starting-point .start-card h2,
-#choose-starting-point .start-card h3,
-#choose-starting-point .feature-card h2,
-#choose-starting-point .feature-card h3,
-#choose-starting-point .step-card h2,
-#choose-starting-point .step-card h3,
-#choose-starting-point .start-card a h2,
-#choose-starting-point .start-card a h3,
-#choose-starting-point .feature-card a h2,
-#choose-starting-point .feature-card a h3,
-#choose-starting-point .step-card a h2,
-#choose-starting-point .step-card a h3 {
-  color: #143f3a !important;
-  font-family: Georgia, "Times New Roman", serif !important;
-  font-size: clamp(1.55rem, 2vw, 2.25rem) !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.035em !important;
-  margin: 0 0 22px !important;
-  text-decoration: none !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-}
-
-/* Keep the card descriptions calm and readable */
-#choose-starting-point .start-card p,
-#choose-starting-point .feature-card p,
-#choose-starting-point .step-card p,
-#choose-starting-point .start-card a p,
-#choose-starting-point .feature-card a p,
-#choose-starting-point .step-card a p {
-  color: #5f6875 !important;
-  font-size: 1rem !important;
-  line-height: 1.65 !important;
-  margin: 0 0 22px !important;
-  text-decoration: none !important;
-}
-
-/* Style only the final action link as the CTA */
-#choose-starting-point .start-card > a:last-child,
-#choose-starting-point .feature-card > a:last-child,
-#choose-starting-point .step-card > a:last-child {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: fit-content !important;
-  margin-top: auto !important;
-  padding: 12px 0 !important;
-  color: #176f65 !important;
-  font-weight: 800 !important;
-  font-size: 0.98rem !important;
-  text-decoration: none !important;
-  border-bottom: none !important;
-}
-
-/* If the whole card is accidentally wrapped in an anchor, remove ugly browser styling */
-#choose-starting-point a.start-card,
-#choose-starting-point a.feature-card,
-#choose-starting-point a.step-card {
-  color: inherit !important;
-  text-decoration: none !important;
-}
-
-/* Keep card numbers subtle */
-#choose-starting-point .step-number,
-#choose-starting-point .card-number,
-#choose-starting-point .start-number {
-  color: #1d7065 !important;
-  font-size: 0.85rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-}
-
-/* Desktop: make the option block narrower and more premium */
-#choose-starting-point .steps-grid,
-#choose-starting-point .feature-grid,
-#choose-starting-point .start-card-grid {
-  max-width: 980px !important;
-  gap: 20px !important;
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  #choose-starting-point .steps-grid,
-  #choose-starting-point .feature-grid,
-  #choose-starting-point .start-card-grid {
-    max-width: 680px !important;
-    grid-template-columns: 1fr !important;
-  }
-
-  #choose-starting-point .start-card,
-  #choose-starting-point .feature-card,
-  #choose-starting-point .step-card {
-    padding: 26px !important;
+  .apc-start-v3-section {
+    padding: 46px 0;
   }
 }
 </style>
@@ -1065,135 +822,106 @@ body {
 <body>
   
 
-<main class="start-clean-page">
-  <section class="start-hero">
-    <div class="start-container">
-      <p class="start-kicker">Start here</p>
-      <h1>Need help understanding your autistic child?</h1>
-      <p class="start-sub">Choose the option that fits what you need today. APC helps parents understand patterns across behaviour, communication, regulation, routines, and learning, then plan practical next steps.</p>
-    </div>
-  </section>
 
-  
-<section class="apc-start-compact-section" id="discovery-call-flow">
-  <div class="apc-start-compact-wrap">
-    <p class="apc-start-eyebrow">Discovery Call</p>
-    <h2 class="apc-start-title">What happens during a 15-minute Discovery Call</h2>
-    <p class="apc-start-copy">
-      The Discovery Call is a short clarity and fit check. CJ listens to your main concern, checks whether APC support is the right next step, and recommends what makes sense next.
-    </p>
-
-    <div class="apc-discovery-grid">
-      <article class="apc-discovery-step">
-        <span class="apc-start-number">1</span>
-        <h3>We understand the concern</h3>
-        <p>CJ briefly listens to what is happening, what feels difficult, and what you are hoping to understand.</p>
-      </article>
-
-      <article class="apc-discovery-step">
-        <span class="apc-start-number">2</span>
-        <h3>We look for one possible pattern</h3>
-        <p>You receive one useful reframe and one initial direction, not a full consultation or mini-programme.</p>
-      </article>
-
-      <article class="apc-discovery-step">
-        <span class="apc-start-number">3</span>
-        <h3>We recommend the next step</h3>
-        <p>CJ may recommend a Parent Strategy Session, a parent support option, observation first, or another suitable direction.</p>
-      </article>
-    </div>
-
-    <p class="apc-discovery-note">
-      APC is parent education and guidance. The Discovery Call is not therapy, diagnosis, crisis support, or a personalised behaviour plan.
-    </p>
-  </div>
-</section>
-
-
-<section class="start-section">
-    <div class="start-container">
-      <div class="start-grid">
-        <a class="start-card primary-card" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">
-          <span>01</span>
-          <h2>Book Free Discovery Call</h2>
-          <p>Best if you are unsure where to start and want a short clarity and fit check.</p>
-          <strong>Book Free Discovery Call</strong>
-        </a>
-
-        <a class="step-card" href="services.html">
-          <span>02</span>
-          <h2>View Parent Support Options</h2>
-          <p>Best if you want to compare APC Quick Clarity, APC Full Implementation, and APC Intensive.</p>
-          <strong>View Parent Support Options</strong>
-        </a>
-
-        <a class="step-card" href="free-tool.html">
-          <span>03</span>
-          <h2>Use the Free Tool</h2>
-          <p>Best if you need quick support for routines, communication, transitions, or overwhelm.</p>
-          <strong>Open Free Tool</strong>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="start-section soft" id="choose-starting-point">
-    <div class="start-container">
-      <p class="start-kicker">Choose your starting point</p>
-      <h2>Most new families should start with a free Discovery Call.</h2>
-      <p>
-        The Discovery Call is a short clarity and fit check. CJ listens to your main concern, checks whether APC is the right fit, and recommends the most suitable next step.
+<main class="apc-start-v3">
+  <section class="apc-start-v3-section">
+    <div class="apc-start-v3-wrap">
+      <p class="apc-start-v3-eyebrow">Start here</p>
+      <h1 class="apc-start-v3-title">Need help understanding your autistic child?</h1>
+      <p class="apc-start-v3-lead">
+        Choose the option that fits what you need today. APC helps parents understand patterns across behaviour, communication, regulation, routines, and learning, then plan practical next steps.
       </p>
 
-      <div class="steps-grid">
-        <article class="step-card">
-          <span class="step-number">1</span>
-          <h3>Book Free Discovery Call</h3>
-          <p>
-            Best if you are unsure where to start, want to briefly explain what is happening, or need help deciding the next step.
-          </p>
+      <div class="apc-start-v3-actions">
+        <a class="apc-start-v3-btn" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Book Free Discovery Call</a>
+        <a class="apc-start-v3-btn secondary" href="services.html">View Parent Support Options</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="apc-start-v3-section white" id="choose-starting-point">
+    <div class="apc-start-v3-wrap">
+      <p class="apc-start-v3-eyebrow">Choose your starting point</p>
+      <h2 class="apc-start-v3-title">What would help most right now?</h2>
+      <p class="apc-start-v3-lead">
+        Start with a short fit check if you are unsure. If you already want to compare support options, you can review the parent support page first.
+      </p>
+
+      <div class="apc-start-v3-grid">
+        <article class="apc-start-v3-card featured">
+          <div class="apc-start-v3-number">01</div>
+          <h2>Book Free Discovery Call</h2>
+          <p>Best if you are unsure where to start and want a short clarity and fit check.</p>
+          <a class="apc-start-v3-card-cta" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Book Free Discovery Call</a>
         </article>
 
-        <article class="step-card">
-          <span class="step-number">2</span>
-          <h3>CJ listens and checks fit</h3>
-          <p>
-            The call is not a full consultation, full solution, or behaviour plan. It helps clarify whether APC is the right support.
-          </p>
+        <article class="apc-start-v3-card">
+          <div class="apc-start-v3-number">02</div>
+          <h2>View Parent Support Options</h2>
+          <p>Best if you want to compare APC Quick Clarity, APC Full Implementation, and APC Intensive.</p>
+          <a class="apc-start-v3-card-cta" href="services.html">View Parent Support Options</a>
         </article>
 
-        <article class="step-card">
-          <span class="step-number">3</span>
-          <h3>CJ recommends the next step</h3>
-          <p>
-            This may be observing one pattern, a 45-minute Parent Strategy Session, a parent support package, or another suitable direction.
-          </p>
+        <article class="apc-start-v3-card">
+          <div class="apc-start-v3-number">03</div>
+          <h2>Use the Free Tool</h2>
+          <p>Best if you need quick support for routines, communication, transitions, or overwhelm.</p>
+          <a class="apc-start-v3-card-cta" href="free-tool.html">Open Free Tool</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="apc-start-v3-section" id="discovery-call-flow">
+    <div class="apc-start-v3-wrap">
+      <p class="apc-start-v3-eyebrow">Discovery Call</p>
+      <h2 class="apc-start-v3-title">What happens during a 15-minute Discovery Call</h2>
+      <p class="apc-start-v3-lead">
+        The Discovery Call is a short clarity and fit check. CJ listens to your main concern, checks whether APC support is the right next step, and recommends what makes sense next.
+      </p>
+
+      <div class="apc-start-v3-steps">
+        <article class="apc-start-v3-step">
+          <div class="apc-start-v3-number">1</div>
+          <h3>We understand the concern</h3>
+          <p>CJ briefly listens to what is happening, what feels difficult, and what you are hoping to understand.</p>
+        </article>
+
+        <article class="apc-start-v3-step">
+          <div class="apc-start-v3-number">2</div>
+          <h3>We look for one possible pattern</h3>
+          <p>You receive one useful reframe and one initial direction, not a full consultation or mini-programme.</p>
+        </article>
+
+        <article class="apc-start-v3-step">
+          <div class="apc-start-v3-number">3</div>
+          <h3>We recommend the next step</h3>
+          <p>CJ may recommend a Parent Strategy Session, a parent support option, observation first, or another suitable direction.</p>
         </article>
       </div>
 
-      <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free Discovery Call</a>
+      <p class="apc-start-v3-note">
+        APC is parent education and guidance. The Discovery Call is not therapy, diagnosis, crisis support, or a personalised behaviour plan.
+      </p>
     </div>
   </section>
 
-<section class="start-section soft">
-    <div class="start-container start-scope">
-      <p class="start-kicker">Clear scope</p>
-      <h2>APC is parent education and practical guidance.</h2>
-      <p>APC does not diagnose, provide therapy, replace OT, speech therapy, psychology, or medical care, or provide crisis support.</p>
-    </div>
-  </section>
+  <section class="apc-start-v3-section white">
+    <div class="apc-start-v3-wrap">
+      <p class="apc-start-v3-eyebrow">Clear scope</p>
+      <h2 class="apc-start-v3-title">APC is parent education and practical guidance.</h2>
+      <p class="apc-start-v3-lead">
+        APC does not diagnose, provide therapy, replace OT, speech therapy, psychology, or medical care, or provide crisis support.
+      </p>
 
-  <section class="start-section final">
-    <div class="start-container">
-      <div class="start-final-card">
-        <p class="start-kicker">Not sure where to start?</p>
-        <h2>Start with the free Discovery Call.</h2>
-        <p>We will briefly understand your situation, check whether APC is the right fit, and recommend the most helpful next step.</p>
-        <a class="start-btn primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Book Free Discovery Call</a>
+      <div class="apc-start-v3-actions">
+        <a class="apc-start-v3-btn" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Book Free Discovery Call</a>
+        <a class="apc-start-v3-btn secondary" href="services.html">View Parent Support Options</a>
       </div>
     </div>
   </section>
 </main>
+
 
 
 </body>
