@@ -937,6 +937,130 @@ body {
 }
 </style>
 
+
+<style>
+/* APC_START_OPTION_CARD_POLISH_V1 */
+
+/* Fix the Start page option cards only */
+#choose-starting-point .start-card,
+#choose-starting-point .feature-card,
+#choose-starting-point .step-card {
+  padding: 34px !important;
+  border-radius: 28px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(20, 63, 58, 0.14) !important;
+  box-shadow: 0 18px 40px rgba(31, 48, 58, 0.055) !important;
+}
+
+/* Remove default purple link styling inside the cards */
+#choose-starting-point .start-card a,
+#choose-starting-point .feature-card a,
+#choose-starting-point .step-card a,
+#choose-starting-point .start-card a:visited,
+#choose-starting-point .feature-card a:visited,
+#choose-starting-point .step-card a:visited {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* Make card headings look like headings, not browser links */
+#choose-starting-point .start-card h2,
+#choose-starting-point .start-card h3,
+#choose-starting-point .feature-card h2,
+#choose-starting-point .feature-card h3,
+#choose-starting-point .step-card h2,
+#choose-starting-point .step-card h3,
+#choose-starting-point .start-card a h2,
+#choose-starting-point .start-card a h3,
+#choose-starting-point .feature-card a h2,
+#choose-starting-point .feature-card a h3,
+#choose-starting-point .step-card a h2,
+#choose-starting-point .step-card a h3 {
+  color: #143f3a !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(1.55rem, 2vw, 2.25rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.035em !important;
+  margin: 0 0 22px !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep the card descriptions calm and readable */
+#choose-starting-point .start-card p,
+#choose-starting-point .feature-card p,
+#choose-starting-point .step-card p,
+#choose-starting-point .start-card a p,
+#choose-starting-point .feature-card a p,
+#choose-starting-point .step-card a p {
+  color: #5f6875 !important;
+  font-size: 1rem !important;
+  line-height: 1.65 !important;
+  margin: 0 0 22px !important;
+  text-decoration: none !important;
+}
+
+/* Style only the final action link as the CTA */
+#choose-starting-point .start-card > a:last-child,
+#choose-starting-point .feature-card > a:last-child,
+#choose-starting-point .step-card > a:last-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: fit-content !important;
+  margin-top: auto !important;
+  padding: 12px 0 !important;
+  color: #176f65 !important;
+  font-weight: 800 !important;
+  font-size: 0.98rem !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+/* If the whole card is accidentally wrapped in an anchor, remove ugly browser styling */
+#choose-starting-point a.start-card,
+#choose-starting-point a.feature-card,
+#choose-starting-point a.step-card {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* Keep card numbers subtle */
+#choose-starting-point .step-number,
+#choose-starting-point .card-number,
+#choose-starting-point .start-number {
+  color: #1d7065 !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+}
+
+/* Desktop: make the option block narrower and more premium */
+#choose-starting-point .steps-grid,
+#choose-starting-point .feature-grid,
+#choose-starting-point .start-card-grid {
+  max-width: 980px !important;
+  gap: 20px !important;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  #choose-starting-point .steps-grid,
+  #choose-starting-point .feature-grid,
+  #choose-starting-point .start-card-grid {
+    max-width: 680px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  #choose-starting-point .start-card,
+  #choose-starting-point .feature-card,
+  #choose-starting-point .step-card {
+    padding: 26px !important;
+  }
+}
+</style>
+
 </head>
 <body>
   
