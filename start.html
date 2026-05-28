@@ -1006,6 +1006,102 @@
 }
 </style>
 
+
+<style>
+/* APC_START_CLARITY_SECTIONS_V1 */
+
+.apc-start-decision-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 32px;
+}
+
+.apc-start-decision-card {
+  padding: 24px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(20, 63, 58, 0.14);
+  box-shadow: 0 14px 34px rgba(31, 48, 58, 0.045);
+}
+
+.apc-start-decision-card h3 {
+  margin: 0 0 10px;
+  color: #143f3a;
+  font-size: clamp(1.12rem, 1.45vw, 1.35rem);
+  line-height: 1.22;
+}
+
+.apc-start-decision-card p {
+  margin: 0;
+  color: #5f6875;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.apc-start-suitable-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 32px;
+}
+
+.apc-start-suitable-card {
+  padding: 26px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(20, 63, 58, 0.14);
+  box-shadow: 0 14px 34px rgba(31, 48, 58, 0.045);
+}
+
+.apc-start-suitable-card h3 {
+  margin: 0 0 16px;
+  color: #143f3a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 1.8vw, 1.75rem);
+  line-height: 1.14;
+}
+
+.apc-start-suitable-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #5f6875;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.apc-start-credential-card {
+  margin-top: 30px;
+  padding: 26px 28px;
+  border-radius: 26px;
+  background: #ffffff;
+  border: 1px solid rgba(20, 63, 58, 0.14);
+  box-shadow: 0 14px 34px rgba(31, 48, 58, 0.045);
+}
+
+.apc-start-credential-card h3 {
+  margin: 0 0 10px;
+  color: #143f3a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 1.8vw, 1.8rem);
+  line-height: 1.14;
+}
+
+.apc-start-credential-card p {
+  margin: 0;
+  color: #5f6875;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 820px) {
+  .apc-start-decision-grid,
+  .apc-start-suitable-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
 </head>
 <body>
   
@@ -1058,7 +1154,41 @@
     </div>
   </section>
 
-  <section class="apc-start-clean-section" id="discovery-call-flow">
+  
+<section class="apc-start-clean-section white" id="start-decision-guide">
+  <div class="apc-start-clean-wrap">
+    <p class="apc-start-clean-eyebrow">Quick guide</p>
+    <h2 class="apc-start-clean-title">Which option should I choose?</h2>
+    <p class="apc-start-clean-lead">
+      Choose the route that matches what you need today. If you are unsure, start with the free Discovery Call.
+    </p>
+
+    <div class="apc-start-decision-grid">
+      <article class="apc-start-decision-card">
+        <h3>“I’m not sure what support we need.”</h3>
+        <p>Start with the free Discovery Call.</p>
+      </article>
+
+      <article class="apc-start-decision-card">
+        <h3>“I want to compare APC support options.”</h3>
+        <p>View the Parent Support Options page.</p>
+      </article>
+
+      <article class="apc-start-decision-card">
+        <h3>“I need something quick right now.”</h3>
+        <p>Use the free APC tool for immediate parent support.</p>
+      </article>
+
+      <article class="apc-start-decision-card">
+        <h3>“I already know the main concern.”</h3>
+        <p>You may be suitable for a Parent Strategy Session after reviewing the options or speaking with CJ.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="apc-start-clean-section" id="discovery-call-flow">
     <div class="apc-start-clean-wrap">
       <p class="apc-start-clean-eyebrow">Discovery Call</p>
       <h2 class="apc-start-clean-title">What happens during a 15-minute Discovery Call</h2>
@@ -1092,7 +1222,41 @@
     </div>
   </section>
 
-  <section class="apc-start-clean-section white">
+  
+<section class="apc-start-clean-section white" id="start-suitable-if">
+  <div class="apc-start-clean-wrap">
+    <p class="apc-start-clean-eyebrow">Fit check</p>
+    <h2 class="apc-start-clean-title">APC may be suitable if...</h2>
+    <p class="apc-start-clean-lead">
+      APC is designed for parents who want practical guidance, clearer patterns, and a calmer next step at home.
+    </p>
+
+    <div class="apc-start-suitable-grid">
+      <article class="apc-start-suitable-card">
+        <h3>APC may fit if you want help with</h3>
+        <ul>
+          <li>understanding what your child’s behaviour may be communicating</li>
+          <li>meltdowns, refusal, routines, school stress, or communication concerns</li>
+          <li>knowing what to observe and what to try at home</li>
+          <li>parent guidance, not another child therapy appointment</li>
+        </ul>
+      </article>
+
+      <article class="apc-start-suitable-card">
+        <h3>APC is not the right first step if you need</h3>
+        <ul>
+          <li>diagnosis or assessment</li>
+          <li>speech therapy, OT, psychology, or medical advice</li>
+          <li>crisis or emergency support</li>
+          <li>a guaranteed behaviour change plan</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="apc-start-clean-section white">
     <div class="apc-start-clean-wrap">
       <p class="apc-start-clean-eyebrow">Clear scope</p>
       <h2 class="apc-start-clean-title">APC is parent education and practical guidance.</h2>
@@ -1102,20 +1266,21 @@
     </div>
   </section>
 
-  <section class="apc-start-clean-section">
-    <div class="apc-start-clean-wrap">
-      <p class="apc-start-clean-eyebrow">Still unsure?</p>
-      <h2 class="apc-start-clean-title">Start with a free Discovery Call.</h2>
-      <p class="apc-start-clean-lead">
-        If you are not sure which support option fits your family, book the free call first. CJ will listen, check fit, and suggest the next step.
-      </p>
+<section class="apc-start-clean-section" id="start-credential-strip">
+  <div class="apc-start-clean-wrap">
+    <p class="apc-start-clean-eyebrow">About CJ</p>
+    <h2 class="apc-start-clean-title">Guidance from an autism educator.</h2>
 
-      <div class="apc-start-clean-actions">
-        <a class="apc-start-clean-btn" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Book Free Discovery Call</a>
-        <a class="apc-start-clean-btn secondary" href="services.html">View Parent Support Options</a>
-      </div>
+    <div class="apc-start-credential-card">
+      <h3>CJ Lim</h3>
+      <p>
+        Autism educator with an MA in Special and Inclusive Education, active Hanen membership, Hanen-certified in Learning Language and Loving It™, with additional Hanen training in ABC and Beyond™ and SPARK Communication™.
+      </p>
     </div>
-  </section>
+  </div>
+</section>
+
+
 </main>
 
 
