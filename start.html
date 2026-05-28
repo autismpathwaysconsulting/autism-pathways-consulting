@@ -820,6 +820,101 @@
 }
 </style>
 
+
+<style>
+/* APC_START_V3_VISUAL_TIGHTEN_V1 */
+
+/* Tighten Start page width so sections do not feel stretched */
+.apc-start-v3-wrap {
+  width: min(960px, calc(100% - 48px)) !important;
+  max-width: 960px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Reduce very large headings slightly */
+.apc-start-v3-title {
+  max-width: 760px !important;
+  font-size: clamp(2rem, 3.8vw, 3.65rem) !important;
+  line-height: 1.05 !important;
+}
+
+/* Keep option cards compact and premium */
+.apc-start-v3-grid,
+.apc-start-v3-steps {
+  max-width: 960px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+}
+
+/* Reduce card size and avoid wide empty spacing */
+.apc-start-v3-card {
+  min-height: 260px !important;
+  padding: 26px !important;
+  border-radius: 24px !important;
+}
+
+.apc-start-v3-step {
+  padding: 24px !important;
+  border-radius: 22px !important;
+}
+
+/* Fix card title size */
+.apc-start-v3-card h2,
+.apc-start-v3-card h3 {
+  font-size: clamp(1.32rem, 1.65vw, 1.75rem) !important;
+  line-height: 1.12 !important;
+  margin-bottom: 14px !important;
+}
+
+/* Fix discovery step heading size */
+.apc-start-v3-step h3 {
+  font-size: clamp(1.12rem, 1.35vw, 1.35rem) !important;
+  line-height: 1.2 !important;
+}
+
+/* Fix card text */
+.apc-start-v3-card p,
+.apc-start-v3-step p {
+  font-size: 0.98rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Remove browser default link look */
+.apc-start-v3-card a,
+.apc-start-v3-card a:visited,
+.apc-start-v3-step a,
+.apc-start-v3-step a:visited {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* Make card CTAs look intentional */
+.apc-start-v3-card-cta {
+  color: #176f65 !important;
+  font-weight: 800 !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .apc-start-v3-wrap {
+    width: min(100% - 32px, 680px) !important;
+    max-width: 680px !important;
+  }
+
+  .apc-start-v3-grid,
+  .apc-start-v3-steps {
+    grid-template-columns: 1fr !important;
+  }
+
+  .apc-start-v3-card {
+    min-height: auto !important;
+  }
+}
+</style>
+
 </head>
 <body>
   
