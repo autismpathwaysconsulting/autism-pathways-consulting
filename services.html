@@ -2319,6 +2319,159 @@ html {
 }
 </style>
 
+<style>
+  .apc-parent-support-visual {
+    padding: 72px 0;
+    background: #FFF9F1;
+  }
+
+  .apc-support-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 32px;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    border-radius: 28px;
+    padding: 36px;
+    box-shadow: 0 18px 50px rgba(7, 55, 52, 0.08);
+  }
+
+  .apc-support-copy h2 {
+    margin: 0 0 12px;
+    color: #073734;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .apc-support-lead {
+    margin: 0 0 8px;
+    color: #073734;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .apc-support-small {
+    margin: 0 0 24px;
+    color: #3d5552;
+    font-size: 1rem;
+  }
+
+  .apc-support-visual-box {
+    position: relative;
+    text-align: center;
+    border-radius: 24px;
+    padding: 30px 24px;
+    background: linear-gradient(160deg, #073734, #0f766e);
+    color: #FFF9F1;
+    overflow: hidden;
+  }
+
+  .apc-support-visual-box::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 999px;
+    background: rgba(255, 249, 241, 0.08);
+    top: -70px;
+    right: -60px;
+  }
+
+  .apc-status-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #E8997A;
+    color: #073734;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+  }
+
+  .apc-slot-count {
+    position: relative;
+    margin-top: 18px;
+    font-size: clamp(3.25rem, 8vw, 5.5rem);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+  }
+
+  .apc-support-visual-box p {
+    position: relative;
+    margin: 8px 0 22px;
+    font-size: 1.05rem;
+    opacity: 0.92;
+  }
+
+  .apc-slots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto 24px;
+  }
+
+  .apc-slots span {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFF9F1;
+    color: #073734;
+    font-weight: 800;
+    font-size: 0.9rem;
+  }
+
+  .apc-next-step-box {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    text-align: left;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255, 249, 241, 0.12);
+    border: 1px solid rgba(255, 249, 241, 0.18);
+  }
+
+  .apc-next-step-box strong {
+    color: #FFF9F1;
+    font-size: 0.95rem;
+  }
+
+  .apc-next-step-box span {
+    color: rgba(255, 249, 241, 0.88);
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 820px) {
+    .apc-parent-support-visual {
+      padding: 48px 0;
+    }
+
+    .apc-support-card {
+      grid-template-columns: 1fr;
+      padding: 24px;
+      border-radius: 22px;
+    }
+
+    .apc-support-visual-box {
+      padding: 26px 18px;
+    }
+
+    .apc-slots span {
+      width: 34px;
+      height: 34px;
+    }
+  }
+</style>
 </head>
 <body>
 
@@ -2337,380 +2490,42 @@ html {
 
 
 <main>
-  <section class="section hero-section">
-    <div class="container">
-      <div class="hero-content">
-        <p class="eyebrow">Autism Pathways Consulting Services</p>
-        <h1>Parent support for when you are not sure what to do next</h1>
-        <p class="hero-subtitle">
-          APC helps parents of autistic children reduce the guesswork, understand patterns in daily life, and choose practical next steps at home.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free Discovery Call</a>
-          <a class="btn btn-secondary" href="#parent-support-options">View Parent Support Options</a>
+  <section class="apc-parent-support-visual" id="structured-parent-support-waitlist">
+  <div class="container">
+    <div class="apc-support-card">
+      <div class="apc-support-copy">
+        <p class="eyebrow">Current availability</p>
+        <h2>Structured Parent Support</h2>
+        <p class="apc-support-lead">Current intake is full.</p>
+        <p class="apc-support-small">Join the waitlist for the next intake.</p>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20join%20the%20APC%20Structured%20Parent%20Support%20waitlist." target="_blank" rel="noopener noreferrer">Join the waitlist</a>
+          <a class="btn btn-secondary" href="services.html#parent-strategy-session">Book APC Parent Strategy Session</a>
+        </div>
+      </div>
+
+      <div class="apc-support-visual-box" aria-label="Current parent support intake status">
+        <div class="apc-status-pill">FULL</div>
+        <div class="apc-slot-count">5/5</div>
+        <p>spaces taken</p>
+
+        <div class="apc-slots" aria-hidden="true">
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5</span>
+        </div>
+
+        <div class="apc-next-step-box">
+          <strong>Next step</strong>
+          <span>Join the waitlist or book one focused session.</span>
         </div>
       </div>
     </div>
-  </section>
-
-  
-      
-      
-      <section class="section fit-section">
-        <div class="section-header">
-          <p class="eyebrow">Who this is for</p>
-          <h2>For parents who want clarity without judgement</h2>
-          <p>
-            APC is for parents who feel stuck between too much advice and no clear next step.
-            We help you understand patterns, reduce guesswork, and choose what to focus on first
-            in real home routines.
-          </p>
-        </div>
-
-        <div class="fit-cards">
-          <article class="fit-card fit-card-primary">
-            <div class="fit-card-label">Good fit</div>
-            <h3>A good fit for APC</h3>
-            <p class="fit-card-intro">
-              You may benefit from APC if you want calm, practical support that helps you understand
-              what may be happening at home.
-            </p>
-            <ul class="fit-list">
-              <li>You feel unsure what your child’s behaviour may be communicating</li>
-              <li>Meltdowns, shutdowns, refusal, routines, or transitions feel confusing</li>
-              <li>You need help deciding what to focus on first</li>
-              <li>Your child already has support, but home still feels difficult</li>
-              <li>You want autism-specific parent guidance that is practical and respectful</li>
-            </ul>
-          </article>
-
-          <article class="fit-card fit-card-muted">
-            <div class="fit-card-label">Not the right fit</div>
-            <h3>APC may not be the right fit if</h3>
-            <p class="fit-card-intro">
-              APC is parent education and guidance. Some needs are better supported by clinical,
-              medical, or urgent services.
-            </p>
-            <ul class="fit-list">
-              <li>You need a diagnosis or formal assessment</li>
-              <li>You need direct speech therapy, OT, psychology, or medical care</li>
-              <li>Your child has urgent safety concerns</li>
-              <li>You want guaranteed behaviour change</li>
-              <li>You want someone to make your child comply</li>
-            </ul>
-          </article>
-        </div>
-
-        <p class="fit-note">
-          If APC is not the right fit, CJ will be clear about what kind of support may be more suitable.
-        </p>
-      </section>
-
-
-
-
-  
-      <section class="section assurance-section">
-        <div class="section-header">
-          <p class="eyebrow">Research-informed structure</p>
-          <h2>Why parent support matters</h2>
-          <p>
-            Parents are not outside the support process. They are part of the child’s everyday support
-            system. APC helps parents understand what is happening in real routines, so support becomes
-            clearer, more consistent, and easier to apply at home.
-          </p>
-        </div>
-
-        <div class="cards-grid three assurance-cards">
-          <article class="info-card">
-            <h3>Parents see the daily patterns</h3>
-            <p>
-              Many important moments happen at home: routines, transitions, communication breakdowns,
-              sensory overwhelm, refusal, shutdowns, and emotional escalation. Parents often notice the
-              details that help explain what is building up.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <h3>Guidance supports implementation</h3>
-            <p>
-              Research on parent-mediated and telehealth autism support highlights the role of guided
-              parent involvement, implementation, parent confidence, and stress support. APC turns that
-              principle into structured, practical guidance for your family context.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <h3>Time allows review and adjustment</h3>
-            <p>
-              Real support is rarely one piece of advice. Several weeks gives parents time to try one
-              practical step, observe what happens, review the pattern, and adjust without rushing.
-            </p>
-          </article>
-        </div>
-
-        <p class="section-note">
-          Sources: Pan et al. 2023 telehealth parent-mediated intervention meta-analysis; NICE autism
-          guidance on family information, advice, training, and support; Project ImPACT parent coaching
-          model; Hanen More Than Words everyday routines and parent interaction principles.
-        </p>
-      </section>
-
-
-
-      
-      
-      <section class="section assurance-section path-section">
-        <div class="section-header">
-          <p class="eyebrow">APC parent support pathway</p>
-          <h2>The APC PATH Process</h2>
-          <p>
-            PATH is the structure APC uses to help parents move from guessing to understanding.
-            It keeps support practical, paced, and connected to what is actually happening at home.
-          </p>
-        </div>
-
-        <div class="path-steps">
-          <article class="path-card">
-            <div class="path-letter">P</div>
-            <div>
-              <h3>Pause and understand</h3>
-              <p>
-                We slow the situation down first. Instead of reacting only to the behaviour, we look at what
-                your child may be communicating, what happened before the moment, and what you are managing
-                as the parent.
-              </p>
-            </div>
-          </article>
-
-          <article class="path-card">
-            <div class="path-letter">A</div>
-            <div>
-              <h3>Assess the pattern</h3>
-              <p>
-                We look across communication, regulation, routines, environment, and adult responses. This
-                helps separate the visible behaviour from the pattern that may be driving it.
-              </p>
-            </div>
-          </article>
-
-          <article class="path-card">
-            <div class="path-letter">T</div>
-            <div>
-              <h3>Try one practical step</h3>
-              <p>
-                We choose one realistic step to test at home. The goal is not to overhaul everything at once,
-                but to make one clear adjustment and observe what changes.
-              </p>
-            </div>
-          </article>
-
-          <article class="path-card">
-            <div class="path-letter">H</div>
-            <div>
-              <h3>Help it carry over</h3>
-              <p>
-                We review what worked, what did not, and what needs to be adjusted. Then we help the idea
-                carry over into routines, transitions, school-related moments, and family life.
-              </p>
-            </div>
-          </article>
-        </div>
-
-        <p class="section-note">
-          This is not therapy, diagnosis, or a guaranteed outcome process. It is a simple parent support
-          pathway that helps families reduce guesswork and choose clearer next steps.
-        </p>
-      </section>
-
-
-
-
-  <section class="section compact-section soft-section">
-    <div class="container">
-      <div class="two-column-grid">
-        <div>
-          <p class="eyebrow">Start here</p>
-          <h2>Free Discovery Call</h2>
-          <p>The free Discovery Call is a 15-minute clarity and fit check. It is not a full consultation or behaviour plan.</p>
-          <p>You will leave with one useful reframe, one initial direction, and one recommended next step.</p>
-          <p><strong>Each family receives one free Discovery Call.</strong></p>
-          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free Discovery Call</a>
-        </div>
-
-        <div class="reassurance-card">
-          <h3>What the call helps with</h3>
-          <p>We briefly understand your situation, clarify whether APC is the right fit, and suggest the most appropriate next step.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section compact-section soft-section" id="option-guide">
-    <div class="container">
-      <div class="section-header reveal-on-scroll">
-        <p class="eyebrow">Not sure which option fits?</p>
-        <h2>A quick guide for parents</h2>
-        <p>Choose the statement that feels closest to your current situation. This is only a guide. CJ will still confirm the most suitable option after understanding your needs.</p>
-      </div>
-
-      <div class="choice-guide reveal-on-scroll">
-        <button class="choice-button active" type="button" data-choice="clarity">
-          I need a clearer starting point
-        </button>
-        <button class="choice-button" type="button" data-choice="implementation">
-          I need support trying this at home
-        </button>
-        <button class="choice-button" type="button" data-choice="intensive">
-          I need deeper follow-up and more guidance
-        </button>
-      </div>
-
-      <div class="choice-result reveal-on-scroll" id="choice-result">
-        <p class="result-label">Suggested starting point</p>
-        <h3>Free Discovery Call</h3>
-        <p>Best for new families who want CJ to listen first, understand the concern, check whether APC is the right fit, and recommend the most suitable next step.</p>
-        <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free Discovery Call</a>
-      </div>
-    </div>
-  </section>
-
-  
-      
-      
-      <section class="section parent-strategy-session" id="parent-strategy-session">
-        <div class="section-header">
-          <p class="eyebrow">Paid first step</p>
-          <h2>APC Parent Strategy Session</h2>
-          <p>
-            A focused 45-minute parent session for communication, meltdowns, refusal, routines, school stress, or after-diagnosis confusion.
-          </p>
-        </div>
-
-        <div class="pricing-grid">
-          <article class="pricing-card featured">
-            <p class="eyebrow">Founding rate</p>
-            <h3>RM350</h3>
-            <p>
-              We look at one concern, review the pattern, and create one practical next step for home.
-            </p>
-            <ul>
-              <li>45-minute online parent session</li>
-              <li>One focused concern</li>
-              <li>Brief written recap</li>
-              <li>One observation focus for the week</li>
-              <li>One practical next step for home</li>
-              <li>Recommendation for whether further support is needed</li>
-            </ul>
-            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session">Book Parent Strategy Session</a>
-          </article>
-
-          <article class="pricing-card">
-            <p class="eyebrow">Best for</p>
-            <h3>One clear concern</h3>
-            <p>
-              Suitable if you feel stuck with one recurring concern and want a practical starting point before deciding whether ongoing support is needed.
-            </p>
-          </article>
-
-          <article class="pricing-card">
-            <p class="eyebrow">Clear scope</p>
-            <h3>What it is not</h3>
-            <p>
-              This is not therapy, diagnosis, speech therapy, OT, psychology, medical advice, or crisis support. It does not promise behaviour change or guaranteed outcomes.
-            </p>
-          </article>
-        </div>
-      </section>
-
-<section class="section pricing-section" id="parent-support-options">
-        <div class="section-header">
-          <p class="eyebrow">Parent support options</p>
-          <h2>Choose the level of support that fits your family’s needs</h2>
-          <p>
-            Start with the amount of support your family needs right now. Each option is structured to help
-            you understand patterns, choose clearer next steps, and apply support at home.
-          </p>
-        </div>
-
-        <div class="pricing-grid">
-          <article class="pricing-card">
-            <div class="pricing-card-top">
-              <p class="pricing-kicker">Starting point</p>
-              <h3>APC Quick Clarity</h3>
-              <p class="pricing-price">RM800</p>
-              <p class="pricing-duration">2 sessions across 2 to 3 weeks</p>
-            </div>
-
-            <div class="pricing-best">
-              <span>Best for</span>
-              <p>Parents who want a clearer picture before committing to longer support.</p>
-            </div>
-
-            <ul class="pricing-list">
-              <li>2 structured parent sessions</li>
-              <li>Pattern review across one main concern</li>
-              <li>Starting support plan</li>
-              <li>WhatsApp clarification during the programme period</li>
-            </ul>
-
-            <a class="pricing-link" href="pay.html">Request APC Quick Clarity</a>
-          </article>
-
-          <article class="pricing-card pricing-card-featured">
-            <div class="pricing-badge">Main APC programme</div>
-            <div class="pricing-card-top">
-              <p class="pricing-kicker">Most structured</p>
-              <h3>APC Full Implementation</h3>
-              <p class="pricing-price">RM1,600</p>
-              <p class="pricing-duration">4 sessions across 6 weeks</p>
-            </div>
-
-            <div class="pricing-best">
-              <span>Best for</span>
-              <p>Parents who need support applying changes at home, not just understanding the issue.</p>
-            </div>
-
-            <ul class="pricing-list">
-              <li>4 structured parent sessions</li>
-              <li>Support planning across home routines</li>
-              <li>Weekly focus points</li>
-              <li>Parent response examples</li>
-              <li>WhatsApp clarification during the programme period</li>
-            </ul>
-
-            <a class="pricing-link pricing-link-primary" href="pay.html">Request APC Full Implementation</a>
-          </article>
-
-          <article class="pricing-card">
-            <div class="pricing-card-top">
-              <p class="pricing-kicker">Deeper support</p>
-              <h3>APC Intensive</h3>
-              <p class="pricing-price">RM2,500</p>
-              <p class="pricing-duration">6 sessions across 8 weeks</p>
-            </div>
-
-            <div class="pricing-best">
-              <span>Best for</span>
-              <p>Families where several concerns are connected across home, school, routines, communication, and regulation.</p>
-            </div>
-
-            <ul class="pricing-list">
-              <li>6 structured parent sessions</li>
-              <li>Deeper pattern review</li>
-              <li>Practical support planning</li>
-              <li>Parent response examples</li>
-              <li>WhatsApp clarification during the programme period</li>
-            </ul>
-
-            <a class="pricing-link" href="pay.html">Request APC Intensive</a>
-          </article>
-        </div>
-
-        <p class="pricing-note">
-          Not sure which option fits? The free Discovery Call helps confirm whether APC is suitable and which level of support makes sense.
-        </p>
-      </section>
+  </div>
+</section>
 
 
 
