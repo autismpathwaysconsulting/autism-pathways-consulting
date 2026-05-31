@@ -2704,6 +2704,299 @@ html {
     }
   }
 </style>
+<style id="apc-services-simple-styles">
+  .apc-services-page {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: #FFF9F1;
+    color: #253532;
+  }
+
+  .apc-services-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 72px 20px;
+  }
+
+  .apc-services-section {
+    margin-bottom: 72px;
+  }
+
+  .apc-services-kicker {
+    color: #0f766e;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 850;
+    margin: 0 0 12px;
+  }
+
+  .apc-services-title {
+    color: #073734;
+    font-size: clamp(2rem, 4vw, 3.35rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin: 0 0 16px;
+    max-width: 900px;
+  }
+
+  .apc-services-intro {
+    color: #3d5552;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.7;
+    max-width: 790px;
+    margin: 0 0 28px;
+  }
+
+  .apc-services-actions,
+  .apc-service-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .apc-services-page .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-weight: 850;
+    text-decoration: none;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .apc-services-page .btn-primary {
+    background: #0f766e;
+    color: #ffffff;
+    border: 1px solid #0f766e;
+  }
+
+  .apc-services-page .btn-secondary {
+    background: #ffffff;
+    color: #0f766e;
+    border: 1px solid #0f766e;
+  }
+
+  .apc-service-grid,
+  .apc-concern-grid,
+  .apc-scope-grid,
+  .apc-faq-grid {
+    display: grid;
+    gap: 18px;
+  }
+
+  .apc-service-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .apc-concern-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .apc-scope-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .apc-faq-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .apc-service-card,
+  .apc-concern-card,
+  .apc-scope-card,
+  .apc-faq-card,
+  .apc-flow-card {
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 14px 40px rgba(7, 55, 52, 0.07);
+  }
+
+  .apc-service-card.featured {
+    border: 2px solid #0f766e;
+    box-shadow: 0 18px 48px rgba(15, 118, 110, 0.14);
+  }
+
+  .apc-service-card h2,
+  .apc-service-card h3,
+  .apc-concern-card h3,
+  .apc-scope-card h3,
+  .apc-faq-card h3,
+  .apc-flow-card h3 {
+    color: #073734;
+    margin: 0 0 10px;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .apc-service-card p,
+  .apc-concern-card p,
+  .apc-scope-card p,
+  .apc-faq-card p,
+  .apc-flow-card p {
+    color: #3d5552;
+    line-height: 1.6;
+    margin: 0 0 12px;
+  }
+
+  .apc-service-tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #E8F5EF;
+    color: #0f766e;
+    font-weight: 850;
+    font-size: 0.78rem;
+    margin-bottom: 14px;
+  }
+
+  .apc-service-price {
+    color: #073734;
+    font-size: 1.12rem;
+    font-weight: 900;
+    margin: 14px 0;
+  }
+
+  .apc-service-list {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .apc-service-list li {
+    color: #3d5552;
+    line-height: 1.45;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .apc-service-list li::before {
+    content: "✓";
+    color: #0f766e;
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+  }
+
+  .apc-slot-bar {
+    margin: 16px 0 10px;
+    height: 14px;
+    background: #dfeee8;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .apc-slot-bar span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #6B9E7A, #0f766e);
+  }
+
+  .apc-slot-text {
+    color: #073734;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .apc-flow-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .apc-flow-card {
+    background: #073734;
+    color: #FFF9F1;
+  }
+
+  .apc-flow-card span {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    background: #E8997A;
+    color: #073734;
+    font-weight: 900;
+    margin-bottom: 16px;
+  }
+
+  .apc-flow-card h3 {
+    color: #FFF9F1;
+  }
+
+  .apc-flow-card p {
+    color: rgba(255, 249, 241, 0.86);
+  }
+
+  .apc-scope-card.safe {
+    background: #f8fffb;
+  }
+
+  .apc-scope-card.boundary {
+    background: #fff8f3;
+  }
+
+  .apc-final-cta {
+    background: #073734;
+    border-radius: 30px;
+    padding: clamp(28px, 5vw, 48px);
+    color: #FFF9F1;
+  }
+
+  .apc-final-cta h2 {
+    color: #FFF9F1;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.06;
+    margin: 0 0 14px;
+    letter-spacing: -0.04em;
+  }
+
+  .apc-final-cta p {
+    color: rgba(255, 249, 241, 0.86);
+    max-width: 720px;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .apc-services-wrap {
+      padding: 52px 16px;
+    }
+
+    .apc-services-section {
+      margin-bottom: 56px;
+    }
+
+    .apc-service-grid,
+    .apc-concern-grid,
+    .apc-scope-grid,
+    .apc-faq-grid,
+    .apc-flow-row {
+      grid-template-columns: 1fr;
+    }
+
+    .apc-services-actions,
+    .apc-service-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .apc-services-page .btn {
+      width: 100%;
+    }
+  }
+</style>
 </head>
 <body>
 
@@ -2721,245 +3014,209 @@ html {
 </nav>
 
 
-<main>
-  <section class="apc-parent-support-visual" id="structured-parent-support-waitlist">
-  <div class="container">
-    <div class="apc-support-card">
-      <div class="apc-support-copy">
-        <p class="eyebrow">Current availability</p>
-        <h2>Structured Parent Support</h2>
-        <p class="apc-support-lead">Current intake is full.</p>
-        <p class="apc-support-small">Join the waitlist for the next intake.</p>
+<main class="apc-services-page">
+  <div class="apc-services-wrap">
 
-        <div class="cta-row">
-          <a class="btn btn-primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20join%20the%20APC%20Structured%20Parent%20Support%20waitlist." target="_blank" rel="noopener noreferrer">Join the waitlist</a>
-          <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book APC Parent Strategy Session</a>
-        </div>
+    <section class="apc-services-section" id="services-hero">
+      <p class="apc-services-kicker">APC services</p>
+      <h1 class="apc-services-title">Choose the APC support that fits where your family is now.</h1>
+      <p class="apc-services-intro">
+        APC helps parents understand what may be happening behind behaviour, communication, learning, routines,
+        sensory overwhelm, and daily stress at home. The goal is simple: notice the pattern, understand what may be happening,
+        and choose one practical next step.
+      </p>
+      <div class="apc-services-actions">
+        <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+        <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Start with Free Call</a>
       </div>
+    </section>
 
-      <div class="apc-support-visual-box" aria-label="Current parent support intake status">
-        <div class="apc-status-pill">FULL</div>
-        <div class="apc-slot-count">5/5</div>
-        <p>spaces taken</p>
+    <section class="apc-services-section" id="choose-your-next-step">
+      <p class="apc-services-kicker">Start here</p>
+      <h2 class="apc-services-title">Three clear options for parents.</h2>
 
-        <div class="apc-slots" aria-hidden="true">
+      <div class="apc-service-grid">
+        <article class="apc-service-card">
+          <div class="apc-service-tag">If you are unsure</div>
+          <h2>Free 15-Min First Step Call</h2>
+          <p>A short call to understand your situation, see if APC is the right fit, and suggest the most suitable next step.</p>
+          <ul class="apc-service-list">
+            <li>Best for parents who are not sure where to begin</li>
+            <li>One useful reframe</li>
+            <li>One initial direction</li>
+            <li>One recommended next step</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Start with Free Call</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card featured">
+          <div class="apc-service-tag">If you want focused help now</div>
+          <h2>APC Parent Strategy Session</h2>
+          <p>A focused online parent session for one autism-related concern at home.</p>
+          <div class="apc-service-price">RM350 | 45 minutes | Online</div>
+          <ul class="apc-service-list">
+            <li>Best for one clear concern</li>
+            <li>We look at what may be happening behind the pattern</li>
+            <li>You leave with one practical next step</li>
+            <li>Helpful for meltdowns, routines, communication, learning, or refusal</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card">
+          <div class="apc-service-tag">If you want deeper support</div>
+          <h2>Structured Parent Support</h2>
+          <p>For parents who want more support across home routines, communication, regulation, learning, or behaviour patterns.</p>
+          <div class="apc-slot-bar" aria-hidden="true"><span></span></div>
+          <div class="apc-slot-text">5/5 slots taken</div>
+          <p>Join the waitlist for the next opening.</p>
+          <ul class="apc-service-list">
+            <li>More structured follow-through</li>
+            <li>Support planning for daily home challenges</li>
+            <li>Practical adjustments based on what is happening in your family</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20join%20the%20APC%20Structured%20Parent%20Support%20waitlist." target="_blank" rel="noopener noreferrer">Join Waitlist</a>
+            <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section" id="what-apc-helps-with">
+      <p class="apc-services-kicker">What parents ask about</p>
+      <h2 class="apc-services-title">Support for the daily moments that feel confusing.</h2>
+
+      <div class="apc-concern-grid">
+        <article class="apc-concern-card">
+          <h3>Meltdowns at home</h3>
+          <p>When big reactions feel sudden, intense, or hard to understand.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Routines and transitions</h3>
+          <p>When mornings, bedtime, leaving the house, or changes become stressful.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Communication struggles</h3>
+          <p>When your child cannot clearly show what they need, feel, or want.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Learning and academics</h3>
+          <p>When homework, writing, attention, or school tasks feel harder than they should.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Refusal and task avoidance</h3>
+          <p>When your child avoids things they can sometimes do.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Sensory overwhelm</h3>
+          <p>When noise, crowds, waiting, clothing, food, or changes become too much.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section" id="how-apc-helps">
+      <p class="apc-services-kicker">How APC helps</p>
+      <h2 class="apc-services-title">A simple flow parents can understand.</h2>
+
+      <div class="apc-flow-row">
+        <article class="apc-flow-card">
           <span>1</span>
+          <h3>Notice the pattern</h3>
+          <p>What happens before the behaviour, meltdown, refusal, or learning struggle?</p>
+        </article>
+        <article class="apc-flow-card">
           <span>2</span>
+          <h3>Understand what may be happening</h3>
+          <p>Communication, regulation, routines, sensory load, learning demands, stress, and environment.</p>
+        </article>
+        <article class="apc-flow-card">
           <span>3</span>
+          <h3>Choose one practical step</h3>
+          <p>A realistic action you can try at home without overwhelming the whole family.</p>
+        </article>
+        <article class="apc-flow-card">
           <span>4</span>
-          <span>5</span>
-        </div>
+          <h3>Move forward with clarity</h3>
+          <p>Less guessing. More understanding. More confidence in what to observe next.</p>
+        </article>
+      </div>
+    </section>
 
-        <div class="apc-next-step-box">
-          <strong>Next step</strong>
-          <span>Join the waitlist or book one focused session.</span>
+    <section class="apc-services-section" id="scope-and-boundaries">
+      <p class="apc-services-kicker">Clear scope</p>
+      <h2 class="apc-services-title">What APC does and does not do.</h2>
+
+      <div class="apc-scope-grid">
+        <article class="apc-scope-card safe">
+          <h3>APC can help with</h3>
+          <ul class="apc-service-list">
+            <li>Parent education about autism and child development</li>
+            <li>Pattern observation across home routines</li>
+            <li>Support planning for daily challenges</li>
+            <li>Parent response adjustments</li>
+            <li>Reframing guilt, overwhelm, and confusion</li>
+            <li>Small practical next steps</li>
+          </ul>
+        </article>
+
+        <article class="apc-scope-card boundary">
+          <h3>APC does not provide</h3>
+          <ul class="apc-service-list">
+            <li>Diagnosis or diagnostic assessment</li>
+            <li>Speech therapy, OT, psychology, or medical advice</li>
+            <li>Crisis support</li>
+            <li>Guaranteed behaviour change</li>
+            <li>Therapy replacement</li>
+            <li>Behaviour control or “fixing” autism</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section" id="services-faq">
+      <p class="apc-services-kicker">Common questions</p>
+      <h2 class="apc-services-title">If you are unsure, start here.</h2>
+
+      <div class="apc-faq-grid">
+        <article class="apc-faq-card">
+          <h3>Which option should I choose?</h3>
+          <p>If you are unsure, start with the free 15-min call. If you already know the main concern, book the Strategy Session.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>Is the Strategy Session a therapy session?</h3>
+          <p>No. It is parent guidance. We look at one concern, make sense of the pattern, and choose one practical next step.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>Can APC help with school or learning issues?</h3>
+          <p>Yes, when the focus is parent understanding, routines, task demands, communication, and small home adjustments. APC does not replace school assessment or therapy.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>What if I want longer support?</h3>
+          <p>Join the Structured Parent Support waitlist. Current intake is full, but the waitlist helps me know who is ready for the next opening.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section">
+      <div class="apc-final-cta">
+        <h2>Not sure what your family needs?</h2>
+        <p>
+          Start with the free 15-min call. If your concern is clearer and you want focused help,
+          book an APC Parent Strategy Session.
+        </p>
+        <div class="apc-services-actions">
+          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Start with Free Call</a>
+          <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
         </div>
       </div>
-    </div>
+    </section>
+
   </div>
-</section>
-
-
-
-  <section class="section compact-section soft-section">
-    <div class="container">
-      <div class="section-header">
-        <p class="eyebrow">What happens inside APC support</p>
-        <h2>A simple process: understand, try, review, adjust</h2>
-        <p>
-          APC support is designed to reduce overwhelm. Each session leads to a clear focus instead of a long list of strategies.
-        </p>
-      </div>
-
-      <div class="steps-grid">
-        <article class="step-card">
-          <span class="step-number">1</span>
-          <h3>We understand what is happening</h3>
-          <p>You share the current concern, what usually happens, what you have tried, and what feels hardest for you as a parent.</p>
-        </article>
-
-        <article class="step-card">
-          <span class="step-number">2</span>
-          <h3>We look for the pattern</h3>
-          <p>Together, we look across communication, regulation, routines, environment, and parent responses.</p>
-        </article>
-
-        <article class="step-card">
-          <span class="step-number">3</span>
-          <h3>We choose one next step</h3>
-          <p>You leave with one practical focus to observe, adjust, or try at home before the next review.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section compact-section">
-    <div class="container">
-      <div class="section-header">
-        <p class="eyebrow">What parents receive</p>
-        <h2>More than a conversation</h2>
-        <p>
-          The value is in the structure around the sessions: intake, pattern review, practical focus points, and written next steps where appropriate.
-        </p>
-      </div>
-
-      <div class="details-grid">
-        <article class="detail-card">
-          <h3>Parent intake review</h3>
-          <p>CJ reviews your concerns, routines, current supports, and what you are hoping to understand before sessions begin.</p>
-        </article>
-
-        <article class="detail-card">
-          <h3>Starting plan</h3>
-          <p>You receive a clearer direction on what to observe, what to try first, and what not to over-focus on yet.</p>
-        </article>
-
-        <article class="detail-card">
-          <h3>Parent response examples</h3>
-          <p>Where appropriate, sessions include practical language or response examples you can try in daily routines.</p>
-        </article>
-
-        <article class="detail-card">
-          <h3>Summary and next steps</h3>
-          <p>Programmes include clearer next-step guidance so parents are not left guessing after the support period ends.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section compact-section">
-        <div class="section-header">
-          <p class="eyebrow">Common questions</p>
-          <h2>What parents usually want to know before starting</h2>
-          <p>
-            These answers are here to keep APC’s role clear before you decide whether parent support
-            feels right for your family.
-          </p>
-        </div>
-
-        <div class="cards-grid three">
-          <article class="info-card">
-            <h3>Is APC therapy?</h3>
-            <p>
-              No. APC is parent education and practical guidance. It does not provide therapy, diagnosis,
-              medical advice, or crisis support.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <h3>Is APC evidence-based?</h3>
-            <p>
-              APC is evidence-informed. This means the structure is guided by autism research, parent-mediated
-              support models, and family guidance principles, while still being personalised to your situation.
-              APC itself is not a formally studied treatment programme.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <h3>Does APC replace my child’s therapist?</h3>
-            <p>
-              No. If your child already works with a speech therapist, occupational therapist, psychologist,
-              or other professional, APC can sit alongside that support by helping you understand and apply
-              practical strategies at home.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <h3>Will this stop meltdowns or behaviour?</h3>
-            <p>
-              APC does not promise that behaviours or meltdowns will stop. The goal is to understand patterns,
-              reduce guesswork, support regulation, and help parents respond with more clarity.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <h3>Why is support spread across weeks?</h3>
-            <p>
-              One conversation can give clarity, but real implementation usually needs time. Several weeks
-              allows you to try one step, observe your child’s response, review what happened, and adjust
-              the plan calmly.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <h3>What if APC is not the right fit?</h3>
-            <p>
-              If your family needs diagnosis, therapy, medical care, or urgent safety support, CJ will be
-              clear about that. The First Step Call helps decide whether APC is suitable or whether another
-              professional should be involved.
-            </p>
-          </article>
-        </div>
-
-      </section>
-
-  <section class="section compact-section">
-    <div class="container">
-      <div class="reassurance-box">
-        <p class="eyebrow">APC scope</p>
-        <h2>A parent support and education service</h2>
-        <p>
-          APC is a parent support and education service. CJ provides structured parent support through pattern review, support planning, and practical implementation guidance. APC is not a therapy clinic, diagnostic service, speech therapy service, occupational therapy service, psychology service, medical provider, or crisis service.
-        </p>
-        <p>
-          If your child needs clinical assessment or therapy, APC can help you understand what kind of support to look for and how to work alongside therapists more effectively.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section compact-section soft-section">
-    <div class="container">
-      <div class="section-header">
-        <p class="eyebrow">How to start</p>
-        <h2>A simple path from enquiry to support</h2>
-      </div>
-
-      <div class="timeline">
-        <article class="timeline-item">
-          <span class="timeline-number">1</span>
-          <div class="timeline-card">
-            <h3>Book Free 15-Min First Step Call</h3>
-            <p>Start with a short clarity and fit check.</p>
-          </div>
-        </article>
-
-        <article class="timeline-item">
-          <span class="timeline-number">2</span>
-          <div class="timeline-card">
-            <h3>Confirm the right option</h3>
-            <p>CJ recommends the support level that fits your current needs.</p>
-          </div>
-        </article>
-
-        <article class="timeline-item">
-          <span class="timeline-number">3</span>
-          <div class="timeline-card">
-            <h3>Complete intake and payment</h3>
-            <p>You complete the needed details before sessions begin.</p>
-          </div>
-        </article>
-
-        <article class="timeline-item">
-          <span class="timeline-number">4</span>
-          <div class="timeline-card">
-            <h3>Begin parent support</h3>
-            <p>You work through patterns, planning, and practical next steps.</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section final-cta-section">
-    <div class="container">
-      <div class="final-cta-card">
-        <h2>Not sure where to start?</h2>
-        <p>Start with a free 15-min First Step Call. We will briefly understand your situation, clarify whether APC is the right fit, and suggest the next step.</p>
-        <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free 15-Min First Step Call</a>
-      </div>
-    </div>
-  </section>
 </main>
 
 
