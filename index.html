@@ -1564,6 +1564,176 @@ a[aria-label="Message CJ"]:hover {
     }
   }
 </style>
+<style id="apc-homepage-cleanup-styles">
+  /* Homepage typography consistency */
+  .apc-home-stack,
+  .apc-home-stack * {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .apc-home-title,
+  .apc-home-stack h2,
+  .apc-home-stack h3 {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif !important;
+    letter-spacing: -0.03em;
+  }
+
+  .apc-home-title {
+    font-weight: 850;
+    max-width: 900px;
+  }
+
+  .apc-home-intro {
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+    line-height: 1.65;
+  }
+
+  /* Before and After grouped visual pairs */
+  .apc-before-after {
+    display: grid;
+    gap: 34px;
+  }
+
+  .apc-ba-row {
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(7, 55, 52, 0.08);
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0 14px 36px rgba(7, 55, 52, 0.05);
+  }
+
+  .apc-ba-box {
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .apc-ba-arrow {
+    align-self: center;
+  }
+
+  /* Mission section visual cards */
+  .apc-mission-visual {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .apc-mission-main {
+    background: #073734;
+    color: #FFF9F1;
+    border-radius: 30px;
+    padding: clamp(26px, 4vw, 44px);
+    box-shadow: 0 18px 48px rgba(7, 55, 52, 0.16);
+  }
+
+  .apc-mission-main h3 {
+    color: #FFF9F1;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.05;
+    margin: 0 0 18px;
+  }
+
+  .apc-mission-main p {
+    color: rgba(255, 249, 241, 0.88);
+    font-size: 1.08rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .apc-belief-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .apc-belief-chip {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 12px 34px rgba(7, 55, 52, 0.06);
+  }
+
+  .apc-belief-chip .belief-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #E8F5EF;
+    color: #0f766e;
+    font-weight: 900;
+    flex: 0 0 auto;
+  }
+
+  .apc-belief-chip h3 {
+    margin: 0 0 6px;
+    color: #073734;
+    font-size: 1.05rem;
+  }
+
+  .apc-belief-chip p {
+    margin: 0;
+    color: #3d5552;
+    line-height: 1.5;
+  }
+
+  /* Make homepage buttons consistent */
+  .apc-home-stack .btn,
+  .apc-card-actions .btn {
+    min-height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    letter-spacing: 0;
+  }
+
+  /* Reduce visual crowding on mobile */
+  @media (max-width: 900px) {
+    .apc-before-after {
+      gap: 38px;
+    }
+
+    .apc-ba-row {
+      padding: 18px;
+      gap: 18px;
+    }
+
+    .apc-ba-box {
+      min-height: 132px;
+      padding: 22px;
+    }
+
+    .apc-ba-box p {
+      font-size: 1.02rem;
+      line-height: 1.45;
+    }
+
+    .apc-ba-arrow {
+      min-height: 32px;
+      font-size: 1.45rem;
+    }
+
+    .apc-mission-visual {
+      grid-template-columns: 1fr;
+    }
+
+    .apc-mission-main {
+      border-radius: 26px;
+    }
+
+    .apc-belief-chip {
+      border-radius: 20px;
+    }
+  }
+</style>
 </head>
 <body>
 <a href="#main-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999;background:var(--teal);color:#fff;padding:8px 16px;border-radius:4px;font-weight:700" onfocus="this.style.left='16px';this.style.width='auto';this.style.height='auto'" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px'">Skip to main content</a>
@@ -1738,32 +1908,53 @@ a[aria-label="Message CJ"]:hover {
     </section>
 
     <section class="apc-home-section" id="apc-mission-values">
-      <p class="apc-home-kicker">Mission and beliefs</p>
-      <h2 class="apc-home-title">APC helps parents feel less lost and more clear.</h2>
-      <p class="apc-home-intro">
-        I believe behaviour is often communication. I believe parents should not be blamed when they are trying to understand their child.
-        I believe small changes can make a meaningful difference: a clearer routine, fewer instructions, a visual support, a calmer transition, or a better-timed response.
-      </p>
+  <p class="apc-home-kicker">Mission and beliefs</p>
+  <h2 class="apc-home-title">APC helps parents feel less lost and more clear.</h2>
 
-      <div class="apc-grid-4">
-        <article class="apc-belief-card">
-          <h3>Autism-affirming</h3>
-          <p>APC does not focus on fixing the child.</p>
-        </article>
-        <article class="apc-belief-card">
-          <h3>Practical</h3>
-          <p>Parents leave with a clearer next step.</p>
-        </article>
-        <article class="apc-belief-card">
-          <h3>Emotionally safe</h3>
-          <p>No blame, no shame, no overwhelming advice.</p>
-        </article>
-        <article class="apc-belief-card">
-          <h3>Pattern-based</h3>
-          <p>We look at communication, regulation, routines, environment, learning demands, and parent responses.</p>
-        </article>
-      </div>
-    </section>
+  <div class="apc-mission-visual">
+    <div class="apc-mission-main">
+      <h3>Understand the pattern. Choose one practical next step.</h3>
+      <p>
+        APC exists to help parents understand what may be happening behind behaviour,
+        communication, routines, regulation, learning, and daily challenges at home.
+      </p>
+    </div>
+
+    <div class="apc-belief-list">
+      <article class="apc-belief-chip">
+        <div class="belief-icon">1</div>
+        <div>
+          <h3>Behaviour is often communication</h3>
+          <p>We look at what your child may be showing through behaviour, not just the behaviour itself.</p>
+        </div>
+      </article>
+
+      <article class="apc-belief-chip">
+        <div class="belief-icon">2</div>
+        <div>
+          <h3>Parents need clarity, not blame</h3>
+          <p>Support should help parents feel more confident, not more guilty.</p>
+        </div>
+      </article>
+
+      <article class="apc-belief-chip">
+        <div class="belief-icon">3</div>
+        <div>
+          <h3>Small changes can matter</h3>
+          <p>A clearer routine, fewer instructions, a visual support, or a calmer transition can make home easier to understand.</p>
+        </div>
+      </article>
+
+      <article class="apc-belief-chip">
+        <div class="belief-icon">4</div>
+        <div>
+          <h3>Practical support comes first</h3>
+          <p>The goal is one realistic next step you can actually try at home.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
 
     <section class="apc-home-section" id="start-here">
       <p class="apc-home-kicker">Start here</p>
@@ -1806,36 +1997,8 @@ a[aria-label="Message CJ"]:hover {
   </div>
 </section>
 
-  <section class="home-section-clean parent-strategy-home" id="parent-strategy-session-home">
-    <div class="home-container">
-      <p class="home-kicker">Paid first step</p>
-      <h2>Need help with one clear concern?</h2>
-      <p>
-        Most new families start with a free 15-min First Step Call. If you already know the main concern and want a focused paid session, the APC Parent Strategy Session helps you understand one concern more clearly and leave with one practical next step for home.
-      </p>
+  
 
-      <div class="home-card-grid">
-        <article class="home-card-clean">
-          <h3>Good for</h3>
-          <p>Communication, meltdowns, refusal, routines, school stress, or after-diagnosis confusion.</p>
-        </article>
-
-        <article class="home-card-clean">
-          <h3>What you receive</h3>
-          <p>One focused session, a brief written recap, one observation focus, and one practical next step.</p>
-        </article>
-
-        <article class="home-card-clean">
-          <h3>Founding rate</h3>
-          <p>RM350 for a 45-minute online parent session.</p>
-        </article>
-      </div>
-
-      <div class="home-actions">
-        <a class="home-btn primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session">Book Parent Strategy Session</a>
-      </div>
-    </div>
-  </section>
 
 
 
