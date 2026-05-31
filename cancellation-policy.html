@@ -352,7 +352,53 @@ footer{background:var(--text);color:#fff;padding:36px 20px}.footer-in{max-width:
   }
 }
 
-</style></head><body><nav><div class="nav-in"><a href="index.html" class="nav-logo">APC</a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="free-tool.html">Free Tool</a></div></div></nav>
+</style><link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#073734">
+<style id="apc-logo-global-styles">
+  .apc-site-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .apc-site-logo img {
+    display: block;
+    height: 42px;
+    width: auto;
+    max-width: 190px;
+    object-fit: contain;
+  }
+
+  .apc-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .apc-footer-logo img {
+    display: block;
+    height: 54px;
+    width: auto;
+    max-width: 220px;
+    object-fit: contain;
+  }
+
+  @media (max-width: 640px) {
+    .apc-site-logo img {
+      height: 36px;
+      max-width: 150px;
+    }
+
+    .apc-footer-logo img {
+      height: 46px;
+      max-width: 180px;
+    }
+  }
+</style>
+</head><body><nav><div class="nav-in"><a class="apc-site-logo" href="index.html" aria-label="Autism Pathways Consulting home"><img src="apc-option-d-primary-logo.png" alt="Autism Pathways Consulting"></a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="free-tool.html">Free Tool</a></div></div></nav>
 <main class="legal-clean-page">
   <section class="legal-hero">
     <div class="legal-container">
@@ -368,11 +414,11 @@ footer{background:var(--text);color:#fff;padding:36px 20px}.footer-in{max-width:
 
         <article class="legal-card">
           <h2>Overview</h2>
-          <p>This policy applies to free Discovery Calls and paid APC parent support services.</p>
+          <p>This policy applies to free 15-min First Step Calls and paid APC parent support services.</p>
         </article>
         <article class="legal-card">
-          <h2>Free Discovery Calls</h2>
-          <p>Free Discovery Calls may be rescheduled with reasonable notice. Repeated no-shows or misuse of free booking services may result in restricted access to future bookings.</p>
+          <h2>Free 15-Min First Step Calls</h2>
+          <p>Free 15-Min First Step Calls may be rescheduled with reasonable notice. Repeated no-shows or misuse of free booking services may result in restricted access to future bookings.</p>
         </article>
         <article class="legal-card">
           <h2>Paid Parent Support Services</h2>
@@ -408,7 +454,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}.footer-in{max-width:
     <nav class="apc-footer-column" aria-label="Support">
       <h3>Support</h3>
       <a href="services.html">Parent Support Options</a>
-      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Discovery Call</a>
+      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">First Step Call</a>
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms &amp; Conditions</a>
       <a href="cancellation-policy.html">Cancellation Policy</a>

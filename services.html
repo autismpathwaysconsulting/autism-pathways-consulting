@@ -2536,18 +2536,64 @@ html {
     }
   }
 </style>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#073734">
+<style id="apc-logo-global-styles">
+  .apc-site-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .apc-site-logo img {
+    display: block;
+    height: 42px;
+    width: auto;
+    max-width: 190px;
+    object-fit: contain;
+  }
+
+  .apc-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .apc-footer-logo img {
+    display: block;
+    height: 54px;
+    width: auto;
+    max-width: 220px;
+    object-fit: contain;
+  }
+
+  @media (max-width: 640px) {
+    .apc-site-logo img {
+      height: 36px;
+      max-width: 150px;
+    }
+
+    .apc-footer-logo img {
+      height: 46px;
+      max-width: 180px;
+    }
+  }
+</style>
 </head>
 <body>
 
 <nav>
   <div class="nav-in">
-    <a href="index.html" class="nav-logo">APC</a>
+    <a class="apc-site-logo" href="index.html" aria-label="Autism Pathways Consulting home"><img src="apc-option-d-primary-logo.png" alt="Autism Pathways Consulting"></a>
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="about.html">About CJ</a>
       <a href="services.html">Services</a>
       <a href="free-tool.html">Free Tool</a>
-      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="nav-cta">Free Discovery Call</a>
+      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="nav-cta">Free 15-Min First Step Call</a>
     </div>
   </div>
 </nav>
@@ -2717,7 +2763,7 @@ html {
             <h3>What if APC is not the right fit?</h3>
             <p>
               If your family needs diagnosis, therapy, medical care, or urgent safety support, CJ will be
-              clear about that. The Discovery Call helps decide whether APC is suitable or whether another
+              clear about that. The First Step Call helps decide whether APC is suitable or whether another
               professional should be involved.
             </p>
           </article>
@@ -2751,7 +2797,7 @@ html {
         <article class="timeline-item">
           <span class="timeline-number">1</span>
           <div class="timeline-card">
-            <h3>Book Free Discovery Call</h3>
+            <h3>Book Free 15-Min First Step Call</h3>
             <p>Start with a short clarity and fit check.</p>
           </div>
         </article>
@@ -2787,8 +2833,8 @@ html {
     <div class="container">
       <div class="final-cta-card">
         <h2>Not sure where to start?</h2>
-        <p>Start with a free 15-minute Discovery Call. We will briefly understand your situation, clarify whether APC is the right fit, and suggest the next step.</p>
-        <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free Discovery Call</a>
+        <p>Start with a free 15-min First Step Call. We will briefly understand your situation, clarify whether APC is the right fit, and suggest the next step.</p>
+        <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book Free 15-Min First Step Call</a>
       </div>
     </div>
   </section>
@@ -2816,7 +2862,7 @@ html {
     <nav class="apc-footer-column" aria-label="Support">
       <h3>Support</h3>
       <a href="services.html">Services</a>
-      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Discovery Call</a>
+      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">First Step Call</a>
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms &amp; Conditions</a>
       <a href="cancellation-policy.html">Cancellation Policy</a>
@@ -2856,7 +2902,7 @@ html {
 
   const options = {
     clarity: {
-      title: 'Free Discovery Call',
+      title: 'Free 15-Min First Step Call',
       text: 'Best for parents who want to understand what may be happening and leave with practical next steps before deciding whether more support is needed.'
     },
     implementation: {
