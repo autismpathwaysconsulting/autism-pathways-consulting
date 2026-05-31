@@ -1894,7 +1894,7 @@ a[aria-label="Message CJ"]:hover {
     }
   }
 </style>
-\n
+
 <style id="apc-home-hero-visual-upgrade">
   .apc-hero-visual-section {
     background: #FFF9F1;
@@ -2222,6 +2222,52 @@ a[aria-label="Message CJ"]:hover {
     .apc-hero-card-logo img {
       width: 58% !important;
       max-width: 220px !important;
+    }
+  }
+</style>
+<style id="apc-homepage-final-hero-fix">
+  /* Safety: hide accidental generated text before the page */
+  html::before,
+  body::before {
+    content: "" !important;
+    display: none !important;
+  }
+
+  /* Align hero copy and teal visual card */
+  .apc-hero-visual-section {
+    padding-top: 8px !important;
+  }
+
+  .apc-hero-visual {
+    align-items: start !important;
+  }
+
+  .apc-hero-copy,
+  .apc-hero-card {
+    align-self: start !important;
+    margin-top: 0 !important;
+  }
+
+  @media (min-width: 901px) {
+    .apc-hero-visual {
+      grid-template-columns: minmax(0, 1fr) minmax(380px, 0.92fr) !important;
+      gap: clamp(32px, 4vw, 54px) !important;
+    }
+
+    .apc-hero-card {
+      margin-top: 0 !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .apc-hero-visual {
+      align-items: stretch !important;
+    }
+
+    .apc-hero-card,
+    .apc-hero-copy {
+      align-self: stretch !important;
+      margin-top: 0 !important;
     }
   }
 </style>
