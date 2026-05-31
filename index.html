@@ -2109,27 +2109,36 @@ a[aria-label="Message CJ"]:hover {
 <style id="apc-hero-logo-full-width-fix">
   .apc-hero-card-logo {
     width: 100%;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .apc-hero-card-logo img {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 58% !important;
+    max-width: 260px !important;
+    min-width: 0 !important;
     height: auto !important;
     display: block;
     box-sizing: border-box;
     object-fit: contain;
     background: rgba(255, 249, 241, 0.96);
-    border-radius: 18px;
-    padding: 14px 18px;
+    border-radius: 16px;
+    padding: 8px 10px;
   }
 
   @media (max-width: 900px) {
+    .apc-hero-card-logo {
+      justify-content: center;
+    }
+
     .apc-hero-card-logo img {
-      width: 100% !important;
-      max-width: 100% !important;
-      padding: 12px 14px;
-      border-radius: 16px;
+      width: 64% !important;
+      max-width: 240px !important;
+      min-width: 0 !important;
+      padding: 8px 10px;
+      border-radius: 14px;
     }
   }
 </style>
