@@ -2271,6 +2271,144 @@ a[aria-label="Message CJ"]:hover {
     }
   }
 </style>
+<style id="apc-audit-homepage-positioning">
+  .apc-hero-trust-line {
+    color: #0f766e;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: clamp(1rem, 1.7vw, 1.15rem);
+    font-weight: 850;
+    line-height: 1.55;
+    margin: 0 0 12px;
+    max-width: 660px;
+  }
+
+  .apc-notice-section {
+    background: #FFF9F1;
+    padding: 72px 20px;
+  }
+
+  .apc-notice-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .apc-notice-title {
+    color: #073734;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    margin: 0 0 16px;
+    max-width: 920px;
+  }
+
+  .apc-notice-intro {
+    color: #3d5552;
+    font-size: clamp(1rem, 2vw, 1.14rem);
+    line-height: 1.7;
+    max-width: 820px;
+    margin: 0 0 28px;
+  }
+
+  .apc-notice-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+  }
+
+  .apc-notice-card {
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 0 14px 40px rgba(7, 55, 52, 0.06);
+  }
+
+  .apc-notice-card h3 {
+    color: #073734;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 1.08rem;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+
+  .apc-notice-card p {
+    color: #3d5552;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .apc-notice-callout {
+    margin-top: 24px;
+    background: #073734;
+    color: #FFF9F1;
+    border-radius: 26px;
+    padding: clamp(24px, 4vw, 36px);
+  }
+
+  .apc-notice-callout p {
+    color: rgba(255, 249, 241, 0.9);
+    font-size: 1.08rem;
+    line-height: 1.65;
+    margin: 0 0 12px;
+  }
+
+  .apc-notice-callout p:last-child {
+    margin-bottom: 0;
+  }
+
+  .apc-notice-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .apc-notice-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-weight: 850;
+    text-decoration: none;
+  }
+
+  .apc-notice-actions .btn-primary {
+    background: #0f766e;
+    border: 1px solid #0f766e;
+    color: #ffffff;
+  }
+
+  .apc-notice-actions .btn-secondary {
+    background: #ffffff;
+    border: 1px solid #0f766e;
+    color: #0f766e;
+  }
+
+  @media (max-width: 900px) {
+    .apc-notice-section {
+      padding: 56px 16px;
+    }
+
+    .apc-notice-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .apc-notice-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .apc-notice-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
 </head>
 <body>
 <a href="#main-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999;background:var(--teal);color:#fff;padding:8px 16px;border-radius:4px;font-weight:700" onfocus="this.style.left='16px';this.style.width='auto';this.style.height='auto'" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px'">Skip to main content</a>
@@ -2301,14 +2439,17 @@ a[aria-label="Message CJ"]:hover {
       <div class="apc-hero-copy">
         <p class="apc-home-kicker">A clearer first step</p>
         <h2>When home feels confusing, start with the pattern.</h2>
+        <p class="apc-hero-trust-line">
+          Autism parent support shaped by 10 years of school-based and 1-to-1 experience with autistic children.
+        </p>
         <p>
-          APC helps parents slow down, understand what may be happening behind behaviour,
-          communication, routines, learning, and meltdowns, then choose one practical next step.
+          APC helps parents understand what may be happening behind behaviour, communication struggles,
+          routines, learning, school stress, and meltdowns, then choose one practical next step.
         </p>
 
         <div class="apc-hero-actions">
-          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
-          <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Start with Free Call</a>
+          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Start with Free Call</a>
+          <a class="btn btn-secondary" href="services.html">View Parent Support Options</a>
         </div>
       </div>
 
@@ -2342,6 +2483,59 @@ a[aria-label="Message CJ"]:hover {
         <div class="apc-hero-note">Calm, practical, parent-centred support</div>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<section class="apc-notice-section" id="what-cj-notices">
+  <div class="apc-notice-wrap">
+    <p class="apc-home-kicker">10 years of pattern observation</p>
+    <h2 class="apc-notice-title">What CJ notices from 10 years supporting autistic children</h2>
+    <p class="apc-notice-intro">
+      Before suggesting strategies, CJ first looks at what is happening around the child.
+      Many autistic children are already communicating through patterns adults may not always notice at first.
+    </p>
+
+    <div class="apc-notice-grid">
+      <article class="apc-notice-card">
+        <h3>Understanding more than they can explain</h3>
+        <p>A child may know more than they can say clearly in the moment.</p>
+      </article>
+
+      <article class="apc-notice-card">
+        <h3>Copying instead of asking for help</h3>
+        <p>Some children copy because they do not know how to start or what to ask.</p>
+      </article>
+
+      <article class="apc-notice-card">
+        <h3>Needing more processing time</h3>
+        <p>A delayed response may mean the child needs time, not that they are ignoring you.</p>
+      </article>
+
+      <article class="apc-notice-card">
+        <h3>Unclear instructions</h3>
+        <p>A task may look simple to adults but feel unclear or too big to the child.</p>
+      </article>
+
+      <article class="apc-notice-card">
+        <h3>Holding it together at school</h3>
+        <p>Some children seem fine in school, then release stress later at home.</p>
+      </article>
+
+      <article class="apc-notice-card">
+        <h3>Behaviour as communication</h3>
+        <p>Behaviour can give clues about confusion, overwhelm, uncertainty, or a need for support.</p>
+      </article>
+    </div>
+
+    <div class="apc-notice-callout">
+      <p>At APC, the first question is not “How do we stop this behaviour?”</p>
+      <p>The first question is: “What is this situation asking from the child, and what support would make the next step clearer?”</p>
+    </div>
+
+    <div class="apc-notice-actions">
+      <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+      <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Start with Free Call</a>
     </div>
   </div>
 </section>
