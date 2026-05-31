@@ -2049,7 +2049,220 @@ a[aria-label="Message CJ"]:hover {
     }
   }
 </style>
-</head>
+<style id="apc-home-hero-visual-upgrade">
+  .apc-hero-visual-section {
+    background: #FFF9F1;
+    padding: 20px 20px 64px;
+  }
+
+  .apc-hero-visual-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .apc-hero-visual {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 28px;
+    align-items: center;
+    background: linear-gradient(135deg, #f7f3ec 0%, #fffaf4 100%);
+    border: 1px solid rgba(7, 55, 52, 0.08);
+    border-radius: 34px;
+    padding: clamp(28px, 4vw, 56px);
+    box-shadow: 0 24px 60px rgba(7, 55, 52, 0.08);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .apc-hero-visual::before {
+    content: "";
+    position: absolute;
+    right: -120px;
+    top: -120px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(15,118,110,0.14) 0%, rgba(15,118,110,0) 72%);
+    pointer-events: none;
+  }
+
+  .apc-hero-copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .apc-hero-copy .apc-home-kicker {
+    margin-bottom: 14px;
+  }
+
+  .apc-hero-copy h2 {
+    color: #073734;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: clamp(2rem, 4.6vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.05em;
+    margin: 0 0 16px;
+    max-width: 620px;
+  }
+
+  .apc-hero-copy p {
+    color: #3d5552;
+    font-size: clamp(1rem, 2vw, 1.12rem);
+    line-height: 1.7;
+    margin: 0 0 24px;
+    max-width: 560px;
+  }
+
+  .apc-hero-copy .apc-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 6px;
+  }
+
+  .apc-hero-copy .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-weight: 850;
+    text-decoration: none;
+  }
+
+  .apc-hero-copy .btn-primary {
+    background: #0f766e;
+    color: #ffffff;
+    border: 1px solid #0f766e;
+  }
+
+  .apc-hero-copy .btn-secondary {
+    background: #ffffff;
+    color: #0f766e;
+    border: 1px solid #0f766e;
+  }
+
+  .apc-hero-card {
+    background: linear-gradient(180deg, #0d4b48 0%, #0f766e 100%);
+    border-radius: 28px;
+    padding: 28px;
+    color: #ffffff;
+    box-shadow: 0 24px 60px rgba(7, 55, 52, 0.18);
+    position: relative;
+    z-index: 1;
+  }
+
+  .apc-hero-card-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .apc-hero-card-logo img {
+    width: 170px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.92);
+    padding: 8px 10px;
+  }
+
+  .apc-hero-card h3 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  .apc-hero-card p {
+    margin: 0 0 18px;
+    color: rgba(255,255,255,0.86);
+    line-height: 1.6;
+  }
+
+  .apc-hero-steps {
+    display: grid;
+    gap: 12px;
+  }
+
+  .apc-hero-step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    align-items: center;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px;
+    padding: 14px 16px;
+  }
+
+  .apc-hero-step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #0f766e;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1rem;
+  }
+
+  .apc-hero-step strong {
+    display: block;
+    color: #ffffff;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .apc-hero-note {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 900px) {
+    .apc-hero-visual {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      padding: 28px 22px;
+      border-radius: 28px;
+    }
+
+    .apc-hero-copy h2 {
+      font-size: clamp(2rem, 9vw, 3rem);
+    }
+
+    .apc-hero-copy .apc-hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .apc-hero-copy .btn {
+      width: 100%;
+    }
+
+    .apc-hero-card {
+      padding: 22px;
+      border-radius: 24px;
+    }
+
+    .apc-hero-card-logo img {
+      width: 150px;
+    }
+  }
+</style>\n</head>
 <body>
 <a href="#main-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999;background:var(--teal);color:#fff;padding:8px 16px;border-radius:4px;font-weight:700" onfocus="this.style.left='16px';this.style.width='auto';this.style.height='auto'" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px'">Skip to main content</a>
 
