@@ -3,45 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Free Autism Parent Resources | Autism Pathways Consulting</title>
   <meta name="description" content="Free autism parent resources by Autism Pathways Consulting, including the Malaysian Autism Parent Guide, APC Calm Companion, and the Free 15-Min First Step Call." />
-
   <style>
     :root {
-      --cream: #fff9f1;
-      --deep: #073734;
       --teal: #0f766e;
+      --deep-teal: #073734;
+      --cream: #fff9f1;
       --sage: #6b9e7a;
       --coral: #e8997a;
-      --text: #314846;
-      --muted: #526966;
-      --border: rgba(7, 55, 52, 0.14);
+      --charcoal: #263b3a;
+      --border: rgba(7, 55, 52, 0.16);
       --shadow: 0 22px 55px rgba(7, 55, 52, 0.10);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, var(--cream) 0%, #ffffff 55%, var(--cream) 100%);
-      color: var(--text);
+      color: var(--charcoal);
+      background: linear-gradient(180deg, #fff9f1 0%, #ffffff 52%, #fff9f1 100%);
       line-height: 1.6;
     }
 
-    a { color: inherit; text-decoration: none; }
-
-    header {
-      background: rgba(255, 249, 241, 0.96);
-      border-bottom: 1px solid rgba(7, 55, 52, 0.08);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(12px);
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    nav {
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 249, 241, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(7, 55, 52, 0.08);
+    }
+
+    .nav {
       width: min(1180px, calc(100% - 40px));
       margin: 0 auto;
       min-height: 76px;
@@ -52,22 +54,39 @@
     }
 
     .brand {
-      font-weight: 900;
-      color: var(--deep);
-      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      color: var(--deep-teal);
+      letter-spacing: -0.02em;
     }
 
-    .links {
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: var(--deep-teal);
+      color: var(--cream);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
       display: flex;
       align-items: center;
       gap: 26px;
-      font-weight: 800;
+      font-weight: 700;
       color: #314241;
     }
 
-    .links a:hover { color: var(--teal); }
+    .nav-links a:hover {
+      color: var(--teal);
+    }
 
-    .cta {
+    .nav-cta {
       background: var(--teal);
       color: white !important;
       padding: 13px 22px;
@@ -75,7 +94,7 @@
       box-shadow: 0 12px 26px rgba(15, 118, 110, 0.22);
     }
 
-    main {
+    .page {
       width: min(1180px, calc(100% - 40px));
       margin: 0 auto;
       padding: 72px 0 88px;
@@ -90,41 +109,46 @@
       margin-bottom: 18px;
     }
 
+    .hero {
+      max-width: 900px;
+      margin-bottom: 52px;
+    }
+
     h1 {
       margin: 0;
-      color: var(--deep);
-      font-size: clamp(3.2rem, 8vw, 6.4rem);
+      font-size: clamp(3rem, 8vw, 6.1rem);
       line-height: 0.95;
       letter-spacing: -0.07em;
+      color: var(--deep-teal);
       max-width: 950px;
     }
 
     .hero p {
       margin: 28px 0 0;
-      max-width: 820px;
-      color: var(--muted);
       font-size: clamp(1.18rem, 2vw, 1.45rem);
+      max-width: 820px;
+      color: #415856;
     }
 
-    .grid {
-      margin-top: 44px;
+    .resource-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 26px;
+      margin-top: 38px;
     }
 
     .card {
-      background: rgba(255,255,255,0.94);
+      background: rgba(255, 255, 255, 0.92);
       border: 1px solid var(--border);
       border-radius: 30px;
       padding: 34px;
       box-shadow: var(--shadow);
-      min-height: 410px;
       display: flex;
       flex-direction: column;
+      min-height: 390px;
     }
 
-    .badge {
+    .card-badge {
       width: fit-content;
       padding: 7px 12px;
       border-radius: 999px;
@@ -137,27 +161,29 @@
       margin-bottom: 20px;
     }
 
-    h2 {
+    .card h2 {
       margin: 0;
-      color: var(--deep);
-      font-size: 1.65rem;
+      color: var(--deep-teal);
+      font-size: 1.62rem;
       line-height: 1.12;
       letter-spacing: -0.04em;
     }
 
     .card p {
       margin: 18px 0 0;
-      color: var(--muted);
+      color: #425956;
       font-size: 1.05rem;
     }
 
     .card ul {
       margin: 22px 0 0;
       padding-left: 20px;
-      color: var(--muted);
+      color: #425956;
     }
 
-    .card li { margin: 8px 0; }
+    .card li {
+      margin: 8px 0;
+    }
 
     .button {
       margin-top: auto;
@@ -170,13 +196,20 @@
       border-radius: 999px;
       background: var(--teal);
       color: white;
-      font-weight: 900;
+      font-weight: 850;
       box-shadow: 0 12px 28px rgba(15, 118, 110, 0.18);
     }
 
-    .courses {
+    .button.secondary {
+      background: transparent;
+      color: var(--teal);
+      border: 1.5px solid var(--teal);
+      box-shadow: none;
+    }
+
+    .coming-soon {
       margin-top: 34px;
-      background: var(--deep);
+      background: var(--deep-teal);
       color: var(--cream);
       border-radius: 34px;
       padding: 42px;
@@ -187,21 +220,22 @@
       box-shadow: 0 28px 65px rgba(7, 55, 52, 0.20);
     }
 
-    .courses h2 {
-      color: var(--cream);
+    .coming-soon h2 {
+      margin: 0;
       font-size: clamp(2rem, 4vw, 3.2rem);
       line-height: 1;
+      letter-spacing: -0.05em;
     }
 
-    .courses p {
-      color: rgba(255,249,241,0.84);
+    .coming-soon p {
       margin: 16px 0 0;
+      color: rgba(255, 249, 241, 0.84);
       font-size: 1.12rem;
     }
 
-    .courses .button {
+    .coming-soon .button {
       background: var(--cream);
-      color: var(--deep);
+      color: var(--deep-teal);
       justify-self: end;
     }
 
@@ -211,6 +245,7 @@
       border-radius: 24px;
       background: rgba(232, 153, 122, 0.12);
       border: 1px solid rgba(232, 153, 122, 0.28);
+      color: #4a514d;
     }
 
     footer {
@@ -230,49 +265,64 @@
     }
 
     @media (max-width: 900px) {
-      nav {
+      .nav {
+        min-height: auto;
+        padding: 18px 0;
         align-items: flex-start;
         flex-direction: column;
-        padding: 18px 0;
       }
 
-      .links {
+      .nav-links {
         width: 100%;
         flex-wrap: wrap;
         gap: 14px 18px;
       }
 
-      .cta { padding: 10px 16px; }
+      .nav-cta {
+        padding: 10px 16px;
+      }
 
-      main { padding-top: 48px; }
+      .page {
+        padding-top: 48px;
+      }
 
-      .grid { grid-template-columns: 1fr; }
+      .resource-grid {
+        grid-template-columns: 1fr;
+      }
 
-      .card { min-height: auto; }
+      .card {
+        min-height: auto;
+      }
 
-      .courses { grid-template-columns: 1fr; }
+      .coming-soon {
+        grid-template-columns: 1fr;
+      }
 
-      .courses .button { justify-self: start; }
+      .coming-soon .button {
+        justify-self: start;
+      }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <nav aria-label="Main navigation">
-      <a class="brand" href="index.html">Autism Pathways Consulting</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">APC</span>
+        <span>Autism Pathways Consulting</span>
+      </a>
 
-      <div class="links">
+      <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="about.html">About CJ</a>
         <a href="services.html">Services</a>
         <a href="resources.html">Resources</a>
-        <a class="cta" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Free 15-Min First Step Call</a>
+        <a class="nav-cta" href="start.html">Free 15-Min First Step Call</a>
       </div>
     </nav>
   </header>
 
-  <main>
+  <main class="page">
     <section class="hero">
       <div class="eyebrow">Free parent resources</div>
       <h1>Not sure where to start?</h1>
@@ -282,9 +332,9 @@
       </p>
     </section>
 
-    <section class="grid" aria-label="APC free resources">
+    <section class="resource-grid" aria-label="APC free resources">
       <article class="card">
-        <div class="badge">Start here</div>
+        <div class="card-badge">Start here</div>
         <h2>Free Malaysian Autism Parent Guide</h2>
         <p>
           New to autism or unsure what to do next? Start with this calm, practical guide for Malaysian parents.
@@ -294,11 +344,11 @@
           <li>Know what support options may exist</li>
           <li>Choose a clearer first step without panic</li>
         </ul>
-        <a class="button" href="The_Complete_Malaysian_Parent_Guide_by_CJ_Lim_APC.pdf" target="_blank" rel="noopener">Download Free Guide</a>
+        <a class="button" href="The_Complete_Malaysian_Parent_Guide_by_CJ_Lim_APC.pdf">Download Free Guide</a>
       </article>
 
       <article class="card">
-        <div class="badge">In the moment</div>
+        <div class="card-badge">In the moment</div>
         <h2>APC Calm Companion</h2>
         <p>
           A free parent support tool for difficult moments at home, including routines, transitions, communication, and calm-down support.
@@ -308,11 +358,11 @@
           <li>Get simple parent prompts</li>
           <li>Support calm, predictable responses</li>
         </ul>
-        <a class="button" href="https://calm.autismpathwaysconsulting.com/" target="_blank" rel="noopener">Open APC Calm</a>
+        <a class="button" href="https://calm.autismpathwaysconsulting.com/">Open APC Calm</a>
       </article>
 
       <article class="card">
-        <div class="badge">Speak with CJ</div>
+        <div class="card-badge">Speak with CJ</div>
         <h2>Free 15-Min First Step Call</h2>
         <p>
           A short clarity and fit call for parents who are unsure where to begin.
@@ -322,19 +372,19 @@
           <li>Notice one possible pattern</li>
           <li>Choose one clearer next step</li>
         </ul>
-        <a class="button" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Book First Step Call</a>
+        <a class="button" href="start.html">Book First Step Call</a>
       </article>
     </section>
 
-    <section class="courses">
+    <section class="coming-soon">
       <div>
-        <div class="eyebrow" style="color:#e8997a;margin-bottom:14px;">Coming soon</div>
+        <div class="eyebrow" style="color: #e8997a; margin-bottom: 14px;">Coming soon</div>
         <h2>Parent learning courses</h2>
         <p>
           Short, practical courses for parents who want step-by-step autism guidance they can learn at their own pace.
         </p>
       </div>
-      <a class="button" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Ask About Future Courses</a>
+      <a class="button" href="start.html">Ask About Future Courses</a>
     </section>
 
     <div class="note">

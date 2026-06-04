@@ -1,4 +1,49 @@
-<!DOCTYPE html>
+from pathlib import Path
+from datetime import datetime
+import re
+
+ROOT = Path(".")
+backup_dir = ROOT / f"_backup_fix_resources_links_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+backup_dir.mkdir(exist_ok=True)
+
+html_files = list(ROOT.glob("*.html"))
+
+def backup(path):
+    (backup_dir / path.name).write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+
+def clean_text(text):
+    replacements = {
+        'href="#apc-calm-companion">Free Tool</a>': 'href="resources.html">Resources</a>',
+        'href="free-tool.html">Free Tool</a>': 'href="resources.html">Resources</a>',
+        'href="/free-tool.html">Free Tool</a>': 'href="/resources.html">Resources</a>',
+        'href="free-tool">Free Tool</a>': 'href="resources.html">Resources</a>',
+        'href="/free-tool">Free Tool</a>': 'href="/resources.html">Resources</a>',
+        '>Free Tool<': '>Resources<',
+        'Open Free Tool': 'Open APC Calm',
+        'Use the Free Tool': 'Use APC Calm',
+        'Use Free Tool': 'Use APC Calm',
+        'Start with Free Call': 'Book First Step Call',
+        'Start with a Free Call': 'Book First Step Call',
+        'Free 15-Minute Discovery Call': 'Free 15-Min First Step Call',
+        'Free Discovery Call': 'Free 15-Min First Step Call',
+        'Book Discovery Call': 'Book First Step Call',
+    }
+
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    return text
+
+for path in html_files:
+    backup(path)
+    text = path.read_text(encoding="utf-8")
+    path.write_text(clean_text(text), encoding="utf-8")
+
+resources = Path("resources.html")
+if resources.exists():
+    backup(resources)
+
+resources.write_text("""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -351,3 +396,9 @@
   </footer>
 </body>
 </html>
+""", encoding="utf-8")
+
+print("Done.")
+print(f"Backup created at: {backup_dir}")
+print("Updated all visible Free Tool links to Resources.")
+print("Rebuilt resources.html as a 3-card resource library.")

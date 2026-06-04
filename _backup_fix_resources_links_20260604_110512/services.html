@@ -1,0 +1,3437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Services | Autism Pathways Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"/><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap"/></noscript>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#2a9d8f;--teal-d:#1e7268;--text:#1a1a2e;--muted:#3d4a5c;--bg:#faf9f7;--card:#fff;--border:#e8e4df}
+body{overflow-x:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+a{color:inherit;text-decoration:none}
+nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-in{max-width:980px;margin:0 auto;display:flex;align-items:center;height:58px;gap:20px}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:17px;color:var(--teal);font-weight:600}
+.nav-links{display:flex;gap:18px;margin-left:auto;font-size:14px;font-weight:700;color:var(--muted)}
+.nav-links a:hover{color:var(--teal)}
+.nav-cta{background:var(--teal);color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:.02em;transition:background .2s}
+.nav-cta:hover{background:var(--teal-d)!important}
+.page-header{max-width:720px;margin:0 auto;padding:64px 24px 32px;text-align:center}
+.hero-label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);line-height:1.2;margin-bottom:16px}
+.page-header p{font-size:1rem;color:var(--muted);max-width:520px;margin:0 auto}
+.container{max-width:800px;margin:0 auto;padding:0 24px 80px}
+
+/* Service section */
+.service-section{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:24px}
+.svc-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:20px}
+.svc-icon{font-size:36px;flex-shrink:0}
+.svc-title h2{font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:4px}
+.svc-title p{font-size:14px;color:var(--muted)}
+.svc-intro{color:var(--muted);font-size:15px;margin-bottom:28px}
+
+/* Steps */
+.steps{margin:0 0 28px}
+.steps-label{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:14px}
+.step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{width:28px;height:28px;background:var(--teal);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-content h4{font-size:15px;font-weight:600;margin-bottom:3px}
+.step-content p{font-size:14px;color:var(--muted);margin:0}
+
+/* Why 2 weeks explainer */
+.why-box{background:#fdf6ee;border:1px solid #f4d9b0;border-radius:12px;padding:16px 20px;margin:0 0 24px;font-size:14px;color:#7a5c2e}
+.why-box strong{color:#5c3d0e}
+
+/* Pricing cards */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.price-card{border:1px solid var(--border);border-radius:12px;padding:20px;position:relative}
+.price-card.featured{border-color:var(--teal);background:#f0faf9}
+.price-badge{position:absolute;top:-10px;right:16px;background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.price-name{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.price-amount{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--text);margin-bottom:2px}
+.price-desc{font-size:12px;color:var(--muted);margin-bottom:8px}
+.price-save{font-size:12px;color:var(--teal);font-weight:600;margin-bottom:8px}
+.price-includes{list-style:none;padding:0;border-top:1px solid var(--border);padding-top:8px;margin-top:4px}
+.price-includes li{font-size:12px;color:var(--muted);padding:3px 0;padding-left:16px;position:relative}
+.price-includes li::before{content:'✓';position:absolute;left:0;color:var(--teal);font-weight:700}
+
+/* CTA row */
+.svc-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{background:var(--teal);color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:700;display:inline-block}
+.btn-secondary{border:1.5px solid var(--teal);color:var(--teal);padding:12px 24px;border-radius:30px;font-size:14px;font-weight:700;display:inline-block}
+.btn-primary:hover{background:var(--teal-d)}
+
+/* School interest form */
+.school-form-wrap{background:#f0faf9;border:1px solid #b2dfdb;border-radius:14px;padding:24px;margin:20px 0}
+.school-form-wrap h4{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.school-form-wrap p{font-size:13px;color:var(--muted);margin-bottom:16px}
+.form-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.form-field{flex:1;min-width:160px;display:flex;flex-direction:column;gap:4px}
+.form-field label{font-size:12px;font-weight:600;color:var(--muted)}
+.form-field input,.form-field select,.form-field textarea{padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:#fff;color:var(--text)}
+.form-field textarea{resize:vertical;min-height:80px}
+.form-submit{background:var(--teal);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;width:100%}
+.form-submit:hover{background:var(--teal-d)}
+.form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* ── WHAT PARENTS OFTEN FEEL ── */
+.parents-feel-section{background:linear-gradient(135deg,#f9faf7,#f0faf9);border:1px solid #d4efeb;border-radius:20px;padding:48px 40px;margin:0 24px 48px;max-width:800px;margin-left:auto;margin-right:auto}
+.parents-feel-section h2{font-family:'DM Serif Display',serif;font-size:clamp(1.5rem,3vw,1.9rem);text-align:center;margin-bottom:32px;color:var(--text)}
+.parents-feel-list{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto}
+.pf-item{padding:16px 20px;background:#fff;border-left:3px solid var(--teal);border-radius:8px;font-size:15px;color:var(--text);line-height:1.6;font-style:italic;box-shadow:0 2px 6px rgba(42,157,143,.08)}
+.parents-feel-section .body-text{font-size:15px;color:var(--muted);line-height:1.75;text-align:center;margin:0 auto;max-width:620px}
+
+/* ── HOW APC IS DIFFERENT ── */
+.how-different{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:24px}
+.how-different h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:20px;text-align:center}
+.how-different-intro{text-align:center;font-size:15px;color:var(--muted);margin-bottom:28px;max-width:600px;margin-left:auto;margin-right:auto}
+.how-different-list{display:flex;flex-direction:column;gap:12px;max-width:600px;margin:0 auto 20px;font-size:14px;color:var(--muted);line-height:1.7}
+.how-different-list li{display:flex;gap:12px;align-items:flex-start;list-style:none}
+.how-different-list li::before{content:'•';color:var(--teal);font-weight:700;flex-shrink:0}
+.how-different-note{background:#f9f8f5;border:1px solid #e8e4df;border-radius:12px;padding:16px 20px;text-align:center;font-size:13px;color:var(--muted);font-style:italic}
+
+/* ── ONE THING I NOTICE ── */
+.one-thing-notice{background:linear-gradient(135deg,#f9faf7,#f0faf9);border:1px solid #d4efeb;border-radius:20px;padding:40px;margin:40px 24px;max-width:800px;margin-left:auto;margin-right:auto;text-align:center}
+.one-thing-notice h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:24px;color:var(--text)}
+.one-thing-notice p{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:12px;max-width:600px;margin-left:auto;margin-right:auto}
+
+/* ── PATHWAY CARDS ── */
+.pathway-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:32px 0;max-width:900px;margin-left:auto;margin-right:auto}
+.pathway-card{background:var(--card);border:1.5px solid var(--teal);border-radius:16px;padding:24px;text-align:center}
+.pathway-card h4{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:8px;color:var(--text)}
+.pathway-card p{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ── HELPFUL IF SECTION ── */
+.helpful-if-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px auto 0;max-width:980px}
+.helpful-if-item{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 18px;font-size:15px;color:var(--text);line-height:1.45;text-align:left;box-shadow:0 8px 24px rgba(31,41,55,.04)}
+.helpful-if-item::before{content:"✓";flex:0 0 auto;color:var(--teal);font-weight:800;font-size:16px;line-height:1.3}
+@media(max-width:900px){.helpful-if-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.helpful-if-grid{grid-template-columns:1fr}.helpful-if-item{padding:16px}}
+
+/* ── HOW SUPPORT WORKS ── */
+.how-works-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:24px auto 0;max-width:1080px}
+@media(max-width:960px){.how-works-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.how-works-steps{grid-template-columns:1fr}}
+.hw-step{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px 18px;text-align:left;box-shadow:0 10px 28px rgba(31,41,55,.04);min-height:150px}
+.hw-step-num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:var(--teal-l);font-size:20px;font-weight:800;color:var(--teal);margin-bottom:18px}
+.hw-step h4{font-size:15px;font-weight:800;color:var(--text);line-height:1.45;margin:0}
+
+/* ── WHICH OPTION TABLE ── */
+.which-option-table{width:100%;margin:28px 0;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.which-option-table td{padding:16px;border-bottom:1px solid var(--border);font-size:14px}
+.which-option-table tr:last-child td{border-bottom:none}
+.which-option-table td:first-child{font-weight:600;color:var(--text);width:40%}
+.which-option-table td:last-child{color:var(--teal);font-weight:600}
+@media(max-width:600px){.which-option-table{font-size:13px}.which-option-table td{padding:12px}.which-option-table td:first-child{width:35%}}
+
+/* structured parent support process */
+.pattern-method{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:24px}
+.pattern-method h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:16px;text-align:center}
+.pattern-method-intro{text-align:center;font-size:15px;color:var(--muted);margin-bottom:32px;max-width:700px;margin-left:auto;margin-right:auto;line-height:1.7}
+.pattern-steps{display:flex;flex-direction:column;gap:16px;max-width:700px;margin:0 auto}
+.pstep{display:flex;gap:16px;align-items:flex-start}
+.pstep-num{width:36px;height:36px;background:var(--teal);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.pstep-text{flex:1;font-size:14px;color:var(--muted);line-height:1.7}
+.pstep-text strong{display:block;color:var(--text);font-weight:700;margin-bottom:3px}
+
+/* ── TESTIMONIALS ── */
+.testimonials{max-width:980px;margin:28px auto 32px;padding:0 20px}
+.test-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 6px 18px rgba(16, 185, 129, 0.04);min-height:120px}
+.quote{font-size:1rem;line-height:1.6;color:var(--text);font-style:italic;margin-bottom:10px}
+.quote strong{font-weight:700}
+.quote-attr{font-size:12px;color:var(--muted);margin-top:8px;font-weight:600}
+.micro-trust{max-width:760px;margin:20px auto 40px;text-align:center;color:var(--muted);font-size:14px;line-height:1.7}
+
+@media(max-width:720px){.test-grid{grid-template-columns:1fr}}
+
+/* ── ADDITIONAL SUPPORT INCLUDED ── */
+.support-included{background:#f7fbfa;border:1px solid #d4e9e2;border-radius:18px;padding:28px;overflow:hidden;margin-top:24px}
+.support-included h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:18px;text-align:center;color:var(--text)}
+.support-item{margin-top:18px}
+.support-item:first-child{margin-top:0}
+.support-item h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px}
+.support-item p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.support-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.support-list li{position:relative;padding-left:18px;color:var(--muted);line-height:1.7;font-size:14px}
+.support-list li::before{content:'•';position:absolute;left:0;top:0;color:var(--teal);font-weight:700}
+@media(max-width:720px){.onboard-grid{grid-template-columns:1fr}}
+
+/* ── ONBOARDING STEPS ── */
+.onboarding-section{max-width:980px;margin:24px auto 32px;padding:0 20px}
+.onboard-intro{max-width:760px;margin:0 auto 24px;text-align:center;color:var(--muted);font-size:15px;line-height:1.7}
+.onboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.onboard-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 10px 24px rgba(42,157,143,.06);min-height:170px}
+.onboard-step{display:flex;align-items:flex-start;gap:14px}
+.onboard-step-num{width:38px;height:38px;background:var(--teal);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.onboard-step-content{flex:1}
+.onboard-step-content h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.onboard-step-content p{font-size:14px;color:var(--muted);line-height:1.7;margin:0}
+@media(max-width:720px){.onboard-grid{grid-template-columns:1fr}}
+
+/* Not sure */
+.unsure{background:var(--teal);color:#fff;border-radius:20px;padding:40px;text-align:center;margin-top:40px}
+.unsure h3{font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:8px}
+.unsure p{opacity:.9;margin-bottom:24px}
+.unsure a{display:inline-block;background:#fff;color:var(--teal);padding:12px 28px;border-radius:8px;font-weight:700}
+footer{background:var(--text);color:#fff;padding:32px 24px;text-align:center}
+footer a{color:rgba(255,255,255,.7);margin:0 12px;font-size:14px}
+.footer-brand{font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--teal)}
+
+@media(max-width:480px){
+  .service-section{padding:24px 18px}
+  .pricing-grid{grid-template-columns:1fr}
+  .price-card.featured{margin-top:0}
+  .svc-cta{flex-direction:column}
+  .btn-primary,.btn-secondary{text-align:center}
+  .page-header{padding:40px 16px 20px}
+  .school-form-wrap{padding:18px}
+  .form-row{flex-direction:column}
+}
+
+@media(max-width:600px){
+  .container{padding:32px 16px}
+  .page-header{padding:40px 16px 20px}
+  h1{font-size:1.7rem}
+  .cred-grid{grid-template-columns:1fr}
+  .service-section{padding:24px 18px}
+  .pricing-grid{grid-template-columns:1fr}
+  .svc-cta{flex-direction:column}
+  .svc-cta a{text-align:center}
+  .btn-primary,.btn-secondary,.btn-main,.btn-ghost{width:100%;text-align:center;padding:13px 20px}
+  .form-row{flex-direction:column}
+  .pkg-grid .pkg-card{padding:16px}
+  .pkg-includes{grid-template-columns:1fr}
+  .method-tabs{gap:6px}
+  .tab-btn{font-size:12px;padding:9px}
+  .nav-links a:not(.nav-cta){display:none}
+  .about-inner,.about-in{flex-direction:column;text-align:center}
+  .cta-box{padding:24px 18px}
+  .unsure{padding:28px 20px}
+  .school-form-wrap{padding:18px 16px}
+  details summary{font-size:13px}
+  .steps-label{font-size:11px}
+}
+@media(max-width:360px){
+  h1{font-size:1.5rem}
+  .service-section{padding:18px 14px}
+  .price-amount{font-size:1.6rem}
+}
+
+/* ── FOOTER ── */
+footer{background:var(--text);color:#fff;padding:36px 20px}
+.footer-in{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.footer-brand{font-family:'DM Serif Display',serif;color:var(--teal);font-size:1.1rem;margin-bottom:6px;font-weight:600}
+.footer-tagline{font-size:13px;color:rgba(255,255,255,.55);max-width:220px;line-height:1.5}
+.footer-links{display:flex;flex-direction:column;gap:6px;margin-left:auto}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.65);font-weight:600}
+.footer-links a:hover{color:#fff}
+.footer-contact{display:flex;flex-direction:column;gap:6px}
+.footer-contact span{font-size:12px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.footer-contact a{font-size:14px;color:rgba(255,255,255,.75);font-weight:700}
+.footer-contact a:hover{color:#fff}
+.footer-bottom{width:100%;font-size:11px;color:rgba(255,255,255,.3);margin-top:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+@media(max-width:600px){.footer-in{flex-direction:column;gap:16px}.footer-links{margin-left:0}}
+
+.service-price {
+  margin: -0.2rem 0 0.15rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--teal, #1f4b47);
+}
+
+.service-meta {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--muted, #6f7f7a);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.detail-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(31, 75, 71, 0.14);
+  border-radius: 22px;
+  padding: clamp(1.1rem, 2.5vw, 1.6rem);
+  box-shadow: 0 12px 30px rgba(31, 75, 71, 0.07);
+}
+
+.detail-card h3 {
+  margin-top: 0;
+}
+
+.detail-card p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 980px) {
+  .details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* APC responsive timeline */
+.timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 1.35rem;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(31, 75, 71, 0.15), rgba(31, 75, 71, 0.45), rgba(31, 75, 71, 0.15));
+  z-index: 0;
+}
+
+.timeline-item {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.timeline-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: #e8f0eb;
+  border: 4px solid var(--soft-bg, #f7f2ea);
+  color: var(--teal, #1f4b47);
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(31, 75, 71, 0.12);
+}
+
+.timeline-card {
+  min-height: 190px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(31, 75, 71, 0.14);
+  border-radius: 24px;
+  padding: clamp(1.25rem, 2.5vw, 1.65rem);
+  box-shadow: 0 14px 36px rgba(31, 75, 71, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(31, 75, 71, 0.28);
+  box-shadow: 0 18px 44px rgba(31, 75, 71, 0.12);
+}
+
+.timeline-card h3 {
+  margin-top: 0;
+}
+
+.timeline-card p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 860px) {
+  .timeline {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+
+  .timeline::before {
+    top: 0;
+    bottom: 0;
+    left: 1.35rem;
+    right: auto;
+    width: 2px;
+    height: auto;
+    background: linear-gradient(180deg, rgba(31, 75, 71, 0.15), rgba(31, 75, 71, 0.45), rgba(31, 75, 71, 0.15));
+  }
+
+  .timeline-item {
+    grid-template-columns: 2.7rem 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .timeline-number {
+    margin: 0;
+  }
+
+  .timeline-card {
+    min-height: auto;
+  }
+}
+
+
+/* APC dynamic clarity upgrade */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.choice-guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 980px;
+  margin: 0 auto 1.25rem;
+}
+
+.choice-button {
+  border: 1px solid rgba(31, 75, 71, 0.18);
+  background: #ffffff;
+  color: var(--text, #203330);
+  border-radius: 22px;
+  padding: 1.1rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.35;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(31, 75, 71, 0.07);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.choice-button:hover,
+.choice-button.active {
+  transform: translateY(-3px);
+  border-color: rgba(31, 75, 71, 0.34);
+  background: #f6fbf8;
+  box-shadow: 0 18px 42px rgba(31, 75, 71, 0.11);
+}
+
+.choice-result {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid rgba(31, 75, 71, 0.16);
+  border-radius: 26px;
+  padding: clamp(1.35rem, 3vw, 2rem);
+  box-shadow: 0 16px 42px rgba(31, 75, 71, 0.09);
+  text-align: center;
+}
+
+.choice-result h3 {
+  margin-top: 0.25rem;
+}
+
+.result-label {
+  margin: 0;
+  color: var(--teal, #1f4b47);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  .choice-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .choice-result {
+    text-align: left;
+  }
+
+  .mobile-sticky-cta {
+    display: block;
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 999;
+  }
+
+  .mobile-sticky-cta a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--teal, #1f4b47);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 800;
+    padding: 0.95rem 1.1rem;
+    border-radius: 999px;
+    box-shadow: 0 14px 36px rgba(31, 75, 71, 0.24);
+  }
+
+  body {
+    padding-bottom: 5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll,
+  .choice-button,
+  .timeline-card {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+
+/* APC safe visual polish update */
+html {
+  scroll-behavior: smooth;
+}
+
+.section {
+  scroll-margin-top: 90px;
+}
+
+.container {
+  width: min(1120px, calc(100% - 32px));
+}
+
+.section-header {
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.section-header h2 {
+  line-height: 1.15;
+}
+
+.section-header p:not(.eyebrow) {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.65;
+}
+
+.service-card,
+.step-card,
+.detail-card,
+.timeline-card,
+.simple-list-card,
+.reassurance-card,
+.reassurance-box,
+.final-cta-card {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+/* Practical details: make cards readable instead of narrow */
+.details-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 1.25rem;
+}
+
+.detail-card {
+  min-height: auto;
+  padding: clamp(1.35rem, 2.8vw, 1.9rem);
+}
+
+.detail-card h3 {
+  font-size: clamp(1.12rem, 2vw, 1.35rem);
+  line-height: 1.25;
+  margin-bottom: 0.65rem;
+}
+
+.detail-card p {
+  max-width: 34rem;
+  line-height: 1.65;
+}
+
+/* What happens in a session: keep structure, improve scan comfort */
+.steps-grid {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: stretch;
+}
+
+.step-card {
+  min-height: 260px;
+  justify-content: flex-start;
+}
+
+.step-card h3 {
+  line-height: 1.25;
+  margin-bottom: 0.55rem;
+}
+
+.step-card p {
+  line-height: 1.65;
+}
+
+/* Timeline: keep current structure but make desktop feel more intentional */
+.timeline {
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.timeline-card {
+  min-height: 175px;
+}
+
+/* Final CTA: remove awkward overlap and make it feel intentional */
+.final-cta-section {
+  background: #ffffff;
+  padding-top: clamp(4rem, 7vw, 6rem);
+  padding-bottom: clamp(4rem, 7vw, 6rem);
+}
+
+.final-cta-card {
+  max-width: 820px;
+  background: #f8f4ed;
+  border: 1px solid rgba(31, 75, 71, 0.16);
+  box-shadow: 0 18px 54px rgba(31, 75, 71, 0.10);
+  transform: none;
+}
+
+.final-cta-card h2 {
+  margin-top: 0;
+}
+
+.final-cta-card p {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.65;
+}
+
+/* Apple-inspired feel: subtle, calm, not flashy */
+.service-card,
+.step-card,
+.detail-card,
+.timeline-card,
+.final-cta-card,
+.choice-result {
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.service-card:hover,
+.step-card:hover,
+.detail-card:hover,
+.timeline-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px rgba(31, 75, 71, 0.11);
+  border-color: rgba(31, 75, 71, 0.26);
+}
+
+.btn,
+.btn-primary,
+.btn-secondary {
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(31, 75, 71, 0.16);
+}
+
+@media (max-width: 860px) {
+  .details-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 100%;
+  }
+
+  .detail-card,
+  .step-card,
+  .timeline-card {
+    min-height: auto;
+  }
+
+  .final-cta-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .final-cta-card {
+    text-align: left;
+  }
+
+  .final-cta-card p {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  body {
+    padding-bottom: 0 !important;
+  }
+}
+
+
+/* APC Apple-inspired footer */
+.apc-footer {
+  background: #f6f2ea;
+  color: #1f2a2a;
+  border-top: 1px solid rgba(31, 75, 71, 0.12);
+  padding: 48px 20px 24px;
+}
+
+.apc-footer-inner {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 0.9fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.apc-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.apc-footer-logo {
+  display: inline-block;
+  font-weight: 800;
+  color: #1f7a70;
+  margin-bottom: 0.75rem;
+}
+
+.apc-footer-brand p {
+  max-width: 340px;
+  margin: 0 0 0.85rem;
+  color: rgba(31, 42, 42, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.apc-footer-small {
+  font-size: 0.78rem !important;
+  color: rgba(31, 42, 42, 0.52) !important;
+}
+
+.apc-footer-column h3 {
+  margin: 0 0 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(31, 42, 42, 0.58);
+}
+
+.apc-footer-column a {
+  display: block;
+  width: fit-content;
+  margin: 0 0 0.62rem;
+  color: rgba(31, 42, 42, 0.74);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.apc-footer-column a:hover {
+  color: #1f7a70;
+  transform: translateX(2px);
+}
+
+.apc-footer-bottom {
+  width: min(1120px, 100%);
+  margin: 32px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(31, 75, 71, 0.12);
+}
+
+.apc-footer-bottom p {
+  margin: 0;
+  color: rgba(31, 42, 42, 0.55);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .apc-footer {
+    padding: 40px 20px 88px;
+  }
+
+  .apc-footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1.5rem;
+  }
+
+  .apc-footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .apc-footer-brand p {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .apc-footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .apc-footer-column a {
+    width: 100%;
+  }
+}
+
+
+/* APC footer refinement */
+.apc-footer {
+  background: #f7f3eb !important;
+  color: #1f2a2a !important;
+  padding: 46px 20px 22px !important;
+  border-top: 1px solid rgba(31, 75, 71, 0.10) !important;
+  text-align: left !important;
+}
+
+.apc-footer-inner {
+  width: min(1080px, 100%) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 1.45fr 0.75fr 0.95fr 1.05fr !important;
+  gap: clamp(2rem, 5vw, 4.5rem) !important;
+  align-items: start !important;
+}
+
+.apc-footer-brand,
+.apc-footer-column {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.apc-footer-logo {
+  display: inline-block !important;
+  margin-bottom: 0.8rem !important;
+  color: #1f6f66 !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.apc-footer-brand p {
+  max-width: 360px !important;
+  margin: 0 0 0.85rem !important;
+  color: rgba(31, 42, 42, 0.66) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.65 !important;
+}
+
+.apc-footer-small {
+  color: rgba(31, 42, 42, 0.48) !important;
+  font-size: 0.74rem !important;
+  line-height: 1.55 !important;
+}
+
+.apc-footer-column h3 {
+  margin: 0 0 0.9rem !important;
+  color: rgba(31, 42, 42, 0.46) !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+}
+
+.apc-footer-column a {
+  display: block !important;
+  width: fit-content !important;
+  margin: 0 0 0.62rem !important;
+  color: rgba(31, 42, 42, 0.68) !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  text-align: left !important;
+  text-decoration: none !important;
+  transition: color 160ms ease, transform 160ms ease !important;
+}
+
+.apc-footer-column a:hover {
+  color: #1f6f66 !important;
+  transform: translateX(2px) !important;
+}
+
+.apc-footer-bottom {
+  width: min(1080px, 100%) !important;
+  margin: 34px auto 0 !important;
+  padding-top: 18px !important;
+  border-top: 1px solid rgba(31, 75, 71, 0.10) !important;
+  text-align: left !important;
+}
+
+.apc-footer-bottom p {
+  margin: 0 !important;
+  color: rgba(31, 42, 42, 0.48) !important;
+  font-size: 0.74rem !important;
+  line-height: 1.5 !important;
+  text-align: left !important;
+}
+
+@media (max-width: 860px) {
+  .apc-footer {
+    padding: 40px 20px 28px !important;
+  }
+
+  .apc-footer-inner {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem 1.75rem !important;
+  }
+
+  .apc-footer-brand {
+    grid-column: 1 / -1 !important;
+  }
+
+  .apc-footer-brand p {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .apc-footer-inner {
+    grid-template-columns: 1fr !important;
+    gap: 1.8rem !important;
+  }
+
+  .apc-footer-column a {
+    width: auto !important;
+  }
+}
+
+
+
+/* APC assurance card layout fix */
+.cards-grid {
+  width: min(1120px, calc(100% - 48px));
+  margin: clamp(2rem, 5vw, 3.5rem) auto 0;
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: stretch;
+}
+
+.cards-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cards-grid.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.info-card {
+  height: 100%;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.4rem, 2vw, 2rem);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.06);
+  padding: clamp(1.35rem, 2.4vw, 2rem);
+  text-align: left;
+  overflow: hidden;
+}
+
+.info-card h3 {
+  margin: 0 0 0.75rem;
+  color: #151827;
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.info-card p {
+  margin: 0;
+  color: rgba(21, 24, 39, 0.72);
+  font-size: clamp(0.95rem, 1vw, 1rem);
+  line-height: 1.75;
+}
+
+.section-note {
+  width: min(980px, calc(100% - 48px));
+  margin: clamp(1.25rem, 3vw, 2rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.5rem;
+  background: rgba(247, 243, 235, 0.72);
+  padding: clamp(1rem, 2vw, 1.35rem);
+  color: rgba(21, 24, 39, 0.72);
+  font-size: clamp(0.9rem, 1vw, 0.98rem);
+  line-height: 1.7;
+  text-align: center;
+}
+
+.section > .section-header {
+  width: min(980px, calc(100% - 48px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 1180px) {
+  .cards-grid.four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .cards-grid.three,
+  .cards-grid.four {
+    grid-template-columns: 1fr;
+  }
+
+  .cards-grid,
+  .section-note,
+  .section > .section-header {
+    width: min(100% - 32px, 680px);
+  }
+
+  .info-card {
+    border-radius: 1.4rem;
+  }
+}
+
+
+
+/* APC strengthened assurance layout */
+.assurance-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.assurance-section + .assurance-section {
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+
+.assurance-section .section-header {
+  max-width: 920px;
+}
+
+.assurance-section .section-header p {
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.assurance-cards {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.path-cards {
+  max-width: 980px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.assurance-section .info-card {
+  min-height: 260px;
+  padding: clamp(1.6rem, 2.4vw, 2.25rem);
+}
+
+.path-section .info-card {
+  min-height: 250px;
+}
+
+.assurance-section .info-card h3 {
+  font-size: clamp(1.15rem, 1.45vw, 1.35rem);
+  line-height: 1.25;
+}
+
+.assurance-section .info-card p {
+  font-size: clamp(0.98rem, 1.08vw, 1.05rem);
+  line-height: 1.7;
+}
+
+.assurance-section .section-note {
+  max-width: 980px;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+@media (max-width: 900px) {
+  .path-cards,
+  .assurance-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .assurance-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .assurance-section .info-card,
+  .path-section .info-card {
+    min-height: auto;
+  }
+}
+
+
+
+/* APC fit section polish */
+.fit-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.fit-section .section-header {
+  max-width: 940px;
+}
+
+.fit-section .section-header p {
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fit-cards {
+  width: min(1080px, calc(100% - 48px));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: stretch;
+}
+
+.fit-card {
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.5vw, 2.4rem);
+  padding: clamp(1.6rem, 3vw, 2.5rem);
+  box-shadow: 0 26px 80px rgba(15, 23, 42, 0.07);
+  text-align: left;
+}
+
+.fit-card-primary {
+  background:
+    radial-gradient(circle at top left, rgba(107, 158, 122, 0.16), transparent 38%),
+    rgba(255, 255, 255, 0.9);
+}
+
+.fit-card-muted {
+  background:
+    radial-gradient(circle at top right, rgba(232, 153, 122, 0.12), transparent 38%),
+    rgba(247, 243, 235, 0.78);
+}
+
+.fit-card-label {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.09);
+  color: #1F6F66;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.fit-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+}
+
+.fit-list {
+  list-style: none;
+  margin: 1.35rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.fit-list li {
+  position: relative;
+  padding-left: 1.7rem;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: clamp(1rem, 1.15vw, 1.08rem);
+  line-height: 1.6;
+}
+
+.fit-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  transform: translateY(-50%);
+}
+
+.fit-card-muted .fit-list li::before {
+  background: rgba(232, 153, 122, 0.95);
+}
+
+.fit-note {
+  width: min(860px, calc(100% - 48px));
+  margin: clamp(1.5rem, 3vw, 2.25rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 1rem 1.25rem;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: clamp(0.95rem, 1vw, 1rem);
+  line-height: 1.7;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .fit-cards {
+    grid-template-columns: 1fr;
+    width: min(100% - 32px, 680px);
+  }
+
+  .fit-note {
+    width: min(100% - 32px, 680px);
+  }
+
+  .fit-card {
+    border-radius: 1.5rem;
+  }
+}
+
+
+
+/* APC fit section premium polish */
+.fit-section {
+  padding-top: clamp(4rem, 7vw, 6rem);
+  padding-bottom: clamp(3.25rem, 6vw, 5rem);
+}
+
+.fit-section + .section {
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+}
+
+.fit-section .section-header {
+  max-width: 960px;
+}
+
+.fit-section .section-header p {
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fit-cards {
+  width: min(1080px, calc(100% - 48px));
+  margin: clamp(2.25rem, 4.5vw, 3.5rem) auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.fit-card {
+  position: relative;
+  min-height: 520px;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.4vw, 2.35rem);
+  padding: clamp(1.6rem, 2.7vw, 2.4rem);
+  text-align: left;
+  overflow: hidden;
+  box-shadow: 0 26px 80px rgba(15, 23, 42, 0.065);
+}
+
+.fit-card::after {
+  content: "";
+  position: absolute;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0.45;
+  filter: blur(8px);
+}
+
+.fit-card-primary {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(247, 243, 235, 0.72)),
+    radial-gradient(circle at top left, rgba(107, 158, 122, 0.22), transparent 42%);
+}
+
+.fit-card-primary::after {
+  left: -6rem;
+  bottom: -7rem;
+  background: rgba(107, 158, 122, 0.16);
+}
+
+.fit-card-muted {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 243, 235, 0.9)),
+    radial-gradient(circle at top right, rgba(232, 153, 122, 0.16), transparent 42%);
+}
+
+.fit-card-muted::after {
+  right: -6rem;
+  bottom: -7rem;
+  background: rgba(232, 153, 122, 0.14);
+}
+
+.fit-card-label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.09);
+  color: #1F6F66;
+  padding: 0.46rem 0.82rem;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.fit-card-muted .fit-card-label {
+  background: rgba(232, 153, 122, 0.14);
+  color: #8f4f35;
+}
+
+.fit-card h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 1.8vw, 1.72rem);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.fit-card-intro {
+  position: relative;
+  z-index: 1;
+  margin: 0.85rem 0 0;
+  max-width: 92%;
+  color: rgba(21, 24, 39, 0.64);
+  font-size: clamp(0.95rem, 1.05vw, 1rem);
+  line-height: 1.65;
+}
+
+.fit-list {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  margin: 1.3rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.82rem;
+}
+
+.fit-list li {
+  position: relative;
+  padding-left: 1.75rem;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: clamp(0.98rem, 1.05vw, 1.04rem);
+  line-height: 1.55;
+}
+
+.fit-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.74em;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 5px rgba(31, 111, 102, 0.08);
+}
+
+.fit-card-muted .fit-list li::before {
+  background: #E8997A;
+  box-shadow: 0 0 0 5px rgba(232, 153, 122, 0.12);
+}
+
+.fit-note {
+  width: min(860px, calc(100% - 48px));
+  margin: clamp(1.35rem, 2.8vw, 2rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.35rem;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 1rem 1.25rem;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: clamp(0.94rem, 1vw, 1rem);
+  line-height: 1.65;
+  text-align: center;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.035);
+}
+
+@media (max-width: 980px) {
+  .fit-cards {
+    grid-template-columns: 1fr;
+    width: min(100% - 32px, 680px);
+  }
+
+  .fit-card {
+    min-height: auto;
+  }
+
+  .fit-note {
+    width: min(100% - 32px, 680px);
+  }
+}
+
+@media (max-width: 640px) {
+  .fit-section {
+    padding-top: 3.4rem;
+    padding-bottom: 3.2rem;
+  }
+
+  .fit-card {
+    border-radius: 1.45rem;
+    padding: 1.35rem;
+  }
+
+  .fit-list {
+    gap: 0.72rem;
+  }
+}
+
+
+
+/* APC pricing readability polish */
+.pricing-section {
+  padding-top: clamp(4rem, 7vw, 6.5rem);
+  padding-bottom: clamp(4rem, 7vw, 6.5rem);
+}
+
+.pricing-section .section-header {
+  max-width: 940px;
+}
+
+.pricing-section .section-header p {
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pricing-grid {
+  width: min(1120px, calc(100% - 48px));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2vw, 1.6rem);
+  align-items: stretch;
+}
+
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.2vw, 2.2rem);
+  background:
+    radial-gradient(circle at top right, rgba(107, 158, 122, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.06);
+  padding: clamp(1.35rem, 2.1vw, 2rem);
+  text-align: left;
+  overflow: hidden;
+}
+
+.pricing-card-featured {
+  border-color: rgba(31, 111, 102, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(31, 111, 102, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 243, 235, 0.78));
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.09);
+  transform: translateY(-0.7rem);
+}
+
+.pricing-badge {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.1);
+  color: #1F6F66;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.pricing-card-top {
+  border-bottom: 1px solid rgba(23, 57, 54, 0.1);
+  padding-bottom: 1.2rem;
+}
+
+.pricing-kicker {
+  margin: 0 0 0.6rem;
+  color: #1F6F66;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.pricing-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 1.75vw, 1.7rem);
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+}
+
+.pricing-price {
+  margin: 1rem 0 0;
+  color: #1F6F66;
+  font-size: clamp(2rem, 3vw, 2.55rem);
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+
+.pricing-duration {
+  margin: 0.8rem 0 0;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 750;
+}
+
+.pricing-best {
+  margin-top: 1.25rem;
+  border-radius: 1.25rem;
+  background: rgba(247, 243, 235, 0.72);
+  padding: 1rem;
+}
+
+.pricing-best span {
+  display: block;
+  color: #1F6F66;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.pricing-best p {
+  margin: 0;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.pricing-list {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1.4rem;
+  padding: 0;
+}
+
+.pricing-list li {
+  position: relative;
+  padding-left: 1.55rem;
+  color: rgba(21, 24, 39, 0.76);
+  font-size: 0.97rem;
+  line-height: 1.5;
+}
+
+.pricing-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  box-shadow: 0 0 0 5px rgba(31, 111, 102, 0.08);
+  transform: translateY(-50%);
+}
+
+.pricing-link {
+  margin-top: auto;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 3.25rem;
+  border: 1px solid rgba(23, 57, 54, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #173936;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 850;
+  padding: 0.85rem 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pricing-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+}
+
+.pricing-link-primary {
+  background: #1F6F66;
+  color: #fff;
+  border-color: #1F6F66;
+}
+
+.pricing-note {
+  width: min(860px, calc(100% - 48px));
+  margin: clamp(1.5rem, 3vw, 2.25rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.35rem;
+  background: rgba(247, 243, 235, 0.72);
+  color: rgba(21, 24, 39, 0.7);
+  padding: 1rem 1.25rem;
+  text-align: center;
+  line-height: 1.65;
+  font-size: 0.98rem;
+}
+
+@media (max-width: 980px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    width: min(100% - 32px, 680px);
+  }
+
+  .pricing-card-featured {
+    transform: none;
+  }
+
+  .pricing-note {
+    width: min(100% - 32px, 680px);
+  }
+}
+
+@media (max-width: 640px) {
+  .pricing-section {
+    padding-top: 3.4rem;
+    padding-bottom: 3.4rem;
+  }
+
+  .pricing-card {
+    border-radius: 1.45rem;
+    padding: 1.3rem;
+  }
+
+  .pricing-price {
+    font-size: 2rem;
+  }
+}
+
+
+
+/* APC full services visual polish */
+.fit-section,
+.pricing-section,
+.assurance-section {
+  padding-top: clamp(4rem, 7vw, 6rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+}
+
+.fit-section + .section,
+.pricing-section + .section,
+.assurance-section + .section {
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+}
+
+.fit-section .section-header,
+.pricing-section .section-header,
+.assurance-section .section-header {
+  max-width: 960px;
+}
+
+.fit-section .section-header p,
+.pricing-section .section-header p,
+.assurance-section .section-header p {
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Fit section */
+.fit-cards {
+  width: min(1080px, calc(100% - 48px));
+  margin: clamp(2.25rem, 4.5vw, 3.5rem) auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.fit-card {
+  position: relative;
+  min-height: 500px;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.4vw, 2.35rem);
+  padding: clamp(1.6rem, 2.7vw, 2.4rem);
+  text-align: left;
+  overflow: hidden;
+  box-shadow: 0 26px 80px rgba(15, 23, 42, 0.065);
+}
+
+.fit-card-primary {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(247, 243, 235, 0.72)),
+    radial-gradient(circle at top left, rgba(107, 158, 122, 0.22), transparent 42%);
+}
+
+.fit-card-muted {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 243, 235, 0.9)),
+    radial-gradient(circle at top right, rgba(232, 153, 122, 0.16), transparent 42%);
+}
+
+.fit-card-label {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.09);
+  color: #1F6F66;
+  padding: 0.46rem 0.82rem;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.fit-card-muted .fit-card-label {
+  background: rgba(232, 153, 122, 0.14);
+  color: #8f4f35;
+}
+
+.fit-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 1.8vw, 1.72rem);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.fit-card-intro {
+  margin: 0.85rem 0 0;
+  max-width: 92%;
+  color: rgba(21, 24, 39, 0.64);
+  font-size: clamp(0.95rem, 1.05vw, 1rem);
+  line-height: 1.65;
+}
+
+.fit-list {
+  list-style: none;
+  margin: 1.3rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.82rem;
+}
+
+.fit-list li {
+  position: relative;
+  padding-left: 1.75rem;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: clamp(0.98rem, 1.05vw, 1.04rem);
+  line-height: 1.55;
+}
+
+.fit-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.74em;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 5px rgba(31, 111, 102, 0.08);
+}
+
+.fit-card-muted .fit-list li::before {
+  background: #E8997A;
+  box-shadow: 0 0 0 5px rgba(232, 153, 122, 0.12);
+}
+
+.fit-note,
+.pricing-note {
+  width: min(860px, calc(100% - 48px));
+  margin: clamp(1.35rem, 2.8vw, 2rem) auto 0;
+  border: 1px solid rgba(23, 57, 54, 0.1);
+  border-radius: 1.35rem;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 1rem 1.25rem;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: clamp(0.94rem, 1vw, 1rem);
+  line-height: 1.65;
+  text-align: center;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.035);
+}
+
+/* Pricing section */
+.pricing-grid {
+  width: min(1120px, calc(100% - 48px));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2vw, 1.6rem);
+  align-items: stretch;
+}
+
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.6rem, 2.2vw, 2.2rem);
+  background:
+    radial-gradient(circle at top right, rgba(107, 158, 122, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.06);
+  padding: clamp(1.35rem, 2.1vw, 2rem);
+  text-align: left;
+  overflow: hidden;
+}
+
+.pricing-card-featured {
+  border-color: rgba(31, 111, 102, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(31, 111, 102, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 243, 235, 0.78));
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.09);
+  transform: translateY(-0.7rem);
+}
+
+.pricing-badge {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: rgba(31, 111, 102, 0.1);
+  color: #1F6F66;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.pricing-card-top {
+  border-bottom: 1px solid rgba(23, 57, 54, 0.1);
+  padding-bottom: 1.2rem;
+}
+
+.pricing-kicker {
+  margin: 0 0 0.6rem;
+  color: #1F6F66;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.pricing-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.35rem, 1.75vw, 1.7rem);
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+}
+
+.pricing-price {
+  margin: 1rem 0 0;
+  color: #1F6F66;
+  font-size: clamp(2rem, 3vw, 2.55rem);
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+
+.pricing-duration {
+  margin: 0.8rem 0 0;
+  color: rgba(21, 24, 39, 0.68);
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 750;
+}
+
+.pricing-best {
+  margin-top: 1.25rem;
+  border-radius: 1.25rem;
+  background: rgba(247, 243, 235, 0.72);
+  padding: 1rem;
+}
+
+.pricing-best span {
+  display: block;
+  color: #1F6F66;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.pricing-best p {
+  margin: 0;
+  color: rgba(21, 24, 39, 0.78);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.pricing-list {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1.4rem;
+  padding: 0;
+}
+
+.pricing-list li {
+  position: relative;
+  padding-left: 1.55rem;
+  color: rgba(21, 24, 39, 0.76);
+  font-size: 0.97rem;
+  line-height: 1.5;
+}
+
+.pricing-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #1F6F66;
+  box-shadow: 0 0 0 5px rgba(31, 111, 102, 0.08);
+  transform: translateY(-50%);
+}
+
+.pricing-link {
+  margin-top: auto;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 3.25rem;
+  border: 1px solid rgba(23, 57, 54, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #173936;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 850;
+  padding: 0.85rem 1rem;
+}
+
+.pricing-link-primary {
+  background: #1F6F66;
+  color: #fff;
+  border-color: #1F6F66;
+}
+
+/* PATH section */
+.path-steps {
+  width: min(980px, calc(100% - 48px));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.path-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  border: 1px solid rgba(23, 57, 54, 0.12);
+  border-radius: clamp(1.4rem, 2vw, 2rem);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.055);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  text-align: left;
+}
+
+.path-letter {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  background: #1F6F66;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.path-card h3 {
+  margin: 0;
+  color: #151827;
+  font-size: clamp(1.08rem, 1.35vw, 1.3rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.path-card p {
+  margin: 0.65rem 0 0;
+  color: rgba(21, 24, 39, 0.72);
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 980px) {
+  .fit-cards,
+  .pricing-grid,
+  .path-steps {
+    grid-template-columns: 1fr;
+    width: min(100% - 32px, 680px);
+  }
+
+  .fit-card,
+  .pricing-card-featured {
+    min-height: auto;
+    transform: none;
+  }
+
+  .fit-note,
+  .pricing-note {
+    width: min(100% - 32px, 680px);
+  }
+}
+
+@media (max-width: 640px) {
+  .fit-section,
+  .pricing-section,
+  .assurance-section {
+    padding-top: 3.4rem;
+    padding-bottom: 3.4rem;
+  }
+
+  .fit-card,
+  .pricing-card,
+  .path-card {
+    border-radius: 1.45rem;
+    padding: 1.3rem;
+  }
+
+  .path-card {
+    grid-template-columns: 1fr;
+  }
+
+  .fit-list,
+  .pricing-list {
+    gap: 0.72rem;
+  }
+}
+
+
+/* APC hero paragraph readability patch */
+.apc-services-hero p,
+.services-hero p,
+.hero p,
+.section-hero p {
+  text-align: left;
+  text-wrap: pretty;
+}
+</style>
+
+<!-- APC_CLARITY_CSS_START -->
+<style id="apc-final-clarity-css">
+  .apc-final-section {
+    padding: 72px 20px;
+    background: #F8F5EF;
+  }
+
+  .apc-final-section.apc-final-white {
+    background: #FFFFFF;
+  }
+
+  .apc-final-wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .apc-final-kicker {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #2F6F6D;
+    margin-bottom: 12px;
+  }
+
+  .apc-final-section h2,
+  .apc-hero-lock {
+    color: #173F3F;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.1rem, 4vw, 3.3rem);
+    line-height: 1.06;
+    margin: 0 0 14px;
+  }
+
+  .apc-hero-lock-sub,
+  .apc-final-intro {
+    max-width: 780px;
+    color: #354545;
+    font-size: 1.06rem;
+    line-height: 1.68;
+    margin: 0 auto 26px;
+  }
+
+  .apc-final-intro {
+    margin-left: 0;
+  }
+
+  .apc-final-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 26px;
+  }
+
+  .apc-final-grid.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .apc-final-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(23, 63, 63, 0.12);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 12px 30px rgba(23, 63, 63, 0.08);
+  }
+
+  .apc-final-card.soft {
+    background: #F8F5EF;
+  }
+
+  .apc-final-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: rgba(143, 185, 168, 0.18);
+    color: #173F3F;
+    font-weight: 900;
+    margin-bottom: 14px;
+  }
+
+  .apc-final-card h3 {
+    margin: 0 0 8px;
+    color: #173F3F;
+    font-size: 1.08rem;
+  }
+
+  .apc-final-card p {
+    margin: 0;
+    color: #536262;
+    font-size: 0.96rem;
+    line-height: 1.58;
+  }
+
+  .apc-final-link {
+    display: inline-flex;
+    margin-top: 22px;
+    color: #2F6F6D;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 920px) {
+    .apc-final-grid,
+    .apc-final-grid.three {
+      grid-template-columns: 1fr;
+    }
+
+    .apc-final-section {
+      padding: 56px 18px;
+    }
+
+    .apc-hero-lock-sub {
+      text-align: center;
+    }
+  }
+</style>
+<!-- APC_CLARITY_CSS_END -->
+
+
+<style>
+/* APC simplified services page */
+.compact-section {
+  padding-top: clamp(3rem, 6vw, 5rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.hero-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.hero-content {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-subtitle {
+  max-width: 760px;
+  margin: 1rem auto 0;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.section-header {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.simple-list-card,
+.reassurance-card,
+.service-card,
+.step-card,
+.reassurance-box,
+.final-cta-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(31, 75, 71, 0.14);
+  border-radius: 24px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  box-shadow: 0 14px 36px rgba(31, 75, 71, 0.08);
+}
+
+.check-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.check-list li {
+  line-height: 1.55;
+}
+
+.two-column-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.cards-grid,
+.steps-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.three-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.steps-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.service-card,
+.step-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.featured-card {
+  border-color: rgba(31, 75, 71, 0.32);
+}
+
+.card-label,
+.eyebrow {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent, #52796f);
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  background: rgba(82, 121, 111, 0.12);
+  color: var(--accent, #52796f);
+  font-weight: 700;
+}
+
+.reassurance-box,
+.final-cta-card {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.final-cta-card {
+  background: var(--soft-bg, #f7f2ea);
+}
+
+.soft-section {
+  background: var(--soft-bg, #f7f2ea);
+}
+
+@media (max-width: 860px) {
+  .two-column-grid,
+  .three-cards,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn,
+  .final-cta-card .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .section-header,
+  .hero-content,
+  .reassurance-box,
+  .final-cta-card {
+    text-align: left;
+  }
+}
+</style>
+
+<style>
+  .apc-parent-support-visual {
+    padding: 72px 0;
+    background: #FFF9F1;
+  }
+
+  .apc-support-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 32px;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    border-radius: 28px;
+    padding: 36px;
+    box-shadow: 0 18px 50px rgba(7, 55, 52, 0.08);
+  }
+
+  .apc-support-copy h2 {
+    margin: 0 0 12px;
+    color: #073734;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .apc-support-lead {
+    margin: 0 0 8px;
+    color: #073734;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .apc-support-small {
+    margin: 0 0 24px;
+    color: #3d5552;
+    font-size: 1rem;
+  }
+
+  .apc-support-visual-box {
+    position: relative;
+    text-align: center;
+    border-radius: 24px;
+    padding: 30px 24px;
+    background: linear-gradient(160deg, #073734, #0f766e);
+    color: #FFF9F1;
+    overflow: hidden;
+  }
+
+  .apc-support-visual-box::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 999px;
+    background: rgba(255, 249, 241, 0.08);
+    top: -70px;
+    right: -60px;
+  }
+
+  .apc-status-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #E8997A;
+    color: #073734;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+  }
+
+  .apc-slot-count {
+    position: relative;
+    margin-top: 18px;
+    font-size: clamp(3.25rem, 8vw, 5.5rem);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+  }
+
+  .apc-support-visual-box p {
+    position: relative;
+    margin: 8px 0 22px;
+    font-size: 1.05rem;
+    opacity: 0.92;
+  }
+
+  .apc-slots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto 24px;
+  }
+
+  .apc-slots span {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFF9F1;
+    color: #073734;
+    font-weight: 800;
+    font-size: 0.9rem;
+  }
+
+  .apc-next-step-box {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    text-align: left;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255, 249, 241, 0.12);
+    border: 1px solid rgba(255, 249, 241, 0.18);
+  }
+
+  .apc-next-step-box strong {
+    color: #FFF9F1;
+    font-size: 0.95rem;
+  }
+
+  .apc-next-step-box span {
+    color: rgba(255, 249, 241, 0.88);
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 820px) {
+    .apc-parent-support-visual {
+      padding: 48px 0;
+    }
+
+    .apc-support-card {
+      grid-template-columns: 1fr;
+      padding: 24px;
+      border-radius: 22px;
+    }
+
+    .apc-support-visual-box {
+      padding: 26px 18px;
+    }
+
+    .apc-slots span {
+      width: 34px;
+      height: 34px;
+    }
+  }
+</style>
+<style id="apc-parent-support-visual-width-fix">
+  .apc-parent-support-visual {
+    padding: 64px 20px;
+  }
+
+  .apc-parent-support-visual > .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .apc-parent-support-visual .apc-support-card {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .apc-parent-support-visual .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .apc-parent-support-visual .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 24px;
+    border-radius: 999px;
+    font-weight: 800;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .apc-parent-support-visual .btn-primary {
+    background: #0f9f8f;
+    color: #ffffff;
+    border: 1px solid #0f9f8f;
+  }
+
+  .apc-parent-support-visual .btn-secondary {
+    background: #ffffff;
+    color: #0f766e;
+    border: 1px solid #0f766e;
+  }
+
+  @media (max-width: 820px) {
+    .apc-parent-support-visual {
+      padding: 44px 16px;
+    }
+
+    .apc-parent-support-visual .cta-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .apc-parent-support-visual .btn {
+      width: 100%;
+    }
+  }
+</style>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#073734">
+<style id="apc-logo-global-styles">
+  .apc-site-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .apc-site-logo img {
+    display: block;
+    height: 42px;
+    width: auto;
+    max-width: 190px;
+    object-fit: contain;
+  }
+
+  .apc-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .apc-footer-logo img {
+    display: block;
+    height: 54px;
+    width: auto;
+    max-width: 220px;
+    object-fit: contain;
+  }
+
+  @media (max-width: 640px) {
+    .apc-site-logo img {
+      height: 36px;
+      max-width: 150px;
+    }
+
+    .apc-footer-logo img {
+      height: 46px;
+      max-width: 180px;
+    }
+  }
+</style>
+<style id="apc-global-type-system">
+  :root {
+    --apc-font-main: "Segoe UI", Roboto, Arial, sans-serif;
+    --apc-dark-teal: #073734;
+    --apc-teal: #0f766e;
+    --apc-cream: #FFF9F1;
+    --apc-coral: #E8997A;
+    --apc-sage: #6B9E7A;
+    --apc-text: #253532;
+    --apc-muted: #3d5552;
+  }
+
+  html,
+  body {
+    font-family: var(--apc-font-main) !important;
+    color: var(--apc-text);
+  }
+
+  body,
+  button,
+  input,
+  textarea,
+  select,
+  a,
+  p,
+  li,
+  span,
+  div {
+    font-family: var(--apc-font-main) !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .home-title,
+  .home-heading,
+  .hero h1,
+  .hero-title,
+  .section-title,
+  .section-header h2,
+  .apc-home-title,
+  .apc-support-copy h2,
+  .apc-start-clean-title,
+  .pkg-name {
+    font-family: var(--apc-font-main) !important;
+    color: var(--apc-dark-teal);
+    letter-spacing: -0.035em;
+  }
+
+  .home-kicker,
+  .apc-home-kicker,
+  .eyebrow,
+  .section-eyebrow,
+  .kicker {
+    font-family: var(--apc-font-main) !important;
+    color: var(--apc-teal) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 850;
+  }
+
+  .home-btn,
+  .nav-cta,
+  .btn,
+  .mini-btn,
+  .free-btn,
+  .apc-start-clean-btn,
+  .card-button,
+  button {
+    font-family: var(--apc-font-main) !important;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .home-card,
+  .apc-mini-card,
+  .apc-proof-card,
+  .apc-start-card,
+  .apc-belief-card,
+  .apc-belief-chip,
+  .pkg-card,
+  .section-card {
+    font-family: var(--apc-font-main) !important;
+  }
+
+  .apc-home-stack .apc-home-title,
+  .apc-home-stack h2,
+  .apc-home-stack h3 {
+    font-family: var(--apc-font-main) !important;
+  }
+
+  /* Make older homepage sections visually closer to the new APC system */
+  .home-section {
+    font-family: var(--apc-font-main) !important;
+  }
+
+  .home-section h2,
+  .home-section h3 {
+    font-family: var(--apc-font-main) !important;
+    color: var(--apc-dark-teal);
+  }
+
+  .home-section p {
+    font-family: var(--apc-font-main) !important;
+    color: var(--apc-muted);
+    line-height: 1.65;
+  }
+
+  @media (max-width: 760px) {
+    h1,
+    .hero h1,
+    .hero-title,
+    .apc-home-title,
+    .home-title {
+      letter-spacing: -0.04em;
+    }
+  }
+</style>
+<style id="apc-services-simple-styles">
+  .apc-services-page {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: #FFF9F1;
+    color: #253532;
+  }
+
+  .apc-services-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 72px 20px;
+  }
+
+  .apc-services-section {
+    margin-bottom: 72px;
+  }
+
+  .apc-services-kicker {
+    color: #0f766e;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 850;
+    margin: 0 0 12px;
+  }
+
+  .apc-services-title {
+    color: #073734;
+    font-size: clamp(2rem, 4vw, 3.35rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin: 0 0 16px;
+    max-width: 900px;
+  }
+
+  .apc-services-intro {
+    color: #3d5552;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.7;
+    max-width: 790px;
+    margin: 0 0 28px;
+  }
+
+  .apc-services-actions,
+  .apc-service-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .apc-services-page .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-weight: 850;
+    text-decoration: none;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .apc-services-page .btn-primary {
+    background: #0f766e;
+    color: #ffffff;
+    border: 1px solid #0f766e;
+  }
+
+  .apc-services-page .btn-secondary {
+    background: #ffffff;
+    color: #0f766e;
+    border: 1px solid #0f766e;
+  }
+
+  .apc-service-grid,
+  .apc-concern-grid,
+  .apc-scope-grid,
+  .apc-faq-grid {
+    display: grid;
+    gap: 18px;
+  }
+
+  .apc-service-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .apc-concern-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .apc-scope-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .apc-faq-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .apc-service-card,
+  .apc-concern-card,
+  .apc-scope-card,
+  .apc-faq-card,
+  .apc-flow-card {
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 14px 40px rgba(7, 55, 52, 0.07);
+  }
+
+  .apc-service-card.featured {
+    border: 2px solid #0f766e;
+    box-shadow: 0 18px 48px rgba(15, 118, 110, 0.14);
+  }
+
+  .apc-service-card h2,
+  .apc-service-card h3,
+  .apc-concern-card h3,
+  .apc-scope-card h3,
+  .apc-faq-card h3,
+  .apc-flow-card h3 {
+    color: #073734;
+    margin: 0 0 10px;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .apc-service-card p,
+  .apc-concern-card p,
+  .apc-scope-card p,
+  .apc-faq-card p,
+  .apc-flow-card p {
+    color: #3d5552;
+    line-height: 1.6;
+    margin: 0 0 12px;
+  }
+
+  .apc-service-tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #E8F5EF;
+    color: #0f766e;
+    font-weight: 850;
+    font-size: 0.78rem;
+    margin-bottom: 14px;
+  }
+
+  .apc-service-price {
+    color: #073734;
+    font-size: 1.12rem;
+    font-weight: 900;
+    margin: 14px 0;
+  }
+
+  .apc-service-list {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .apc-service-list li {
+    color: #3d5552;
+    line-height: 1.45;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .apc-service-list li::before {
+    content: "✓";
+    color: #0f766e;
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+  }
+
+  .apc-slot-bar {
+    margin: 16px 0 10px;
+    height: 14px;
+    background: #dfeee8;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .apc-slot-bar span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #6B9E7A, #0f766e);
+  }
+
+  .apc-slot-text {
+    color: #073734;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .apc-flow-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .apc-flow-card {
+    background: #073734;
+    color: #FFF9F1;
+  }
+
+  .apc-flow-card span {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    background: #E8997A;
+    color: #073734;
+    font-weight: 900;
+    margin-bottom: 16px;
+  }
+
+  .apc-flow-card h3 {
+    color: #FFF9F1;
+  }
+
+  .apc-flow-card p {
+    color: rgba(255, 249, 241, 0.86);
+  }
+
+  .apc-scope-card.safe {
+    background: #f8fffb;
+  }
+
+  .apc-scope-card.boundary {
+    background: #fff8f3;
+  }
+
+  .apc-final-cta {
+    background: #073734;
+    border-radius: 30px;
+    padding: clamp(28px, 5vw, 48px);
+    color: #FFF9F1;
+  }
+
+  .apc-final-cta h2 {
+    color: #FFF9F1;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.06;
+    margin: 0 0 14px;
+    letter-spacing: -0.04em;
+  }
+
+  .apc-final-cta p {
+    color: rgba(255, 249, 241, 0.86);
+    max-width: 720px;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .apc-services-wrap {
+      padding: 52px 16px;
+    }
+
+    .apc-services-section {
+      margin-bottom: 56px;
+    }
+
+    .apc-service-grid,
+    .apc-concern-grid,
+    .apc-scope-grid,
+    .apc-faq-grid,
+    .apc-flow-row {
+      grid-template-columns: 1fr;
+    }
+
+    .apc-services-actions,
+    .apc-service-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .apc-services-page .btn {
+      width: 100%;
+    }
+  }
+</style>
+<style id="apc-nav-cta-consistency">
+  .nav-cta,
+  a.nav-cta,
+  .apc-free-call-nav {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #0f766e;
+    color: #ffffff !important;
+    border: 1px solid #0f766e;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif !important;
+    font-size: 0.92rem;
+    font-weight: 850;
+    line-height: 1;
+    text-decoration: none !important;
+    white-space: nowrap;
+    box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18);
+  }
+
+  .nav-cta:hover,
+  a.nav-cta:hover,
+  .apc-free-call-nav:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(15, 118, 110, 0.22);
+  }
+
+  @media (max-width: 820px) {
+    .nav-cta,
+    a.nav-cta,
+    .apc-free-call-nav {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+</style>
+<style id="apc-services-trust-badge-polish">
+  .apc-services-trust-badge {
+    display: inline-flex;
+    align-items: center;
+    max-width: 760px;
+    background: #E8F5EF;
+    border: 1px solid rgba(15, 118, 110, 0.18);
+    color: #073734;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 750;
+    line-height: 1.45;
+    margin: 6px 0 24px;
+  }
+
+  @media (max-width: 760px) {
+    .apc-services-trust-badge {
+      display: flex;
+      border-radius: 18px;
+      align-items: flex-start;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="apc-site-logo" href="index.html" aria-label="Autism Pathways Consulting home"><img src="apc-option-d-primary-logo.png" alt="Autism Pathways Consulting"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="resources.html">Resources</a>
+      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" class="nav-cta">Free 15-Min First Step Call</a>
+    </div>
+  </div>
+</nav>
+
+
+<main class="apc-services-page">
+  <div class="apc-services-wrap">
+
+    <section class="apc-services-section" id="services-hero">
+      <p class="apc-services-kicker">APC services</p>
+      <h1 class="apc-services-title">Choose the APC support that fits where your family is now.</h1>
+      <p class="apc-services-intro">
+        APC helps parents understand what may be happening behind behaviour, communication, learning, routines,
+        sensory overwhelm, and daily stress at home. The goal is simple: notice the pattern, understand what may be happening,
+        and choose one practical next step.
+      </p>
+      <p class="apc-services-trust-badge">Guidance from CJ Lim, MA Special and Inclusive Education, shaped by 10 years of school-based and 1-to-1 experience.</p>
+      <div class="apc-services-actions">
+        <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+<a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+      </div>
+    </section>
+
+    <section class="apc-services-section" id="choose-your-next-step">
+      <p class="apc-services-kicker">Start here</p>
+      <h2 class="apc-services-title">Three clear options for parents.</h2>
+
+      <div class="apc-service-grid">
+        <article class="apc-service-card">
+          <div class="apc-service-tag">If you are unsure</div>
+          <h2>Free 15-Min First Step Call</h2>
+          <p>A short call to understand your situation, see if APC is the right fit, and suggest the most suitable next step.</p>
+          <ul class="apc-service-list">
+            <li>Best for parents who are not sure where to begin</li>
+            <li>One useful reframe</li>
+            <li>One initial direction</li>
+            <li>One recommended next step</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card featured">
+          <div class="apc-service-tag">If you want focused help now</div>
+          <h2>APC Parent Strategy Session</h2>
+          <p>A focused online parent session where we look at one repeated pattern in detail, such as routines, communication, refusal, learning stress, or difficult moments at home.</p>
+          <div class="apc-service-price">RM350 | 45 minutes | Online</div>
+          <ul class="apc-service-list">
+            <li>Best for one clear concern where you want focused guidance</li>
+            <li>We look at what may be happening behind the pattern</li>
+            <li>You leave with a clearer understanding and one practical next step to observe, adjust, or try</li>
+            <li>Helpful for meltdowns, routines, communication, learning, or refusal</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card">
+          <div class="apc-service-tag">If you want deeper support</div>
+          <h2>Structured Parent Support</h2>
+          <p>For parents who want deeper support across connected daily challenges.</p>
+          <div class="apc-slot-bar" aria-hidden="true"><span></span></div>
+          <div class="apc-slot-text">Current spaces are limited</div>
+          <p>Start with a Free 15-Min First Step Call so CJ can check whether deeper support is the right fit. If deeper support is suitable, CJ will advise the next available parent support option.</p>
+          <ul class="apc-service-list">
+            <li>More structured follow-through</li>
+            <li>Support planning for daily home challenges</li>
+            <li>Practical adjustments based on what is happening in your family</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20would%20like%20to%20ask%20about%20APC%20Structured%20Parent%20Support." target="_blank" rel="noopener noreferrer">Ask About Parent Support</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section" id="what-apc-helps-with">
+      <p class="apc-services-kicker">What parents ask about</p>
+      <h2 class="apc-services-title">Support for the daily moments that feel confusing.</h2>
+
+      <div class="apc-concern-grid">
+        <article class="apc-concern-card">
+          <h3>Meltdowns at home</h3>
+          <p>When big reactions feel sudden, intense, or hard to understand.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Routines and transitions</h3>
+          <p>When mornings, bedtime, leaving the house, or changes become stressful.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Communication struggles</h3>
+          <p>When your child cannot clearly show what they need, feel, or want.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Learning and academics</h3>
+          <p>When homework, writing, attention, or school tasks feel harder than they should.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Refusal and task avoidance</h3>
+          <p>When your child avoids things they can sometimes do.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Sensory overwhelm</h3>
+          <p>When noise, crowds, waiting, clothing, food, or changes become too much.</p>
+        </article>
+      </div>
+    </section>
+
+<section class="apc-services-section" id="how-apc-looks-at-struggle">
+  <p class="apc-services-kicker">How APC looks at a concern</p>
+  <h2 class="apc-services-title">How APC looks at your child’s struggle</h2>
+  <p class="apc-services-intro">
+    When a parent shares a concern, APC does not jump straight into generic tips.
+    We first look at the pattern around the situation. This helps parents move away from blame and towards a clearer question:
+    “What does my child need me to understand here?”
+  </p>
+
+  <div class="apc-concern-grid">
+    <article class="apc-concern-card">
+      <h3>Before the behaviour</h3>
+      <p>What happened before the meltdown, refusal, shutdown, or task avoidance?</p>
+    </article>
+
+    <article class="apc-concern-card">
+      <h3>The demand</h3>
+      <p>What was the child being asked to do, understand, wait for, or manage?</p>
+    </article>
+
+    <article class="apc-concern-card">
+      <h3>Clarity</h3>
+      <p>Was the instruction, routine, or next step clear enough?</p>
+    </article>
+
+    <article class="apc-concern-card">
+      <h3>Processing time</h3>
+      <p>Did the child have enough time to understand and respond?</p>
+    </article>
+
+    <article class="apc-concern-card">
+      <h3>Environment</h3>
+      <p>Was there noise, sensory input, tiredness, hunger, transition stress, or uncertainty?</p>
+    </article>
+
+    <article class="apc-concern-card">
+      <h3>Adult response</h3>
+      <p>How did the adult response affect what happened next?</p>
+    </article>
+  </div>
+
+  <div class="apc-card-actions">
+    <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+<a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+  </div>
+</section>
+
+    <section class="apc-services-section" id="how-apc-helps">
+      <p class="apc-services-kicker">How APC helps</p>
+      <h2 class="apc-services-title">A simple flow parents can understand.</h2>
+
+      <div class="apc-flow-row">
+        <article class="apc-flow-card">
+          <span>1</span>
+          <h3>Notice the pattern</h3>
+          <p>What happens before the behaviour, meltdown, refusal, or learning struggle?</p>
+        </article>
+        <article class="apc-flow-card">
+          <span>2</span>
+          <h3>Understand what may be happening</h3>
+          <p>Communication, regulation, routines, sensory load, learning demands, stress, and environment.</p>
+        </article>
+        <article class="apc-flow-card">
+          <span>3</span>
+          <h3>Choose one practical step</h3>
+          <p>A realistic action you can try at home without overwhelming the whole family.</p>
+        </article>
+        <article class="apc-flow-card">
+          <span>4</span>
+          <h3>Move forward with clarity</h3>
+          <p>Less guessing. More understanding. More confidence in what to observe next.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section" id="scope-and-boundaries">
+      <p class="apc-services-kicker">Clear scope</p>
+      <h2 class="apc-services-title">What APC does and does not do.</h2>
+
+      <div class="apc-scope-grid">
+        <article class="apc-scope-card safe">
+          <h3>APC can help with</h3>
+          <ul class="apc-service-list">
+            <li>Parent education about autism and child development</li>
+            <li>Pattern observation across home routines</li>
+            <li>Support planning for daily challenges</li>
+            <li>Parent response adjustments</li>
+            <li>Reframing guilt, overwhelm, and confusion</li>
+            <li>Small practical next steps</li>
+          </ul>
+        </article>
+
+        <article class="apc-scope-card boundary">
+          <h3>APC does not provide</h3>
+          <ul class="apc-service-list">
+            <li>Diagnosis or diagnostic assessment</li>
+            <li>Speech therapy, OT, psychology, or medical advice</li>
+            <li>Crisis support</li>
+            <li>Guaranteed behaviour change</li>
+            <li>Therapy replacement</li>
+            <li>Behaviour control plans</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section" id="services-faq">
+      <p class="apc-services-kicker">Common questions</p>
+      <h2 class="apc-services-title">If you are unsure, start here.</h2>
+
+      <div class="apc-faq-grid">
+        <article class="apc-faq-card">
+          <h3>Which option should I choose?</h3>
+          <p>If you are unsure, start with the free 15-minute call. If your concern is already clear and you want focused guidance, the Strategy Session may be the next step.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>Is the Strategy Session a therapy session?</h3>
+          <p>No. It is parent guidance. We look at one concern, make sense of the pattern, and choose one practical next step.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>Can APC help with school or learning issues?</h3>
+          <p>Yes, when the focus is parent understanding, routines, task demands, communication, and small home adjustments. APC does not replace school assessment or therapy.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>What if I want longer support?</h3>
+          <p>Start with the free 15-minute call. If deeper support is suitable, CJ will let you know the next available parent support option.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="apc-services-section">
+      <div class="apc-final-cta">
+        <h2>Not sure what your family needs?</h2>
+        <p>
+          Start with the free 15-min call. If your concern is clearer and you want focused help,
+          book an APC Parent Strategy Session.
+        </p>
+        <div class="apc-services-actions">
+          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+          <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book Strategy Session</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+
+
+<footer class="apc-footer">
+  <div class="apc-footer-inner">
+    <div class="apc-footer-brand">
+      <a href="index.html" class="apc-footer-logo">Autism Pathways Consulting</a>
+      <p>Evidence-informed parent support for families who want to reduce guesswork, understand patterns, and choose practical next steps at home.</p>
+      <p class="apc-footer-small">CJ Special and Inclusive Consultancy (003030209-T)<br>SSM Reg. 201903282307 · Petaling Jaya and KL</p>
+    </div>
+
+    <nav class="apc-footer-column" aria-label="Explore">
+      <h3>Explore</h3>
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="start.html">Start Here</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+
+    <nav class="apc-footer-column" aria-label="Support">
+      <h3>Support</h3>
+      <a href="services.html">Services</a>
+      <a href="https://cal.com/autismpathwaysconsulting/free-discovery-call" target="_blank" rel="noopener">Free 15-Min First Step Call</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="cancellation-policy.html">Cancellation Policy</a>
+    </nav>
+
+    <div class="apc-footer-column">
+      <h3>Contact</h3>
+      <a href="https://wa.me/601172998168" target="_blank" rel="noopener">WhatsApp: 011-7299 8168</a>
+      <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>
+      <a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+
+  <div class="apc-footer-bottom">
+    <p>© 2026 Autism Pathways Consulting. Parent education and guidance, not therapy or diagnosis.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const revealItems = document.querySelectorAll('.section, .service-card, .step-card, .detail-card, .timeline-item, .choice-guide, .choice-result');
+  revealItems.forEach((item) => item.classList.add('reveal-on-scroll'));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealItems.forEach((item) => observer.observe(item));
+
+  const result = document.getElementById('choice-result');
+  const buttons = document.querySelectorAll('.choice-button');
+
+  const options = {
+    clarity: {
+      title: 'Free 15-Min First Step Call',
+      text: 'Best for parents who want to understand what may be happening and leave with practical next steps before deciding whether more support is needed.'
+    },
+    implementation: {
+      title: 'Structured Parent Support Waitlist',
+      text: 'Best for parents ready to work through patterns, practise changes, and receive structured guidance over several weeks.'
+    },
+    intensive: {
+      title: 'Structured Parent Support Waitlist',
+      text: 'Best for families who need deeper support, more follow-up, and a longer support period to work through ongoing concerns.'
+    }
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      buttons.forEach((btn) => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      const selected = options[button.dataset.choice];
+      if (!selected || !result) return;
+
+      result.innerHTML = `
+        <p class="result-label">Suggested starting point</p>
+        <h3>${selected.title}</h3>
+        <p>${selected.text}</p>
+        <a class="btn btn-primary" href="#parent-support-options">Compare support options</a>
+      `;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
+
