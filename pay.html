@@ -360,35 +360,155 @@
       font-weight: 950;
       text-align: center;
     }
-
-    .url-box {
-      margin-top: 24px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(7, 55, 52, 0.06);
-      border: 1px solid rgba(7, 55, 52, 0.1);
-      color: var(--muted);
-    }
-
-    .url-box strong {
-      color: var(--teal-dark);
-    }
-
-    .url-box code {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 4px 7px;
-      border-radius: 7px;
-      background: #ffffff;
-      color: var(--teal-dark);
-      word-break: break-all;
-    }
-
-    .boundary {
+.boundary {
       margin-top: 18px;
       color: var(--muted);
       font-size: 0.94rem;
     }
+
+
+    .payment-details {
+      margin-top: 28px;
+      padding: clamp(22px, 3vw, 34px);
+      border-radius: var(--radius);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .payment-details h2 {
+      margin: 0 0 8px;
+      color: var(--teal-dark);
+      font-size: clamp(1.55rem, 3vw, 2.25rem);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .payment-details-intro {
+      margin: 0 0 20px;
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .payment-methods {
+      display: grid;
+      grid-template-columns: 1fr 0.85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .payment-method-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: #f7fbf8;
+      border: 1px solid rgba(7, 55, 52, 0.09);
+    }
+
+    .payment-method-card h3 {
+      margin: 0 0 12px;
+      color: var(--teal-dark);
+      font-size: 1.1rem;
+      line-height: 1.2;
+    }
+
+    .bank-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(7, 55, 52, 0.09);
+    }
+
+    .bank-row:last-child {
+      border-bottom: 0;
+    }
+
+    .bank-row span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 850;
+    }
+
+    .bank-row strong {
+      color: var(--teal-dark);
+      font-weight: 900;
+      word-break: break-word;
+    }
+
+    .qr-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 240px;
+      text-align: center;
+    }
+
+    .qr-box img {
+      width: min(220px, 100%);
+      height: auto;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid rgba(7, 55, 52, 0.12);
+      padding: 10px;
+    }
+
+    .qr-placeholder {
+      width: min(220px, 100%);
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px dashed rgba(7, 55, 52, 0.28);
+      color: var(--muted);
+      padding: 18px;
+      font-weight: 750;
+    }
+
+    .payment-confirmation {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(232, 153, 122, 0.12);
+      border: 1px solid rgba(232, 153, 122, 0.24);
+      color: #5a352a;
+      font-weight: 750;
+      line-height: 1.55;
+    }
+
+    .whatsapp-confirm-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      margin-top: 18px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: var(--teal-dark);
+      color: var(--cream);
+      text-decoration: none;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .payment-methods {
+        grid-template-columns: 1fr;
+      }
+
+      .bank-row {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+
+      .whatsapp-confirm-button {
+        width: 100%;
+      }
+    }
+
 
     footer {
       padding: 28px 0 42px;
@@ -589,15 +709,61 @@
           </a>
         </article>
 
-        <div class="url-box">
-          <strong>Use one page with exact programme links:</strong><br>
-          RM350 Strategy Session:<br>
-          <code>https://autismpathwaysconsulting.com/pay.html?program=strategy</code><br><br>
-          RM2,500 Parent Support Programme:<br>
-          <code>https://autismpathwaysconsulting.com/pay.html?program=parent-support</code>
-        </div>
+        <!-- APC payment details start -->
+        <div class="payment-details">
+          <h2>Payment details</h2>
+          <p class="payment-details-intro">
+            Please select the payment option APC confirmed with your family, then make payment using bank transfer or Maybank QR.
+          </p>
 
-        <p class="boundary">
+          <div class="payment-methods">
+            <div class="payment-method-card">
+              <h3>Bank transfer</h3>
+
+              <div class="bank-row">
+                <span>Bank</span>
+                <strong>Maybank</strong>
+              </div>
+
+              <div class="bank-row">
+                <span>Account name</span>
+                <strong>Autism Pathways Consulting</strong>
+              </div>
+
+              <div class="bank-row">
+                <span>Account number</span>
+                <strong>Scan the Maybank QR or use the confirmed payment details from APC</strong>
+              </div>
+
+              <div class="bank-row">
+                <span>Reference</span>
+                <strong>Parent name + confirmed APC programme</strong>
+              </div>
+            </div>
+
+            <div class="payment-method-card">
+              <h3>Maybank QR</h3>
+              <div class="qr-box">
+
+              <img src="/QR_Payment.JPG" alt="Maybank QR payment code for Autism Pathways Consulting">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-confirmation">
+            After payment is completed, please send the receipt or screenshot through WhatsApp.
+            APC will confirm payment, then send the intake form and arrange the next step.
+          </div>
+
+          <a class="whatsapp-confirm-button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20my%20confirmed%20APC%20programme.%20Here%20is%20my%20payment%20confirmation.">
+            Send payment confirmation on WhatsApp
+          </a>
+        </div>
+        <!-- APC payment details end -->
+
+
+<p class="boundary">
           APC provides parent education, pattern review, support planning, and practical implementation guidance.
           This is not therapy, diagnosis, medical advice, crisis support, or a guaranteed behaviour-change programme.
         </p>
@@ -613,8 +779,7 @@
 
   <script>
     (function () {
-      var params = new URLSearchParams(window.location.search);
-      var current = params.get("program") || "strategy";
+      var current = "strategy";
 
       var tabs = document.querySelectorAll("[data-select-program]");
       var panels = document.querySelectorAll("[data-program-panel]");
@@ -652,12 +817,6 @@
         if (notice) {
           notice.textContent = "Selected payment option: " + selected.title + " at " + selected.price + ". Please only proceed if this matches the programme APC confirmed with you.";
           notice.classList.add("show");
-        }
-
-        if (updateUrl) {
-          var url = new URL(window.location.href);
-          url.searchParams.set("program", program);
-          window.history.replaceState({}, "", url.toString());
         }
       }
 
