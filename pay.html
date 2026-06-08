@@ -856,132 +856,330 @@ main > .wrap {
 </style>
 
 
-<style id="apc-rm2500-integrated-style">
-  .apc-rm2500-card {
-    margin-top: 1.5rem;
-    padding: clamp(1.35rem, 3vw, 2rem);
-    border-radius: 1.35rem;
-    border: 1px solid rgba(13, 92, 86, 0.18);
+<style id="apc-payment-grid-style">
+  .apc-pay-page {
     background: #fffaf3;
-    box-shadow: 0 16px 40px rgba(7, 55, 52, 0.08);
     color: #173834;
   }
 
-  .apc-rm2500-card__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.85rem;
-    padding: 0.35rem 0.75rem;
+  .apc-pay-wrap {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .apc-pay-hero {
+    padding: clamp(3rem, 8vw, 5.5rem) 0 2.5rem;
+    background: #fffaf3;
+    color: #073734;
+  }
+
+  .apc-pay-eyebrow {
+    margin: 0 0 0.9rem;
+    color: #0f766e;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .apc-pay-hero h1 {
+    margin: 0;
+    max-width: 900px;
+    color: #073734;
+    font-size: clamp(2.2rem, 5.5vw, 4.8rem);
+    line-height: 1.02;
+    letter-spacing: -0.06em;
+  }
+
+  .apc-pay-hero p {
+    max-width: 760px;
+    margin: 1.15rem 0 0;
+    color: rgba(23, 56, 52, 0.78);
+    font-size: clamp(1rem, 2vw, 1.16rem);
+    line-height: 1.7;
+  }
+
+  .apc-selected-notice {
+    display: none;
+    margin-top: 1.35rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    background: rgba(45, 212, 191, 0.14);
+    border: 1px solid rgba(15, 118, 110, 0.24);
+    color: #073734;
+    font-weight: 750;
+    line-height: 1.55;
+  }
+
+  .apc-selected-notice.is-visible {
+    display: block;
+  }
+
+  .apc-pay-section {
+    padding: 1rem 0 5rem;
+  }
+
+  .apc-program-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  .apc-program-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 1.4rem;
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    box-shadow: 0 16px 45px rgba(7, 55, 52, 0.07);
+    color: #173834;
+  }
+
+  .apc-program-card.is-selected {
+    border: 2px solid #0f766e;
+    box-shadow: 0 22px 60px rgba(7, 55, 52, 0.16);
+  }
+
+  .apc-program-card.is-selected::before {
+    content: "Selected payment option";
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.38rem 0.7rem;
     border-radius: 999px;
-    background: rgba(45, 212, 191, 0.15);
+    background: #0f766e;
+    color: #fffaf3;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .apc-program-label {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 1rem;
+    padding: 0.36rem 0.76rem;
+    border-radius: 999px;
+    background: rgba(45, 212, 191, 0.14);
     color: #0f5c55;
-    font-size: 0.78rem;
-    font-weight: 800;
+    font-size: 0.76rem;
+    font-weight: 900;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
-  .apc-rm2500-card h2,
-  .apc-rm2500-card h3 {
-    margin: 0 0 0.75rem;
+  .apc-program-card h2 {
+    margin: 0 0 0.7rem;
     color: #073734;
-    font-size: clamp(1.45rem, 3vw, 2.2rem);
-    line-height: 1.12;
-    letter-spacing: -0.03em;
+    font-size: clamp(1.45rem, 3vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
   }
 
-  .apc-rm2500-card__price {
-    margin: 0.7rem 0 0.85rem;
+  .apc-program-price {
+    margin: 0.35rem 0 0.85rem;
     color: #073734;
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    font-weight: 900;
-    letter-spacing: -0.05em;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 950;
+    letter-spacing: -0.06em;
     line-height: 1;
   }
 
-  .apc-rm2500-card__summary {
-    max-width: 760px;
+  .apc-program-summary {
     margin: 0 0 1rem;
-    color: rgba(23, 56, 52, 0.82);
-    line-height: 1.65;
+    color: rgba(23, 56, 52, 0.78);
+    line-height: 1.62;
   }
 
-  .apc-rm2500-card__grid {
+  .apc-program-list {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin: 1rem 0 0;
+    gap: 0.65rem;
+    margin: 0 0 1.1rem;
     padding: 0;
     list-style: none;
   }
 
-  .apc-rm2500-card__grid li {
+  .apc-program-list li {
     position: relative;
-    padding: 0.8rem 0.9rem 0.8rem 2.1rem;
-    border-radius: 0.9rem;
-    background: #ffffff;
-    border: 1px solid rgba(13, 92, 86, 0.1);
+    padding-left: 1.45rem;
     color: #173834;
-    line-height: 1.4;
+    line-height: 1.45;
     font-weight: 650;
   }
 
-  .apc-rm2500-card__grid li::before {
+  .apc-program-list li::before {
     content: "✓";
     position: absolute;
-    left: 0.85rem;
-    top: 0.78rem;
+    left: 0;
+    top: 0;
     color: #0f766e;
-    font-weight: 900;
+    font-weight: 950;
   }
 
-  .apc-rm2500-card__note {
-    margin-top: 1rem;
+  .apc-program-note {
+    margin-top: auto;
     padding: 0.95rem 1rem;
     border-radius: 1rem;
     background: rgba(232, 153, 122, 0.12);
     border: 1px solid rgba(232, 153, 122, 0.24);
     color: #5a352a;
-    line-height: 1.55;
+    line-height: 1.5;
     font-weight: 650;
   }
 
-  .apc-rm2500-card__button {
+  .apc-program-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     margin-top: 1rem;
-    min-height: 48px;
-    padding: 0.85rem 1.15rem;
+    min-height: 50px;
+    padding: 0.85rem 1.1rem;
     border-radius: 999px;
     background: #073734;
-    color: #fff9f1;
+    color: #fffaf3;
     text-decoration: none;
-    font-weight: 800;
+    font-weight: 900;
+    text-align: center;
   }
 
-  .apc-rm2500-card__boundary {
+  .apc-program-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .apc-link-helper {
+    margin-top: 1.5rem;
+    padding: 1.1rem;
+    border-radius: 1.1rem;
+    background: rgba(7, 55, 52, 0.06);
+    border: 1px solid rgba(7, 55, 52, 0.1);
+    color: rgba(23, 56, 52, 0.82);
+    line-height: 1.6;
+  }
+
+  .apc-link-helper code {
+    display: inline-block;
+    margin-top: 0.35rem;
+    padding: 0.18rem 0.4rem;
+    border-radius: 0.4rem;
+    background: #ffffff;
+    color: #073734;
+    font-size: 0.92em;
+  }
+
+  .apc-boundary-note {
     margin-top: 1rem;
-    color: rgba(23, 56, 52, 0.72);
+    color: rgba(23, 56, 52, 0.7);
     font-size: 0.92rem;
-    line-height: 1.55;
+    line-height: 1.58;
   }
 
-  @media (max-width: 760px) {
-    .apc-rm2500-card__grid {
+  @media (max-width: 840px) {
+    .apc-program-grid {
       grid-template-columns: 1fr;
     }
 
-    .apc-rm2500-card__button {
+    .apc-program-card.is-selected::before {
+      position: static;
+      width: fit-content;
+      margin-bottom: 0.8rem;
+    }
+
+    .apc-program-button {
       width: 100%;
-      text-align: center;
     }
   }
 </style>
 
 </head>
 <body>
+
+<main class="apc-pay-page">
+  <section class="apc-pay-hero">
+    <div class="apc-pay-wrap">
+      <p class="apc-pay-eyebrow">Confirmed families only</p>
+      <h1>Payment for APC Parent Support</h1>
+      <p>
+        Please only use this page after Autism Pathways Consulting has confirmed your programme,
+        fee, and next step with you.
+      </p>
+      <div id="apc-selected-notice" class="apc-selected-notice"></div>
+    </div>
+  </section>
+
+  <section class="apc-pay-section">
+    <div class="apc-pay-wrap">
+      <div class="apc-program-grid">
+
+        <article class="apc-program-card" id="program-strategy-session" data-program="strategy-session" data-title="APC Parent Strategy Session" data-price="RM350">
+          <div class="apc-program-label">Single session</div>
+          <h2>APC Parent Strategy Session</h2>
+          <div class="apc-program-price">RM350</div>
+          <p class="apc-program-summary">
+            A focused parent strategy session for families who need clearer direction before deciding
+            whether deeper support is needed.
+          </p>
+          <ul class="apc-program-list">
+            <li>45-minute online parent session</li>
+            <li>Focused review of one main concern</li>
+            <li>Clear next step for the family</li>
+            <li>Suitable after APC has confirmed fit</li>
+          </ul>
+          <div class="apc-program-note">
+            Use this option only after APC has confirmed that a single strategy session is the right next step.
+          </div>
+          <a class="apc-program-button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM350%20APC%20Parent%20Strategy%20Session.">
+            Send RM350 payment confirmation
+          </a>
+        </article>
+
+        <article class="apc-program-card" id="program-parent-support-rm2500" data-program="parent-support-rm2500" data-title="APC Parent Support Programme" data-price="RM2,500">
+          <div class="apc-program-label">6-session programme</div>
+          <h2>APC Parent Support Programme</h2>
+          <div class="apc-program-price">RM2,500</div>
+          <p class="apc-program-summary">
+            A structured 6-session parent support programme for families who need more comprehensive support
+            with puberty, body changes, hygiene, privacy, communication, routines, and emotional regulation.
+          </p>
+          <ul class="apc-program-list">
+            <li>6 parent support sessions</li>
+            <li>1 hour per session</li>
+            <li>Delivered across 6 to 8 weeks</li>
+            <li>Parent support via video call</li>
+            <li>Intake review before Session 1</li>
+            <li>WhatsApp clarification during the active support period</li>
+            <li>End-of-programme summary with recommended next steps</li>
+          </ul>
+          <div class="apc-program-note">
+            Use this option only after APC has confirmed this 6-session programme with your family.
+          </div>
+          <a class="apc-program-button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20APC%20Parent%20Support%20Programme.">
+            Send RM2,500 payment confirmation
+          </a>
+        </article>
+
+      </div>
+
+      <div class="apc-link-helper">
+        <strong>Exact programme links</strong><br>
+        Parent Strategy Session:
+        <code>https://autismpathwaysconsulting.com/pay.html?program=strategy-session</code><br>
+        Parent Support Programme:
+        <code>https://autismpathwaysconsulting.com/pay.html?program=parent-support-rm2500</code>
+      </div>
+
+      <p class="apc-boundary-note">
+        APC provides parent education, pattern review, support planning, and practical implementation guidance.
+        This is not therapy, diagnosis, medical advice, crisis support, or a guaranteed behaviour-change programme.
+      </p>
+    </div>
+  </section>
+</main>
+
 
 <nav>
   <div class="nav-inner">
@@ -1071,46 +1269,6 @@ main > .wrap {
 
   
 
-<!-- APC RM2500 integrated option start -->
-<article class="apc-rm2500-card">
-  <div class="apc-rm2500-card__label">Confirmed programme option</div>
-
-  <h2>APC Parent Support Programme</h2>
-
-  <div class="apc-rm2500-card__price">RM2,500</div>
-
-  <p class="apc-rm2500-card__summary">
-    A structured 6-session parent support programme for families who need more comprehensive support
-    with puberty, body changes, hygiene, privacy, communication, routines, and emotional regulation.
-  </p>
-
-  <ul class="apc-rm2500-card__grid">
-    <li>6 parent support sessions</li>
-    <li>1 hour per session</li>
-    <li>Delivered across 6 to 8 weeks</li>
-    <li>Parent support via video call</li>
-    <li>Intake review before Session 1</li>
-    <li>Practical parent guidance during each session</li>
-    <li>Parent scripts and routine support where helpful</li>
-    <li>WhatsApp clarification during the active support period</li>
-    <li>End-of-programme summary with recommended next steps</li>
-  </ul>
-
-  <div class="apc-rm2500-card__note">
-    Please use this option only after APC has confirmed this programme with your family.
-    After payment is completed, send the payment confirmation through WhatsApp.
-  </div>
-
-  <a class="apc-rm2500-card__button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20APC%20Parent%20Support%20Programme.">
-    Send payment confirmation on WhatsApp
-  </a>
-
-  <p class="apc-rm2500-card__boundary">
-    APC provides parent education, pattern review, support planning, and practical implementation guidance.
-    This is not therapy, diagnosis, medical advice, crisis support, or a guaranteed behaviour-change programme.
-  </p>
-</article>
-<!-- APC RM2500 integrated option end -->
 
 <div class="trust-bar">
     <div class="trust-item">🔒 Secure payment</div>
@@ -1159,5 +1317,40 @@ function copyText(text, btn) {
 </script>
 
 <!-- APC_PAY_PAGE_FORCE_REFRESH: 2026-05-25 09:34:09 -->
+
+<script id="apc-payment-program-script">
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var selectedProgram = params.get("program") || params.get("package") || params.get("option");
+
+    if (!selectedProgram) return;
+
+    var cards = document.querySelectorAll("[data-program]");
+    var selectedCard = null;
+
+    cards.forEach(function (card) {
+      if (card.getAttribute("data-program") === selectedProgram) {
+        card.classList.add("is-selected");
+        selectedCard = card;
+      }
+    });
+
+    if (!selectedCard) return;
+
+    var title = selectedCard.getAttribute("data-title") || "selected programme";
+    var price = selectedCard.getAttribute("data-price") || "";
+    var notice = document.getElementById("apc-selected-notice");
+
+    if (notice) {
+      notice.textContent = "Selected payment option: " + title + " at " + price + ". Please only proceed if this matches the programme APC confirmed with you.";
+      notice.classList.add("is-visible");
+    }
+
+    setTimeout(function () {
+      selectedCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 250);
+  })();
+</script>
+
 </body>
 </html>
