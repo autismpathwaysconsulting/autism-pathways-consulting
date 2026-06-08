@@ -1,1356 +1,476 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>APC Support Payment | Autism Pathways Consulting</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--teal:#2a9d8f;--teal-d:#1e7268;--text:#1a1a2e;--muted:#6b7280;--bg:#faf9f7;--card:#fff;--border:#e8e4df;--pink:#e84393}
-body{overflow-x:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding-bottom:60px}
-a{color:inherit;text-decoration:none}
-nav{background:var(--teal);padding:0 24px}
-.nav-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;height:56px;gap:16px}
-.nav-logo{font-family:'DM Serif Display',serif;font-size:16px;color:#fff}
-.nav-back{font-size:14px;color:rgba(255,255,255,.8);margin-left:auto}
-.container{max-width:480px;margin:0 auto;padding:28px 16px 0}
-/* Step label */
-.step-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-/* Session card */
-.pkg-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
-.pkg-card{border:2px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all .18s;background:var(--card)}
-.pkg-card:hover{border-color:var(--teal)}
-.pkg-card.active{border-color:var(--teal);background:#f0faf9}
-.pkg-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.pkg-name{font-weight:700;font-size:15px}
-.pkg-price{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--teal)}
-.pkg-save{font-size:11px;font-weight:700;color:var(--teal);background:#d4f0eb;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
-.pkg-desc{font-size:13px;color:var(--muted);margin-bottom:10px}
-.pkg-includes{list-style:none;padding:0;border-top:1px solid var(--border);padding-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.pkg-includes li{font-size:12px;color:var(--muted);padding-left:14px;position:relative}
-.pkg-includes li::before{content:'✓';position:absolute;left:0;color:var(--teal);font-weight:700}
-/* Cal.com step */
-.cal-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px}
-.cal-box p{font-size:14px;color:var(--muted);margin-bottom:16px}
-.cal-btn{display:block;background:var(--teal);color:#fff;text-align:center;padding:14px;border-radius:10px;font-weight:700;font-size:15px}
-.cal-btn:hover{background:var(--teal-d)}
-.cal-note{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
-/* Method tabs */
-.method-tabs{display:flex;gap:8px;margin-bottom:16px}
-.tab-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s;text-align:center}
-.tab-btn.active{border-color:var(--teal);background:var(--teal);color:#fff}
-.panel{display:none}
-.panel.active{display:block}
-/* QR */
-.qr-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
-.qr-amount{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--teal);margin-bottom:4px}
-.qr-label{font-size:13px;color:var(--muted);margin-bottom:16px}
-.qr-img-wrap{display:inline-block;background:#fff;border-radius:10px;padding:6px;border:1px solid var(--border)}
-.qr-img-wrap img{width:240px;height:auto;display:block}
-.qr-caption{margin-top:12px;font-size:13px;color:var(--muted)}
-.duitnow-badge{margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:#fff0f6;border:1px solid #fbc8df;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--pink)}
-/* Bank */
-.bank-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.bank-header{background:var(--teal);color:#fff;padding:12px 18px;font-weight:700;font-size:14px}
-.bank-body{overflow-x:hidden;padding:16px 18px}
-.bank-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
-.bank-row:last-child{border-bottom:none}
-.bank-row .lbl{font-size:12px;color:var(--muted);font-weight:500;min-width:90px}
-.bank-row .val{font-size:14px;font-weight:700;text-align:right;flex:1}
-.copy-btn{background:var(--teal);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer}
-.copy-btn.copied{background:#10b981}
-/* Notice */
-.notice-box{margin-top:20px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:16px;font-size:13px;color:#92400e}
-/* Trust */
-.trust-bar{margin-top:20px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
-.trust-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500}
-
-@media(max-width:480px){
-  .container{padding:20px 14px 0}
-  .pkg-includes{grid-template-columns:1fr}
-  .method-tabs{gap:6px}
-  .tab-btn{font-size:12px;padding:8px}
-  .qr-img-wrap img{width:200px}
-  .trust-bar{gap:12px}
-}
-
-@media(max-width:600px){
-  .container{padding:32px 16px}
-  .page-header{padding:40px 16px 20px}
-  h1{font-size:1.7rem}
-  .cred-grid{grid-template-columns:1fr}
-  .service-section{padding:24px 18px}
-  .pricing-grid{grid-template-columns:1fr}
-  .svc-cta{flex-direction:column}
-  .svc-cta a{text-align:center}
-  .btn-primary,.btn-secondary,.btn-main,.btn-ghost{width:100%;text-align:center;padding:13px 20px}
-  .form-row{flex-direction:column}
-  .pkg-grid .pkg-card{padding:16px}
-  .pkg-includes{grid-template-columns:1fr}
-  .method-tabs{gap:6px}
-  .tab-btn{font-size:12px;padding:9px}
-  .nav-links a:not(.nav-cta){display:none}
-  .about-inner,.about-in{flex-direction:column;text-align:center}
-  .cta-box{padding:24px 18px}
-  .unsure{padding:28px 20px}
-  .school-form-wrap{padding:18px 16px}
-  details summary{font-size:13px}
-  .steps-label{font-size:11px}
-}
-@media(max-width:360px){
-  h1{font-size:1.5rem}
-  .service-section{padding:18px 14px}
-  .price-amount{font-size:1.6rem}
-}
-
-/* APC Apple-inspired footer */
-.apc-footer {
-  background: #f6f2ea;
-  color: #1f2a2a;
-  border-top: 1px solid rgba(31, 75, 71, 0.12);
-  padding: 48px 20px 24px;
-}
-
-.apc-footer-inner {
-  width: min(1120px, 100%);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.4fr 0.8fr 0.9fr 1fr;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: start;
-}
-
-.apc-footer a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.apc-footer-logo {
-  display: inline-block;
-  font-weight: 800;
-  color: #1f7a70;
-  margin-bottom: 0.75rem;
-}
-
-.apc-footer-brand p {
-  max-width: 340px;
-  margin: 0 0 0.85rem;
-  color: rgba(31, 42, 42, 0.72);
-  font-size: 0.92rem;
-  line-height: 1.65;
-}
-
-.apc-footer-small {
-  font-size: 0.78rem !important;
-  color: rgba(31, 42, 42, 0.52) !important;
-}
-
-.apc-footer-column h3 {
-  margin: 0 0 0.85rem;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(31, 42, 42, 0.58);
-}
-
-.apc-footer-column a {
-  display: block;
-  width: fit-content;
-  margin: 0 0 0.62rem;
-  color: rgba(31, 42, 42, 0.74);
-  font-size: 0.9rem;
-  line-height: 1.35;
-  transition: color 180ms ease, transform 180ms ease;
-}
-
-.apc-footer-column a:hover {
-  color: #1f7a70;
-  transform: translateX(2px);
-}
-
-.apc-footer-bottom {
-  width: min(1120px, 100%);
-  margin: 32px auto 0;
-  padding-top: 18px;
-  border-top: 1px solid rgba(31, 75, 71, 0.12);
-}
-
-.apc-footer-bottom p {
-  margin: 0;
-  color: rgba(31, 42, 42, 0.55);
-  font-size: 0.78rem;
-  line-height: 1.5;
-}
-
-@media (max-width: 860px) {
-  .apc-footer {
-    padding: 40px 20px 88px;
-  }
-
-  .apc-footer-inner {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem 1.5rem;
-  }
-
-  .apc-footer-brand {
-    grid-column: 1 / -1;
-  }
-
-  .apc-footer-brand p {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 560px) {
-  .apc-footer-inner {
-    grid-template-columns: 1fr;
-  }
-
-  .apc-footer-column a {
-    width: 100%;
-  }
-}
-
-
-/* APC footer refinement */
-.apc-footer {
-  background: #f7f3eb !important;
-  color: #1f2a2a !important;
-  padding: 46px 20px 22px !important;
-  border-top: 1px solid rgba(31, 75, 71, 0.10) !important;
-  text-align: left !important;
-}
-
-.apc-footer-inner {
-  width: min(1080px, 100%) !important;
-  margin: 0 auto !important;
-  display: grid !important;
-  grid-template-columns: 1.45fr 0.75fr 0.95fr 1.05fr !important;
-  gap: clamp(2rem, 5vw, 4.5rem) !important;
-  align-items: start !important;
-}
-
-.apc-footer-brand,
-.apc-footer-column {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
-  padding: 0 !important;
-  text-align: left !important;
-}
-
-.apc-footer-logo {
-  display: inline-block !important;
-  margin-bottom: 0.8rem !important;
-  color: #1f6f66 !important;
-  font-size: 0.95rem !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.01em !important;
-}
-
-.apc-footer-brand p {
-  max-width: 360px !important;
-  margin: 0 0 0.85rem !important;
-  color: rgba(31, 42, 42, 0.66) !important;
-  font-size: 0.88rem !important;
-  line-height: 1.65 !important;
-}
-
-.apc-footer-small {
-  color: rgba(31, 42, 42, 0.48) !important;
-  font-size: 0.74rem !important;
-  line-height: 1.55 !important;
-}
-
-.apc-footer-column h3 {
-  margin: 0 0 0.9rem !important;
-  color: rgba(31, 42, 42, 0.46) !important;
-  font-size: 0.68rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.14em !important;
-  text-transform: uppercase !important;
-  text-align: left !important;
-}
-
-.apc-footer-column a {
-  display: block !important;
-  width: fit-content !important;
-  margin: 0 0 0.62rem !important;
-  color: rgba(31, 42, 42, 0.68) !important;
-  font-size: 0.86rem !important;
-  font-weight: 500 !important;
-  line-height: 1.35 !important;
-  text-align: left !important;
-  text-decoration: none !important;
-  transition: color 160ms ease, transform 160ms ease !important;
-}
-
-.apc-footer-column a:hover {
-  color: #1f6f66 !important;
-  transform: translateX(2px) !important;
-}
-
-.apc-footer-bottom {
-  width: min(1080px, 100%) !important;
-  margin: 34px auto 0 !important;
-  padding-top: 18px !important;
-  border-top: 1px solid rgba(31, 75, 71, 0.10) !important;
-  text-align: left !important;
-}
-
-.apc-footer-bottom p {
-  margin: 0 !important;
-  color: rgba(31, 42, 42, 0.48) !important;
-  font-size: 0.74rem !important;
-  line-height: 1.5 !important;
-  text-align: left !important;
-}
-
-@media (max-width: 860px) {
-  .apc-footer {
-    padding: 40px 20px 28px !important;
-  }
-
-  .apc-footer-inner {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 2rem 1.75rem !important;
-  }
-
-  .apc-footer-brand {
-    grid-column: 1 / -1 !important;
-  }
-
-  .apc-footer-brand p {
-    max-width: 100% !important;
-  }
-}
-
-@media (max-width: 560px) {
-  .apc-footer-inner {
-    grid-template-columns: 1fr !important;
-    gap: 1.8rem !important;
-  }
-
-  .apc-footer-column a {
-    width: auto !important;
-  }
-}
-
-
-/* APC Pay page polish */
-.payment-alert {
-  background: #fff7f0;
-  border: 1px solid #f2d2a2;
-  border-radius: 18px;
-  padding: 1.1rem 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #6f4a1d;
-  line-height: 1.65;
-}
-
-.payment-alert strong {
-  display: block;
-  margin-bottom: 0.35rem;
-  color: #5f3f18;
-  font-size: 0.95rem;
-}
-
-.payment-alert p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.payment-intro {
-  margin: 0.75rem 0 1.25rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.7;
-}
-
-.paying-for-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-}
-
-.paying-for-label {
-  margin-bottom: 0.25rem;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.paying-for-amount {
-  color: var(--teal);
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.6rem;
-  line-height: 1.15;
-}
-
-.paying-for-description {
-  margin-top: 0.25rem;
-  color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.5;
-}
-
-.pay-bank-amount {
-  color: var(--teal);
-}
-
-.after-payment-note {
-  line-height: 1.65;
-}
-
-.after-payment-note strong {
-  display: block;
-  margin-bottom: 0.25rem;
-  color: var(--text);
-}
-
-.after-payment-note p {
-  margin: 0 0 0.9rem;
-  color: var(--muted);
-}
-
-.after-payment-note a {
-  color: var(--teal);
-  font-weight: 800;
-}
-
-.session-details-btn {
-  display: inline-block;
-  background: var(--teal);
-  color: #ffffff !important;
-  padding: 0.72rem 1.1rem;
-  border-radius: 999px;
-  font-size: 0.88rem;
-  font-weight: 800;
-  text-decoration: none;
-}
-
-
-/* APC Pay package mobile polish */
-.pkg-card {
-  border-radius: 20px !important;
-  padding: 22px !important;
-}
-
-.pkg-card.active {
-  background: #f0faf8 !important;
-}
-
-.pkg-card .pkg-name {
-  font-size: 1rem !important;
-  line-height: 1.35 !important;
-}
-
-.pkg-card .pkg-price {
-  font-size: clamp(1.35rem, 4vw, 1.8rem) !important;
-  line-height: 1.1 !important;
-}
-
-.pkg-card ul {
-  gap: 10px 18px !important;
-}
-
-.pkg-card li {
-  line-height: 1.5 !important;
-}
-
-@media (max-width: 680px) {
-  .pkg-card {
-    padding: 20px !important;
-    margin-bottom: 12px !important;
-  }
-
-  .pkg-card > div:first-child {
-    align-items: flex-start !important;
-    gap: 12px !important;
-  }
-
-  .pkg-card .pkg-price {
-    font-size: 1.55rem !important;
-    white-space: nowrap !important;
-  }
-
-  .pkg-card ul {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
-
-  .pkg-card li {
-    font-size: 0.9rem !important;
-  }
-}
-
-
-/* APC Pay desktop layout polish */
-.pay-wrap,
-.container,
-main > .wrap {
-  max-width: 860px !important;
-}
-
-.pkg-card {
-  border-radius: 24px !important;
-  padding: 26px 28px !important;
-  margin-bottom: 16px !important;
-  box-shadow: 0 12px 34px rgba(31, 75, 71, 0.045) !important;
-}
-
-.pkg-card.active {
-  background: #f0faf8 !important;
-  border-color: rgba(31, 143, 131, 0.28) !important;
-}
-
-.pkg-card > div:first-child {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: flex-start !important;
-  gap: 24px !important;
-  margin-bottom: 18px !important;
-}
-
-.pkg-card .pkg-name {
-  font-size: 1.08rem !important;
-  line-height: 1.35 !important;
-  letter-spacing: 0.01em !important;
-}
-
-.pkg-card .pkg-price {
-  font-size: clamp(1.45rem, 2.2vw, 1.8rem) !important;
-  line-height: 1.1 !important;
-  white-space: nowrap !important;
-}
-
-.pkg-card > p {
-  max-width: 680px !important;
-  margin-bottom: 20px !important;
-  line-height: 1.65 !important;
-}
-
-.pkg-card ul {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 10px 32px !important;
-  margin-top: 0 !important;
-}
-
-.pkg-card li {
-  line-height: 1.5 !important;
-  font-size: 0.92rem !important;
-}
-
-@media (max-width: 680px) {
-  .pay-wrap,
-  .container,
-  main > .wrap {
-    max-width: calc(100% - 28px) !important;
-  }
-
-  .pkg-card {
-    padding: 20px !important;
-  }
-
-  .pkg-card > div:first-child {
-    gap: 12px !important;
-  }
-
-  .pkg-card ul {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
-}
-
-
-/* APC Pay confirmation-first flow */
-#confirm-before-paying {
-  scroll-margin-top: 90px;
-}
-
-#complete-payment {
-  scroll-margin-top: 90px;
-}
-
-.payment-alert {
-  background: #fff7f0;
-  border: 1px solid #f2d2a2;
-  border-radius: 18px;
-  padding: 1.1rem 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #6f4a1d;
-  line-height: 1.65;
-}
-
-.payment-alert strong {
-  display: block;
-  margin-bottom: 0.35rem;
-  color: #5f3f18;
-  font-size: 0.95rem;
-}
-
-.payment-alert p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.payment-intro {
-  margin: 0.75rem 0 1.25rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.7;
-}
-
-
-/* APC Pay step flow polish */
-#confirm-before-paying,
-#complete-payment,
-#send-receipt {
-  scroll-margin-top: 90px;
-}
-
-.after-payment-note {
-  margin-top: 1.1rem;
-  line-height: 1.65;
-}
-
-.after-payment-note .step-label {
-  margin-bottom: 0.75rem;
-}
-
-.after-payment-note p {
-  margin: 0 0 0.9rem;
-  color: var(--muted);
-}
-
-.after-payment-note a {
-  color: var(--teal);
-  font-weight: 800;
-}
-
-
-/* APC Pay visible step labels fix */
-#confirm-before-paying,
-#complete-payment,
-#send-receipt {
-  scroll-margin-top: 90px;
-}
-
-.after-payment-note .step-label {
-  margin-bottom: 0.75rem;
-}
-
-</style>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#073734">
-<style id="apc-logo-global-styles">
-  .apc-site-logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-  }
-
-  .apc-site-logo img {
-    display: block;
-    height: 42px;
-    width: auto;
-    max-width: 190px;
-    object-fit: contain;
-  }
-
-  .apc-footer-logo {
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-
-  .apc-footer-logo img {
-    display: block;
-    height: 54px;
-    width: auto;
-    max-width: 220px;
-    object-fit: contain;
-  }
-
-  @media (max-width: 640px) {
-    .apc-site-logo img {
-      height: 36px;
-      max-width: 150px;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment | Autism Pathways Consulting</title>
+  <meta name="description" content="Payment page for confirmed Autism Pathways Consulting families.">
+  <style>
+    :root {
+      --teal-dark: #073734;
+      --teal: #0f766e;
+      --teal-soft: #e7f6f3;
+      --cream: #fffaf3;
+      --cream-2: #f7efe4;
+      --coral: #e8997a;
+      --text: #173834;
+      --muted: rgba(23, 56, 52, 0.72);
+      --border: rgba(7, 55, 52, 0.14);
+      --shadow: 0 18px 50px rgba(7, 55, 52, 0.08);
+      --radius: 24px;
     }
 
-    .apc-footer-logo img {
-      height: 46px;
-      max-width: 180px;
+    * {
+      box-sizing: border-box;
     }
-  }
-</style>
-<style id="apc-global-type-system">
-  :root {
-    --apc-font-main: "Segoe UI", Roboto, Arial, sans-serif;
-    --apc-dark-teal: #073734;
-    --apc-teal: #0f766e;
-    --apc-cream: #FFF9F1;
-    --apc-coral: #E8997A;
-    --apc-sage: #6B9E7A;
-    --apc-text: #253532;
-    --apc-muted: #3d5552;
-  }
 
-  html,
-  body {
-    font-family: var(--apc-font-main) !important;
-    color: var(--apc-text);
-  }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-  body,
-  button,
-  input,
-  textarea,
-  select,
-  a,
-  p,
-  li,
-  span,
-  div {
-    font-family: var(--apc-font-main) !important;
-  }
+    a {
+      color: inherit;
+    }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  .home-title,
-  .home-heading,
-  .hero h1,
-  .hero-title,
-  .section-title,
-  .section-header h2,
-  .apc-home-title,
-  .apc-support-copy h2,
-  .apc-start-clean-title,
-  .pkg-name {
-    font-family: var(--apc-font-main) !important;
-    color: var(--apc-dark-teal);
-    letter-spacing: -0.035em;
-  }
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 250, 243, 0.96);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+    }
 
-  .home-kicker,
-  .apc-home-kicker,
-  .eyebrow,
-  .section-eyebrow,
-  .kicker {
-    font-family: var(--apc-font-main) !important;
-    color: var(--apc-teal) !important;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    font-size: 0.78rem;
-    font-weight: 850;
-  }
+    .nav {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
 
-  .home-btn,
-  .nav-cta,
-  .btn,
-  .mini-btn,
-  .free-btn,
-  .apc-start-clean-btn,
-  .card-button,
-  button {
-    font-family: var(--apc-font-main) !important;
-    font-weight: 800;
-    letter-spacing: 0;
-  }
+    .brand {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: var(--teal-dark);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
 
-  .home-card,
-  .apc-mini-card,
-  .apc-proof-card,
-  .apc-start-card,
-  .apc-belief-card,
-  .apc-belief-chip,
-  .pkg-card,
-  .section-card {
-    font-family: var(--apc-font-main) !important;
-  }
+    .brand span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0;
+      margin-top: 4px;
+    }
 
-  .apc-home-stack .apc-home-title,
-  .apc-home-stack h2,
-  .apc-home-stack h3 {
-    font-family: var(--apc-font-main) !important;
-  }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 0.95rem;
+      font-weight: 750;
+      color: var(--muted);
+    }
 
-  /* Make older homepage sections visually closer to the new APC system */
-  .home-section {
-    font-family: var(--apc-font-main) !important;
-  }
+    .nav-links a {
+      text-decoration: none;
+    }
 
-  .home-section h2,
-  .home-section h3 {
-    font-family: var(--apc-font-main) !important;
-    color: var(--apc-dark-teal);
-  }
+    .nav-links a:hover {
+      color: var(--teal-dark);
+    }
 
-  .home-section p {
-    font-family: var(--apc-font-main) !important;
-    color: var(--apc-muted);
-    line-height: 1.65;
-  }
+    main {
+      min-height: calc(100vh - 72px);
+    }
 
-  @media (max-width: 760px) {
-    h1,
-    .hero h1,
-    .hero-title,
-    .apc-home-title,
-    .home-title {
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: clamp(52px, 8vw, 92px) 0 30px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-size: 0.8rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      color: var(--teal-dark);
+      font-size: clamp(2.25rem, 5.5vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.065em;
+    }
+
+    .hero-text {
+      max-width: 780px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.17rem);
+    }
+
+    .selected-notice {
+      display: none;
+      margin-top: 22px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: var(--teal-soft);
+      border: 1px solid rgba(15, 118, 110, 0.22);
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+
+    .selected-notice.show {
+      display: block;
+    }
+
+    .payment-section {
+      padding: 24px 0 78px;
+    }
+
+    .programme-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .programme-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: clamp(22px, 3vw, 34px);
+      border-radius: var(--radius);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .programme-card.selected {
+      border: 2px solid var(--teal);
+      box-shadow: 0 24px 70px rgba(7, 55, 52, 0.16);
+    }
+
+    .selected-pill {
+      display: none;
+      width: fit-content;
+      margin-bottom: 12px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--teal);
+      color: var(--cream);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .programme-card.selected .selected-pill {
+      display: inline-flex;
+    }
+
+    .label {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(45, 212, 191, 0.14);
+      color: var(--teal);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .programme-card h2 {
+      margin: 0 0 10px;
+      color: var(--teal-dark);
+      font-size: clamp(1.45rem, 3vw, 2.2rem);
+      line-height: 1.12;
       letter-spacing: -0.04em;
     }
-  }
-</style>
-<style id="apc-nav-cta-consistency">
-  .nav-cta,
-  a.nav-cta,
-  .apc-free-call-nav {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    min-height: 42px;
-    padding: 0 18px;
-    border-radius: 999px;
-    background: #0f766e;
-    color: #ffffff !important;
-    border: 1px solid #0f766e;
-    font-family: "Segoe UI", Roboto, Arial, sans-serif !important;
-    font-size: 0.92rem;
-    font-weight: 850;
-    line-height: 1;
-    text-decoration: none !important;
-    white-space: nowrap;
-    box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18);
-  }
 
-  .nav-cta:hover,
-  a.nav-cta:hover,
-  .apc-free-call-nav:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(15, 118, 110, 0.22);
-  }
-
-  @media (max-width: 820px) {
-    .nav-cta,
-    a.nav-cta,
-    .apc-free-call-nav {
-      width: 100%;
-      margin-top: 10px;
-    }
-  }
-</style>
-
-
-<style id="apc-payment-grid-style">
-  .apc-pay-page {
-    background: #fffaf3;
-    color: #173834;
-  }
-
-  .apc-pay-wrap {
-    width: min(1120px, calc(100% - 32px));
-    margin: 0 auto;
-  }
-
-  .apc-pay-hero {
-    padding: clamp(3rem, 8vw, 5.5rem) 0 2.5rem;
-    background: #fffaf3;
-    color: #073734;
-  }
-
-  .apc-pay-eyebrow {
-    margin: 0 0 0.9rem;
-    color: #0f766e;
-    font-size: 0.82rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .apc-pay-hero h1 {
-    margin: 0;
-    max-width: 900px;
-    color: #073734;
-    font-size: clamp(2.2rem, 5.5vw, 4.8rem);
-    line-height: 1.02;
-    letter-spacing: -0.06em;
-  }
-
-  .apc-pay-hero p {
-    max-width: 760px;
-    margin: 1.15rem 0 0;
-    color: rgba(23, 56, 52, 0.78);
-    font-size: clamp(1rem, 2vw, 1.16rem);
-    line-height: 1.7;
-  }
-
-  .apc-selected-notice {
-    display: none;
-    margin-top: 1.35rem;
-    padding: 1rem 1.1rem;
-    border-radius: 1rem;
-    background: rgba(45, 212, 191, 0.14);
-    border: 1px solid rgba(15, 118, 110, 0.24);
-    color: #073734;
-    font-weight: 750;
-    line-height: 1.55;
-  }
-
-  .apc-selected-notice.is-visible {
-    display: block;
-  }
-
-  .apc-pay-section {
-    padding: 1rem 0 5rem;
-  }
-
-  .apc-program-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
-    align-items: stretch;
-  }
-
-  .apc-program-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    padding: clamp(1.25rem, 3vw, 2rem);
-    border-radius: 1.4rem;
-    background: #ffffff;
-    border: 1px solid rgba(7, 55, 52, 0.12);
-    box-shadow: 0 16px 45px rgba(7, 55, 52, 0.07);
-    color: #173834;
-  }
-
-  .apc-program-card.is-selected {
-    border: 2px solid #0f766e;
-    box-shadow: 0 22px 60px rgba(7, 55, 52, 0.16);
-  }
-
-  .apc-program-card.is-selected::before {
-    content: "Selected payment option";
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.38rem 0.7rem;
-    border-radius: 999px;
-    background: #0f766e;
-    color: #fffaf3;
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .apc-program-label {
-    display: inline-flex;
-    width: fit-content;
-    margin-bottom: 1rem;
-    padding: 0.36rem 0.76rem;
-    border-radius: 999px;
-    background: rgba(45, 212, 191, 0.14);
-    color: #0f5c55;
-    font-size: 0.76rem;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .apc-program-card h2 {
-    margin: 0 0 0.7rem;
-    color: #073734;
-    font-size: clamp(1.45rem, 3vw, 2.25rem);
-    line-height: 1.1;
-    letter-spacing: -0.035em;
-  }
-
-  .apc-program-price {
-    margin: 0.35rem 0 0.85rem;
-    color: #073734;
-    font-size: clamp(2.4rem, 5vw, 4rem);
-    font-weight: 950;
-    letter-spacing: -0.06em;
-    line-height: 1;
-  }
-
-  .apc-program-summary {
-    margin: 0 0 1rem;
-    color: rgba(23, 56, 52, 0.78);
-    line-height: 1.62;
-  }
-
-  .apc-program-list {
-    display: grid;
-    gap: 0.65rem;
-    margin: 0 0 1.1rem;
-    padding: 0;
-    list-style: none;
-  }
-
-  .apc-program-list li {
-    position: relative;
-    padding-left: 1.45rem;
-    color: #173834;
-    line-height: 1.45;
-    font-weight: 650;
-  }
-
-  .apc-program-list li::before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: #0f766e;
-    font-weight: 950;
-  }
-
-  .apc-program-note {
-    margin-top: auto;
-    padding: 0.95rem 1rem;
-    border-radius: 1rem;
-    background: rgba(232, 153, 122, 0.12);
-    border: 1px solid rgba(232, 153, 122, 0.24);
-    color: #5a352a;
-    line-height: 1.5;
-    font-weight: 650;
-  }
-
-  .apc-program-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1rem;
-    min-height: 50px;
-    padding: 0.85rem 1.1rem;
-    border-radius: 999px;
-    background: #073734;
-    color: #fffaf3;
-    text-decoration: none;
-    font-weight: 900;
-    text-align: center;
-  }
-
-  .apc-program-button:hover {
-    transform: translateY(-1px);
-  }
-
-  .apc-link-helper {
-    margin-top: 1.5rem;
-    padding: 1.1rem;
-    border-radius: 1.1rem;
-    background: rgba(7, 55, 52, 0.06);
-    border: 1px solid rgba(7, 55, 52, 0.1);
-    color: rgba(23, 56, 52, 0.82);
-    line-height: 1.6;
-  }
-
-  .apc-link-helper code {
-    display: inline-block;
-    margin-top: 0.35rem;
-    padding: 0.18rem 0.4rem;
-    border-radius: 0.4rem;
-    background: #ffffff;
-    color: #073734;
-    font-size: 0.92em;
-  }
-
-  .apc-boundary-note {
-    margin-top: 1rem;
-    color: rgba(23, 56, 52, 0.7);
-    font-size: 0.92rem;
-    line-height: 1.58;
-  }
-
-  @media (max-width: 840px) {
-    .apc-program-grid {
-      grid-template-columns: 1fr;
+    .price {
+      margin: 8px 0 14px;
+      color: var(--teal-dark);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 950;
+      letter-spacing: -0.06em;
+      line-height: 1;
     }
 
-    .apc-program-card.is-selected::before {
-      position: static;
-      width: fit-content;
-      margin-bottom: 0.8rem;
+    .summary {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.62;
     }
 
-    .apc-program-button {
-      width: 100%;
+    .includes {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
     }
-  }
-</style>
 
+    .includes li {
+      position: relative;
+      padding-left: 24px;
+      color: var(--text);
+      font-weight: 680;
+      line-height: 1.45;
+    }
+
+    .includes li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--teal);
+      font-weight: 950;
+    }
+
+    .note {
+      margin-top: auto;
+      padding: 15px 16px;
+      border-radius: 16px;
+      background: rgba(232, 153, 122, 0.12);
+      border: 1px solid rgba(232, 153, 122, 0.24);
+      color: #5a352a;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      margin-top: 16px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: var(--teal-dark);
+      color: var(--cream);
+      text-decoration: none;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .url-box {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(7, 55, 52, 0.06);
+      border: 1px solid rgba(7, 55, 52, 0.1);
+      color: var(--muted);
+    }
+
+    .url-box strong {
+      color: var(--teal-dark);
+    }
+
+    .url-box code {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 4px 7px;
+      border-radius: 7px;
+      background: #ffffff;
+      color: var(--teal-dark);
+      word-break: break-all;
+    }
+
+    .boundary {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    footer {
+      padding: 28px 0 42px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 860px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px 0;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .programme-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<main class="apc-pay-page">
-  <section class="apc-pay-hero">
-    <div class="apc-pay-wrap">
-      <p class="apc-pay-eyebrow">Confirmed families only</p>
-      <h1>Payment for APC Parent Support</h1>
-      <p>
-        Please only use this page after Autism Pathways Consulting has confirmed your programme,
-        fee, and next step with you.
-      </p>
-      <div id="apc-selected-notice" class="apc-selected-notice"></div>
-    </div>
-  </section>
-
-  <section class="apc-pay-section">
-    <div class="apc-pay-wrap">
-      <div class="apc-program-grid">
-
-        <article class="apc-program-card" id="program-strategy-session" data-program="strategy-session" data-title="APC Parent Strategy Session" data-price="RM350">
-          <div class="apc-program-label">Single session</div>
-          <h2>APC Parent Strategy Session</h2>
-          <div class="apc-program-price">RM350</div>
-          <p class="apc-program-summary">
-            A focused parent strategy session for families who need clearer direction before deciding
-            whether deeper support is needed.
-          </p>
-          <ul class="apc-program-list">
-            <li>45-minute online parent session</li>
-            <li>Focused review of one main concern</li>
-            <li>Clear next step for the family</li>
-            <li>Suitable after APC has confirmed fit</li>
-          </ul>
-          <div class="apc-program-note">
-            Use this option only after APC has confirmed that a single strategy session is the right next step.
-          </div>
-          <a class="apc-program-button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM350%20APC%20Parent%20Strategy%20Session.">
-            Send RM350 payment confirmation
-          </a>
-        </article>
-
-        <article class="apc-program-card" id="program-parent-support-rm2500" data-program="parent-support-rm2500" data-title="APC Parent Support Programme" data-price="RM2,500">
-          <div class="apc-program-label">6-session programme</div>
-          <h2>APC Parent Support Programme</h2>
-          <div class="apc-program-price">RM2,500</div>
-          <p class="apc-program-summary">
-            A structured 6-session parent support programme for families who need more comprehensive support
-            with puberty, body changes, hygiene, privacy, communication, routines, and emotional regulation.
-          </p>
-          <ul class="apc-program-list">
-            <li>6 parent support sessions</li>
-            <li>1 hour per session</li>
-            <li>Delivered across 6 to 8 weeks</li>
-            <li>Parent support via video call</li>
-            <li>Intake review before Session 1</li>
-            <li>WhatsApp clarification during the active support period</li>
-            <li>End-of-programme summary with recommended next steps</li>
-          </ul>
-          <div class="apc-program-note">
-            Use this option only after APC has confirmed this 6-session programme with your family.
-          </div>
-          <a class="apc-program-button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20APC%20Parent%20Support%20Programme.">
-            Send RM2,500 payment confirmation
-          </a>
-        </article>
-
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/">
+        Autism Pathways Consulting
+        <span>Parent education and practical autism guidance</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/services.html">Services</a>
+        <a href="/start.html">Start Here</a>
+        <a href="https://wa.me/601172998168">WhatsApp</a>
       </div>
+    </nav>
+  </header>
 
-      <div class="apc-link-helper">
-        <strong>Exact programme links</strong><br>
-        Parent Strategy Session:
-        <code>https://autismpathwaysconsulting.com/pay.html?program=strategy-session</code><br>
-        Parent Support Programme:
-        <code>https://autismpathwaysconsulting.com/pay.html?program=parent-support-rm2500</code>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Confirmed families only</p>
+        <h1>Payment for APC Parent Support</h1>
+        <p class="hero-text">
+          Please only use this page after Autism Pathways Consulting has confirmed your programme,
+          fee, and next step with you.
+        </p>
+        <div id="selectedNotice" class="selected-notice"></div>
       </div>
+    </section>
 
-      <p class="apc-boundary-note">
-        APC provides parent education, pattern review, support planning, and practical implementation guidance.
-        This is not therapy, diagnosis, medical advice, crisis support, or a guaranteed behaviour-change programme.
-      </p>
-    </div>
-  </section>
-</main>
+    <section class="payment-section">
+      <div class="wrap">
+        <div class="programme-grid">
 
+          <article class="programme-card" id="strategy" data-program="strategy" data-title="APC Parent Strategy Session" data-price="RM350">
+            <div class="selected-pill">Selected option</div>
+            <div class="label">Single session</div>
+            <h2>APC Parent Strategy Session</h2>
+            <div class="price">RM350</div>
+            <p class="summary">
+              A focused parent session for families with one clear concern who want practical direction
+              before deciding whether deeper support is needed.
+            </p>
+            <ul class="includes">
+              <li>45-minute online parent session</li>
+              <li>Focused review of one main concern</li>
+              <li>Clear next step for your family</li>
+              <li>Suitable after APC has confirmed fit</li>
+            </ul>
+            <div class="note">
+              Use this option only after APC has confirmed that a Parent Strategy Session is the right next step.
+            </div>
+            <a class="button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM350%20APC%20Parent%20Strategy%20Session.">
+              Send RM350 payment confirmation
+            </a>
+          </article>
 
-<nav>
-  <div class="nav-inner">
-    <span class="nav-logo">APC</span>
-    <a href="services.html" class="nav-back">← Back to services</a>
-  <a href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer" class="nav-cta apc-free-call-nav">Free 15-Min First Step Call</a></div>
-</nav>
+          <article class="programme-card" id="parent-support" data-program="parent-support" data-title="APC Parent Support Programme" data-price="RM2,500">
+            <div class="selected-pill">Selected option</div>
+            <div class="label">6-session programme</div>
+            <h2>APC Parent Support Programme</h2>
+            <div class="price">RM2,500</div>
+            <p class="summary">
+              A structured parent support programme for families who need more comprehensive support
+              with puberty, body changes, hygiene, privacy, communication, routines, and emotional regulation.
+            </p>
+            <ul class="includes">
+              <li>6 parent support sessions</li>
+              <li>1 hour per session</li>
+              <li>Delivered across 6 to 8 weeks</li>
+              <li>Parent support via video call</li>
+              <li>Intake review before Session 1</li>
+              <li>WhatsApp clarification during the active support period</li>
+              <li>End-of-programme summary with recommended next steps</li>
+            </ul>
+            <div class="note">
+              Use this option only after APC has confirmed this 6-session programme with your family.
+            </div>
+            <a class="button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20APC%20Parent%20Support%20Programme.">
+              Send RM2,500 payment confirmation
+            </a>
+          </article>
 
-<div class="container">
-  <div class="payment-alert">
-    <strong>Please pay only after your session is confirmed.</strong>
-    <p>This page is only for families whose APC Parent Strategy Session has already been confirmed by CJ. Please do not make payment until your session, fee, and date have been reviewed and confirmed.</p>
-  </div>
-
-  <!-- SUPPORT OPTIONS -->
-  <div class="step-label">Confirmed session</div>
-  <p class="payment-intro">Please continue only if CJ has confirmed this session for your family.</p>
-  <div class="pkg-grid" id="pkgGrid">
-
-        <div class="pkg-card active" onclick="selectPkg(this,'RM350','APC Parent Strategy Session','45-minute online parent session')">
-      <div>
-        <div class="pkg-name">APC Parent Strategy Session</div>
-        <div class="pkg-desc">45-minute online parent session</div>
-      </div>
-      <div><span class="pkg-price">RM350</span></div>
-    </div>
-
-  </div>
-
-  <!-- STEP 1: CHECK CONFIRMED OPTION -->
-  <div class="step-label" id="confirm-before-paying">Step 1: Check your confirmed option</div>
-  <div class="cal-box">
-    <p>Please continue only if this matches the session, fee, and next step CJ has already confirmed with you. If anything looks different, message CJ before making payment.</p>
-    <a href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20am%20on%20the%20APC%20payment%20page%20and%20would%20like%20to%20confirm%20whether%20I%20should%20make%20payment." target="_blank" class="cal-btn">Message CJ if unsure</a>
-    <p class="cal-note">If you are unsure, message CJ before making payment. This page is only for sessions that have already been discussed and confirmed.</p>
-  </div>
-
-  <!-- STEP 2: COMPLETE PAYMENT -->
-  <div class="step-label" id="complete-payment">Step 2: Complete payment</div>
-  <div class="paying-for-card">
-    <div class="paying-for-label">Paying for</div>
-    <div class="paying-for-amount" id="payAmt">RM350</div>
-    <div class="paying-for-description" id="payLabel">APC Parent Strategy Session · 45-minute online parent session</div>
-  </div>
-
-  <div class="method-tabs">
-    <div class="tab-btn active" onclick="switchTab('qr')">DuitNow QR</div>
-    <div class="tab-btn" onclick="switchTab('bank')">Bank Transfer</div>
-  </div>
-
-  <div id="panel-qr" class="panel active">
-    <div class="qr-card">
-      <div class="qr-amount" id="qrAmt">RM350</div>
-      <div class="qr-label" id="qrLabel">APC Parent Strategy Session</div>
-      <div class="qr-img-wrap">
-        <img src="QR_Payment.JPG" alt="DuitNow QR - CJ Special and Inclusive"/>
-      </div>
-      <div class="qr-caption">Screenshot and pay from Maybank2u, CIMB, RHB, Touch 'n Go, Boost and more.</div>
-      <div class="duitnow-badge">🇲🇾 Malaysia National QR · DuitNow</div>
-    </div>
-  </div>
-
-  <div id="panel-bank" class="panel">
-    <div class="bank-card">
-      <div class="bank-header">Maybank Direct Transfer</div>
-      <div class="bank-body">
-        <div class="bank-row"><span class="lbl">Bank</span><span class="val">Maybank</span></div>
-        <div class="bank-row"><span class="lbl">Account Name</span><span class="val">CJ Special and Inclusive Consultancy</span></div>
-        <div class="bank-row">
-          <span class="lbl">Account No.</span>
-          <span class="val">5648 7460 6832</span>
-          <button class="copy-btn" onclick="copyText('564874606832',this)">Copy</button>
         </div>
-        <div class="bank-row"><span class="lbl">Amount</span><span class="val pay-bank-amount" id="bankAmt">RM350</span></div>
-        <div class="bank-row"><span class="lbl">Reference</span><span class="val">Your name + session</span></div>
+
+        <div class="url-box">
+          <strong>Use one page with exact programme links:</strong><br>
+          RM350 Strategy Session:<br>
+          <code>https://autismpathwaysconsulting.com/pay.html?program=strategy</code><br><br>
+          RM2,500 Parent Support Programme:<br>
+          <code>https://autismpathwaysconsulting.com/pay.html?program=parent-support</code>
+        </div>
+
+        <p class="boundary">
+          APC provides parent education, pattern review, support planning, and practical implementation guidance.
+          This is not therapy, diagnosis, medical advice, crisis support, or a guaranteed behaviour-change programme.
+        </p>
       </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Autism Pathways Consulting | autismpathwaysconsulting.com | @autismpathwaysconsulting
     </div>
-  </div>
+  </footer>
 
-  <div class="notice-box">
-    <div class="after-payment-note" id="send-receipt">
-      <div class="step-label">Step 3: Send your receipt</div>
-      <p>Screenshot your payment receipt and send it to CJ at <a href="https://wa.me/601172998168">011-7299 8168</a>. Your booking is confirmed once payment is received.</p>
-      <a href="booking-confirmed-session.html" class="session-details-btn">View session details →</a>
-    </div>
-  </div>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var selected = params.get("program");
 
-  
+      if (!selected) return;
 
+      var card = document.querySelector('[data-program="' + selected + '"]');
+      var notice = document.getElementById("selectedNotice");
 
-<div class="trust-bar">
-    <div class="trust-item">🔒 Secure payment</div>
-    <div class="trust-item">🎓 M.A. in Special and Inclusive Education</div>
-    <div class="trust-item">⭐ 10+ years experience</div>
-  </div>
+      if (!card) return;
 
-  <div style="text-align:center;padding:24px 0 12px;font-size:11px;color:#aaa;line-height:1.8">
-    CJ Special and Inclusive Consultancy (003030209-T) &middot; SSM Reg. 201903282307 &middot; Petaling Jaya &amp; KL<br>
-    <a href="mailto:cjlim@autismpathwaysconsulting.com" style="color:#aaa">cjlim@autismpathwaysconsulting.com</a> &middot;
-    <a href="https://wa.me/601172998168" style="color:#aaa">011-7299 8168</a><br>
-    <a href="privacy.html" style="color:#aaa">Privacy Policy</a> &middot; <a href="disclaimer.html" style="color:#aaa">Disclaimer</a> &middot; <a href="terms.html" style="color:#aaa">Terms &amp; Conditions</a> &middot; <a href="cancellation-policy.html" style="color:#aaa">Cancellation Policy</a>
-  </div>
+      card.classList.add("selected");
 
-</div>
+      var title = card.getAttribute("data-title");
+      var price = card.getAttribute("data-price");
 
-<script>
-function selectPkg(el, amt, name, desc) {
-  document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('payAmt').textContent = amt;
-  document.getElementById('payLabel').textContent = name + ' · ' + desc;
-  document.getElementById('qrAmt').textContent = amt;
-  document.getElementById('qrLabel').textContent = name;
-  document.getElementById('bankAmt').textContent = amt;
-  const confirmSection = document.getElementById('confirm-before-paying');
-  if (confirmSection) {
-    setTimeout(() => {
-      confirmSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 120);
-  }
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelector('[onclick="switchTab(\''+tab+'\')"]').classList.add('active');
-  document.getElementById('panel-'+tab).classList.add('active');
-}
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'Copied!'; btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-</script>
-
-<!-- APC_PAY_PAGE_FORCE_REFRESH: 2026-05-25 09:34:09 -->
-
-<script id="apc-payment-program-script">
-  (function () {
-    var params = new URLSearchParams(window.location.search);
-    var selectedProgram = params.get("program") || params.get("package") || params.get("option");
-
-    if (!selectedProgram) return;
-
-    var cards = document.querySelectorAll("[data-program]");
-    var selectedCard = null;
-
-    cards.forEach(function (card) {
-      if (card.getAttribute("data-program") === selectedProgram) {
-        card.classList.add("is-selected");
-        selectedCard = card;
+      if (notice) {
+        notice.textContent = "Selected payment option: " + title + " at " + price + ". Please only proceed if this matches the programme APC confirmed with you.";
+        notice.classList.add("show");
       }
-    });
 
-    if (!selectedCard) return;
-
-    var title = selectedCard.getAttribute("data-title") || "selected programme";
-    var price = selectedCard.getAttribute("data-price") || "";
-    var notice = document.getElementById("apc-selected-notice");
-
-    if (notice) {
-      notice.textContent = "Selected payment option: " + title + " at " + price + ". Please only proceed if this matches the programme APC confirmed with you.";
-      notice.classList.add("is-visible");
-    }
-
-    setTimeout(function () {
-      selectedCard.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 250);
-  })();
-</script>
-
+      setTimeout(function () {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 200);
+    })();
+  </script>
 </body>
 </html>
