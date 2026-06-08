@@ -854,8 +854,281 @@ main > .wrap {
     }
   }
 </style>
+
+<style>
+  /* APC payment page update */
+  .payment-page {
+    background: #fffaf3;
+    color: #173834;
+  }
+
+  .payment-container {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .payment-hero {
+    padding: 72px 0 36px;
+    background: linear-gradient(135deg, #073734 0%, #0f5c55 100%);
+    color: #fff9f1;
+  }
+
+  .payment-hero .eyebrow {
+    margin: 0 0 12px;
+    font-size: 0.84rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #e8997a;
+    font-weight: 700;
+  }
+
+  .payment-hero h1 {
+    margin: 0;
+    font-size: clamp(2.1rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-text {
+    max-width: 720px;
+    margin: 18px 0 0;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    color: rgba(255, 249, 241, 0.86);
+  }
+
+  .payment-options {
+    padding: 48px 0 80px;
+  }
+
+  .payment-card {
+    background: #ffffff;
+    border: 1px solid rgba(7, 55, 52, 0.12);
+    border-radius: 28px;
+    padding: clamp(24px, 4vw, 44px);
+    box-shadow: 0 20px 60px rgba(7, 55, 52, 0.08);
+  }
+
+  .featured-payment-card {
+    border-top: 8px solid #2dd4bf;
+  }
+
+  .programme-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(45, 212, 191, 0.14);
+    color: #073734;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+  }
+
+  .payment-card h2 {
+    margin: 0;
+    max-width: 820px;
+    color: #073734;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .price-block {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 28px 0 18px;
+    color: #073734;
+  }
+
+  .currency {
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+
+  .price {
+    font-size: clamp(3rem, 8vw, 5.4rem);
+    font-weight: 900;
+    letter-spacing: -0.06em;
+  }
+
+  .programme-summary {
+    max-width: 820px;
+    margin: 0 0 26px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(23, 56, 52, 0.82);
+  }
+
+  .programme-includes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .programme-includes li {
+    position: relative;
+    padding: 14px 14px 14px 42px;
+    border-radius: 16px;
+    background: #f6fbf8;
+    color: #173834;
+    line-height: 1.45;
+    font-weight: 600;
+  }
+
+  .programme-includes li::before {
+    content: "✓";
+    position: absolute;
+    left: 16px;
+    top: 14px;
+    color: #0f766e;
+    font-weight: 900;
+  }
+
+  .payment-note {
+    margin-top: 28px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: #fff4ed;
+    border: 1px solid rgba(232, 153, 122, 0.35);
+    color: #5a352a;
+    line-height: 1.65;
+    font-weight: 600;
+  }
+
+  .payment-actions {
+    margin-top: 28px;
+  }
+
+  .primary-payment-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    background: #073734;
+    color: #fff9f1;
+    text-decoration: none;
+    font-weight: 800;
+    box-shadow: 0 12px 30px rgba(7, 55, 52, 0.2);
+  }
+
+  .primary-payment-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .payment-boundary-card {
+    margin-top: 24px;
+    padding: 24px;
+    border-radius: 22px;
+    background: rgba(7, 55, 52, 0.06);
+    border: 1px solid rgba(7, 55, 52, 0.12);
+  }
+
+  .payment-boundary-card h3 {
+    margin: 0 0 8px;
+    color: #073734;
+    font-size: 1.2rem;
+  }
+
+  .payment-boundary-card p {
+    margin: 0;
+    color: rgba(23, 56, 52, 0.78);
+    line-height: 1.65;
+  }
+
+  @media (max-width: 760px) {
+    .payment-hero {
+      padding: 56px 0 32px;
+    }
+
+    .programme-includes {
+      grid-template-columns: 1fr;
+    }
+
+    .payment-card {
+      border-radius: 22px;
+    }
+
+    .primary-payment-button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
 </head>
 <body>
+
+<main class="payment-page">
+  <section class="payment-hero">
+    <div class="payment-container">
+      <p class="eyebrow">Confirmed families only</p>
+      <h1>Payment for APC Parent Support</h1>
+      <p class="hero-text">
+        Please only use this page after Autism Pathways Consulting has confirmed your programme,
+        fee, and next step with you.
+      </p>
+    </div>
+  </section>
+
+  <section class="payment-options">
+    <div class="payment-container">
+      <div class="payment-card featured-payment-card">
+        <div class="programme-label">APC Parent Support Programme</div>
+        <h2>Puberty, Body Changes & Emotional Regulation</h2>
+
+        <div class="price-block">
+          <span class="currency">RM</span>
+          <span class="price">2,500</span>
+        </div>
+
+        <p class="programme-summary">
+          A structured 6-session parent support programme for families who need practical guidance
+          around puberty, body changes, hygiene, privacy, communication, routines, and emotional regulation.
+        </p>
+
+        <ul class="programme-includes">
+          <li>6 parent support sessions</li>
+          <li>1 hour per session</li>
+          <li>Delivered across 6 to 8 weeks</li>
+          <li>Parent support via video call</li>
+          <li>Intake review before Session 1</li>
+          <li>Practical parent guidance during each session</li>
+          <li>Parent scripts and routine support where helpful</li>
+          <li>WhatsApp clarification during the active support period</li>
+          <li>End-of-programme summary with recommended next steps</li>
+        </ul>
+
+        <div class="payment-note">
+          After payment is completed, please send the payment confirmation to APC through WhatsApp.
+          The intake form and Session 1 scheduling will be shared after payment confirmation.
+        </div>
+
+        <div class="payment-actions">
+          <a class="primary-payment-button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20APC%20Parent%20Support%20Programme.">
+            Send payment confirmation on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="payment-boundary-card">
+        <h3>Professional boundary</h3>
+        <p>
+          This programme provides parent education, pattern review, support planning, and practical
+          implementation guidance. It is not therapy, diagnosis, medical advice, crisis support, or a
+          guaranteed behaviour-change programme.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
 <nav>
   <div class="nav-inner">
     <span class="nav-logo">APC</span>
