@@ -90,17 +90,13 @@
       color: var(--teal-dark);
     }
 
-    main {
-      min-height: calc(100vh - 72px);
-    }
-
     .wrap {
       width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
     }
 
     .hero {
-      padding: clamp(52px, 8vw, 92px) 0 30px;
+      padding: clamp(52px, 8vw, 92px) 0 26px;
     }
 
     .eyebrow {
@@ -114,9 +110,9 @@
 
     h1 {
       margin: 0;
-      max-width: 900px;
+      max-width: 920px;
       color: var(--teal-dark);
-      font-size: clamp(2.25rem, 5.5vw, 4.8rem);
+      font-size: clamp(2.25rem, 5.5vw, 4.7rem);
       line-height: 1.02;
       letter-spacing: -0.065em;
     }
@@ -143,117 +139,205 @@
       display: block;
     }
 
-    .payment-section {
-      padding: 24px 0 78px;
+    .section {
+      padding: 34px 0;
     }
 
-    .programme-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 22px;
-      align-items: stretch;
-    }
-
-    .programme-card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      padding: clamp(22px, 3vw, 34px);
-      border-radius: var(--radius);
-      background: #ffffff;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
-
-    .programme-card.selected {
-      border: 2px solid var(--teal);
-      box-shadow: 0 24px 70px rgba(7, 55, 52, 0.16);
-    }
-
-    .selected-pill {
-      display: none;
-      width: fit-content;
-      margin-bottom: 12px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: var(--teal);
-      color: var(--cream);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .programme-card.selected .selected-pill {
-      display: inline-flex;
-    }
-
-    .label {
-      display: inline-flex;
-      width: fit-content;
-      margin-bottom: 14px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(45, 212, 191, 0.14);
-      color: var(--teal);
-      font-size: 0.76rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .programme-card h2 {
-      margin: 0 0 10px;
+    .section-title {
+      margin: 0 0 18px;
       color: var(--teal-dark);
-      font-size: clamp(1.45rem, 3vw, 2.2rem);
-      line-height: 1.12;
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      line-height: 1.1;
       letter-spacing: -0.04em;
     }
 
-    .price {
-      margin: 8px 0 14px;
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 32px rgba(7, 55, 52, 0.05);
+    }
+
+    .step-number {
+      display: inline-flex;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--teal-dark);
+      color: var(--cream);
+      font-weight: 950;
+      margin-bottom: 12px;
+    }
+
+    .step-card h3 {
+      margin: 0 0 8px;
       color: var(--teal-dark);
-      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .step-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .option-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 18px 0 22px;
+    }
+
+    .option-tab {
+      cursor: pointer;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: #ffffff;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      color: var(--text);
+      transition: 0.18s ease;
+    }
+
+    .option-tab:hover {
+      transform: translateY(-2px);
+      border-color: rgba(15, 118, 110, 0.35);
+    }
+
+    .option-tab.active {
+      border: 2px solid var(--teal);
+      background: linear-gradient(180deg, #ffffff 0%, #f1fbf8 100%);
+      box-shadow: 0 24px 70px rgba(7, 55, 52, 0.14);
+    }
+
+    .tab-label {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 10px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(45, 212, 191, 0.14);
+      color: var(--teal);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .option-tab h3 {
+      margin: 0 0 8px;
+      color: var(--teal-dark);
+      font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+
+    .tab-price {
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: clamp(2rem, 4vw, 3rem);
       font-weight: 950;
       letter-spacing: -0.06em;
       line-height: 1;
     }
 
-    .summary {
-      margin: 0 0 18px;
+    .tab-summary {
+      margin: 12px 0 0;
       color: var(--muted);
-      line-height: 1.62;
+      line-height: 1.55;
+    }
+
+    .details-panel {
+      display: none;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(24px, 4vw, 38px);
+      box-shadow: var(--shadow);
+    }
+
+    .details-panel.active {
+      display: block;
+    }
+
+    .details-top {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .details-panel h2 {
+      margin: 0 0 12px;
+      color: var(--teal-dark);
+      font-size: clamp(1.7rem, 3.5vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+    }
+
+    .details-price {
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: clamp(2.6rem, 6vw, 4.4rem);
+      font-weight: 950;
+      letter-spacing: -0.07em;
+      line-height: 1;
+      text-align: right;
+    }
+
+    .details-summary {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.03rem;
+      line-height: 1.65;
     }
 
     .includes {
       display: grid;
-      gap: 10px;
-      margin: 0 0 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 24px 0 0;
       padding: 0;
       list-style: none;
     }
 
     .includes li {
       position: relative;
-      padding-left: 24px;
+      padding: 13px 14px 13px 40px;
+      border-radius: 14px;
+      background: #f7fbf8;
+      border: 1px solid rgba(7, 55, 52, 0.08);
       color: var(--text);
-      font-weight: 680;
-      line-height: 1.45;
+      font-weight: 700;
+      line-height: 1.4;
     }
 
     .includes li::before {
       content: "✓";
       position: absolute;
-      left: 0;
-      top: 0;
+      left: 15px;
+      top: 13px;
       color: var(--teal);
       font-weight: 950;
     }
 
     .note {
-      margin-top: auto;
-      padding: 15px 16px;
+      margin-top: 22px;
+      padding: 16px 18px;
       border-radius: 16px;
       background: rgba(232, 153, 122, 0.12);
       border: 1px solid rgba(232, 153, 122, 0.24);
@@ -266,19 +350,15 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 50px;
-      margin-top: 16px;
-      padding: 13px 18px;
+      min-height: 52px;
+      margin-top: 18px;
+      padding: 14px 20px;
       border-radius: 999px;
       background: var(--teal-dark);
       color: var(--cream);
       text-decoration: none;
       font-weight: 950;
       text-align: center;
-    }
-
-    .button:hover {
-      transform: translateY(-1px);
     }
 
     .url-box {
@@ -317,7 +397,21 @@
       font-size: 0.92rem;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 960px) {
+      .steps-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .details-top {
+        grid-template-columns: 1fr;
+      }
+
+      .details-price {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 760px) {
       .nav {
         align-items: flex-start;
         flex-direction: column;
@@ -329,7 +423,15 @@
         gap: 12px;
       }
 
-      .programme-grid {
+      .option-tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .includes {
         grid-template-columns: 1fr;
       }
 
@@ -368,60 +470,124 @@
       </div>
     </section>
 
-    <section class="payment-section">
+    <section class="section">
       <div class="wrap">
-        <div class="programme-grid">
+        <h2 class="section-title">How payment and onboarding works</h2>
 
-          <article class="programme-card" id="strategy" data-program="strategy" data-title="APC Parent Strategy Session" data-price="RM350">
-            <div class="selected-pill">Selected option</div>
-            <div class="label">Single session</div>
-            <h2>APC Parent Strategy Session</h2>
-            <div class="price">RM350</div>
-            <p class="summary">
-              A focused parent session for families with one clear concern who want practical direction
-              before deciding whether deeper support is needed.
-            </p>
-            <ul class="includes">
-              <li>45-minute online parent session</li>
-              <li>Focused review of one main concern</li>
-              <li>Clear next step for your family</li>
-              <li>Suitable after APC has confirmed fit</li>
-            </ul>
-            <div class="note">
-              Use this option only after APC has confirmed that a Parent Strategy Session is the right next step.
-            </div>
-            <a class="button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM350%20APC%20Parent%20Strategy%20Session.">
-              Send RM350 payment confirmation
-            </a>
+        <div class="steps-grid">
+          <article class="step-card">
+            <div class="step-number">1</div>
+            <h3>Confirm programme</h3>
+            <p>APC confirms the suitable programme, fee, and next step with your family first.</p>
           </article>
 
-          <article class="programme-card" id="parent-support" data-program="parent-support" data-title="APC Parent Support Programme" data-price="RM2,500">
-            <div class="selected-pill">Selected option</div>
-            <div class="label">6-session programme</div>
-            <h2>APC Parent Support Programme</h2>
-            <div class="price">RM2,500</div>
-            <p class="summary">
-              A structured parent support programme for families who need more comprehensive support
-              with puberty, body changes, hygiene, privacy, communication, routines, and emotional regulation.
-            </p>
-            <ul class="includes">
-              <li>6 parent support sessions</li>
-              <li>1 hour per session</li>
-              <li>Delivered across 6 to 8 weeks</li>
-              <li>Parent support via video call</li>
-              <li>Intake review before Session 1</li>
-              <li>WhatsApp clarification during the active support period</li>
-              <li>End-of-programme summary with recommended next steps</li>
-            </ul>
-            <div class="note">
-              Use this option only after APC has confirmed this 6-session programme with your family.
-            </div>
-            <a class="button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20APC%20Parent%20Support%20Programme.">
-              Send RM2,500 payment confirmation
-            </a>
+          <article class="step-card">
+            <div class="step-number">2</div>
+            <h3>Use the correct link</h3>
+            <p>Open the payment link that matches the programme APC confirmed with you.</p>
           </article>
 
+          <article class="step-card">
+            <div class="step-number">3</div>
+            <h3>Make payment</h3>
+            <p>Complete payment using your agreed option, then keep the payment confirmation.</p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">4</div>
+            <h3>Send confirmation</h3>
+            <p>Send your payment confirmation to APC through WhatsApp for checking.</p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">5</div>
+            <h3>Start onboarding</h3>
+            <p>APC sends the intake form and arranges the next step after payment confirmation.</p>
+          </article>
         </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Choose your confirmed payment option</h2>
+
+        <div class="option-tabs" role="tablist" aria-label="Payment options">
+          <button class="option-tab" type="button" data-select-program="strategy">
+            <span class="tab-label">Single session</span>
+            <h3>APC Parent Strategy Session</h3>
+            <p class="tab-price">RM350</p>
+            <p class="tab-summary">For one focused concern after APC confirms this is the right next step.</p>
+          </button>
+
+          <button class="option-tab" type="button" data-select-program="parent-support">
+            <span class="tab-label">6-session programme</span>
+            <h3>APC Parent Support Programme</h3>
+            <p class="tab-price">RM2,500</p>
+            <p class="tab-summary">For more comprehensive parent support across 6 sessions.</p>
+          </button>
+        </div>
+
+        <article class="details-panel" id="panel-strategy" data-program-panel="strategy">
+          <div class="details-top">
+            <div>
+              <h2>APC Parent Strategy Session</h2>
+              <p class="details-summary">
+                A focused parent session for families with one clear concern who want practical direction
+                before deciding whether deeper support is needed.
+              </p>
+            </div>
+            <p class="details-price">RM350</p>
+          </div>
+
+          <ul class="includes">
+            <li>45-minute online parent session</li>
+            <li>Focused review of one main concern</li>
+            <li>Clear next step for your family</li>
+            <li>Suitable after APC has confirmed fit</li>
+          </ul>
+
+          <div class="note">
+            Use this option only after APC has confirmed that a Parent Strategy Session is the right next step.
+          </div>
+
+          <a class="button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM350%20APC%20Parent%20Strategy%20Session.">
+            Send RM350 payment confirmation
+          </a>
+        </article>
+
+        <article class="details-panel" id="panel-parent-support" data-program-panel="parent-support">
+          <div class="details-top">
+            <div>
+              <h2>APC Parent Support Programme</h2>
+              <p class="details-summary">
+                A structured parent support programme for families who need more comprehensive support
+                with puberty, body changes, hygiene, privacy, communication, routines, and emotional regulation.
+              </p>
+            </div>
+            <p class="details-price">RM2,500</p>
+          </div>
+
+          <ul class="includes">
+            <li>6 parent support sessions</li>
+            <li>1 hour per session</li>
+            <li>Delivered across 6 to 8 weeks</li>
+            <li>Parent support via video call</li>
+            <li>Intake review before Session 1</li>
+            <li>Practical parent guidance during each session</li>
+            <li>Parent scripts and routine support where helpful</li>
+            <li>WhatsApp clarification during the active support period</li>
+            <li>End-of-programme summary with recommended next steps</li>
+          </ul>
+
+          <div class="note">
+            Use this option only after APC has confirmed this 6-session programme with your family.
+          </div>
+
+          <a class="button" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20APC%20Parent%20Support%20Programme.">
+            Send RM2,500 payment confirmation
+          </a>
+        </article>
 
         <div class="url-box">
           <strong>Use one page with exact programme links:</strong><br>
@@ -448,28 +614,64 @@
   <script>
     (function () {
       var params = new URLSearchParams(window.location.search);
-      var selected = params.get("program");
+      var current = params.get("program") || "strategy";
 
-      if (!selected) return;
-
-      var card = document.querySelector('[data-program="' + selected + '"]');
+      var tabs = document.querySelectorAll("[data-select-program]");
+      var panels = document.querySelectorAll("[data-program-panel]");
       var notice = document.getElementById("selectedNotice");
 
-      if (!card) return;
+      function programmeDetails(program) {
+        if (program === "parent-support") {
+          return {
+            title: "APC Parent Support Programme",
+            price: "RM2,500"
+          };
+        }
 
-      card.classList.add("selected");
-
-      var title = card.getAttribute("data-title");
-      var price = card.getAttribute("data-price");
-
-      if (notice) {
-        notice.textContent = "Selected payment option: " + title + " at " + price + ". Please only proceed if this matches the programme APC confirmed with you.";
-        notice.classList.add("show");
+        return {
+          title: "APC Parent Strategy Session",
+          price: "RM350"
+        };
       }
 
-      setTimeout(function () {
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 200);
+      function selectProgram(program, updateUrl) {
+        if (program !== "strategy" && program !== "parent-support") {
+          program = "strategy";
+        }
+
+        tabs.forEach(function (tab) {
+          tab.classList.toggle("active", tab.getAttribute("data-select-program") === program);
+        });
+
+        panels.forEach(function (panel) {
+          panel.classList.toggle("active", panel.getAttribute("data-program-panel") === program);
+        });
+
+        var selected = programmeDetails(program);
+
+        if (notice) {
+          notice.textContent = "Selected payment option: " + selected.title + " at " + selected.price + ". Please only proceed if this matches the programme APC confirmed with you.";
+          notice.classList.add("show");
+        }
+
+        if (updateUrl) {
+          var url = new URL(window.location.href);
+          url.searchParams.set("program", program);
+          window.history.replaceState({}, "", url.toString());
+        }
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          selectProgram(tab.getAttribute("data-select-program"), true);
+          document.querySelector('[data-program-panel="' + tab.getAttribute("data-select-program") + '"]').scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      });
+
+      selectProgram(current, false);
     })();
   </script>
 </body>
