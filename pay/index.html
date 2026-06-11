@@ -201,7 +201,7 @@
 
     .option-tabs {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin: 12px 0 14px;
     }
@@ -245,7 +245,7 @@
     .option-tab h3 {
       margin: 0 0 5px;
       color: var(--teal-dark);
-      font-size: clamp(1.08rem, 2.1vw, 1.45rem);
+      font-size: clamp(1.02rem, 2vw, 1.32rem);
       line-height: 1.12;
       letter-spacing: -0.035em;
     }
@@ -253,7 +253,7 @@
     .tab-price {
       margin: 0;
       color: var(--teal-dark);
-      font-size: clamp(1.85rem, 4vw, 2.55rem);
+      font-size: clamp(1.75rem, 3.5vw, 2.35rem);
       font-weight: 950;
       letter-spacing: -0.06em;
       line-height: 1;
@@ -262,7 +262,7 @@
     .tab-summary {
       margin: 9px 0 0;
       color: var(--muted);
-      font-size: 0.91rem;
+      font-size: 0.9rem;
       line-height: 1.42;
     }
 
@@ -483,7 +483,11 @@
       font-size: 0.88rem;
     }
 
-    @media (max-width: 920px) {
+    @media (max-width: 980px) {
+      .option-tabs {
+        grid-template-columns: 1fr;
+      }
+
       .nav {
         align-items: flex-start;
         flex-direction: column;
@@ -510,7 +514,6 @@
     }
 
     @media (max-width: 760px) {
-      .option-tabs,
       .steps-grid,
       .includes {
         grid-template-columns: 1fr;
@@ -609,6 +612,13 @@
             <p class="tab-summary">For one focused concern after APC confirms this is the right next step.</p>
           </button>
 
+          <button class="option-tab" type="button" data-select-program="focused-support">
+            <span class="tab-label">4-session programme</span>
+            <h3>Focused Parent Support Programme</h3>
+            <p class="tab-price">RM1,600</p>
+            <p class="tab-summary">For focused support across 4 parent sessions.</p>
+          </button>
+
           <button class="option-tab" type="button" data-select-program="parent-support">
             <span class="tab-label">6-session programme</span>
             <h3>APC Parent Support Programme</h3>
@@ -637,6 +647,34 @@
 
           <div class="note">
             Use this option only after APC has confirmed that a Parent Strategy Session is the right next step.
+          </div>
+        </article>
+
+        <article class="details-panel" id="panel-focused-support" data-program-panel="focused-support">
+          <div class="details-top">
+            <div>
+              <h2>Focused Parent Support Programme</h2>
+              <p class="details-summary">
+                A structured 4-session parent support programme for families who need focused implementation support across one or two priority areas.
+              </p>
+            </div>
+            <p class="details-price">RM1,600</p>
+          </div>
+
+          <ul class="includes">
+            <li>4 parent support sessions</li>
+            <li>1 hour per session</li>
+            <li>Delivered across 4 to 6 weeks</li>
+            <li>Parent support via video call</li>
+            <li>Intake review before Session 1</li>
+            <li>Practical parent guidance during each session</li>
+            <li>Parent scripts and routine support where helpful</li>
+            <li>WhatsApp clarification during the active support period</li>
+            <li>Post-programme check-in direction</li>
+          </ul>
+
+          <div class="note">
+            Use this option only after APC has confirmed this 4-session programme with your family.
           </div>
         </article>
 
@@ -743,6 +781,13 @@
           reference: "Parent name + APC Parent Strategy Session",
           button: "Send RM350 payment confirmation",
           message: "Hi CJ, I have completed payment for the RM350 APC Parent Strategy Session. Here is my payment confirmation."
+        },
+        "focused-support": {
+          price: "RM1,600",
+          title: "Focused Parent Support Programme",
+          reference: "Parent name + Focused Parent Support Programme",
+          button: "Send RM1,600 payment confirmation",
+          message: "Hi CJ, I have completed payment for the RM1600 Focused Parent Support Programme. Here is my payment confirmation."
         },
         "parent-support": {
           price: "RM2,500",
