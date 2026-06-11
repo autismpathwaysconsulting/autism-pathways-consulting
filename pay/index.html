@@ -555,6 +555,20 @@
     color: #0f766e;
   }
 
+
+  .apc-pay-hero,
+  .apc-pay-hero h1,
+  .apc-pay-hero .apc-pay-lead {
+    text-align: center !important;
+  }
+
+  .apc-pay-hero h1 {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
   .apc-pay-hero h1 {
     margin: 0;
     font-size: clamp(2rem, 4vw, 3.25rem);
@@ -756,6 +770,9 @@
 </style>
 <!-- /APC_PAY_PAGE_SAFE_UPDATE_V1 -->
 
+
+
+
 </head>
 <body>
   <header class="site-header">
@@ -874,8 +891,7 @@
       </article>
     </div>
   </section>
-
-  <section class="apc-pay-section">
+<section class="apc-pay-section">
     <div class="apc-pay-info-box">
       <h2>Fees and billing region</h2>
       <p class="apc-pay-muted">
@@ -910,6 +926,33 @@
 
   
 <!-- Old public pricing script removed by APC cleanup -->
+
+
+
+
+
+<!-- APC_CLEAN_PAYMENT_URL_REDIRECT_V1 -->
+<script>
+  (function () {
+    var cleanRoutes = {
+      "strategy": "/pay/strategy/",
+      "progress": "/pay/progress/",
+      "focused": "/pay/focused/",
+      "focused-1600": "/pay/focused-1600/",
+      "comprehensive": "/pay/comprehensive/",
+      "parent-support": "/pay/comprehensive/",
+      "programme": "/pay/comprehensive/"
+    };
+
+    var params = new URLSearchParams(window.location.search);
+    var key = params.get("option") || params.get("pay") || params.get("program");
+
+    if (key && cleanRoutes[key]) {
+      window.location.replace(cleanRoutes[key]);
+    }
+  })();
+</script>
+<!-- /APC_CLEAN_PAYMENT_URL_REDIRECT_V1 -->
 
 </body>
 </html>
