@@ -530,23 +530,17 @@
     }
   </style>
 
-
-
-
-
-
-
-<!-- APC_PAY_PAGE_SAFE_UPDATE_V2 -->
+<!-- APC_PAY_PAGE_SAFE_UPDATE_V1 -->
 <style>
   .apc-pay-page {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 48px 20px 70px;
+    padding: 56px 20px 72px;
   }
 
   .apc-pay-hero {
-    text-align: center !important;
-    padding: 44px 24px 34px;
+    text-align: center;
+    padding: 48px 24px 36px;
     border-radius: 28px;
     background: linear-gradient(135deg, rgba(45, 212, 191, 0.12), rgba(232, 153, 122, 0.10));
     border: 1px solid rgba(26, 26, 26, 0.08);
@@ -559,15 +553,25 @@
     text-transform: uppercase;
     font-weight: 700;
     color: #0f766e;
+  }
+
+
+  .apc-pay-hero,
+  .apc-pay-hero h1,
+  .apc-pay-hero .apc-pay-lead {
     text-align: center !important;
   }
 
   .apc-pay-hero h1 {
     width: 100% !important;
     max-width: none !important;
-    margin: 0 auto !important;
-    text-align: center !important;
-    font-size: clamp(2rem, 4vw, 3.1rem);
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .apc-pay-hero h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.25rem);
     line-height: 1.05;
     color: #1a1a1a;
   }
@@ -578,11 +582,10 @@
     font-size: 1.08rem;
     line-height: 1.65;
     color: rgba(26, 26, 26, 0.78);
-    text-align: center !important;
   }
 
   .apc-pay-alert {
-    max-width: 780px;
+    max-width: 760px;
     margin: 22px auto 0;
     padding: 16px 18px;
     border-radius: 18px;
@@ -590,7 +593,6 @@
     border: 1px solid rgba(232, 153, 122, 0.35);
     color: rgba(26, 26, 26, 0.82);
     line-height: 1.55;
-    text-align: center;
   }
 
   .apc-pay-actions {
@@ -695,16 +697,8 @@
   }
 
   .apc-pay-card h3 {
-    margin: 0 0 8px;
-    font-size: 1.18rem;
-    color: #1a1a1a;
-  }
-
-  .apc-pay-price {
-    margin: 0 0 12px;
-    font-size: clamp(2rem, 3.5vw, 2.55rem);
-    line-height: 1;
-    font-weight: 850;
+    margin: 0 0 10px;
+    font-size: 1.2rem;
     color: #1a1a1a;
   }
 
@@ -714,57 +708,11 @@
     line-height: 1.62;
   }
 
-  .apc-pay-tag {
-    display: inline-flex;
-    margin-bottom: 14px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    background: rgba(45, 212, 191, 0.14);
-    color: #0f766e;
-    font-size: 0.82rem;
-    font-weight: 800;
-  }
-
-  .apc-pay-bank-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-top: 18px;
-  }
-
-  .apc-pay-bank-card {
-    background: #ffffff;
-    border: 1px solid rgba(26, 26, 26, 0.08);
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: 0 14px 32px rgba(26, 26, 26, 0.05);
-  }
-
-  .apc-pay-bank-card h3 {
-    margin: 0 0 12px;
-  }
-
-  .apc-pay-bank-row {
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    gap: 10px;
-    padding: 10px 0;
-    border-top: 1px solid rgba(26, 26, 26, 0.08);
-    line-height: 1.5;
-  }
-
-  .apc-pay-bank-row:first-of-type {
-    border-top: 0;
-  }
-
-  .apc-pay-bank-label {
-    color: rgba(26, 26, 26, 0.58);
-    font-weight: 700;
-  }
-
-  .apc-pay-bank-value {
-    color: rgba(26, 26, 26, 0.86);
-    font-weight: 750;
+  .apc-pay-small-note {
+    margin-top: 14px;
+    font-size: 0.92rem;
+    color: rgba(26, 26, 26, 0.62);
+    line-height: 1.55;
   }
 
   .apc-pay-info-box {
@@ -772,6 +720,10 @@
     border: 1px solid rgba(232, 153, 122, 0.28);
     border-radius: 24px;
     padding: 24px;
+  }
+
+  .apc-pay-info-box p {
+    margin: 0;
   }
 
   .apc-pay-after-list {
@@ -803,8 +755,7 @@
 
   @media (max-width: 900px) {
     .apc-pay-steps,
-    .apc-pay-cards,
-    .apc-pay-bank-grid {
+    .apc-pay-cards {
       grid-template-columns: 1fr;
     }
 
@@ -815,14 +766,12 @@
     .apc-pay-hero {
       padding: 36px 18px 30px;
     }
-
-    .apc-pay-bank-row {
-      grid-template-columns: 1fr;
-      gap: 4px;
-    }
   }
 </style>
-<!-- /APC_PAY_PAGE_SAFE_UPDATE_V2 -->
+<!-- /APC_PAY_PAGE_SAFE_UPDATE_V1 -->
+
+
+
 
 </head>
 <body>
@@ -848,104 +797,21 @@
 
   <main class="apc-pay-page">
   <section class="apc-pay-hero">
-    <p class="apc-pay-eyebrow">Payment</p>
+    <p class="apc-pay-eyebrow">Payment confirmation</p>
     <h1>Complete Your APC Payment</h1>
     <p class="apc-pay-lead">
-      Select the payment option confirmed with CJ, make payment by bank transfer or DuitNow, then send your payment confirmation on WhatsApp.
+      Please only make payment after your session or programme has been confirmed with CJ.
     </p>
     <div class="apc-pay-alert">
-      Please only pay for a session or programme that has already been confirmed with CJ. If your quoted amount is different from the options below, follow the amount confirmed in WhatsApp or on your invoice.
+      After payment is completed, send your payment confirmation on WhatsApp. Once payment is confirmed, APC will issue the receipt, send the intake form where relevant, and arrange the next appointment. The payment amount should match what CJ confirmed with you directly.
     </div>
     <div class="apc-pay-actions">
-      <a class="apc-pay-button primary" href="#payment-options">View payment options</a>
-      <a class="apc-pay-button secondary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20need%20help%20with%20APC%20payment.">Need help with payment?</a>
-    </div>
-  </section>
-
-  <section class="apc-pay-section" aria-labelledby="payment-options">
-    <h2 id="payment-options">Payment options</h2>
-    <p class="apc-pay-muted">
-      Choose the option that matches what CJ confirmed with you. All prices on this page are in MYR.
-    </p>
-
-    <div class="apc-pay-cards">
-      <article class="apc-pay-card">
-        <span class="apc-pay-tag">Clarity and next step</span>
-        <h3>APC Parent Strategy Session</h3>
-        <p class="apc-pay-price">RM350</p>
-        <p>
-          A 60-minute parent strategy session to understand the concern, identify the pattern, and decide the next practical step.
-        </p>
-        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM350%20APC%20Parent%20Strategy%20Session.%20Here%20is%20my%20payment%20confirmation.">
-          Send RM350 confirmation
-        </a>
-      </article>
-
-      <article class="apc-pay-card">
-        <span class="apc-pay-tag">Focused support</span>
-        <h3>Focused Parent Support</h3>
-        <p class="apc-pay-price">RM1,800</p>
-        <p>
-          Best for one main priority area where parents need clearer wording, structure, routines, and follow-through at home.
-        </p>
-        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM1800%20Focused%20Parent%20Support%20Programme.%20Here%20is%20my%20payment%20confirmation.">
-          Send RM1,800 confirmation
-        </a>
-      </article>
-
-      <article class="apc-pay-card">
-        <span class="apc-pay-tag">Most complete support</span>
-        <h3>Comprehensive Parent Support</h3>
-        <p class="apc-pay-price">RM2,500</p>
-        <p>
-          Best when the concern affects several connected areas, such as communication, routines, regulation, hygiene, privacy, school, or parent responses.
-        </p>
-        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20Comprehensive%20Parent%20Support%20Programme.%20Here%20is%20my%20payment%20confirmation.">
-          Send RM2,500 confirmation
-        </a>
-      </article>
-    </div>
-  </section>
-
-  <section class="apc-pay-section" aria-labelledby="bank-details">
-    <h2 id="bank-details">Bank transfer details</h2>
-    <p class="apc-pay-muted">
-      Make payment using the details below. Please include your name or your child’s initials in the payment reference where possible.
-    </p>
-
-    <div class="apc-pay-bank-grid">
-      <div class="apc-pay-bank-card">
-        <h3>Maybank transfer</h3>
-        <div class="apc-pay-bank-row">
-          <span class="apc-pay-bank-label">Account name</span>
-          <span class="apc-pay-bank-value">CJ Special and Inclusive Consultancy</span>
-        </div>
-        <div class="apc-pay-bank-row">
-          <span class="apc-pay-bank-label">Bank</span>
-          <span class="apc-pay-bank-value">Maybank</span>
-        </div>
-        <div class="apc-pay-bank-row">
-          <span class="apc-pay-bank-label">Account number</span>
-          <span class="apc-pay-bank-value">564874606832</span>
-        </div>
-        <div class="apc-pay-bank-row">
-          <span class="apc-pay-bank-label">Reference</span>
-          <span class="apc-pay-bank-value">APC + parent name</span>
-        </div>
-      </div>
-
-      <div class="apc-pay-bank-card">
-        <h3>DuitNow QR</h3>
-        <p class="apc-pay-muted">
-          If CJ has sent you the APC DuitNow QR, you may also pay by scanning the QR and entering the confirmed amount.
-        </p>
-        <p class="apc-pay-muted">
-          After payment, send the receipt or screenshot on WhatsApp so APC can confirm the payment and issue your receipt.
-        </p>
-        <a class="apc-pay-button secondary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20please%20send%20me%20the%20APC%20DuitNow%20QR%20for%20payment.">
-          Ask for DuitNow QR
-        </a>
-      </div>
+      <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20my%20APC%20payment.%20Here%20is%20my%20payment%20confirmation.">
+        Send payment confirmation on WhatsApp
+      </a>
+      <a class="apc-pay-button secondary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20need%20help%20with%20APC%20payment.">
+        Need help with payment?
+      </a>
     </div>
   </section>
 
@@ -954,11 +820,11 @@
     <div class="apc-pay-steps">
       <div class="apc-pay-step">
         <span class="apc-pay-step-number">1</span>
-        <p>Select the option confirmed with CJ.</p>
+        <p>Confirm your session or programme with CJ.</p>
       </div>
       <div class="apc-pay-step">
         <span class="apc-pay-step-number">2</span>
-        <p>Make payment by Maybank transfer or DuitNow QR.</p>
+        <p>Make payment using the option sent to you.</p>
       </div>
       <div class="apc-pay-step">
         <span class="apc-pay-step-number">3</span>
@@ -975,10 +841,72 @@
     </div>
   </section>
 
+  <section class="apc-pay-section" aria-labelledby="payment-options">
+    <h2 id="payment-options">Payment options</h2>
+    <p class="apc-pay-muted">
+      Use the payment option that CJ has confirmed with you. Please only pay the amount confirmed by CJ in WhatsApp or on your invoice.
+    </p>
+
+    <div class="apc-pay-cards">
+      <article class="apc-pay-card">
+        <h3>Malaysia Payment</h3>
+        <p>
+          For Malaysia-based families, payment is usually made by Maybank bank transfer or DuitNow QR.
+        </p>
+        <p class="apc-pay-small-note">
+          Only pay the amount confirmed by CJ.
+        </p>
+        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20my%20Malaysia%20payment%20for%20APC.%20Here%20is%20my%20payment%20confirmation.">
+          Send payment confirmation
+        </a>
+      </article>
+
+      <article class="apc-pay-card">
+        <h3>Singapore Payment</h3>
+        <p>
+          For Singapore-based families, CJ will send a Wise SGD payment request or Wise SGD transfer details.
+        </p>
+        <p>
+          You can usually pay from your Singapore bank app as a local SGD transfer.
+        </p>
+        <p class="apc-pay-small-note">
+          Only use the payment details sent to you directly.
+        </p>
+        <a class="apc-pay-button secondary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20please%20send%20me%20the%20Singapore%20payment%20details%20for%20APC.">
+          Ask CJ for Singapore payment details
+        </a>
+      </article>
+
+      <article class="apc-pay-card">
+        <h3>International Payment</h3>
+        <p>
+          For international families, CJ will send a secure card payment link or suitable international payment option.
+        </p>
+        <p class="apc-pay-small-note">
+          Only use the payment link sent to you directly.
+        </p>
+        <a class="apc-pay-button secondary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20please%20send%20me%20the%20international%20payment%20details%20for%20APC.">
+          Ask CJ for international payment details
+        </a>
+      </article>
+    </div>
+  </section>
+<section class="apc-pay-section">
+    <div class="apc-pay-info-box">
+      <h2>Fees and billing region</h2>
+      <p class="apc-pay-muted">
+        APC Home Support Programme starts from RM1,800. For families who need deeper support across more connected concerns, the Extended Home Support Programme is RM2,500. Please only pay the amount CJ has confirmed with you directly.
+      </p>
+      <p class="apc-pay-muted" style="margin-top: 10px;">
+        Malaysia-based families are billed in MYR. Singapore-based families are billed in SGD. Other international families are billed in USD.
+      </p>
+    </div>
+  </section>
+
   <section class="apc-pay-section" aria-labelledby="after-payment">
     <h2 id="after-payment">What happens after payment?</h2>
     <ul class="apc-pay-after-list">
-      <li>APC will confirm the payment and issue your receipt.</li>
+      <li>APC will issue your receipt.</li>
       <li>CJ will send the intake form, if required.</li>
       <li>CJ will review the intake form before Session 1.</li>
       <li>Session 1 will be scheduled after payment confirmation and intake review.</li>
