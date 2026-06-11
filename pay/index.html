@@ -908,68 +908,8 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-      var tabs = document.querySelectorAll("[data-select-program]");
-      var panels = document.querySelectorAll("[data-program-panel]");
-      var whatsappButton = document.getElementById("whatsappButton");
-      var paymentReference = document.getElementById("paymentReference");
+  
+<!-- Old public pricing script removed by APC cleanup -->
 
-      var programmes = {
-        "strategy": {
-          price: "RM350",
-          title: "APC Parent Strategy Session",
-          reference: "Parent name + APC Parent Strategy Session",
-          button: "Send RM350 payment confirmation",
-          message: "Hi CJ, I have completed payment for the RM350 APC Parent Strategy Session. Here is my payment confirmation."
-        },
-        "focused-support": {
-          price: "RM1,600",
-          title: "Focused Parent Support Programme",
-          reference: "Parent name + Focused Parent Support Programme",
-          button: "Send RM1,600 payment confirmation",
-          message: "Hi CJ, I have completed payment for the RM1600 Focused Parent Support Programme. Here is my payment confirmation."
-        },
-        "parent-support": {
-          price: "RM2,500",
-          title: "APC Parent Support Programme",
-          reference: "Parent name + APC Parent Support Programme",
-          button: "Send RM2,500 payment confirmation",
-          message: "Hi CJ, I have completed payment for the RM2500 APC Parent Support Programme. Here is my payment confirmation."
-        }
-      };
-
-      function selectProgram(program) {
-        if (!programmes[program]) {
-          program = "strategy";
-        }
-
-        tabs.forEach(function (tab) {
-          tab.classList.toggle("active", tab.getAttribute("data-select-program") === program);
-        });
-
-        panels.forEach(function (panel) {
-          panel.classList.toggle("active", panel.getAttribute("data-program-panel") === program);
-        });
-
-        if (paymentReference) {
-          paymentReference.textContent = programmes[program].reference;
-        }
-
-        if (whatsappButton) {
-          whatsappButton.textContent = programmes[program].button;
-          whatsappButton.href = "https://wa.me/601172998168?text=" + encodeURIComponent(programmes[program].message);
-        }
-      }
-
-      tabs.forEach(function (tab) {
-        tab.addEventListener("click", function () {
-          selectProgram(tab.getAttribute("data-select-program"));
-        });
-      });
-
-      selectProgram("strategy");
-    })();
-  </script>
 </body>
 </html>
