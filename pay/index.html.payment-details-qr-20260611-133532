@@ -821,47 +821,6 @@
       gap: 4px;
     }
   }
-
-/* APC payment details and QR refinement */
-.apc-pay-qr-wrap {
-  display: grid;
-  gap: 14px;
-}
-
-.apc-pay-qr-image-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 240px;
-  padding: 16px;
-  border-radius: 20px;
-  background: #ffffff;
-  border: 1px solid rgba(26, 26, 26, 0.08);
-}
-
-.apc-pay-qr-image {
-  width: min(260px, 100%);
-  height: auto;
-  display: block;
-  border-radius: 16px;
-}
-
-.apc-pay-copy-note {
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: rgba(45, 212, 191, 0.10);
-  color: rgba(26, 26, 26, 0.78);
-  line-height: 1.55;
-  font-size: 0.95rem;
-}
-
-.apc-pay-bank-value code {
-  font: inherit;
-  font-weight: 850;
-  color: inherit;
-}
-
 </style>
 <!-- /APC_PAY_PAGE_SAFE_UPDATE_V2 -->
 
@@ -949,9 +908,9 @@
   </section>
 
   <section class="apc-pay-section" aria-labelledby="bank-details">
-    <h2 id="bank-details">Payment details</h2>
+    <h2 id="bank-details">Bank transfer details</h2>
     <p class="apc-pay-muted">
-      Make payment using Maybank bank transfer or DuitNow QR. Please include your name or your child’s initials in the payment reference where possible.
+      Make payment using the details below. Please include your name or your child’s initials in the payment reference where possible.
     </p>
 
     <div class="apc-pay-bank-grid">
@@ -967,44 +926,30 @@
         </div>
         <div class="apc-pay-bank-row">
           <span class="apc-pay-bank-label">Account number</span>
-          <span class="apc-pay-bank-value"><code>564874606832</code></span>
+          <span class="apc-pay-bank-value">564874606832</span>
         </div>
         <div class="apc-pay-bank-row">
           <span class="apc-pay-bank-label">Reference</span>
           <span class="apc-pay-bank-value">APC + parent name</span>
         </div>
-
-        <div class="apc-pay-copy-note">
-          After payment, send the payment receipt or screenshot on WhatsApp so APC can confirm the payment and issue your receipt.
-        </div>
-
-        <div class="apc-pay-actions" style="justify-content: flex-start; margin-top: 16px;">
-          <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20my%20APC%20payment%20by%20Maybank%20transfer.%20Here%20is%20my%20payment%20confirmation.">
-            Send transfer confirmation
-          </a>
-        </div>
       </div>
 
       <div class="apc-pay-bank-card">
         <h3>DuitNow QR</h3>
-
-        <div class="apc-pay-qr-wrap">
-          <div class="apc-pay-qr-image-wrap">
-            <img class="apc-pay-qr-image" src="/QR_Payment.JPG" alt="APC DuitNow QR payment code">
-          </div>
-          <p class="apc-pay-muted">
-            Scan the QR, enter the amount confirmed with CJ, then send your receipt or screenshot on WhatsApp.
-          </p>
-          <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20my%20APC%20payment%20by%20DuitNow%20QR.%20Here%20is%20my%20payment%20confirmation.">
-            Send QR payment confirmation
-          </a>
-        </div>
-
+        <p class="apc-pay-muted">
+          If CJ has sent you the APC DuitNow QR, you may also pay by scanning the QR and entering the confirmed amount.
+        </p>
+        <p class="apc-pay-muted">
+          After payment, send the receipt or screenshot on WhatsApp so APC can confirm the payment and issue your receipt.
+        </p>
+        <a class="apc-pay-button secondary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20please%20send%20me%20the%20APC%20DuitNow%20QR%20for%20payment.">
+          Ask for DuitNow QR
+        </a>
       </div>
     </div>
   </section>
 
-<section class="apc-pay-section" aria-labelledby="payment-steps">
+  <section class="apc-pay-section" aria-labelledby="payment-steps">
     <h2 id="payment-steps">Payment steps</h2>
     <div class="apc-pay-steps">
       <div class="apc-pay-step">
