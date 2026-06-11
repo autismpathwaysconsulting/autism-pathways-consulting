@@ -555,20 +555,6 @@
     color: #0f766e;
   }
 
-
-  .apc-pay-hero,
-  .apc-pay-hero h1,
-  .apc-pay-hero .apc-pay-lead {
-    text-align: center !important;
-  }
-
-  .apc-pay-hero h1 {
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
   .apc-pay-hero h1 {
     margin: 0;
     font-size: clamp(2rem, 4vw, 3.25rem);
@@ -803,7 +789,7 @@
       Please only make payment after your session or programme has been confirmed with CJ.
     </p>
     <div class="apc-pay-alert">
-      After payment is completed, send your payment confirmation on WhatsApp. Once payment is confirmed, APC will issue the receipt, send the intake form where relevant, and arrange the next appointment. The payment amount should match what CJ confirmed with you directly.
+      After payment is completed, send your payment confirmation on WhatsApp. Once payment is confirmed, APC will issue the receipt, send the intake form where relevant, and arrange the next appointment.
     </div>
     <div class="apc-pay-actions">
       <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20my%20APC%20payment.%20Here%20is%20my%20payment%20confirmation.">
@@ -844,7 +830,7 @@
   <section class="apc-pay-section" aria-labelledby="payment-options">
     <h2 id="payment-options">Payment options</h2>
     <p class="apc-pay-muted">
-      Use the payment option that CJ has confirmed with you. Please only pay the amount confirmed by CJ in WhatsApp or on your invoice.
+      Use the payment option that CJ has confirmed with you. Please only pay the amount that has been confirmed directly.
     </p>
 
     <div class="apc-pay-cards">
@@ -931,7 +917,28 @@
 
 
 
+<!-- APC_CLEAN_PAYMENT_URL_REDIRECT_V1 -->
+<script>
+  (function () {
+    var cleanRoutes = {
+      "strategy": "/pay/strategy/",
+      "progress": "/pay/progress/",
+      "focused": "/pay/focused/",
+      "focused-1600": "/pay/focused-1600/",
+      "comprehensive": "/pay/comprehensive/",
+      "parent-support": "/pay/comprehensive/",
+      "programme": "/pay/comprehensive/"
+    };
 
+    var params = new URLSearchParams(window.location.search);
+    var key = params.get("option") || params.get("pay") || params.get("program");
+
+    if (key && cleanRoutes[key]) {
+      window.location.replace(cleanRoutes[key]);
+    }
+  })();
+</script>
+<!-- /APC_CLEAN_PAYMENT_URL_REDIRECT_V1 -->
 
 </body>
 </html>

@@ -555,20 +555,6 @@
     color: #0f766e;
   }
 
-
-  .apc-pay-hero,
-  .apc-pay-hero h1,
-  .apc-pay-hero .apc-pay-lead {
-    text-align: center !important;
-  }
-
-  .apc-pay-hero h1 {
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
   .apc-pay-hero h1 {
     margin: 0;
     font-size: clamp(2rem, 4vw, 3.25rem);
@@ -770,9 +756,6 @@
 </style>
 <!-- /APC_PAY_PAGE_SAFE_UPDATE_V1 -->
 
-
-
-
 </head>
 <body>
   <header class="site-header">
@@ -803,7 +786,7 @@
       Please only make payment after your session or programme has been confirmed with CJ.
     </p>
     <div class="apc-pay-alert">
-      After payment is completed, send your payment confirmation on WhatsApp. Once payment is confirmed, APC will issue the receipt, send the intake form where relevant, and arrange the next appointment. The payment amount should match what CJ confirmed with you directly.
+      After payment is completed, send your payment confirmation on WhatsApp. Once payment is confirmed, APC will issue the receipt, send the intake form where relevant, and arrange the next appointment.
     </div>
     <div class="apc-pay-actions">
       <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20my%20APC%20payment.%20Here%20is%20my%20payment%20confirmation.">
@@ -844,7 +827,7 @@
   <section class="apc-pay-section" aria-labelledby="payment-options">
     <h2 id="payment-options">Payment options</h2>
     <p class="apc-pay-muted">
-      Use the payment option that CJ has confirmed with you. Please only pay the amount confirmed by CJ in WhatsApp or on your invoice.
+      Use the payment option that CJ has confirmed with you. Please only pay the amount that has been confirmed directly.
     </p>
 
     <div class="apc-pay-cards">
@@ -891,7 +874,8 @@
       </article>
     </div>
   </section>
-<section class="apc-pay-section">
+
+  <section class="apc-pay-section">
     <div class="apc-pay-info-box">
       <h2>Fees and billing region</h2>
       <p class="apc-pay-muted">
@@ -924,14 +908,68 @@
     </div>
   </footer>
 
-  
-<!-- Old public pricing script removed by APC cleanup -->
+  <script>
+    (function () {
+      var tabs = document.querySelectorAll("[data-select-program]");
+      var panels = document.querySelectorAll("[data-program-panel]");
+      var whatsappButton = document.getElementById("whatsappButton");
+      var paymentReference = document.getElementById("paymentReference");
 
+      var programmes = {
+        "strategy": {
+          price: "RM350",
+          title: "APC Parent Strategy Session",
+          reference: "Parent name + APC Parent Strategy Session",
+          button: "Send RM350 payment confirmation",
+          message: "Hi CJ, I have completed payment for the RM350 APC Parent Strategy Session. Here is my payment confirmation."
+        },
+        "focused-support": {
+          price: "RM1,600",
+          title: "Focused Parent Support Programme",
+          reference: "Parent name + Focused Parent Support Programme",
+          button: "Send RM1,600 payment confirmation",
+          message: "Hi CJ, I have completed payment for the RM1600 Focused Parent Support Programme. Here is my payment confirmation."
+        },
+        "parent-support": {
+          price: "RM2,500",
+          title: "APC Parent Support Programme",
+          reference: "Parent name + APC Parent Support Programme",
+          button: "Send RM2,500 payment confirmation",
+          message: "Hi CJ, I have completed payment for the RM2500 APC Parent Support Programme. Here is my payment confirmation."
+        }
+      };
 
+      function selectProgram(program) {
+        if (!programmes[program]) {
+          program = "strategy";
+        }
 
+        tabs.forEach(function (tab) {
+          tab.classList.toggle("active", tab.getAttribute("data-select-program") === program);
+        });
 
+        panels.forEach(function (panel) {
+          panel.classList.toggle("active", panel.getAttribute("data-program-panel") === program);
+        });
 
+        if (paymentReference) {
+          paymentReference.textContent = programmes[program].reference;
+        }
 
+        if (whatsappButton) {
+          whatsappButton.textContent = programmes[program].button;
+          whatsappButton.href = "https://wa.me/601172998168?text=" + encodeURIComponent(programmes[program].message);
+        }
+      }
 
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          selectProgram(tab.getAttribute("data-select-program"));
+        });
+      });
+
+      selectProgram("strategy");
+    })();
+  </script>
 </body>
 </html>
