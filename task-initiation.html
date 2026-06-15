@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>When Your Child Can't Get Started | Autism Pathways Consulting</title>
+  <meta name="description" content="A simple, practical routine for parents of autistic children who freeze at the start of homework, chores, and everyday tasks. Free guide from Autism Pathways Consulting." />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta name="theme-color" content="#073734" />
+  <style>
+    :root {
+      --apc-font-main: "Segoe UI", Roboto, Arial, sans-serif;
+      --apc-dark-teal: #073734;
+      --apc-teal: #0f766e;
+      --apc-cream: #FFF9F1;
+      --apc-coral: #E8997A;
+      --apc-sage: #6B9E7A;
+      --apc-text: #253532;
+      --apc-muted: #3d5552;
+      --apc-bg: #fbf8f1;
+      --apc-line: rgba(20, 63, 58, 0.14);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      font-family: var(--apc-font-main);
+      color: var(--apc-text);
+      background: var(--apc-bg);
+      line-height: 1.7;
+    }
+    .wrap { width: min(760px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { padding: 22px 0 0; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--apc-teal); font-weight: 800; font-size: 0.9rem; text-decoration: none;
+    }
+    .hero { padding: 40px 0 12px; }
+    .eyebrow {
+      margin: 0 0 14px; color: var(--apc-teal); font-size: 0.74rem;
+      font-weight: 850; letter-spacing: 0.16em; text-transform: uppercase;
+    }
+    h1 {
+      margin: 0 0 18px; color: var(--apc-dark-teal);
+      font-size: clamp(2.1rem, 6vw, 3.2rem); line-height: 1.08; letter-spacing: -0.035em;
+    }
+    .lead { margin: 0; color: var(--apc-text); font-size: 1.12rem; line-height: 1.7; }
+    .body { padding: 18px 0 10px; }
+    h2 {
+      margin: 38px 0 14px; color: var(--apc-dark-teal);
+      font-size: clamp(1.5rem, 3.5vw, 2rem); line-height: 1.15; letter-spacing: -0.03em;
+    }
+    p { margin: 0 0 16px; color: var(--apc-muted); font-size: 1.04rem; }
+    .reframe {
+      background: #FDF2EC; border: 1px solid rgba(232, 153, 122, 0.4);
+      border-left: 4px solid var(--apc-coral); border-radius: 16px; padding: 20px 24px; margin: 26px 0;
+    }
+    .reframe p { margin: 0; color: var(--apc-text); }
+    .reframe strong { color: #b4623f; }
+    .callout {
+      background: #EAF6F0; border: 1px solid rgba(15, 118, 110, 0.18);
+      border-left: 4px solid var(--apc-teal); border-radius: 16px; padding: 20px 24px; margin: 26px 0;
+    }
+    .callout p { margin: 0; color: var(--apc-text); }
+    .callout strong { color: var(--apc-dark-teal); }
+    .step {
+      display: flex; gap: 18px; align-items: flex-start;
+      background: #FFFFFF; border: 1px solid var(--apc-line); border-radius: 20px;
+      padding: 22px 24px; margin: 16px 0; box-shadow: 0 14px 34px rgba(31, 48, 58, 0.05);
+    }
+    .step-num {
+      width: 40px; height: 40px; min-width: 40px; border-radius: 50%;
+      background: var(--apc-teal); color: #FFFFFF; font-weight: 800; font-size: 1.05rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-body h3 { margin: 0 0 5px; color: var(--apc-dark-teal); font-size: 1.12rem; }
+    .step-body p { margin: 0; font-size: 0.98rem; }
+    .two-col { display: flex; gap: 16px; margin: 26px 0; flex-wrap: wrap; }
+    .col {
+      flex: 1; min-width: 240px; background: #FFFFFF; border: 1px solid var(--apc-line);
+      border-radius: 20px; padding: 24px; box-shadow: 0 14px 34px rgba(31, 48, 58, 0.05);
+    }
+    .col h3 { margin: 0 0 12px; font-size: 1.05rem; }
+    .col-home h3 { color: var(--apc-teal); }
+    .col-school h3 { color: var(--apc-coral); }
+    .col ul { margin: 0; padding-left: 0; list-style: none; }
+    .col li { position: relative; padding: 7px 0 7px 22px; color: var(--apc-muted); font-size: 0.96rem; }
+    .col li::before { content: ""; position: absolute; left: 4px; top: 15px; width: 7px; height: 7px; border-radius: 50%; background: var(--apc-sage); }
+    .try-box {
+      background: #FFFFFF; border: 1px dashed var(--apc-sage); border-radius: 20px; padding: 24px 26px; margin: 30px 0;
+    }
+    .try-box h3 { margin: 0 0 10px; color: var(--apc-dark-teal); font-size: 1.12rem; }
+    .try-box p { font-size: 0.98rem; }
+    .try-box p:last-child { margin-bottom: 0; }
+    .credential {
+      border-top: 1px solid var(--apc-line); padding-top: 26px; margin-top: 38px;
+      color: var(--apc-muted); font-style: italic; font-size: 1.02rem;
+    }
+    .cta {
+      background: #FFFFFF; border: 1px solid var(--apc-line); border-radius: 28px;
+      padding: 34px 30px; margin: 36px 0 50px; text-align: center; box-shadow: 0 22px 60px rgba(31, 75, 71, 0.08);
+    }
+    .cta h2 { margin: 0 0 10px; }
+    .cta p { margin: 0 auto 20px; max-width: 480px; }
+    .cta-btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 50px;
+      padding: 14px 26px; border-radius: 999px; background: var(--apc-teal); color: #FFFFFF;
+      font-weight: 850; text-decoration: none; box-shadow: 0 12px 28px rgba(15, 118, 110, 0.18);
+    }
+    .cta .handle { display: block; margin-top: 16px; color: var(--apc-muted); font-size: 0.84rem; }
+    @media (max-width: 680px) { .two-col { gap: 14px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap topbar">
+    <a class="back-link" href="start">&larr; Back to Start Here</a>
+  </div>
+  <header class="wrap hero">
+    <p class="eyebrow">Free parent guide</p>
+    <h1>When your child can't get started</h1>
+    <p class="lead">You ask your child to start their homework. They don't move. You ask again. Still nothing. It can look like they are ignoring you, or being lazy, or refusing on purpose. For many autistic children, that is not what is happening.</p>
+  </header>
+  <main class="wrap body">
+    <p>Starting a task is its own skill. Before any work gets done, the brain has to stop what it is doing, shift attention, and begin something new. This is called task initiation, and it is one of the harder things for many autistic children to do on demand. The work itself might be easy. Finding the way in is the hard part.</p>
+    <div class="reframe">
+      <p><strong>A small shift in how you see it:</strong> When your child does not start, they are often not saying "I won't." Their brain is closer to "I can't find the way in right now." That difference changes what helps. Pressure tends to make the freeze worse. Structure tends to make it easier.</p>
+    </div>
+    <h2>Why pushing harder rarely works</h2>
+    <p>The natural response is to add more. More reminders. More urgency. A consequence if they still don't begin. But if the problem is getting started, adding pressure adds to the load the brain is already struggling with. The child wants to start. They are stuck at the doorway, and being told to hurry through it does not make the doorway easier to find.</p>
+    <p>What tends to help instead is making the start smaller, quieter, and more predictable. That is what the routine below is built to do.</p>
+    <h2>The Simple Start Routine</h2>
+    <p>The idea is to use the same few steps every time, so starting becomes familiar instead of fresh each day. Predictability is doing a lot of the work here.</p>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Clear the space first</h3>
+        <p>Put only the one task in front of your child. One book, one worksheet, one job. Move everything else out of view. A clear space gives the brain fewer things to sort through before it can begin.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Name only the first small piece</h3>
+        <p>Instead of "do your homework," try "just write your name and the date." Give one tiny first step, not the whole task. Once the first piece is done, the next one is usually easier, because the hardest part was the start.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Stay close for the first two minutes</h3>
+        <p>Sit nearby without watching over them or asking questions. You are not supervising. You are being a calm, steady presence while their brain settles into the task. Many children can carry on once those first couple of minutes are behind them.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Use the same signal each time</h3>
+        <p>Pick one short phrase that means "we are starting now," and use it every time. Something like "Homework starts now." The repetition turns the start into a routine your child can recognise, rather than a surprise they have to handle.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <p><strong>Keep the steps the same, even when the task changes.</strong> The routine works because it is familiar. Getting dressed, brushing teeth, packing a bag, starting a chore. The same four steps can carry across all of them.</p>
+    </div>
+    <h2>At home and at school</h2>
+    <p>The same idea works in both places. You can share this with your child's teacher.</p>
+    <div class="two-col">
+      <div class="col col-home">
+        <h3>At home</h3>
+        <ul>
+          <li>One task on the table, everything else away</li>
+          <li>Name the first small step, not the whole job</li>
+          <li>Sit nearby for two quiet minutes</li>
+          <li>Same starting phrase every time</li>
+          <li>Notice what helps and do more of it</li>
+        </ul>
+      </div>
+      <div class="col col-school">
+        <h3>At school</h3>
+        <ul>
+          <li>Clear the desk to only what is needed</li>
+          <li>Give the first instruction on its own</li>
+          <li>Allow a minute of quiet settling, no prompts</li>
+          <li>Check in quietly after, not by calling out</li>
+          <li>Keep the start predictable each lesson</li>
+        </ul>
+      </div>
+    </div>
+    <div class="try-box">
+      <h3>Try this for one week</h3>
+      <p>Pick one task your child regularly gets stuck on. Use the four steps every time, exactly the same way, for a week.</p>
+      <p>Notice what happens just before they get stuck. Tired? Hungry? Just finished something hard? Coming straight from school? The pattern around the start often tells you more than the start itself.</p>
+      <p>You are not looking for a perfect result in a week. You are looking for what makes the start a little easier, so you can do more of it.</p>
+    </div>
+    <p>Some days will still be hard. That is normal, and it does not mean the routine is not working. A child who is exhausted, overloaded, or unwell may struggle to start no matter how good the routine is. On those days, getting started is not the goal. Getting through the day is.</p>
+    <div class="credential">
+      In ten years working with autistic children and families in Malaysia, the children who struggled most at homework were rarely the ones who could not do the work. They were the ones who could not find the start. Once starting got easier, a lot of the daily battle eased with it.
+    </div>
+    <div class="cta">
+      <h2>Want to look at this for your own child?</h2>
+      <p>Every child gets stuck for slightly different reasons. A short conversation can help you see your child's pattern more clearly and find one practical next step.</p>
+      <a class="cta-btn" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Book a free 15-min First Step Call</a>
+      <span class="handle">autismpathwaysconsulting.com &nbsp;|&nbsp; @autismpathwaysconsulting</span>
+    </div>
+  </main>
+</body>
+</html>
