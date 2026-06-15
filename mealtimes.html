@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#073734" />
+
+  <title>When Your Child Won't Eat | Autism Pathways Consulting</title>
+  <meta name="description" content="Why autistic children are often very selective about food, and what helps at the table. A free guide for Malaysian parents from Autism Pathways Consulting." />
+
+  <style>
+    :root {
+      --cream: #fff9f1;
+      --deep: #073734;
+      --teal: #0f766e;
+      --sage: #6b9e7a;
+      --coral: #e8997a;
+      --text: #314846;
+      --muted: #526966;
+      --border: rgba(7, 55, 52, 0.14);
+      --shadow: 0 22px 55px rgba(7, 55, 52, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--cream) 0%, #ffffff 55%, var(--cream) 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      background: rgba(255, 249, 241, 0.96);
+      border-bottom: 1px solid rgba(7, 55, 52, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    nav {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand { font-weight: 900; color: var(--deep); letter-spacing: -0.03em; }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-weight: 800;
+      color: #314241;
+    }
+
+    .links a:hover { color: var(--teal); }
+
+    .cta {
+      background: var(--teal);
+      color: white !important;
+      padding: 13px 22px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.22);
+    }
+
+    main {
+      width: min(760px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 40px 0 88px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 26px;
+      color: var(--deep);
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    p { margin: 0 0 20px; font-size: 1.12rem; color: var(--text); }
+
+    h2 {
+      margin: 46px 0 18px;
+      color: var(--deep);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .callout {
+      margin: 30px 0;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: rgba(232, 153, 122, 0.12);
+      border: 1px solid rgba(232, 153, 122, 0.28);
+      font-size: 1.12rem;
+      color: var(--deep);
+    }
+
+    .callout strong { color: var(--deep); }
+
+    .signal-card {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 30px;
+      box-shadow: var(--shadow);
+      margin: 20px 0;
+    }
+
+    .signal-card h3 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .signal-card p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+
+    .signal-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.08);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
+    .step {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+      margin: 26px 0;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-of-type { border-bottom: none; }
+
+    .step-num {
+      flex: 0 0 auto;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.3rem;
+    }
+
+    .step-body h3 {
+      margin: 6px 0 8px;
+      color: var(--deep);
+      font-size: 1.22rem;
+      letter-spacing: -0.02em;
+    }
+
+    .step-body p { margin: 0; font-size: 1.08rem; color: var(--muted); }
+
+    .medical-note {
+      margin: 34px 0;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: rgba(107, 158, 122, 0.10);
+      border: 1px solid rgba(107, 158, 122, 0.30);
+      font-size: 1.05rem;
+      color: var(--deep);
+    }
+
+    .medical-note strong { color: var(--deep); }
+
+    .week {
+      margin: 30px 0;
+      padding: 28px 30px;
+      border-radius: 24px;
+      background: rgba(107, 158, 122, 0.12);
+      border: 1px solid rgba(107, 158, 122, 0.28);
+    }
+
+    .week h2 { margin-top: 0; }
+
+    .credential {
+      margin: 40px 0;
+      padding: 28px 30px;
+      border-left: 4px solid var(--sage);
+      background: rgba(7, 55, 52, 0.03);
+      border-radius: 0 18px 18px 0;
+      font-size: 1.14rem;
+      color: var(--deep);
+    }
+
+    .cta-banner {
+      margin: 50px 0 0;
+      background: var(--deep);
+      color: var(--cream);
+      border-radius: 30px;
+      padding: 44px;
+      text-align: center;
+      box-shadow: 0 28px 65px rgba(7, 55, 52, 0.20);
+    }
+
+    .cta-banner h2 { color: var(--cream); margin: 0 0 14px; }
+    .cta-banner p { color: rgba(255,249,241,0.86); margin: 0 0 26px; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: var(--cream);
+      color: var(--deep);
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .button:hover { background: #f0e9df; }
+
+    footer {
+      border-top: 1px solid rgba(7, 55, 52, 0.10);
+      padding: 30px 0;
+      color: #52615f;
+    }
+
+    .footer-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      nav { align-items: flex-start; flex-direction: column; padding: 18px 0; }
+      .links { width: 100%; flex-wrap: wrap; gap: 14px 18px; }
+      .cta { padding: 10px 16px; }
+      .cta-banner { padding: 32px 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav aria-label="Main navigation">
+      <a class="brand" href="index.html">Autism Pathways Consulting</a>
+      <div class="links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About CJ</a>
+        <a href="services.html">Services</a>
+        <a href="resources.html">Resources</a>
+        <a class="cta" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Free 15-Min First Step Call</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <a class="back-link" href="resources.html">&larr; Back to Resources</a>
+
+    <div class="eyebrow">Free parent guide</div>
+    <h1>When your child won't eat</h1>
+
+    <p>You put the food down. He looks at it and pushes the plate away. Or he gags. Or he leaves the table. Or he eats four bites of the one thing he will eat and calls it done. You have tried hiding vegetables, offering rewards, making it fun, making it firm, cooking separately so there is always something he will accept. You are tired, and underneath the tired there is something that feels closer to fear. Because food is not just food. It is three times a day, every single day, and you do not know what to do.</p>
+
+    <p>That fear is one of the most reasonable things a parent can feel. And it is also one of the most isolating, because from the outside, a child who will not eat looks like a child who is being difficult. From the inside, you know it is something else entirely. You just do not have the words for it yet.</p>
+
+    <div class="callout">
+      <strong>A small shift in how you see it:</strong> For many autistic children, food selectivity is not a preference or a phase. It is a sensory experience. The texture, smell, temperature, colour, or even the sound a food makes when chewed can be genuinely overwhelming in a way that is very hard to override with encouragement or hunger. He is not choosing to be difficult. His nervous system is telling him something is wrong, and it is very convincing.
+    </div>
+
+    <h2>What is usually driving it</h2>
+
+    <div class="signal-card">
+      <div class="signal-label">Texture</div>
+      <h3>How it feels in the mouth</h3>
+      <p>Soft, slimy, lumpy, crunchy, or mixed textures in the same bite. Many autistic children have a strong aversion to specific textures that can trigger a gag response. This is not drama. It is a real physical reaction from a nervous system that processes tactile input more intensely than most.</p>
+    </div>
+
+    <div class="signal-card">
+      <div class="signal-label">Smell</div>
+      <h3>Before it even reaches the plate</h3>
+      <p>The smell of food cooking, the smell of a dish placed nearby, or even the lingering smell of something from a previous meal can be enough to close the window before eating has begun. A child who refuses food the moment it appears may be responding to the smell before anything else.</p>
+    </div>
+
+    <div class="signal-card">
+      <div class="signal-label">Appearance</div>
+      <h3>Colour, shape, and familiarity</h3>
+      <p>Food that looks different from usual, even the same dish made slightly differently, can be refused. A brand change, a different colour capsicum, a slightly browner edge on the bread. What looks identical to you may look meaningfully different to a child whose visual processing notices everything.</p>
+    </div>
+
+    <div class="signal-card">
+      <div class="signal-label">Predictability</div>
+      <h3>Knowing exactly what it will be</h3>
+      <p>Safe foods are safe partly because they are known. The same brand, the same preparation, the same plate. The eating is not just about nutrition. It is about certainty in a world that is often uncertain. New foods require trust that has to be built very slowly, in very small steps, with no pressure attached.</p>
+    </div>
+
+    <h2>What tends to help at the table</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Remove pressure from mealtimes first</h3>
+        <p>This is the hardest step and the most important one. Pressure at the table, even gentle pressure, even just watching and hoping, tends to narrow the window for eating rather than widen it. A child who feels observed and expected to eat becomes more anxious, not less. The goal is a mealtime that feels safe enough that eating becomes possible. That starts with the pressure coming down.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Always include one safe food</h3>
+        <p>Every meal, no negotiation. Not as a reward for trying something new. Just there, reliably, so your child always has something he can eat. This sounds simple and it is. It also changes the mealtime from a situation where he might go hungry into one where there is always an exit. That shift in the stakes makes the whole table feel less threatening.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Introduce new foods at a distance first</h3>
+        <p>On the table but not on his plate. On his plate but not expected to be eaten. Touched but not tasted. Smelled but not touched. New foods need to become familiar before they become safe, and that familiarity is built through exposure with zero expectation attached. It takes much longer than it should. It works much better than anything faster.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Keep mealtimes as calm and predictable as possible</h3>
+        <p>Same time, same seat, same general setup where you can manage it. For a child whose nervous system is already managing the sensory experience of food, a chaotic or unpredictable mealtime adds load before the first bite. Predictability at the table does not solve the selectivity, but it removes one variable that does not need to be there.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Notice what he does eat, not just what he refuses</h3>
+        <p>Most children with selective eating have more accepted foods than parents realise when they stop focusing on the refusals. Write down everything he will eat, including things you would not normally count as a meal. That list is your starting point, not your ceiling. Building from accepted foods is almost always more effective than introducing completely new ones.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>The goal right now is not a varied diet. It is a calm table.</strong> A child who eats a small range of foods in a relaxed environment is in a better position to expand that range over time than a child who is anxious at every meal. Calm comes first. Variety follows, slowly, when the pressure is gone.
+    </div>
+
+    <div class="medical-note">
+      <strong>A note on when to involve a professional.</strong> If your child is losing weight, eating fewer than ten foods, refusing entire food groups, or you have concerns about nutrition or growth, please speak with your child's paediatrician or a dietitian. Significant food selectivity in autistic children is well-recognised and there are specialists who work specifically in this area. This guide is about the home environment and mealtime patterns. It is not a substitute for medical or nutritional assessment when that is what the situation needs.
+    </div>
+
+    <div class="week">
+      <h2>Try this for one week</h2>
+      <p>Write down every food your child ate this week, every bite of anything, without judgment about whether it counts. At the end of the week, look at the list. Notice the textures, the temperatures, the colours. Is there a pattern in what he accepts? Crunchy things but not soft ones. Dry things but not wet ones. Beige foods but not green ones.</p>
+      <p>That pattern is not random. It is telling you something about what his nervous system finds manageable. Understanding the pattern is the first step toward working with it rather than against it.</p>
+    </div>
+
+    <p>There will be meals where he eats almost nothing and you will worry. That worry is normal and understandable. Try to hold onto what you know about the week as a whole rather than measuring by the single meal. Most children with selective eating, even significant selectivity, find a way to sustain themselves on the foods they accept. The work is slow and it does not always feel like progress. But a calmer table, with one safe food always present and no pressure attached, is real progress even when it does not look like it.</p>
+
+    <div class="credential">
+      In ten years working with autistic children and families in Malaysia, mealtimes were the thing parents most often described as a daily source of dread. Not because the child was refusing dramatically, but because every meal was quietly tense, and the tension had been going on so long that nobody remembered what a normal mealtime felt like. The families who made the most ground were the ones who stopped trying to fix the eating and started trying to fix the table. Once the pressure came down and the safe food was reliably there, something usually shifted. Not the range of foods, not at first. But the feeling of the meal. And that was enough to start.
+    </div>
+
+    <div class="cta-banner">
+      <h2>Want to look at mealtimes for your own child?</h2>
+      <p>Food selectivity almost always connects to patterns in how your child manages sensory input across the day. A short conversation can help you understand what is driving it and find one practical place to start.</p>
+      <a class="button" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Book a free 15-min First Step Call</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© Autism Pathways Consulting</span>
+      <span>autismpathwaysconsulting.com | @autismpathwaysconsulting</span>
+    </div>
+  </footer>
+</body>
+</html>
