@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#073734" />
+
+  <title>When the Meltdown Comes Out of Nowhere | Autism Pathways Consulting</title>
+  <meta name="description" content="A calm, practical guide for parents of autistic children whose meltdowns seem to come from nowhere. Understand the build-up and a simple routine that helps. Free guide from Autism Pathways Consulting." />
+
+  <style>
+    :root {
+      --cream: #fff9f1;
+      --deep: #073734;
+      --teal: #0f766e;
+      --sage: #6b9e7a;
+      --coral: #e8997a;
+      --text: #314846;
+      --muted: #526966;
+      --border: rgba(7, 55, 52, 0.14);
+      --shadow: 0 22px 55px rgba(7, 55, 52, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--cream) 0%, #ffffff 55%, var(--cream) 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      background: rgba(255, 249, 241, 0.96);
+      border-bottom: 1px solid rgba(7, 55, 52, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    nav {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand { font-weight: 900; color: var(--deep); letter-spacing: -0.03em; }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-weight: 800;
+      color: #314241;
+    }
+
+    .links a:hover { color: var(--teal); }
+
+    .cta {
+      background: var(--teal);
+      color: white !important;
+      padding: 13px 22px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.22);
+    }
+
+    main {
+      width: min(760px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 40px 0 88px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 26px;
+      color: var(--deep);
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    p { margin: 0 0 20px; font-size: 1.12rem; color: var(--text); }
+
+    h2 {
+      margin: 46px 0 18px;
+      color: var(--deep);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .callout {
+      margin: 30px 0;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: rgba(232, 153, 122, 0.12);
+      border: 1px solid rgba(232, 153, 122, 0.28);
+      font-size: 1.12rem;
+      color: var(--deep);
+    }
+
+    .callout strong { color: var(--deep); }
+
+    .step {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+      margin: 26px 0;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-of-type { border-bottom: none; }
+
+    .step-num {
+      flex: 0 0 auto;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.3rem;
+    }
+
+    .step-body h3 {
+      margin: 6px 0 8px;
+      color: var(--deep);
+      font-size: 1.22rem;
+      letter-spacing: -0.02em;
+    }
+
+    .step-body p { margin: 0; font-size: 1.08rem; color: var(--muted); }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .col {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .col h3 {
+      margin: 0 0 14px;
+      color: var(--deep);
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .col ul { margin: 0; padding-left: 20px; color: var(--muted); }
+    .col li { margin: 9px 0; font-size: 1.04rem; }
+
+    .week {
+      margin: 30px 0;
+      padding: 28px 30px;
+      border-radius: 24px;
+      background: rgba(107, 158, 122, 0.12);
+      border: 1px solid rgba(107, 158, 122, 0.28);
+    }
+
+    .week h2 { margin-top: 0; }
+
+    .credential {
+      margin: 40px 0;
+      padding: 28px 30px;
+      border-left: 4px solid var(--sage);
+      background: rgba(7, 55, 52, 0.03);
+      border-radius: 0 18px 18px 0;
+      font-size: 1.14rem;
+      color: var(--deep);
+    }
+
+    .cta-banner {
+      margin: 50px 0 0;
+      background: var(--deep);
+      color: var(--cream);
+      border-radius: 30px;
+      padding: 44px;
+      text-align: center;
+      box-shadow: 0 28px 65px rgba(7, 55, 52, 0.20);
+    }
+
+    .cta-banner h2 { color: var(--cream); margin: 0 0 14px; }
+    .cta-banner p { color: rgba(255,249,241,0.86); margin: 0 0 26px; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: var(--cream);
+      color: var(--deep);
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .button:hover { background: #f0e9df; }
+
+    footer {
+      border-top: 1px solid rgba(7, 55, 52, 0.10);
+      padding: 30px 0;
+      color: #52615f;
+    }
+
+    .footer-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      nav { align-items: flex-start; flex-direction: column; padding: 18px 0; }
+      .links { width: 100%; flex-wrap: wrap; gap: 14px 18px; }
+      .cta { padding: 10px 16px; }
+      .cols { grid-template-columns: 1fr; }
+      .cta-banner { padding: 32px 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav aria-label="Main navigation">
+      <a class="brand" href="index.html">Autism Pathways Consulting</a>
+      <div class="links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About CJ</a>
+        <a href="services.html">Services</a>
+        <a href="resources.html">Resources</a>
+        <a class="cta" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Free 15-Min First Step Call</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <a class="back-link" href="resources.html">&larr; Back to Resources</a>
+
+    <div class="eyebrow">Free parent guide</div>
+    <h1>When the meltdown comes out of nowhere</h1>
+
+    <p>One minute your child is okay. The next, they are on the floor, screaming, hitting, or completely shut down, and you have no idea what set it off. It can feel like it came from nowhere, like a switch flipped. For many autistic children, it did not come from nowhere. It came from a build-up you could not see.</p>
+
+    <p>A meltdown is not a tantrum. A tantrum has a goal, and it usually stops when the child gets what they want or realises they will not. A meltdown is different. It is what happens when a nervous system becomes too overloaded to cope, and it does not stop on request, because it was never a choice. Your child is not giving you a hard time. They are having a hard time.</p>
+
+    <div class="callout">
+      <strong>A small shift in how you see it:</strong> The meltdown is not the problem to solve. It is the overflow at the end of a build-up. The real story is everything that stacked up in the minutes or hours before it, much of which is easy to miss because none of it looked like a crisis on its own.
+    </div>
+
+    <h2>Why pushing harder rarely works</h2>
+
+    <p>When a child melts down, the natural response is to step in firmly. Raise your voice to be heard over theirs. Add a consequence. Tell them to calm down. The trouble is that a brain in meltdown cannot take in instructions, reasoning, or warnings. The part that listens and plans has gone offline for now. So more words, more volume, and more pressure all land as more input on a system that is already past full.</p>
+
+    <p>What tends to help is the opposite of adding. It is taking away. Less noise, fewer words, more space, and a calm adult nearby. You are not trying to teach anything in this moment. You are helping a storm pass with as little extra load as possible.</p>
+
+    <h2>The Calm-Down Routine</h2>
+
+    <p>Use the same response every time, so your child learns that a meltdown is met with safety, not more stress. Predictability is doing a lot of the work here.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Lower everything you can</h3>
+        <p>Turn down or turn off whatever you are able to. Less talking, less light, less noise, fewer people in the room. The brain is overloaded, so the kindest thing is to shrink the amount it has to deal with.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Drop the lesson</h3>
+        <p>This is not the moment to explain, correct, ask questions, or hand out a consequence. None of it will land, and all of it adds load. The teaching, if any is needed, comes much later, when everyone is calm.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Stay calm and stay near</h3>
+        <p>Keep your own voice low and your body steady, even if it is hard. Be a quiet, safe presence close by, without crowding. Your calm is something your child can borrow when their own has run out.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Reconnect after, not during</h3>
+        <p>When the storm passes, lead with comfort, not a debrief. A meltdown is exhausting and often frightening for a child. Reconnection tells them the relationship is safe even on the hard days. Any conversation about what happened can wait, and should be short and kind.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Keep your response the same, even when the meltdown looks different.</strong> The routine works because it is familiar. A child who learns that meltdowns are always met with the same calm, low-pressure response can settle faster over time, because the response itself stops being one more thing to brace against.
+    </div>
+
+    <h2>At home and at school</h2>
+
+    <p>The same approach works in both places, and it helps when the adults around your child respond in similar ways. You can share this with your child's teacher.</p>
+
+    <div class="cols">
+      <div class="col">
+        <h3>At home</h3>
+        <ul>
+          <li>Lower noise, light, and talking first</li>
+          <li>Stop instructing and questioning</li>
+          <li>Stay near with a calm, steady presence</li>
+          <li>Comfort first when it passes</li>
+          <li>Notice what built up beforehand</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>At school</h3>
+        <ul>
+          <li>Reduce demands and sensory input quickly</li>
+          <li>Move to a quieter, calmer space if possible</li>
+          <li>Pause instructions and corrections</li>
+          <li>Allow recovery time before re-engaging</li>
+          <li>Log what came before, not just the meltdown</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week">
+      <h2>Try this for one week</h2>
+      <p>Do not aim to stop the meltdowns this week. Aim to see them coming. After each one, write down the hour before it. What was happening, and how was your child doing? Tired, hungry, just home from school, mid-transition, asked to do something hard, somewhere loud or bright?</p>
+      <p>The build-up is where the answer usually lives. Most meltdowns that look sudden have a slow stack of stressors behind them, and once you can see the pattern, you can start easing the load earlier, before it overflows.</p>
+    </div>
+
+    <p>Some meltdowns will still happen, and that does not mean you are doing it wrong. A child who is exhausted, unwell, or deeply overloaded may melt down no matter how good the response is. On those days, the goal is not to prevent the storm. It is to keep your child safe and let them know you are still there.</p>
+
+    <div class="credential">
+      In ten years working with autistic children and families in Malaysia, the meltdowns that looked the most sudden almost always had a slow build-up that no one had spotted yet. Once parents could see what was stacking up across the day, the meltdowns usually became fewer, and the ones that still came were easier to move through together.
+    </div>
+
+    <div class="cta-banner">
+      <h2>Want to look at this for your own child?</h2>
+      <p>Every child overloads for slightly different reasons. A short conversation can help you see your child's build-up more clearly and find one practical next step.</p>
+      <a class="button" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Book a free 15-min First Step Call</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© Autism Pathways Consulting</span>
+      <span>autismpathwaysconsulting.com | @autismpathwaysconsulting</span>
+    </div>
+  </footer>
+</body>
+</html>
