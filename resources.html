@@ -137,6 +137,11 @@
       margin-bottom: 20px;
     }
 
+    .badge.soon {
+      background: rgba(107, 158, 122, 0.12);
+      color: var(--sage);
+    }
+
     h2 {
       margin: 0;
       color: var(--deep);
@@ -174,6 +179,16 @@
       box-shadow: 0 12px 28px rgba(15, 118, 110, 0.18);
     }
 
+    .button.secondary {
+      background: rgba(15, 118, 110, 0.08);
+      color: var(--teal);
+      box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      background: rgba(15, 118, 110, 0.15);
+    }
+
     .courses {
       margin-top: 34px;
       background: var(--deep);
@@ -203,14 +218,11 @@
       background: var(--cream);
       color: var(--deep);
       justify-self: end;
+      box-shadow: none;
     }
 
-    .note {
-      margin-top: 34px;
-      padding: 22px 26px;
-      border-radius: 24px;
-      background: rgba(232, 153, 122, 0.12);
-      border: 1px solid rgba(232, 153, 122, 0.28);
+    .courses .button:hover {
+      background: #f0e9df;
     }
 
     footer {
@@ -261,7 +273,6 @@
   <header>
     <nav aria-label="Main navigation">
       <a class="brand" href="index.html">Autism Pathways Consulting</a>
-
       <div class="links">
         <a href="index.html">Home</a>
         <a href="about.html">About CJ</a>
@@ -279,13 +290,12 @@
       <p>Start with the challenge you are facing now. These resources help parents understand meltdowns, refusal, routines, communication, school stress, and daily home patterns without blame or overwhelm.</p>
     </section>
 
+    <!-- THREE MAIN RESOURCES -->
     <section class="grid" aria-label="APC main parent resources">
       <article class="card">
         <div class="badge">Free guide</div>
         <h2>Read the Free Parent Guide</h2>
-        <p>
-          New to autism or unsure what to do next? Enter your name and email to get this calm, practical guide for Malaysian parents.
-        </p>
+        <p>New to autism or unsure what to do next? Enter your name and email to get this calm, practical guide for Malaysian parents.</p>
         <ul>
           <li>Understand common autism-related concerns</li>
           <li>Know what support options may exist</li>
@@ -297,9 +307,7 @@
       <article class="card">
         <div class="badge">In the moment</div>
         <h2>Use APC Calm Companion</h2>
-        <p>
-          A free parent support tool for difficult moments at home, including routines, transitions, communication, and calm-down support.
-        </p>
+        <p>A free parent support tool for difficult moments at home, including routines, transitions, communication, and calm-down support.</p>
         <ul>
           <li>Use when you feel unsure what to do</li>
           <li>Get simple parent prompts</li>
@@ -311,9 +319,7 @@
       <article class="card">
         <div class="badge">Speak with CJ</div>
         <h2>Book a Free 15-Min First Step Call</h2>
-        <p>
-          A short clarity and fit call for parents who are unsure where to begin.
-        </p>
+        <p>A short clarity and fit call for parents who are unsure where to begin.</p>
         <ul>
           <li>Briefly share what is happening</li>
           <li>Notice one possible pattern</li>
@@ -323,67 +329,88 @@
       </article>
     </section>
 
+    <!-- BY CHALLENGE -->
+    <section class="grid" aria-label="Start by parent challenge">
+      <article class="card">
+        <div class="badge">Start here</div>
+        <h2>Meltdowns at home</h2>
+        <p>For parents who feel like the meltdown came out of nowhere and want to understand what may have built up before it happened.</p>
+        <a class="button secondary" href="free-tool.html">Use Calm Companion</a>
+      </article>
 
-  <section class="grid" aria-label="Start by parent challenge">
-    <article class="card">
-      <div class="badge">Start here</div>
-      <h2>Meltdowns at home</h2>
-      <p>For parents who feel like the meltdown came out of nowhere and want to understand what may have built up before it happened.</p>
-      <a class="button secondary" href="free-tool.html">Use Calm Companion</a>
-    </article>
+      <article class="card">
+        <div class="badge">Start here</div>
+        <h2>Refusal and task battles</h2>
+        <p>For parents who keep repeating instructions and wonder why homework, routines, or simple requests become a battle.</p>
+        <a class="button secondary" href="services.html">Get personalised help</a>
+      </article>
 
-    <article class="card">
-      <div class="badge">Start here</div>
-      <h2>Refusal and task battles</h2>
-      <p>For parents who keep repeating instructions and wonder why homework, routines, or simple requests become a battle.</p>
-      <a class="button secondary" href="services.html">Get personalised help</a>
-    </article>
+      <article class="card">
+        <div class="badge">Start here</div>
+        <h2>Routines and transitions</h2>
+        <p>For parents who feel like mornings, bedtime, leaving the house, or switching activities take too much effort every day.</p>
+        <a class="button secondary" href="https://stats.sender.net/forms/ejRjpY/view" target="_blank" rel="noopener">Get Free Guide</a>
+      </article>
 
-    <article class="card">
-      <div class="badge">Start here</div>
-      <h2>Routines and transitions</h2>
-      <p>For parents who feel like mornings, bedtime, leaving the house, or switching activities take too much effort every day.</p>
-      <a class="button secondary" href="https://stats.sender.net/forms/ejRjpY/view" target="_blank" rel="noopener">Get Free Guide</a>
-    </article>
+      <article class="card">
+        <div class="badge">Start here</div>
+        <h2>Communication beyond words</h2>
+        <p>For parents who are unsure what their child is trying to communicate through behaviour, silence, pulling, crying, or repeated phrases.</p>
+        <a class="button secondary" href="services.html">See Home Support Programme</a>
+      </article>
 
-    <article class="card">
-      <div class="badge">Start here</div>
-      <h2>Communication beyond words</h2>
-      <p>For parents who are unsure what their child is trying to communicate through behaviour, silence, pulling, crying, or repeated phrases.</p>
-      <a class="button secondary" href="services.html">See Home Support Programme</a>
-    </article>
+      <article class="card">
+        <div class="badge">Start here</div>
+        <h2>School calm, home collapse</h2>
+        <p>For parents whose child seems fine at school but breaks down, refuses, or becomes overwhelmed after coming home.</p>
+        <a class="button secondary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Book First Step Call</a>
+      </article>
 
-    <article class="card">
-      <div class="badge">Start here</div>
-      <h2>School calm, home collapse</h2>
-      <p>For parents whose child seems fine at school but breaks down, refuses, or becomes overwhelmed after coming home.</p>
-      <a class="button secondary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Book First Step Call</a>
-    </article>
+      <article class="card">
+        <div class="badge">Start here</div>
+        <h2>Puberty, privacy and boundaries</h2>
+        <p>For parents of autistic tweens and teens who want calm, practical guidance around body changes, privacy, hygiene, personal safety, and social boundaries at home.</p>
+        <ul>
+          <li>Understand what your child may find confusing or overwhelming</li>
+          <li>Learn how to talk about body changes in clear, concrete language</li>
+          <li>Build simple routines for hygiene and personal care</li>
+        </ul>
+        <a class="button secondary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Book First Step Call</a>
+      </article>
+    </section>
 
-    <article class="card">
-      <div class="badge">Coming soon</div>
-      <h2>Puberty, privacy and boundaries</h2>
-      <p>For parents who want calm, respectful guidance around body changes, privacy, hygiene, safety, and boundaries.</p>
-    </article>
-  </section>
+    <!-- LEARNING LIBRARY + PERSONALISED -->
+    <section class="grid" aria-label="APC parent learning library">
+      <article class="card" style="grid-column: span 2;">
+        <div class="badge">Parent learning library</div>
+        <h2>Short reads for the challenges that come up most</h2>
+        <p>Practical parent learning resources built around the concerns APC hears most often: meltdowns, refusal, routines, communication, school stress, and puberty support. Written for Malaysian families, without clinical jargon or blame.</p>
+        <ul>
+          <li>Why meltdowns build slowly and feel sudden</li>
+          <li>How to reduce task refusal without a fight</li>
+          <li>What autistic children often need from routines</li>
+          <li>How to support communication at home</li>
+          <li>Understanding school fatigue and home collapse</li>
+        </ul>
+        <a class="button" href="https://stats.sender.net/forms/ejRjpY/view" target="_blank" rel="noopener">Get the Free Guide to Start</a>
+      </article>
 
-  <section class="grid" aria-label="APC parent learning library">
-    <article class="card">
-      <div class="badge">Coming soon</div>
-      <h2>Parent Learning Library</h2>
-      <p>Short, practical parent learning resources are being built around common APC topics: meltdowns, refusal, routines, communication, school stress, and puberty support.</p>
-    </article>
+      <article class="card">
+        <div class="badge">Personalised support</div>
+        <h2>Need this personalised for your child?</h2>
+        <p>The APC Home Support Programme helps parents understand daily challenges at home and build a practical Home Support Plan for what to do next.</p>
+        <a class="button" href="services.html">See Home Support Programme</a>
+      </article>
+    </section>
 
-    <article class="card">
-      <div class="badge">Personalised support</div>
-      <h2>Need this personalised for your child?</h2>
-      <p>The APC Home Support Programme helps parents understand daily challenges at home and build a practical Home Support Plan for what to do next.</p>
-      <a class="button" href="services.html">See Home Support Programme</a>
-    </article>
-  </section>
+    <!-- CTA BANNER -->
     <section class="courses">
       <div>
-        
+        <h2>Not sure where to start?</h2>
+        <p>Book the free 15-minute First Step Call. CJ will help you understand what may be happening and suggest one clear next step for your family.</p>
+      </div>
+      <a class="button" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Book First Step Call</a>
+    </section>
   </main>
 
   <footer>
