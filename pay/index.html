@@ -913,6 +913,32 @@
   }
 }
 
+/* APC offer pre-selection via URL parameter */
+.apc-pay-card.is-selected {
+  border: 2px solid #2DD4BF;
+  box-shadow: 0 16px 40px rgba(45, 212, 191, 0.22);
+}
+
+.apc-pay-card.is-hidden {
+  display: none;
+}
+
+.apc-pay-banner {
+  display: none;
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #fff9f1;
+  border: 1px solid rgba(45, 212, 191, 0.40);
+  color: #073734;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.apc-pay-banner.is-active {
+  display: block;
+}
+
 </style>
 <!-- /APC_PAY_PAGE_SAFE_UPDATE_V2 -->
 
@@ -961,45 +987,46 @@
     </p>
 
     <div class="apc-pay-cards">
-      <article class="apc-pay-card">
+      <article class="apc-pay-card" data-offer="350">
         <span class="apc-pay-tag">Clarity and next step</span>
-        <h3>APC Parent Strategy Session</h3>
+        <h3>One-Concern Parent Session</h3>
         <p class="apc-pay-price">RM350</p>
         <p>
-          A 60-minute parent strategy session to understand the concern, identify the pattern, and decide the next practical step.
+          A single 45-minute session focused on one concern, ending with one practical next step.
         </p>
-        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM350%20APC%20Parent%20Strategy%20Session.%20Here%20is%20my%20payment%20confirmation.">
+        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20just%20paid%20for%20the%20One-Concern%20Parent%20Session%20at%20RM350.%20Attaching%20my%20payment%20confirmation%20now.">
           Send RM350 confirmation
         </a>
       </article>
 
-      <article class="apc-pay-card">
-        <span class="apc-pay-tag">Focused support</span>
-        <h3>Focused Parent Support</h3>
-        <p class="apc-pay-price">RM1,800</p>
+      <article class="apc-pay-card" data-offer="950">
+        <span class="apc-pay-tag">Save RM100</span>
+        <h3>3-Session Starter Pack</h3>
+        <p class="apc-pay-price">RM950</p>
         <p>
-          Best for one main priority area where parents need clearer wording, structure, routines, and follow-through at home.
+          Focused support across 3 sessions so progress can build with steady follow-through. Save RM100.
         </p>
-        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM1800%20Focused%20Parent%20Support%20Programme.%20Here%20is%20my%20payment%20confirmation.">
-          Send RM1,800 confirmation
+        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20just%20paid%20for%20the%203-Session%20Starter%20Pack%20at%20RM950.%20Attaching%20my%20payment%20confirmation%20now.">
+          Send RM950 confirmation
         </a>
       </article>
 
-      <article class="apc-pay-card">
+      <article class="apc-pay-card" data-offer="1800">
         <span class="apc-pay-tag">Most complete support</span>
-        <h3>Comprehensive Parent Support</h3>
-        <p class="apc-pay-price">RM2,500</p>
+        <h3>APC Home Support Programme</h3>
+        <p class="apc-pay-price">RM1,800</p>
         <p>
-          Best when the concern affects several connected areas, such as communication, routines, regulation, hygiene, privacy, school, or parent responses.
+          6 sessions over 3 months with a personalised Home Support Plan. Save RM300.
         </p>
-        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20completed%20payment%20for%20the%20RM2500%20Comprehensive%20Parent%20Support%20Programme.%20Here%20is%20my%20payment%20confirmation.">
-          Send RM2,500 confirmation
+        <a class="apc-pay-button primary" href="https://wa.me/601172998168?text=Hi%20CJ%2C%20I%20have%20just%20paid%20for%20the%20APC%20Home%20Support%20Programme%20at%20RM1%2C800.%20Attaching%20my%20payment%20confirmation%20now.">
+          Send RM1,800 confirmation
         </a>
       </article>
     </div>
   </section>
 
-  <section class="apc-pay-section" aria-labelledby="bank-details">
+  <section class="apc-pay-section" id="payment-details" aria-labelledby="bank-details">
+    <div id="apc-pay-banner" class="apc-pay-banner" role="status"></div>
     <h2 id="bank-details">Payment details</h2>
     <p class="apc-pay-muted">
       Make payment using Maybank bank transfer, DuitNow QR, or Wise if CJ has confirmed Wise payment details with you. Please include your name or your child’s initials in the payment reference where possible.
@@ -1117,6 +1144,41 @@
 
   
 <!-- Old public pricing script removed by APC cleanup -->
+
+<script>
+(function () {
+  var offers = {
+    "350": { name: "One-Concern Parent Session", price: "RM350" },
+    "950": { name: "3-Session Starter Pack", price: "RM950" },
+    "1800": { name: "APC Home Support Programme", price: "RM1,800" }
+  };
+
+  var sel = new URLSearchParams(window.location.search).get("s");
+  if (!sel || !offers[sel]) return;
+
+  var cards = document.querySelectorAll(".apc-pay-card[data-offer]");
+  for (var i = 0; i < cards.length; i++) {
+    if (cards[i].getAttribute("data-offer") === sel) {
+      cards[i].classList.add("is-selected");
+    } else {
+      cards[i].classList.add("is-hidden");
+    }
+  }
+
+  var banner = document.getElementById("apc-pay-banner");
+  if (banner) {
+    banner.textContent = "You are paying for " + offers[sel].name + " at " + offers[sel].price + ". This was confirmed with CJ.";
+    banner.classList.add("is-active");
+  }
+
+  var target = document.getElementById("payment-details");
+  if (target) {
+    window.requestAnimationFrame(function () {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+})();
+</script>
 
 
 
