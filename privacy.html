@@ -558,8 +558,30 @@ footer{background:var(--text);color:#fff;padding:36px 20px}.footer-in{max-width:
     }
   }
 </style>
-</head><body><nav><div class="nav-in"><a class="apc-site-logo" href="index.html" aria-label="Autism Pathways Consulting home"><img src="apc-option-d-primary-logo.png" alt="Autism Pathways Consulting"></a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="resources.html">Resources</a></div><a href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer" class="nav-cta apc-free-call-nav">Free 15-Min First Step Call</a></div></nav>
-<main class="legal-clean-page">
+<style id="apc-a11y">
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{
+  outline:3px solid #0f766e;
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,249,241,.9);
+  border-radius:4px;
+}
+.apc-skip-link{
+  position:absolute;left:8px;top:-48px;z-index:1000;
+  padding:10px 16px;border-radius:999px;
+  background:#073734;color:#fff9f1;font-weight:800;text-decoration:none;
+  transition:top .15s ease;
+}
+.apc-skip-link:focus{top:8px;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
+</head><body>
+<a class="apc-skip-link" href="#main-content">Skip to main content</a><nav><div class="nav-in"><a class="apc-site-logo" href="index.html" aria-label="Autism Pathways Consulting home"><img src="apc-option-d-primary-logo.png" alt="Autism Pathways Consulting"></a><div class="nav-links"><a href="index.html">Home</a><a href="about.html">About CJ</a><a href="services.html">Services</a><a href="resources.html">Resources</a></div><a href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer" class="nav-cta apc-free-call-nav">Free 15-Min First Step Call</a></div></nav>
+<main id="main-content" class="legal-clean-page">
   <section class="legal-hero">
     <div class="legal-container">
       <p class="legal-kicker">Privacy</p>

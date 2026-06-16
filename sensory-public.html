@@ -292,9 +292,31 @@
       .cta-banner { padding: 32px 24px; }
     }
   </style>
+<style id="apc-a11y">
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{
+  outline:3px solid #0f766e;
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,249,241,.9);
+  border-radius:4px;
+}
+.apc-skip-link{
+  position:absolute;left:8px;top:-48px;z-index:1000;
+  padding:10px 16px;border-radius:999px;
+  background:#073734;color:#fff9f1;font-weight:800;text-decoration:none;
+  transition:top .15s ease;
+}
+.apc-skip-link:focus{top:8px;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
 </head>
 
 <body>
+<a class="apc-skip-link" href="#main-content">Skip to main content</a>
   <header>
     <nav aria-label="Main navigation">
       <a class="brand" href="index.html">Autism Pathways Consulting</a>
@@ -308,7 +330,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main-content">
     <a class="back-link" href="resources.html">&larr; Back to Resources</a>
 
     <div class="eyebrow">Free parent guide</div>

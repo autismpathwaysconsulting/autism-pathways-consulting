@@ -122,8 +122,30 @@
     .cta .handle { display: block; margin-top: 16px; color: var(--apc-muted); font-size: 0.84rem; }
     @media (max-width: 680px) { .two-col { gap: 14px; } }
   </style>
+<style id="apc-a11y">
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{
+  outline:3px solid #0f766e;
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,249,241,.9);
+  border-radius:4px;
+}
+.apc-skip-link{
+  position:absolute;left:8px;top:-48px;z-index:1000;
+  padding:10px 16px;border-radius:999px;
+  background:#073734;color:#fff9f1;font-weight:800;text-decoration:none;
+  transition:top .15s ease;
+}
+.apc-skip-link:focus{top:8px;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
 </head>
 <body>
+<a class="apc-skip-link" href="#main-content">Skip to main content</a>
   <div class="wrap topbar">
     <a class="back-link" href="start">&larr; Back to Start Here</a>
   </div>
@@ -132,7 +154,7 @@
     <h1>When your child can't get started</h1>
     <p class="lead">You ask your child to start their homework. They don't move. You ask again. Still nothing. It can look like they are ignoring you, or being lazy, or refusing on purpose. For many autistic children, that is not what is happening.</p>
   </header>
-  <main class="wrap body">
+  <main id="main-content" class="wrap body">
     <p>Starting a task is its own skill. Before any work gets done, the brain has to stop what it is doing, shift attention, and begin something new. This is called task initiation, and it is one of the harder things for many autistic children to do on demand. The work itself might be easy. Finding the way in is the hard part.</p>
     <div class="reframe">
       <p><strong>A small shift in how you see it:</strong> When your child does not start, they are often not saying "I won't." Their brain is closer to "I can't find the way in right now." That difference changes what helps. Pressure tends to make the freeze worse. Structure tends to make it easier.</p>
