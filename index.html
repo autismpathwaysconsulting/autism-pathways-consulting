@@ -1501,7 +1501,7 @@ a[aria-label="Message CJ"]:hover {
   }
 
   .apc-stars {
-    color: #E8997A;
+    color: #c2674a;
     font-size: 1.25rem;
     letter-spacing: 0.08em;
     margin-bottom: 12px;
@@ -2459,6 +2459,27 @@ a[aria-label="Message CJ"]:hover {
     max-width: 720px !important;
   }
 </style>
+<style id="apc-a11y">
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{
+  outline:3px solid #0f766e;
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,249,241,.9);
+  border-radius:4px;
+}
+.apc-skip-link{
+  position:absolute;left:8px;top:-48px;z-index:1000;
+  padding:10px 16px;border-radius:999px;
+  background:#073734;color:#fff9f1;font-weight:800;text-decoration:none;
+  transition:top .15s ease;
+}
+.apc-skip-link:focus{top:8px;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
 </head>
 <body>
 <a href="#main-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999;background:var(--teal);color:#fff;padding:8px 16px;border-radius:4px;font-weight:700" onfocus="this.style.left='16px';this.style.width='auto';this.style.height='auto'" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px'">Skip to main content</a>
@@ -2477,7 +2498,7 @@ a[aria-label="Message CJ"]:hover {
   </div>
 </nav>
 
-<main class="apc-home-clean">
+<main id="main-content" class="apc-home-clean">
   
 
 
@@ -2803,14 +2824,14 @@ a[aria-label="Message CJ"]:hover {
           <p>For parents who are not sure where to begin.</p>
           <p>A short call to understand your situation, see if APC is the right fit, and suggest the most suitable next step.</p>
           <div class="apc-card-actions">
-            <a class="btn btn-secondary" href="start.html">Book First Step Call</a>
+            <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
           </div>
         </article>
 
         <article class="apc-start-card featured">
           <h3>APC Home Support Programme</h3>
           <p>For parents who want guided support across connected daily challenges at home.</p>
-          <div class="apc-price">Programme starts from RM1,800 after a free fit call</div>
+          <div class="apc-price">RM1,800, after a free fit call</div>
           <p>A guided parent programme where we look at your child’s communication, regulation, routines, and daily home challenges, then build a practical Home Support Plan for what to do next.</p>
           <div class="apc-card-actions">
             <a class="btn btn-primary" href="services.html">See Home Support Programme</a>
@@ -2824,7 +2845,7 @@ a[aria-label="Message CJ"]:hover {
           <div class="apc-slot-text">RM350 | 45 minutes | Online</div>
           <p>A focused parent session for one repeated concern, such as routines, communication, refusal, learning stress, or difficult moments at home.</p>
           <div class="apc-card-actions">
-            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Start with a Free First Step Call</a>
             <a class="btn btn-secondary" href="services.html">See Home Support Programme</a>
           </div>
         </article>
