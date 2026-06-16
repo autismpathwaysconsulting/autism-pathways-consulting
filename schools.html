@@ -446,17 +446,17 @@ footer a{color:rgba(255,255,255,.7);margin:0 12px;font-size:14px}
       <form onsubmit="submitSchoolForm(event)">
         <div class="form-row">
           <div class="form-field">
-            <label>Your name</label>
+            <label for="sf-name">Your name</label>
             <input type="text" id="sf-name" placeholder="e.g. Ms Priya" required/>
           </div>
           <div class="form-field">
-            <label>School / centre name</label>
+            <label for="sf-school">School / centre name</label>
             <input type="text" id="sf-school" placeholder="e.g. Tadika Ceria" required/>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Your role</label>
+            <label for="sf-role">Your role</label>
             <select id="sf-role">
               <option value="">Select...</option>
               <option>Principal / Director</option>
@@ -467,12 +467,12 @@ footer a{color:rgba(255,255,255,.7);margin:0 12px;font-size:14px}
             </select>
           </div>
           <div class="form-field">
-            <label>WhatsApp number</label>
+            <label for="sf-phone">WhatsApp number</label>
             <input type="tel" id="sf-phone" placeholder="e.g. 011-1234 5678" required/>
           </div>
         </div>
         <div class="form-field" style="margin-bottom:12px">
-          <label>What do you need support with?</label>
+          <label for="sf-message">What do you need support with?</label>
           <textarea id="sf-message" placeholder="e.g. We need guidance for supporting a student with overwhelm during class transitions..."></textarea>
         </div>
         <button type="submit" class="form-submit">Register interest</button>
