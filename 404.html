@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found | Autism Pathways Consulting</title>
+  <meta name="description" content="That page could not be found. Find your way back to Autism Pathways Consulting parent guides, services, and the free First Step Call." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta name="theme-color" content="#073734" />
+  <style>
+    :root {
+      --deep: #073734;
+      --teal: #0f766e;
+      --cream: #fff9f1;
+      --coral: #e8997a;
+      --text: #253532;
+      --muted: #526966;
+      --border: rgba(7, 55, 52, 0.14);
+      --font: "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: inherit; text-decoration: none; }
+    header {
+      background: rgba(255, 249, 241, 0.96);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+    nav {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; }
+    .brand img { height: 40px; width: auto; object-fit: contain; }
+    .links { display: flex; align-items: center; gap: 22px; font-weight: 800; font-size: 0.95rem; color: #314241; }
+    .links a:hover { color: var(--teal); }
+    .nav-cta {
+      background: var(--teal); color: #fff !important;
+      padding: 11px 18px; border-radius: 999px;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18);
+    }
+    main {
+      flex: 1;
+      width: min(720px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 72px 0 64px;
+      text-align: center;
+    }
+    .eyebrow {
+      color: var(--teal); font-size: 0.78rem; font-weight: 850;
+      letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 18px; color: var(--deep);
+      font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.06; letter-spacing: -0.04em;
+    }
+    .lead { margin: 0 auto 34px; max-width: 540px; font-size: 1.1rem; color: var(--muted); }
+    .cards {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px; text-align: left; margin: 0 auto;
+    }
+    .card {
+      background: #fff; border: 1px solid var(--border); border-radius: 18px;
+      padding: 20px 22px; box-shadow: 0 14px 34px rgba(7, 55, 52, 0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 18px 42px rgba(7, 55, 52, 0.10); }
+    .card h2 { margin: 0 0 5px; color: var(--deep); font-size: 1.08rem; letter-spacing: -0.02em; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .primary-action { margin-top: 30px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 50px;
+      padding: 14px 28px; border-radius: 999px; background: var(--deep); color: var(--cream);
+      font-weight: 850; box-shadow: 0 12px 28px rgba(7, 55, 52, 0.18);
+    }
+    .btn:hover { background: #0a4a45; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: 1fr; }
+      .links a:not(.nav-cta) { display: none; }
+      main { padding: 48px 0 48px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Main navigation">
+      <a class="brand" href="/" aria-label="Autism Pathways Consulting home">
+        <img src="apc-option-d-primary-logo.png" alt="Autism Pathways Consulting" />
+      </a>
+      <div class="links">
+        <a href="/">Home</a>
+        <a href="/about">About CJ</a>
+        <a href="/services">Services</a>
+        <a href="/resources">Resources</a>
+        <a class="nav-cta" href="/start">Free 15-Min First Step Call</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <p class="eyebrow">Page not found</p>
+    <h1>This page seems to have wandered off.</h1>
+    <p class="lead">
+      The link may be old or slightly mistyped. Nothing is broken on your end. Here are a few good places to pick up from.
+    </p>
+
+    <div class="cards">
+      <a class="card" href="/">
+        <h2>Home</h2>
+        <p>Start at the beginning and see how APC supports parents.</p>
+      </a>
+      <a class="card" href="/resources">
+        <h2>Parent guides</h2>
+        <p>Practical guides for meltdowns, routines, communication, and more.</p>
+      </a>
+      <a class="card" href="/services">
+        <h2>Services</h2>
+        <p>The First Step Call, One-Concern Session, and Home Support Programme.</p>
+      </a>
+      <a class="card" href="/start">
+        <h2>Start here</h2>
+        <p>Not sure where to begin? This page helps you choose.</p>
+      </a>
+    </div>
+
+    <div class="primary-action">
+      <a class="btn" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book a Free 15-Min First Step Call</a>
+    </div>
+  </main>
+
+  <footer>
+    Autism Pathways Consulting | autismpathwaysconsulting.com
+  </footer>
+</body>
+</html>
