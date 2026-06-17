@@ -357,6 +357,22 @@
     .footer-text a { color: var(--text3); }
     .footer-text a:hover { color: var(--text2); }
 
+    /* Shared APC footer (matches index.html / about.html) */
+    .apc-footer{background:#f7f3eb;color:#1f2a2a;padding:46px 20px 22px;border-top:1px solid rgba(31,75,71,.10);text-align:left}
+    .apc-footer-inner{width:min(1080px,100%);margin:0 auto;display:grid;grid-template-columns:1.45fr .75fr .95fr 1.05fr;gap:clamp(2rem,5vw,4.5rem);align-items:start}
+    .apc-footer a{color:inherit;text-decoration:none}
+    .apc-footer-logo{display:inline-block;margin-bottom:.8rem;color:#1f6f66;font-size:.95rem;font-weight:800;letter-spacing:-.01em}
+    .apc-footer-brand p{max-width:360px;margin:0 0 .85rem;color:rgba(31,42,42,.66);font-size:.88rem;line-height:1.65}
+    .apc-footer-small{color:rgba(31,42,42,.48);font-size:.74rem;line-height:1.55}
+    .apc-footer-column h3{margin:0 0 .9rem;color:rgba(31,42,42,.46);font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    .apc-footer-column a{display:block;width:fit-content;margin:0 0 .62rem;color:rgba(31,42,42,.68);font-size:.86rem;font-weight:500;line-height:1.35;transition:color 160ms ease,transform 160ms ease}
+    .apc-footer-column a:hover{color:#1f6f66;transform:translateX(2px)}
+    .apc-footer-bottom{width:min(1080px,100%);margin:34px auto 0;padding-top:18px;border-top:1px solid rgba(31,75,71,.10)}
+    .apc-footer-bottom p{margin:0;color:rgba(31,42,42,.48);font-size:.74rem;line-height:1.5}
+    .apc-footer-bottom a{color:inherit;text-decoration:underline}
+    @media(max-width:860px){.apc-footer-inner{grid-template-columns:1fr 1fr;gap:2rem 1.75rem}.apc-footer-brand{grid-column:1/-1}.apc-footer-brand p{max-width:100%}}
+    @media(max-width:560px){.apc-footer-inner{grid-template-columns:1fr;gap:1.8rem}.apc-footer-column a{width:auto}}
+
     /* MOBILE */
     @media (max-width: 768px) {
       .nav-links { display: none; }
@@ -539,16 +555,42 @@
 
 </main>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <p class="footer-text">
-      &copy; Autism Pathways Consulting &nbsp;&middot;&nbsp;
-      Operated by CJ Special and Inclusive Consultancy (003030209-T) &nbsp;&middot;&nbsp;
+<footer class="apc-footer">
+  <div class="apc-footer-inner">
+    <div class="apc-footer-brand">
+      <a href="index.html" class="apc-footer-logo">Autism Pathways Consulting</a>
+      <p>Evidence-informed parent support for families who want to reduce guesswork, understand patterns, and choose practical next steps at home.</p>
+      <p class="apc-footer-small">CJ Special and Inclusive Consultancy (003030209-T)<br>SSM Reg. 201903282307 · Petaling Jaya and KL</p>
+    </div>
+
+    <nav class="apc-footer-column" aria-label="Explore">
+      <h3>Explore</h3>
+      <a href="index.html">Home</a>
+      <a href="about.html">About CJ</a>
+      <a href="services.html">Services</a>
+      <a href="start.html">Start Here</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+
+    <nav class="apc-footer-column" aria-label="Support">
+      <h3>Support</h3>
+      <a href="services.html">Parent Support Options</a>
+      <a href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener">Free 15-Min First Step Call</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="cancellation-policy.html">Cancellation Policy</a>
+    </nav>
+
+    <div class="apc-footer-column">
+      <h3>Contact</h3>
+      <a href="https://wa.me/601172998168" target="_blank" rel="noopener">WhatsApp: 011-7299 8168</a>
       <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a>
-    </p>
-    <p class="footer-text">
-      <a href="https://instagram.com/autismpathwaysconsulting">@autismpathwaysconsulting</a>
-    </p>
+      <a href="https://instagram.com/autismpathwaysconsulting" target="_blank" rel="noopener">@autismpathwaysconsulting</a>
+    </div>
+  </div>
+
+  <div class="apc-footer-bottom">
+    <p>&copy; Autism Pathways Consulting &middot; Operated by CJ Special and Inclusive Consultancy (003030209-T) &middot; <a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a></p>
   </div>
 </footer>
 
