@@ -2997,6 +2997,12 @@ html {
 
   .apc-flow-card h3 {
     color: #FFF9F1;
+    min-height: 2.6em;
+  }
+
+  #how-apc-helps .apc-services-title {
+    font-size: clamp(26px, 3.8vw, 40px);
+    text-wrap: balance;
   }
 
   .apc-flow-card p {
@@ -3579,7 +3585,7 @@ html {
     config: {"layout":"month_view"},
     calLink: "autismpathwaysconsulting/first-step-call",
   });
-  Cal.ns["first-step-call"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+  Cal.ns["first-step-call"]("ui", {"theme":"light","cssVarsPerTheme":{"light":{"cal-brand":"#073734"}},"hideEventTypeDetails":false,"layout":"month_view"});
 </script>
 
 </body>
