@@ -40,6 +40,21 @@
       "@type": "Question",
       "name": "What if I want structured support?",
       "acceptedAnswer": { "@type": "Answer", "text": "Start with the free 15-minute call. If the Home Support Programme is suitable, CJ will explain the next step clearly." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this therapy?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. APC is parent education and structured parent support. CJ is not a therapist, and APC does not provide diagnosis, treatment, or clinical therapy. The work is evidence-informed support that helps you understand and respond to your child's patterns at home." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will this replace my child's therapists?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. APC works with you, not instead of the therapists your child is already seeing. The support is designed to sit alongside any OT, speech, or other professional care your child receives." }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my child does not have a formal diagnosis?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A diagnosis is not required. The support looks at patterns across communication, regulation, routines, environment, and parent responses, which apply whether or not a formal diagnosis is in place." }
     }
   ]
 }
@@ -3380,20 +3395,85 @@ html {
           <h3>What if I want structured support?</h3>
           <p>Start with the free 15-minute call. If the Home Support Programme is suitable, CJ will explain the next step clearly.</p>
         </article>
+        <article class="apc-faq-card">
+          <h3>Is this therapy?</h3>
+          <p>No. APC is parent education and structured parent support. CJ is not a therapist, and APC does not provide diagnosis, treatment, or clinical therapy. The work is evidence-informed support that helps you understand and respond to your child's patterns at home.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>Will this replace my child's therapists?</h3>
+          <p>No. APC works with you, not instead of the therapists your child is already seeing. The support is designed to sit alongside any OT, speech, or other professional care your child receives.</p>
+        </article>
+        <article class="apc-faq-card">
+          <h3>What if my child does not have a formal diagnosis?</h3>
+          <p>A diagnosis is not required. The support looks at patterns across communication, regulation, routines, environment, and parent responses, which apply whether or not a formal diagnosis is in place.</p>
+        </article>
       </div>
     </section>
 
-    <section class="apc-services-section">
+    <style id="apc-trust-block">
+      .apc-testimonial-placeholder{
+        max-width:680px;margin:28px auto 0;padding:28px 30px;
+        background:#FFF9F1;border:1px solid #f0dcc8;border-left:4px solid #E8997A;
+        border-radius:16px;text-align:center;
+      }
+      .apc-testimonial-quote{
+        font-family:'DM Serif Display',serif;font-size:1.35rem;line-height:1.45;
+        color:#073734;font-style:italic;margin:0 0 10px;
+      }
+      .apc-testimonial-attr{
+        font-size:0.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+        color:#9a6b52;margin:0;
+      }
+      .apc-cal-inline{
+        width:100%;min-height:620px;margin:22px auto 0;
+        background:#fff;border-radius:16px;overflow:hidden;
+        box-shadow:0 10px 30px rgba(7,55,52,.08);
+      }
+      .apc-cal-fallback{
+        font-size:0.9rem;color:#3d5552;text-align:center;margin:14px 0 0;
+      }
+      .apc-cal-fallback a{color:#0f766e;font-weight:700;}
+      @media (max-width:600px){ .apc-cal-inline{min-height:560px;} }
+    </style>
+    <section class="apc-services-section" id="trust-and-stories">
+      <p class="apc-services-kicker">Trust and stories</p>
+      <h2 class="apc-services-title">Backed by training. Working alongside therapists.</h2>
+      <p class="apc-services-intro">
+        Parent stories are being collected and will appear here soon. Until then, here is what stands behind the support.
+      </p>
+
+      <div class="apc-concern-grid">
+        <article class="apc-concern-card">
+          <h3>Hanen-informed training</h3>
+          <p>CJ's parent guidance is informed by Hanen programme training, which focuses on everyday communication and connection between parent and child.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Alongside a Speech Language Therapist</h3>
+          <p>APC collaborates with Stephanie De Souza, Speech Language Therapist, so parent support sits alongside qualified clinical care, not in place of it.</p>
+        </article>
+        <article class="apc-concern-card">
+          <h3>Ten years with children and families</h3>
+          <p>Guidance from CJ Lim, MA Special and Inclusive Education, shaped by school-based and one-to-one experience.</p>
+        </article>
+      </div>
+
+      <!-- Drop a real parent quote here the moment the first one lands. Replace the placeholder text and attribution. -->
+      <blockquote class="apc-testimonial-placeholder">
+        <p class="apc-testimonial-quote">A parent story will appear here soon.</p>
+        <p class="apc-testimonial-attr">First parent story coming soon</p>
+      </blockquote>
+    </section>
+
+    <section class="apc-services-section" id="book-now">
       <div class="apc-final-cta">
-        <h2>Not sure what your family needs?</h2>
+        <h2>Book your free First Step Call</h2>
         <p>
-          Start with the free 15-min call. If your concern is clearer and you want focused help,
-          ask about the APC Home Support Programme.
+          A short, no-cost call to understand your situation and suggest the most suitable next step. Pick a time below.
         </p>
-        <div class="apc-services-actions">
-          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
-          <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book One-Concern Session</a>
-        </div>
+        <div id="apc-cal-inline" class="apc-cal-inline" aria-label="First Step Call booking calendar"></div>
+        <p class="apc-cal-fallback">
+          Calendar not loading? <a href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Open the booking page in a new tab</a>.
+        </p>
       </div>
     </section>
 
@@ -3488,6 +3568,18 @@ html {
     });
   });
 })();
+</script>
+
+<!-- Cal.com inline embed: First Step Call booked on-page, no click-out -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "first-step-call", {origin:"https://cal.com"});
+  Cal.ns["first-step-call"]("inline", {
+    elementOrSelector:"#apc-cal-inline",
+    config: {"layout":"month_view"},
+    calLink: "autismpathwaysconsulting/first-step-call",
+  });
+  Cal.ns["first-step-call"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
 </script>
 
 </body>

@@ -2933,6 +2933,28 @@ a[aria-label="Message CJ"]:hover {
 
   
 
+  <style id="apc-home-cal">
+    .apc-cal-inline{
+      width:100%;min-height:620px;margin:22px auto 0;
+      background:#fff;border-radius:16px;overflow:hidden;
+      box-shadow:0 10px 30px rgba(7,55,52,.08);
+    }
+    .apc-cal-fallback{font-size:0.9rem;color:#3d5552;margin:14px 0 0;}
+    .apc-cal-fallback a{color:#0f766e;font-weight:700;}
+    @media (max-width:600px){ .apc-cal-inline{min-height:560px;} }
+  </style>
+  <section class="apc-home-section" id="book-now">
+    <p class="apc-home-kicker">Book now</p>
+    <h2 class="apc-home-title">Start with a free First Step Call.</h2>
+    <p style="max-width:640px;color:#234d49;margin:0 0 4px;">
+      A short, no-cost call to understand your situation and suggest the most suitable next step. Pick a time below.
+    </p>
+    <div id="apc-cal-inline" class="apc-cal-inline" aria-label="First Step Call booking calendar"></div>
+    <p class="apc-cal-fallback">
+      Calendar not loading? <a href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Open the booking page in a new tab</a>.
+    </p>
+  </section>
+
 </main>
 
 <footer class="apc-footer">
@@ -3009,6 +3031,18 @@ function showPanel(name) {
     }, 80);
   }
 }
+</script>
+
+<!-- Cal.com inline embed: First Step Call booked on-page, no click-out -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "first-step-call", {origin:"https://cal.com"});
+  Cal.ns["first-step-call"]("inline", {
+    elementOrSelector:"#apc-cal-inline",
+    config: {"layout":"month_view"},
+    calLink: "autismpathwaysconsulting/first-step-call",
+  });
+  Cal.ns["first-step-call"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
 </script>
 
 </body>
