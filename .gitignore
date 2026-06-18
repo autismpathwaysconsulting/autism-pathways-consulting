@@ -1,3 +1,5 @@
 backups/
+_backup_*/
+_local_backups/
 .DS_Store
 .claude/
