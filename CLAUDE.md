@@ -1,11 +1,11 @@
-# APC website — working rules for this repo
+# APC website: working rules for this repo
 
 Static HTML site for Autism Pathways Consulting (APC), founded by CJ Lim (MA Special and
 Inclusive Education). Deployed via GitHub → Cloudflare Pages at autismpathwaysconsulting.com.
 No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-deploys to production.
 
 ## Non-negotiable brand rules (apply to every change)
-- **No em dashes anywhere, ever.** Use commas, colons, or full stops. Verify with `grep -c "—" <file>` (must be 0).
+- **No em dashes anywhere, ever.** Use commas, colons, or full stops. Before committing, confirm zero em-dash characters remain in changed files (count must be 0).
 - **No therapy-replacement, diagnosis, cure, "method/framework", or guaranteed-outcome language.**
   APC is parent education and structured parent support, not therapy, diagnosis, or treatment.
 - Tone: warm, calm, practical. Card/guide titles use the parent's felt moment, not a clinical
@@ -21,10 +21,10 @@ No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-dep
   Guide pages use a minimal footer; both must carry scope + SSM.
 
 ## Locked offer ladder (use exactly, no variations)
-1. **Free 15-Min First Step Call** — fit check, no cost. Cal.com slug `first-step-call`.
-2. **One-Concern Parent Session** — RM350, 45 min online, one repeated concern, focused pattern
+1. **Free 15-Min First Step Call**: fit check, no cost. Cal.com slug `first-step-call`.
+2. **One-Concern Parent Session**: RM350, 45 min online, one repeated concern, focused pattern
    review, one practical next step. Cal.com slug `parent-strategy-session` (slug unchanged; label is "One-Concern").
-3. **APC Home Support Programme** — RM1,800, six weekly sessions over six weeks, personalised Home
+3. **APC Home Support Programme**: RM1,800, six weekly sessions over six weeks, personalised Home
    Support Plan, WhatsApp clarification throughout, plus one check-in about a month after the final session.
 
 **Never reintroduce these dropped offers:** RM950 / 3-Session Starter Pack, RM2,500 / Comprehensive,
@@ -47,7 +47,7 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 
 ## Images
 - Convert inline-rendered rasters to WebP; keep originals as fallback. **Encode with Python Pillow**
-  (`Image.open(x).save(y,"WEBP",quality=90,method=6)`) — `sips` can read but not write WebP here.
+  (`Image.open(x).save(y,"WEBP",quality=90,method=6)`) because `sips` can read but not write WebP here.
 - Keep `og-image.png` and the JSON-LD `"logo"` as PNG (social scrapers / structured data).
 
 ## Workflow
