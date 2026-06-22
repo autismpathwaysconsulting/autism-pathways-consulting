@@ -24,7 +24,7 @@ No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-dep
 1. **Free 15-Min First Step Call**: fit check, no cost. Cal.com slug `first-step-call`.
 2. **One-Concern Parent Session**: RM350, 45 min online, one repeated concern, focused pattern
    review, one practical next step. Cal.com slug `parent-strategy-session` (slug unchanged; label is "One-Concern").
-3. **APC Home Support Programme**: RM1,800, six weekly sessions over six weeks, personalised Home
+3. **APC Home Support Programme**: RM1,800, four sessions once every two weeks, personalised Home
    Support Plan, WhatsApp clarification throughout, plus one check-in about a month after the final session.
 
 **Never reintroduce these dropped offers:** RM950 / 3-Session Starter Pack, RM2,500 / Comprehensive,
