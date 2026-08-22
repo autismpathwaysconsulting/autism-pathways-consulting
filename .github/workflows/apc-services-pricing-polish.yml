@@ -1,0 +1,161 @@
+name: APC services pricing polish
+
+on:
+  push:
+    branches:
+      - apc/services-pricing-polish
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: apc/services-pricing-polish
+
+      - name: Reorder service cards and move prices up
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('services.html')
+          text = path.read_text()
+
+          old = '''      <div class="apc-service-grid">
+        <article class="apc-service-card">
+          <div class="apc-service-tag">First step</div>
+          <h2>Free 15-Min First Step Call</h2>
+          <p>A short call to understand your situation, see if APC is the right fit, and suggest the most suitable next step.</p>
+          <ul class="apc-service-list">
+            <li>Best for parents who are not sure where to begin</li>
+            <li>One useful reframe</li>
+            <li>One initial direction</li>
+            <li>One recommended next step</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card featured">
+          <div class="apc-service-tag">Main programme</div>
+          <h2>APC Home Support Programme</h2>
+          <p>For parents wanting structured Home Support. Start with the free First Step Call so CJ can check whether the programme is a good fit.</p>
+          <p>Four sessions, once every two weeks. Builds a personalised Home Support Plan covering communication, regulation, routines, and parent responses. Includes WhatsApp clarification throughout, plus one check-in about a month after the final session.</p>
+          <p style="margin:10px 0 0;padding:10px 14px;background:#FFF9F1;border-left:3px solid #2DD4BF;border-radius:8px;font-size:0.9rem;color:#073734;">If the Home Support Plan doesn't feel usable to you after Session 1, we adjust it together before Session 2, at no extra cost.</p>
+          <div class="apc-service-price">RM1,800</div>
+          <ul class="apc-service-list">
+            <li>Four sessions, once every two weeks</li>
+            <li>Personalised Home Support Plan</li>
+            <li>WhatsApp clarification throughout the programme</li>
+            <li>One check-in session about a month after the final session</li>
+          </ul>
+          <p style="margin-top:14px;font-size:0.95rem;color:#3d5552;font-style:italic;">APC works with you, not instead of the therapists your child is already seeing.</p>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card">
+          <div class="apc-service-tag">One focused session</div>
+          <h2>One-Concern Parent Session</h2>
+          <p>A focused 45-minute session for one repeated concern. You leave with a clearer picture of the pattern and one practical next step.</p>
+          <p>Book this session directly. The Cal.com booking form is your intake form, and you do not need a First Step Call first.</p>
+          <div class="apc-slot-bar" aria-hidden="true"><span></span></div>
+          <div class="apc-slot-text">RM350 | 45 minutes | Online</div>
+          <ul class="apc-service-list">
+            <li>One repeated concern, reviewed in full</li>
+            <li>Focused pattern review</li>
+            <li>One practical next step</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book One-Concern Session</a>
+          </div>
+        </article>
+      </div>'''
+
+          new = '''      <div class="apc-service-grid">
+        <article class="apc-service-card">
+          <div class="apc-service-tag">First step</div>
+          <h2>Free 15-Min First Step Call</h2>
+          <p>A short call to understand your situation, see if APC is the right fit, and suggest the most suitable next step.</p>
+          <ul class="apc-service-list">
+            <li>Best for parents who are not sure where to begin</li>
+            <li>One useful reframe</li>
+            <li>One initial direction</li>
+            <li>One recommended next step</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card">
+          <div class="apc-service-tag">One focused session</div>
+          <h2>One-Concern Parent Session</h2>
+          <div class="apc-slot-text">RM350 | 45 minutes | Online</div>
+          <p>A focused 45-minute session for one repeated concern. You leave with a clearer picture of the pattern and one practical next step.</p>
+          <p>Book this session directly. The Cal.com booking form is your intake form, and you do not need a First Step Call first.</p>
+          <div class="apc-slot-bar" aria-hidden="true"><span></span></div>
+          <ul class="apc-service-list">
+            <li>One repeated concern, reviewed in full</li>
+            <li>Focused pattern review</li>
+            <li>One practical next step</li>
+          </ul>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book One-Concern Session</a>
+          </div>
+        </article>
+
+        <article class="apc-service-card featured">
+          <div class="apc-service-tag">Main programme</div>
+          <h2>APC Home Support Programme</h2>
+          <div class="apc-service-price">RM1,800</div>
+          <p>For parents wanting structured Home Support. Start with the free First Step Call so CJ can check whether the programme is a good fit.</p>
+          <p>Four sessions, once every two weeks. Builds a personalised Home Support Plan covering communication, regulation, routines, and parent responses. Includes WhatsApp clarification throughout, plus one check-in about a month after the final session.</p>
+          <p style="margin:10px 0 0;padding:10px 14px;background:#FFF9F1;border-left:3px solid #2DD4BF;border-radius:8px;font-size:0.9rem;color:#073734;">If the Home Support Plan doesn't feel usable to you after Session 1, we adjust it together before Session 2, at no extra cost.</p>
+          <ul class="apc-service-list">
+            <li>Four sessions, once every two weeks</li>
+            <li>Personalised Home Support Plan</li>
+            <li>WhatsApp clarification throughout the programme</li>
+            <li>One check-in session about a month after the final session</li>
+          </ul>
+          <p style="margin-top:14px;font-size:0.95rem;color:#3d5552;font-style:italic;">APC works with you, not instead of the therapists your child is already seeing.</p>
+          <div class="apc-service-actions">
+            <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book First Step Call</a>
+          </div>
+        </article>
+      </div>'''
+
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected exactly one service-grid block, found {text.count(old)}')
+
+          updated = text.replace(old, new)
+          if '\u2014' in updated:
+              raise SystemExit('Em dash found after edit')
+          if updated.count('https://cal.com/autismpathwaysconsulting/first-step-call') < 1:
+              raise SystemExit('First Step Call URL missing')
+          if updated.count('https://cal.com/autismpathwaysconsulting/parent-strategy-session') < 1:
+              raise SystemExit('One-Concern URL missing')
+          if 'RM350 | 45 minutes | Online' not in updated or 'RM1,800' not in updated:
+              raise SystemExit('Expected pricing missing')
+
+          path.write_text(updated)
+          PY
+
+      - name: Verify diff
+        run: |
+          git diff --check
+          git diff -- services.html
+
+      - name: Commit polished services page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add services.html
+          git commit -m "Improve services pricing scan order"
+          git push origin HEAD:apc/services-pricing-polish
