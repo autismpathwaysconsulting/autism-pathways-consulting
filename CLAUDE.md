@@ -1,8 +1,9 @@
 # APC website: working rules for this repo
 
 Static HTML site for Autism Pathways Consulting (APC), founded by CJ Lim (MA Special and
-Inclusive Education). Deployed via GitHub → Cloudflare Pages at autismpathwaysconsulting.com.
-No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-deploys to production.
+Inclusive Education). No build step: edit HTML/CSS in place. The public-launch state is
+`PREPARATION_NOT_LAUNCHED / NOT_AUTHORISED`. Production deployment, launch, merge, and marking
+a draft PR ready for review require separate Founder authorization.
 
 ## Non-negotiable brand rules (apply to every change)
 - **No em dashes anywhere, ever.** Use commas, colons, or full stops. Before committing, confirm zero em-dash characters remain in changed files (count must be 0).
@@ -13,7 +14,7 @@ No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-dep
 - Scope line where relevant: "APC works with you, not instead of the therapists your child is already seeing."
 - Parent-facing CTAs should route by readiness rather than forcing every parent through the same path:
   - **Unsure what support fits:** Free 15-Min First Step Call (Cal.com event `first-step-call`).
-  - **One clear repeated concern:** Book the One-Concern Parent Session directly through the existing Cal.com `parent-strategy-session` flow. The Cal.com form is the intake form. Do not require a First Step Call first.
+  - **One focused parent concern:** Submit a One-Concern Parent Session booking request through the existing Cal.com `parent-strategy-session` flow. The Founder must confirm suitability and availability and give permission before payment. Do not require a First Step Call first when suitability and scope are already clear.
   - **Ready for structured Home Support:** Start with the Free 15-Min First Step Call so CJ can check whether the RM1,800 APC Home Support Programme is a good fit.
 - Keep the Free 15-Min First Step Call clearly available for parents who are unsure and as the fit-check path for Home Support.
 - Do not turn Home Support into unrestricted direct checkout or create a new intake form unless separately approved.
@@ -26,10 +27,15 @@ No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-dep
 
 ## Locked offer ladder (use exactly, no variations)
 1. **Free 15-Min First Step Call**: fit check, no cost. Cal.com slug `first-step-call`.
-2. **One-Concern Parent Session**: RM350, 45 min online, one repeated concern, focused pattern
-   review, one practical next step. Cal.com slug `parent-strategy-session` (slug unchanged; label is "One-Concern").
-3. **APC Home Support Programme**: RM1,800, four sessions once every two weeks, personalised Home
-   Support Plan, WhatsApp clarification throughout, plus one check-in about a month after the final session.
+2. **One-Concern Parent Session**: RM350, 45 minutes, Google Meet, one focused parent concern,
+   focused pattern review, one practical next step. Submit a booking request first. The Founder
+   reviews suitability and availability and gives permission before payment. Pay only by Maybank
+   bank transfer or DuitNow QR, then submit payment proof. The Founder verifies payment before
+   manually confirming the booking and Google Meet details. A request or payment is not automatic
+   booking confirmation. Cal.com slug `parent-strategy-session` (slug unchanged; label is "One-Concern").
+3. **APC Home Support Programme**: RM1,800, four 60-minute sessions over approximately 6–8 weeks,
+   personalised Home Support Plan, and WhatsApp clarification throughout. There is no additional
+   post-programme check-in.
 
 **Never reintroduce these dropped offers:** RM950 / 3-Session Starter Pack, RM2,500 / Comprehensive,
 Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strategy Session, Focused Parent Support.
@@ -48,7 +54,7 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 - Booking is embedded inline via the Cal.com embed on `index.html`.
 - The Services page uses direct CTA links:
   - Unsure parents: Free 15-Min First Step Call.
-  - One clear concern: direct RM350 One-Concern Parent Session.
+  - One focused parent concern: RM350 One-Concern Parent Session booking request, subject to Founder suitability and availability confirmation before payment.
 - Do not reintroduce the large inline Cal.com calendar on `services.html` unless separately approved.
 - Custom `404.html` + `_redirects` (`/* /404.html 404`). Accessibility baseline: `<style id="apc-a11y">`,
   a skip link, and `id="main-content"` on each `<main>` already exist on live pages; do not re-add.
@@ -60,7 +66,9 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 
 ## Workflow
 - Verify edits with `grep -c` before committing. Confirm em-dash count is 0.
-- Commit messages: **no AI attribution lines.** Push: `git add <files>` → `git commit` → `git push origin main`.
+- Commit messages: **no AI attribution lines.** Push only the authorized review branch normally,
+  without force. Do not push to `main`, merge, mark a draft PR ready, deploy, or launch without
+  separate Founder authorization.
 - Do not edit or commit `_backup_*/`, `_local_backups/`, `backups/`, or `.claude/` (all gitignored;
   historical snapshots / local dev config).
 - Local preview: serve with Node (`.claude/static-server.js` on :8899); `python3 -m http.server` is sandbox-blocked.
