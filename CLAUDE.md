@@ -45,7 +45,11 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 - Payment: `/pay/` (real page, supports `?s=350` / `?s=1800`); root `pay.html` redirects to it.
 - Brevo email capture: free parent guide (on `resources.html` + homepage card) and the course waitlist
   (`course-waitlist.html`) are separate Brevo forms. The course sales page is `/connect`.
-- Booking is embedded inline via the Cal.com embed on `index.html` and `services.html` (no click-out).
+- Booking is embedded inline via the Cal.com embed on `index.html`.
+- The Services page uses direct CTA links:
+  - Unsure parents: Free 15-Min First Step Call.
+  - One clear concern: direct RM350 One-Concern Parent Session.
+- Do not reintroduce the large inline Cal.com calendar on `services.html` unless separately approved.
 - Custom `404.html` + `_redirects` (`/* /404.html 404`). Accessibility baseline: `<style id="apc-a11y">`,
   a skip link, and `id="main-content"` on each `<main>` already exist on live pages; do not re-add.
 
