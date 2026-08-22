@@ -13,10 +13,10 @@ No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-dep
 - Scope line where relevant: "APC works with you, not instead of the therapists your child is already seeing."
 - Parent-facing CTAs should route by readiness rather than forcing every parent through the same path:
   - **Unsure what support fits:** Free 15-Min First Step Call (Cal.com event `first-step-call`).
-  - **One clear repeated concern:** Apply for a One-Concern Parent Session through the existing Parent Intake Form. Do not require a First Step Call first.
-  - **Ready for structured support:** Apply for APC Home Support through the existing Parent Intake Form. Do not require a First Step Call first.
-- Keep the Free 15-Min First Step Call clearly available for parents who are unsure. Do not make it a mandatory gate for RM350 or RM1,800 support.
-- RM350 and RM1,800 applications remain subject to APC fit review. Do not turn these into unrestricted payment or self-booking flows unless separately approved.
+  - **One clear repeated concern:** Book the One-Concern Parent Session directly through the existing Cal.com `parent-strategy-session` flow. The Cal.com form is the intake form. Do not require a First Step Call first.
+  - **Ready for structured Home Support:** Start with the Free 15-Min First Step Call so CJ can check whether the RM1,800 APC Home Support Programme is a good fit.
+- Keep the Free 15-Min First Step Call clearly available for parents who are unsure and as the fit-check path for Home Support.
+- Do not turn Home Support into unrestricted direct checkout or create a new intake form unless separately approved.
 
 ## Footer requirement (every parent-facing page)
 - Scope disclaimer present, and the SSM line:
