@@ -3433,16 +3433,6 @@ html {
         font-size:0.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
         color:#9a6b52;margin:0;
       }
-      .apc-cal-inline{
-        width:100%;min-height:620px;margin:22px auto 0;
-        background:transparent;border-radius:16px;overflow:hidden;
-        border:1px solid rgba(255,255,255,0.1);
-      }
-      .apc-cal-fallback{
-        font-size:0.9rem;color:rgba(255,255,255,0.6);text-align:center;margin:14px 0 0;
-      }
-      .apc-cal-fallback a{color:#2DD4BF;font-weight:700;}
-      @media (max-width:600px){ .apc-cal-inline{min-height:560px;} }
     </style>
     <section class="apc-services-section" id="trust-and-stories">
       <p class="apc-services-kicker">Trust and stories</p>
@@ -3475,14 +3465,19 @@ html {
 
     <section class="apc-services-section" id="book-now">
       <div class="apc-final-cta">
-        <h2>Book your free First Step Call</h2>
+        <h2>Choose your next step</h2>
         <p>
-          A short, no-cost call to understand your situation and suggest the most suitable next step. Pick a time below.
+          <strong>Not sure where to start?</strong><br>
+          Book the Free 15-Min First Step Call.
         </p>
-        <div id="apc-cal-inline" class="apc-cal-inline" aria-label="First Step Call booking calendar"></div>
-        <p class="apc-cal-fallback">
-          Calendar not loading? <a href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Open the booking page in a new tab</a>.
+        <p>
+          <strong>Have one clear repeated concern?</strong><br>
+          Book the RM350 One-Concern Parent Session directly.
         </p>
+        <div class="apc-services-actions">
+          <a class="btn btn-primary" href="https://cal.com/autismpathwaysconsulting/first-step-call" target="_blank" rel="noopener noreferrer">Book Free First Step Call</a>
+          <a class="btn btn-secondary" href="https://cal.com/autismpathwaysconsulting/parent-strategy-session" target="_blank" rel="noopener noreferrer">Book RM350 One-Concern Session</a>
+        </div>
       </div>
     </section>
 
@@ -3577,18 +3572,6 @@ html {
     });
   });
 })();
-</script>
-
-<!-- Cal.com inline embed: First Step Call booked on-page, no click-out -->
-<script type="text/javascript">
-  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-  Cal("init", "first-step-call", {origin:"https://cal.com"});
-  Cal.ns["first-step-call"]("inline", {
-    elementOrSelector:"#apc-cal-inline",
-    config: {"layout":"month_view"},
-    calLink: "autismpathwaysconsulting/first-step-call",
-  });
-  Cal.ns["first-step-call"]("ui", {"theme":"dark","cssVarsPerTheme":{"dark":{"cal-brand":"#2DD4BF"}},"hideEventTypeDetails":false,"layout":"month_view"});
 </script>
 
 </body>
