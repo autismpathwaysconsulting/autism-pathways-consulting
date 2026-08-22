@@ -11,8 +11,12 @@ No build step: edit HTML/CSS in place. Work directly on `main`; pushing auto-dep
 - Tone: warm, calm, practical. Card/guide titles use the parent's felt moment, not a clinical
   topic label (e.g. "When the meltdown comes out of nowhere", not "Meltdowns at home").
 - Scope line where relevant: "APC works with you, not instead of the therapists your child is already seeing."
-- One primary call to action per parent-facing page: the **Free 15-Min First Step Call**
-  (Cal.com event `first-step-call`).
+- Parent-facing CTAs should route by readiness rather than forcing every parent through the same path:
+  - **Unsure what support fits:** Free 15-Min First Step Call (Cal.com event `first-step-call`).
+  - **One clear repeated concern:** Book the One-Concern Parent Session directly through the existing Cal.com `parent-strategy-session` flow. The Cal.com form is the intake form. Do not require a First Step Call first.
+  - **Ready for structured Home Support:** Start with the Free 15-Min First Step Call so CJ can check whether the RM1,800 APC Home Support Programme is a good fit.
+- Keep the Free 15-Min First Step Call clearly available for parents who are unsure and as the fit-check path for Home Support.
+- Do not turn Home Support into unrestricted direct checkout or create a new intake form unless separately approved.
 
 ## Footer requirement (every parent-facing page)
 - Scope disclaimer present, and the SSM line:
