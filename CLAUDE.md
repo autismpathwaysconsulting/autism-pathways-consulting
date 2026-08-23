@@ -45,6 +45,9 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 - Fonts as built: **DM Serif Display** (headings), **DM Sans** (body). Match the existing aesthetic.
 - Primary logo: `apc-option-d-primary-logo.webp` (served as WebP; original `.png` kept as fallback).
 
+## Visual and UX authority
+- `DESIGN.md` is authoritative for visual and UX decisions. Future page work must follow it, preserve the funnel rules, begin mobile-first, and reduce unnecessary visual complexity rather than add it.
+
 ## Site conventions
 - `/page.html` 308-redirects to extensionless `/page` (and `/index.html` → `/`). Canonical, `og:url`,
   and `sitemap.xml` all use the extensionless form. `pay/index.html` serves `/pay/`; `connect/index.html` serves `/connect`.
