@@ -377,10 +377,9 @@ class AuthorityValidatorTests(unittest.TestCase):
             self.assertEqual(["tracked.txt"], committed_tracked_paths(root))
 
     def test_secondwave_nested_inline_online_fails(self):
-        source = self.canonical["services.html"].replace(
-            "RM350 | 45 minutes | Google Meet",
-            "RM350 | 45 minutes | <span>on<strong>line</strong></span>",
-            1,
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The RM350 delivery platform is <span>on<strong>line</strong></span>.</p>",
         )
         self.assert_finding("delivery.generic_online", self.findings_for({"services.html": source}))
 
@@ -423,10 +422,9 @@ class AuthorityValidatorTests(unittest.TestCase):
             "<span>R </span><em>M4\n</em><span>50</span>",
         ):
             with self.subTest(split_price=split_price):
-                source = self.canonical["services.html"].replace(
-                    "RM350 | 45 minutes | Google Meet",
-                    f"{split_price} | 45 minutes | Google Meet",
-                    1,
+                source = insert_in_session_article(
+                    self.canonical["services.html"],
+                    f"<p>Current session price: {split_price}.</p>",
                 )
                 self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
 
@@ -441,10 +439,10 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
 
     def test_all_secondwave_cases_fail_together(self):
-        services = self.canonical["services.html"].replace(
-            "RM350 | 45 minutes | Google Meet",
-            "<span>R</span><span>M450</span> | 45 minutes | <span>on<strong>line</strong></span>",
-            1,
+        services = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Current session price: <span>R</span><span>M450</span>. "
+            "The RM350 delivery platform is <span>on<strong>line</strong></span>.</p>",
         )
         for claim in (
             "The session accepts PayPal.",
@@ -475,19 +473,17 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         for variant in variants:
             with self.subTest(variant=variant):
-                source = self.canonical["services.html"].replace(
-                    "RM350 | 45 minutes | Google Meet",
-                    f"RM350 | 45 minutes | {variant}",
-                    1,
+                source = insert_in_session_article(
+                    self.canonical["services.html"],
+                    f"<p>The RM350 delivery platform is {variant}.</p>",
                 )
                 self.assert_finding(
                     "delivery.generic_online",
                     self.findings_for({"services.html": source}),
                 )
-        duration = self.canonical["services.html"].replace(
-            "45 minutes | Google Meet",
-            "<span>6</span><em>0</em> minutes | Google Meet",
-            1,
+        duration = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Current session duration: <span>6</span><em>0</em> minutes.</p>",
         )
         self.assert_finding("value.session_duration", self.findings_for({"services.html": duration}))
 
@@ -552,8 +548,8 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_required_booking_flow_order_is_page_scoped(self):
         source = self.canonical["services.html"].replace(
-            "CJ verifies payment before confirming the booking",
-            "CJ records payment before confirming the booking",
+            "The Founder verifies payment before confirming the booking",
+            "The Founder records payment before confirming the booking",
         )
         self.assert_finding(
             "required.services.html.booking_sequence",
