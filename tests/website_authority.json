@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "offers": {
+    "one_concern": {
+      "canonical_name": "One-Concern Parent Session",
+      "price": {
+        "currency": ["RM", "MYR"],
+        "value": 350
+      },
+      "duration_minutes": 45,
+      "scope": "one focused parent concern",
+      "delivery_platforms": ["Google Meet"],
+      "payment_methods": ["Maybank bank transfer", "DuitNow QR"],
+      "booking_sequence": [
+        "request",
+        "review",
+        "permission",
+        "payment",
+        "proof",
+        "verification",
+        "manual_confirmation"
+      ],
+      "bindings": {
+        "services.html": {
+          "kind": "article",
+          "signals": ["One-Concern Parent Session", "RM350", "45 minutes", "Google Meet"]
+        },
+        "terms.html": {
+          "kind": "li",
+          "signals": ["One-Concern Parent Session", "RM350", "45-minute", "Google Meet"]
+        },
+        "pay/index.html": {
+          "kind": "article",
+          "signals": ["One-Concern Parent Session", "RM350", "45-minute", "Google Meet"]
+        }
+      }
+    },
+    "home_support": {
+      "canonical_name": "APC Home Support Programme",
+      "price": {
+        "currency": ["RM", "MYR"],
+        "value": 1800
+      },
+      "session_count": 4,
+      "session_duration_minutes": 60,
+      "window_weeks": [6, 8],
+      "additional_post_programme_checkin": false,
+      "wise_scope": "already authorized overseas Home Support payment",
+      "bindings": {
+        "services.html": {
+          "kind": "article",
+          "signals": ["APC Home Support Programme", "RM1,800", "Four 60-minute sessions"]
+        },
+        "terms.html": {
+          "kind": "li",
+          "signals": ["APC Home Support Programme", "RM1,800", "four 60-minute sessions"]
+        },
+        "pay/index.html": {
+          "kind": "article",
+          "signals": ["APC Home Support Programme", "RM1,800", "Four 60-minute sessions"]
+        }
+      }
+    }
+  },
+  "launch": {
+    "required_governance_states": ["PREPARATION_NOT_LAUNCHED", "NOT_AUTHORISED"],
+    "prohibited_public_states": [
+      "enrolment open",
+      "bookings open",
+      "now available",
+      "available nationwide",
+      "open to everyone",
+      "generally available",
+      "publicly available",
+      "officially launched",
+      "live for public booking"
+    ]
+  }
+}

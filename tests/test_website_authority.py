@@ -8,6 +8,7 @@ import tempfile
 import unittest
 
 from validate_website_authority import (
+    AUTHORITY,
     ROOT,
     committed_tracked_paths,
     load_tracked_documents,
@@ -569,6 +570,367 @@ class AuthorityValidatorTests(unittest.TestCase):
             "For the RM1,800 Home Support Programme, Wise is available only after CJ confirms fit.",
         )
         self.assertEqual([], self.findings_for({"pay/index.html": source}))
+
+    def test_structural_01_generic_bank_transfer_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The RM350 session accepts bank transfer.</p>",
+        )
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+
+    def test_structural_02_paypal_supported_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>PayPal is supported for this session.</p>",
+        )
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+
+    def test_structural_03_settle_rm350_through_paypal_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Settle the RM350 fee through PayPal.</p>",
+        )
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+
+    def test_structural_04_paypal_checkout_link_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            '<a href="https://paypal.example/checkout">Pay RM350 now</a>',
+        )
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+
+    def test_structural_05_payment_unrelated_negation_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The session is not free, and PayPal is accepted for payment.</p>",
+        )
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+
+    def test_structural_06_google_meet_or_facetime_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The RM350 session is delivered via Google Meet or FaceTime.</p>",
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_structural_07_whatsapp_video_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The RM350 session is delivered via WhatsApp video.</p>",
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_structural_08_google_meet_or_in_person_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The RM350 session is delivered via Google Meet or in-person.</p>",
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_structural_09_google_meet_or_hybrid_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The RM350 session is delivered via Google Meet or hybrid.</p>",
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_structural_10_generic_video_call_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The RM350 session is delivered by video call.</p>",
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_structural_11_myr_450_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Current session price: MYR 450.</p>",
+        )
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_structural_12_numeric_jsonld_price_fails(self):
+        script = (
+            '<script type="application/ld+json">'
+            '{"@type":"Offer","name":"One-Concern Parent Session",'
+            '"price":450,"priceCurrency":"MYR"}</script>'
+        )
+        source = self.canonical["services.html"].replace("</body>", script + "\n</body>", 1)
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_structural_13_numeric_javascript_price_fails(self):
+        script = '<script>const offer={name:"One-Concern Parent Session",price:450};</script>'
+        source = self.canonical["services.html"].replace("</body>", script + "\n</body>", 1)
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_structural_14_one_hour_duration_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Current session duration: 1 hour.</p>",
+        )
+        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+
+    def test_structural_15_enrolment_open_fails(self):
+        source = append_html(self.canonical["index.html"], "Enrolment is now open.")
+        self.assert_finding("launch.public_availability", self.findings_for({"index.html": source}))
+
+    def test_structural_16_available_nationwide_fails(self):
+        source = append_html(
+            self.canonical["index.html"], "The programme is now available nationwide."
+        )
+        self.assert_finding("launch.public_availability", self.findings_for({"index.html": source}))
+
+    def test_structural_17_bookings_open_nationwide_fails(self):
+        source = append_html(self.canonical["index.html"], "Bookings are open nationwide.")
+        self.assert_finding("launch.public_availability", self.findings_for({"index.html": source}))
+
+    def test_structural_18_meta_description_availability_fails(self):
+        source = self.canonical["index.html"].replace(
+            '<meta name="description" content="',
+            '<meta name="description" content="The programme is now available nationwide. ',
+            1,
+        )
+        self.assert_finding("launch.public_availability", self.findings_for({"index.html": source}))
+
+    def test_structural_19_launch_unrelated_negation_fails(self):
+        source = append_html(
+            self.canonical["index.html"], "APC is not closed and is now publicly available."
+        )
+        self.assert_finding("launch.public_availability", self.findings_for({"index.html": source}))
+
+    def test_structural_20_review_after_payment_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>We review your request after receiving payment.</p>",
+        )
+        self.assert_finding("booking.sequence_reordered", self.findings_for({"services.html": source}))
+
+    def test_structural_21_approval_after_payment_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Approval is requested after payment.</p>",
+        )
+        self.assert_finding("booking.sequence_reordered", self.findings_for({"services.html": source}))
+
+    def test_structural_22_confirmation_before_proof_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Your booking is confirmed immediately; payment proof is checked afterwards.</p>",
+        )
+        self.assert_finding("booking.sequence_reordered", self.findings_for({"services.html": source}))
+
+    def test_structural_23_automatic_unrelated_negation_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The booking is not delayed and is automatically confirmed.</p>",
+        )
+        self.assert_finding("booking.automatic_confirmation", self.findings_for({"services.html": source}))
+
+    def test_structural_all_23_cases_fail_together(self):
+        services = self.canonical["services.html"]
+        for markup in (
+            "<p>The RM350 session accepts bank transfer.</p>",
+            "<p>PayPal is supported for this session.</p>",
+            "<p>Settle the RM350 fee through PayPal.</p>",
+            '<a href="https://paypal.example/checkout">Pay RM350 now</a>',
+            "<p>The session is not free, and PayPal is accepted for payment.</p>",
+            "<p>The RM350 session is delivered via Google Meet or FaceTime.</p>",
+            "<p>The RM350 session is delivered via WhatsApp video.</p>",
+            "<p>The RM350 session is delivered via Google Meet or in-person.</p>",
+            "<p>The RM350 session is delivered via Google Meet or hybrid.</p>",
+            "<p>The RM350 session is delivered by video call.</p>",
+            "<p>Current session price: MYR 450.</p>",
+            "<p>Current session duration: 1 hour.</p>",
+            "<p>We review your request after receiving payment.</p>",
+            "<p>Approval is requested after payment.</p>",
+            "<p>Your booking is confirmed immediately; payment proof is checked afterwards.</p>",
+            "<p>The booking is not delayed and is automatically confirmed.</p>",
+        ):
+            services = insert_in_session_article(services, markup)
+        services = services.replace(
+            "</body>",
+            '<script type="application/ld+json">'
+            '{"@type":"Offer","name":"One-Concern Parent Session","price":450,"priceCurrency":"MYR"}'
+            '</script><script>const offer={name:"One-Concern Parent Session",price:450};</script></body>',
+            1,
+        )
+        index = self.canonical["index.html"].replace(
+            '<meta name="description" content="',
+            '<meta name="description" content="The programme is now available nationwide. ',
+            1,
+        )
+        for claim in (
+            "Enrolment is now open.",
+            "The programme is now available nationwide.",
+            "Bookings are open nationwide.",
+            "APC is not closed and is now publicly available.",
+        ):
+            index = append_html(index, claim)
+        identifiers = {
+            finding.identifier
+            for finding in self.findings_for({"services.html": services, "index.html": index})
+        }
+        expected = {
+            "payment.unsupported_rm350_method",
+            "delivery.unapproved_platform",
+            "value.session_price",
+            "value.session_duration",
+            "launch.public_availability",
+            "booking.sequence_reordered",
+            "booking.automatic_confirmation",
+        }
+        self.assertTrue(expected.issubset(identifiers), expected - identifiers)
+
+    def test_structural_unknown_payment_method_fails_closed(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"], "<p>Pay RM350 through BlueBank.</p>"
+        )
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+
+    def test_structural_unknown_delivery_platform_fails_closed(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"], "<p>The delivery platform is BlueJeans.</p>"
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_structural_currency_and_iso_duration_fields_fail(self):
+        script = (
+            '<script type="application/ld+json">'
+            '{"@type":"Offer","name":"One-Concern Parent Session",'
+            '"price":350,"priceCurrency":"USD","duration":"PT1H"}</script>'
+        )
+        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
+        findings = self.findings_for({"services.html": source})
+        self.assert_finding("value.session_currency", findings)
+        self.assert_finding("value.session_duration", findings)
+
+    def test_structural_relevant_data_attribute_price_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"], '<span data-price="450">Special fee</span>'
+        )
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_structural_relevant_aria_delivery_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            '<span aria-label="The RM350 session is delivered via FaceTime">Details</span>',
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_structural_javascript_confirmation_field_fails(self):
+        script = (
+            '<script>const offer={name:"One-Concern Parent Session",'
+            'confirmation:"automatic"};</script>'
+        )
+        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
+        self.assert_finding("booking.automatic_confirmation", self.findings_for({"services.html": source}))
+
+    def test_structural_jsonld_availability_field_fails(self):
+        script = (
+            '<script type="application/ld+json">'
+            '{"@type":"Offer","name":"One-Concern Parent Session",'
+            '"availability":"InStock"}</script>'
+        )
+        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
+        self.assert_finding("launch.public_availability", self.findings_for({"services.html": source}))
+
+    def test_structural_targeted_negations_pass(self):
+        services = self.canonical["services.html"]
+        for markup in (
+            "<p>PayPal is not accepted.</p>",
+            "<p>The booking is not automatically confirmed.</p>",
+        ):
+            services = insert_in_session_article(services, markup)
+        index = append_html(self.canonical["index.html"], "APC is not publicly available.")
+        self.assertEqual([], self.findings_for({"services.html": services, "index.html": index}))
+
+    def test_structural_missing_governed_block_fails_closed(self):
+        source = self.canonical["services.html"].replace(
+            "One-Concern Parent Session", "Unnamed parent session"
+        )
+        self.assert_finding("binding.one_concern.missing", self.findings_for({"services.html": source}))
+
+    def test_structural_duplicate_governed_block_fails_closed(self):
+        duplicate = (
+            "<article><h2>One-Concern Parent Session</h2>"
+            "<p>RM350 · 45 minutes · Google Meet</p></article>"
+        )
+        source = append_html(self.canonical["services.html"], duplicate)
+        self.assert_finding("binding.one_concern.duplicate", self.findings_for({"services.html": source}))
+
+    def test_structural_binding_ignores_semantic_punctuation_and_whitespace(self):
+        source = self.canonical["services.html"].replace(
+            "One-Concern Parent Session", "One Concern Parent Session"
+        ).replace("RM350", "RM 350")
+        identifiers = {finding.identifier for finding in self.findings_for({"services.html": source})}
+        self.assertNotIn("binding.one_concern.missing", identifiers)
+        self.assertNotIn("binding.one_concern.duplicate", identifiers)
+
+    def test_structural_malformed_governed_page_fails_closed(self):
+        source = self.canonical["services.html"].replace("</article>", "", 1)
+        self.assert_finding("syntax.html_invalid", self.findings_for({"services.html": source}))
+
+    def test_structural_required_preparation_states_fail_closed(self):
+        source = self.canonical["CLAUDE.md"].replace("NOT_AUTHORISED", "STATE_REMOVED")
+        self.assert_finding("required.launch_lock", self.findings_for({"CLAUDE.md": source}))
+
+    def test_structural_terms_and_payment_are_independently_governed(self):
+        terms = self.canonical["terms.html"].replace("RM350", "MYR 450", 1)
+        payment = insert_in_session_article(
+            self.canonical["pay/index.html"], "<p>Current session duration: 1 hour.</p>"
+        )
+        self.assert_finding("value.session_price", self.findings_for({"terms.html": terms}))
+        self.assert_finding("value.session_duration", self.findings_for({"pay/index.html": payment}))
+
+    def test_structural_multilingual_narrative_is_allowed(self):
+        source = append_html(
+            self.canonical["about.html"],
+            "Sokongan ibu bapa membantu keluarga memahami corak dan memilih langkah seterusnya.",
+        )
+        self.assertEqual([], self.findings_for({"about.html": source}))
+
+    def test_structural_authority_manifest_is_locked_and_declarative(self):
+        session = AUTHORITY["offers"]["one_concern"]
+        home = AUTHORITY["offers"]["home_support"]
+        self.assertEqual(350, session["price"]["value"])
+        self.assertEqual(45, session["duration_minutes"])
+        self.assertEqual(["Google Meet"], session["delivery_platforms"])
+        self.assertEqual(["Maybank bank transfer", "DuitNow QR"], session["payment_methods"])
+        self.assertEqual(1800, home["price"]["value"])
+        self.assertEqual([6, 8], home["window_weeks"])
+        self.assertEqual(
+            {"services.html", "terms.html", "pay/index.html"},
+            set(session["bindings"]),
+        )
+
+    def test_structural_action_and_value_attributes_fail(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            '<form action="https://paypal.example/checkout">'
+            '<input value="MYR 450"><button>Pay RM350 now</button></form>',
+        )
+        findings = self.findings_for({"services.html": source})
+        self.assert_finding("payment.unsupported_rm350_method", findings)
+        self.assert_finding("value.session_price", findings)
+
+    def test_structural_payment_and_delivery_fields_fail(self):
+        script = (
+            '<script type="application/ld+json">'
+            '{"@type":"Offer","name":"One-Concern Parent Session",'
+            '"paymentMethod":"PayPal","deliveryPlatform":"FaceTime"}</script>'
+        )
+        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
+        findings = self.findings_for({"services.html": source})
+        self.assert_finding("payment.unsupported_rm350_method", findings)
+        self.assert_finding("delivery.unapproved_platform", findings)
+
+    def test_structural_ranges_and_alternatives_fail(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The session costs RM350 or MYR 450 and lasts 45 or 60 minutes.</p>",
+        )
+        findings = self.findings_for({"services.html": source})
+        self.assert_finding("value.session_price", findings)
+        self.assert_finding("value.session_duration", findings)
 
 
 if __name__ == "__main__":
