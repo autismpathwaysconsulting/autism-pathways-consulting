@@ -35,6 +35,16 @@ class Rule:
 
 
 @dataclass(frozen=True)
+class OfferPolicy:
+    identifier: str
+    context: str
+    allowed_price: str
+    allowed_duration: str
+    allowed_delivery: tuple[str, ...]
+    allowed_payment_methods: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class Surface:
     path: str
     kind: str
@@ -172,10 +182,10 @@ GLOBAL_RULES = (
     ),
     Rule(
         "delivery.generic_online",
-        r"\bonline\b",
+        r"\bon\s*line\b",
         context=r"\b(?:one-concern parent session|rm\s*350)\b",
-        negation=r"\b(?:not|never|does not|is not|cannot)\b.{0,50}\bonline\b",
-        kinds=frozenset({"article", "li", "text", "jsonld_record", "javascript_record"}),
+        negation=r"\b(?:not|never|does not|is not|cannot)\b.{0,50}\bon\s*line\b",
+        kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "javascript_record"}),
     ),
     Rule(
         "booking.automatic_confirmation",
@@ -191,14 +201,7 @@ GLOBAL_RULES = (
         "payment.before_permission",
         r"\b(?:pay|payment)\b.{0,80}\bbefore\b.{0,120}\b(?:founder|cj)\b.{0,120}\b(?:permission|review|suitability|availability|confirm)\w*\b",
         context=r"\b(?:one-concern parent session|rm\s*350)\b",
-        kinds=frozenset({"article", "li", "text", "jsonld_record", "javascript_record"}),
-    ),
-    Rule(
-        "payment.unsupported_rm350_method",
-        r"\b(?:card|stripe|wise)\b",
-        context=r"\b(?:one-concern parent session|rm\s*350)\b",
-        negation=r"(?:\b(?:card|stripe|wise)\b.{0,45}\b(?:not|never|only for home support)\b|\b(?:not|never|no|do not|cannot)\b.{0,45}\b(?:card|stripe|wise)\b)",
-        kinds=frozenset({"article", "li", "text", "jsonld_record", "javascript_record"}),
+        kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "javascript_record"}),
     ),
     Rule(
         "home.additional_checkin",
@@ -210,6 +213,11 @@ GLOBAL_RULES = (
         r"(?:\b(?:public\s+)?launch\b.{0,50}\b(?:authori[sz]ed|approved|live)\b|\b(?:authori[sz]ed|approved|live)\b.{0,50}\b(?:public\s+)?launch\b)",
         negation=r"\b(?:not|never|without|preparation_not_launched\s*/\s*not_authorised)\b.{0,50}\b(?:authori[sz]ed|approved|live|launch)\b|\bnot_authori[sz]ed\b",
     ),
+    Rule(
+        "launch.public_availability",
+        r"(?:\b(?:pilot|apc|service|programme|website)\b.{0,60}\b(?:now\s+)?publicly available\b|\b(?:open|available) to the public\b|\bnow publicly available\b)",
+        negation=r"\b(?:not|never|is not|isn't|historically|previously|not yet)\b.{0,60}\b(?:publicly available|open to the public|available to the public)\b",
+    ),
 )
 
 MUTATION_SIGNAL = re.compile(
@@ -220,7 +228,62 @@ HTML_TARGET_SIGNAL = re.compile(
     r"\.html\b|glob\s*\(\s*['\"][^'\"]*\.html|html_files|resources_html",
     FLAGS,
 )
-BLOCK_TAGS = frozenset({"article", "li", "section"})
+BLOCK_TAGS = frozenset(
+    {"article", "li", "section", "div", "p", "h1", "h2", "h3", "h4", "h5", "h6"}
+)
+OFFER_BLOCK_KINDS = frozenset({"article", "li", "p", "jsonld_record", "javascript_record"})
+SESSION_POLICY = OfferPolicy(
+    identifier="session",
+    context=(
+        r"\b(?:one-concern parent session|rm\s*350|"
+        r"(?:current\s+)?session\s+(?:price|duration|delivery platform|payment method))\b"
+    ),
+    allowed_price="350",
+    allowed_duration="45",
+    allowed_delivery=(r"\bgoogle meet\b",),
+    allowed_payment_methods=(
+        "bank transfer",
+        "maybank transfer",
+        "maybank bank transfer",
+        "duitnow qr",
+    ),
+)
+HOME_CONTEXT = re.compile(
+    r"\b(?:apc home support programme|home support programme|structured home support|home support|rm\s*1,?800)\b",
+    FLAGS,
+)
+PAYMENT_ASSERTION = re.compile(
+    r"\b(?:accepts?|paid by|pay by|pay with|pay using|use.{0,30}(?:payment|bank transfer|duitnow)|"
+    r"payment (?:method|option)s? (?:is|are|include)|payment should be made by|"
+    r"(?:accepted|offered|available) (?:for|as).{0,25}(?:payment|rm\s*350)|"
+    r"offers?.{0,30}(?:as )?payment|available.{0,25}payment)\b",
+    FLAGS,
+)
+DELIVERY_ASSERTION = re.compile(
+    r"\b(?:delivery platform|delivered(?:\s+(?:via|on|through|using))?|held\s+(?:via|on)|"
+    r"conducted\s+(?:via|on)|takes place\s+(?:via|on)|session\s+(?:is\s+)?(?:via|on))\b",
+    FLAGS,
+)
+NEGATION = re.compile(
+    r"\b(?:not|never|no|does not|do not|is not|isn't|cannot|can't|must not)\b",
+    FLAGS,
+)
+REORDERED_SEQUENCE = re.compile(
+    r"(?:\b(?:pay|payment)\s+first\b|"
+    r"\b(?:pay|payment)\b.{0,80}\bthen\b.{0,80}\b(?:request|approval|permission|review)\b|"
+    r"\b(?:confirm|confirmation)\w*\s+first\b|"
+    r"\bconfirm(?:s|ed|ing)?\s+(?:the\s+)?booking\b.{0,80}\bbefore\b.{0,80}\b(?:payment proof|verification|request|review)\b)",
+    FLAGS,
+)
+SEQUENCE_EVENTS = (
+    ("request", re.compile(r"\b(?:submit(?:ting)? (?:a )?(?:booking )?request|booking form (?:as|submits) a request)\b", FLAGS)),
+    ("review", re.compile(r"\breview\w*\b.{0,100}\bsuitability\b.{0,80}\bavailability\b", FLAGS)),
+    ("permission", re.compile(r"\b(?:permission|confirm\w*\s+whether\s+(?:(?:the )?request|it)\s+can proceed|confirmed that (?:the )?request can proceed)\b", FLAGS)),
+    ("payment", re.compile(r"\b(?:pay|payment)\b", FLAGS)),
+    ("proof", re.compile(r"\b(?:payment )?proof\b", FLAGS)),
+    ("verification", re.compile(r"\bverif(?:y|ies|ied|ication)\b", FLAGS)),
+    ("manual_confirmation", re.compile(r"\bconfirm(?:s|ed|ing)? (?:the )?booking\b|\bmanually confirm\b", FLAGS)),
+)
 
 
 def normalize(value: str) -> str:
@@ -231,7 +294,11 @@ def normalize(value: str) -> str:
 def split_claims(value: str) -> list[str]:
     return [
         normalize(part)
-        for part in re.split(r"(?<=[.!?;])\s+|\bbut\b|\bhowever\b", normalize(value), flags=re.IGNORECASE)
+        for part in re.split(
+            r"(?<=[.!?;])\s+|\bbut\b|\bhowever\b|,?\s+or\s+the\s+(?=rm\s*[0-9])",
+            normalize(value),
+            flags=re.IGNORECASE,
+        )
         if normalize(part)
     ]
 
@@ -255,6 +322,9 @@ class AuthorityHTMLParser(HTMLParser):
             self.script_type = (values.get("type") or "").lower()
             self.script_parts = []
         if tag in BLOCK_TAGS and self.skip_depth == 0 and self.script_type is None:
+            self.page_parts.append(" ")
+            for _, parts in self.blocks:
+                parts.append(" ")
             self.blocks.append((tag, []))
         for attribute in ("href", "src", "action"):
             value = values.get(attribute)
@@ -270,10 +340,10 @@ class AuthorityHTMLParser(HTMLParser):
         text = normalize(data)
         if not text:
             return
-        self.page_parts.append(text)
+        self.page_parts.append(data)
         self.surfaces.append(Surface(self.path, "text", text))
         for _, parts in self.blocks:
-            parts.append(text)
+            parts.append(data)
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "script" and self.script_type is not None:
@@ -292,8 +362,11 @@ class AuthorityHTMLParser(HTMLParser):
             for index in range(len(self.blocks) - 1, -1, -1):
                 block_tag, parts = self.blocks[index]
                 if block_tag == tag:
-                    self.surfaces.append(Surface(self.path, tag, normalize(" ".join(parts))))
+                    self.surfaces.append(Surface(self.path, tag, normalize("".join(parts))))
                     del self.blocks[index]
+                    self.page_parts.append(" ")
+                    for _, outer_parts in self.blocks:
+                        outer_parts.append(" ")
                     break
 
     def _add_jsonld(self, script: str) -> None:
@@ -338,7 +411,7 @@ def extract_surfaces(path: str, source: str) -> list[Surface]:
         parser.close()
     except Exception:
         return [Surface(path, "html_invalid", "invalid")]
-    parser.surfaces.append(Surface(path, "page", normalize(" ".join(parser.page_parts))))
+    parser.surfaces.append(Surface(path, "page", normalize("".join(parser.page_parts))))
     return parser.surfaces
 
 
@@ -380,25 +453,73 @@ def _active_claim_surfaces(surfaces: Iterable[Surface]) -> Iterable[Surface]:
         if surface.kind in {"html_invalid", "jsonld_invalid"}:
             yield surface
             continue
-        if surface.kind in {"article", "li", "section", "page", "text"}:
+        if surface.kind in {"article", "li", "section", "div", "p", "page", "text"}:
             for claim in split_claims(surface.text):
                 yield Surface(surface.path, surface.kind, claim)
         else:
             yield surface
 
 
-def _value_findings(surfaces: Iterable[Surface]) -> set[Finding]:
+def _is_inactive_claim(value: str) -> bool:
+    return bool(
+        NEGATION.search(value)
+        or re.search(
+            r"\b(?:historically|formerly|previously|retired|superseded)\b",
+            value,
+            FLAGS,
+        )
+    )
+
+
+def _payment_methods(value: str) -> list[str] | None:
+    patterns = (
+        r"\baccepts?\s+(.+?)(?:\s+payments?\b|[.;]|$)",
+        r"\b(?:pay|paid)\s+(?:only\s+)?by\s+(.+?)(?:,?\s+(?:then|before|after|and\s+(?:submit|send))\b|[.;]|$)",
+        r"\bpayment should be made by\s+(.+?)(?:,?\s+(?:then|before|after|and\s+(?:submit|send|payment proof))\b|[.;]|$)",
+        r"\buse\s+(.+?)(?:,?\s+(?:then|before|after|and\s+(?:submit|send))\b|[.;]|$)",
+        r"\bpayment (?:method|option)s? (?:is|are|include)\s+(.+?)(?:[.;]|$)",
+        r"\b(.+?)\s+(?:is|are)\s+(?:accepted|offered|available)\s+(?:for|as)\s+(?:rm\s*350|payment)\b",
+        r"\boffers?\s+(.+?)\s+as\s+payment\b",
+    )
+    segment = None
+    for pattern in patterns:
+        match = re.search(pattern, value, FLAGS)
+        if match:
+            segment = normalize(match.group(1))
+            break
+    if segment is None:
+        return None
+    segment = re.sub(r"\b(?:payment|payments|only)\b", "", segment, flags=FLAGS)
+    return [
+        normalize(method).lower()
+        for method in re.split(r"\s*(?:,|\band\b|\bor\b)\s*", segment, flags=FLAGS)
+        if normalize(method)
+    ]
+
+
+def _allowed_payment_methods(methods: list[str]) -> bool:
+    allowed = set(SESSION_POLICY.allowed_payment_methods)
+    return bool(methods) and all(method in allowed for method in methods)
+
+
+def _ordered_booking_sequence(value: str) -> bool:
+    offset = 0
+    for _, pattern in SEQUENCE_EVENTS:
+        match = pattern.search(value, offset)
+        if not match:
+            return False
+        offset = match.end()
+    return True
+
+
+def _authority_findings(surfaces: Iterable[Surface]) -> set[Finding]:
     findings: set[Finding] = set()
     for surface in surfaces:
-        if surface.kind not in {"article", "li", "text", "jsonld_record", "javascript_record"}:
+        if surface.kind not in OFFER_BLOCK_KINDS:
             continue
-        has_session_name = bool(re.search(r"\bone-concern parent session\b", surface.text, FLAGS))
+        session = bool(re.search(SESSION_POLICY.context, surface.text, FLAGS))
         has_home_name = bool(re.search(r"\b(?:apc )?home support programme\b", surface.text, FLAGS))
         has_money = bool(re.search(r"\brm\s*[0-9]", surface.text, FLAGS))
-        session = bool(re.search(r"\brm\s*350\b", surface.text, FLAGS)) or (
-            has_session_name
-            and (has_money or bool(re.search(r"\bgoogle meet\b", surface.text, FLAGS)))
-        )
         home = bool(re.search(r"\brm\s*1,?800\b", surface.text, FLAGS)) or (
             has_home_name
             and (
@@ -407,31 +528,62 @@ def _value_findings(surfaces: Iterable[Surface]) -> set[Finding]:
                 or bool(re.search(r"\b[0-9]+\s*[–-]\s*[0-9]+\s+weeks\b", surface.text, FLAGS))
             )
         )
-        if session and home:
-            continue
-        if session:
-            for match in re.finditer(r"\brm\s*([0-9][0-9,]*)\b", surface.text, FLAGS):
-                raw = match.group(1)
-                if re.search(r"\bsave\s*$", surface.text[max(0, match.start() - 12):match.start()], FLAGS):
-                    continue
-                if raw.replace(",", "") != "350":
-                    findings.add(Finding("value.session_price", surface.path, surface.kind))
-            for raw in re.findall(r"\b([0-9]{1,3})(?:-|\s)minute(?:s)?\b", surface.text, FLAGS):
-                if raw != "45":
-                    findings.add(Finding("value.session_duration", surface.path, surface.kind))
-        if home:
-            for match in re.finditer(r"\brm\s*([0-9][0-9,]*)\b", surface.text, FLAGS):
-                raw = match.group(1)
-                if re.search(r"\bsave\s*$", surface.text[max(0, match.start() - 12):match.start()], FLAGS):
-                    continue
-                if raw.replace(",", "") != "1800":
-                    findings.add(Finding("value.home_price", surface.path, surface.kind))
-            for raw in re.findall(r"\b([0-9]{1,3})-minute sessions\b", surface.text, FLAGS):
-                if raw != "60":
-                    findings.add(Finding("value.home_duration", surface.path, surface.kind))
-            for left, right in re.findall(r"\b([0-9]+)\s*[–-]\s*([0-9]+)\s+weeks\b", surface.text, FLAGS):
-                if (left, right) != ("6", "8"):
-                    findings.add(Finding("value.home_window", surface.path, surface.kind))
+        claims = split_claims(surface.text)
+        inherit_session = session and not HOME_CONTEXT.search(surface.text)
+        inherit_home = home and not re.search(SESSION_POLICY.context, surface.text, FLAGS)
+        if session and REORDERED_SEQUENCE.search(surface.text) and not _is_inactive_claim(surface.text):
+            findings.add(Finding("booking.sequence_reordered", surface.path, surface.kind))
+        for claim in claims:
+            claim_is_session = bool(re.search(SESSION_POLICY.context, claim, FLAGS)) or (
+                inherit_session and not HOME_CONTEXT.search(claim)
+            )
+            claim_is_home = bool(HOME_CONTEXT.search(claim)) or (
+                inherit_home and not re.search(SESSION_POLICY.context, claim, FLAGS)
+            )
+            if claim_is_session:
+                if REORDERED_SEQUENCE.search(claim) and not _is_inactive_claim(claim):
+                    findings.add(Finding("booking.sequence_reordered", surface.path, surface.kind))
+                for match in re.finditer(r"\br\s*m\s*([0-9](?:[0-9,]|\s(?=[0-9]))*)\b", claim, FLAGS):
+                    raw = match.group(1)
+                    if re.search(r"\bsave\s*$", claim[max(0, match.start() - 12):match.start()], FLAGS):
+                        continue
+                    if re.sub(r"[\s,]", "", raw) != SESSION_POLICY.allowed_price:
+                        findings.add(Finding("value.session_price", surface.path, surface.kind))
+                for raw in re.findall(r"\b([0-9](?:\s*[0-9]){0,2})(?:-|\s)minute(?:s)?\b", claim, FLAGS):
+                    if re.sub(r"\s", "", raw) != SESSION_POLICY.allowed_duration:
+                        findings.add(Finding("value.session_duration", surface.path, surface.kind))
+                if not _is_inactive_claim(claim):
+                    if PAYMENT_ASSERTION.search(claim):
+                        methods = _payment_methods(claim)
+                        if methods is not None and not _allowed_payment_methods(methods):
+                            findings.add(Finding("payment.unsupported_rm350_method", surface.path, surface.kind))
+                    if DELIVERY_ASSERTION.search(claim):
+                        has_allowed_delivery = any(
+                            re.search(pattern, claim, FLAGS)
+                            for pattern in SESSION_POLICY.allowed_delivery
+                        )
+                        has_alternative = bool(
+                            re.search(
+                                r"\b(?:zoom|microsoft teams|teams|webex|skype|jitsi|phone|telephone|online)\b",
+                                claim,
+                                FLAGS,
+                            )
+                        )
+                        if not has_allowed_delivery or has_alternative:
+                            findings.add(Finding("delivery.unapproved_platform", surface.path, surface.kind))
+            if claim_is_home:
+                for match in re.finditer(r"\br\s*m\s*([0-9](?:[0-9,]|\s(?=[0-9]))*)\b", claim, FLAGS):
+                    raw = match.group(1)
+                    if re.search(r"\bsave\s*$", claim[max(0, match.start() - 12):match.start()], FLAGS):
+                        continue
+                    if re.sub(r"[\s,]", "", raw) != "1800":
+                        findings.add(Finding("value.home_price", surface.path, surface.kind))
+                for raw in re.findall(r"\b([0-9]{1,3})-minute sessions\b", claim, FLAGS):
+                    if raw != "60":
+                        findings.add(Finding("value.home_duration", surface.path, surface.kind))
+                for left, right in re.findall(r"\b([0-9]+)\s*[–-]\s*([0-9]+)\s+weeks\b", claim, FLAGS):
+                    if (left, right) != ("6", "8"):
+                        findings.add(Finding("value.home_window", surface.path, surface.kind))
     return findings
 
 
@@ -469,6 +621,14 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
         for requirement in requirements:
             if not re.search(requirement.pattern, authority, FLAGS):
                 findings.add(Finding(f"required.{path}.{requirement.identifier}", path, "page"))
+        sequence_surfaces = (
+            surface
+            for surface in page_surfaces
+            if surface.kind in OFFER_BLOCK_KINDS
+            and re.search(SESSION_POLICY.context, surface.text, FLAGS)
+        )
+        if not any(_ordered_booking_sequence(surface.text) for surface in sequence_surfaces):
+            findings.add(Finding(f"required.{path}.booking_sequence", path, "page"))
 
     governance = normalize(documents.get("CLAUDE.md", ""))
     if not re.search(r"\bpreparation_not_launched\s*/\s*not_authorised\b", governance, FLAGS):
@@ -485,7 +645,7 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
     if _rule_matches(launch_rule, governance_surface):
         findings.add(Finding(launch_rule.identifier, governance_surface.path, governance_surface.kind))
 
-    findings.update(_value_findings(all_surfaces))
+    findings.update(_authority_findings(all_surfaces))
     return sorted(findings)
 
 

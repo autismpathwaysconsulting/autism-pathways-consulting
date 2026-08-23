@@ -24,6 +24,13 @@ def append_html(source: str, claim: str, before: bool = False) -> str:
     return source.replace(marker, insertion + marker, 1)
 
 
+def insert_in_session_article(source: str, markup: str) -> str:
+    marker = '<div class="apc-slot-bar" aria-hidden="true">'
+    if marker not in source:
+        raise AssertionError("missing One-Concern Parent Session fixture marker")
+    return source.replace(marker, f"{markup}\n          {marker}", 1)
+
+
 class AuthorityValidatorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -243,6 +250,204 @@ class AuthorityValidatorTests(unittest.TestCase):
             (root / "untracked.html").write_text("Parent Strategy Session", encoding="utf-8")
             subprocess.run(["git", "add", "tracked.txt"], cwd=root, check=True)
             self.assertEqual(["tracked.txt"], committed_tracked_paths(root))
+
+    def test_secondwave_nested_inline_online_fails(self):
+        source = self.canonical["services.html"].replace(
+            "RM350 | 45 minutes | Google Meet",
+            "RM350 | 45 minutes | <span>on<strong>line</strong></span>",
+            1,
+        )
+        self.assert_finding("delivery.generic_online", self.findings_for({"services.html": source}))
+
+    def test_secondwave_paypal_for_rm350_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The session accepts PayPal.</p>",
+        )
+        self.assert_finding(
+            "payment.unsupported_rm350_method",
+            self.findings_for({"services.html": source}),
+        )
+
+    def test_secondwave_context_light_price_fails(self):
+        source = append_html(self.canonical["services.html"], "Current session price: RM450.")
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_context_light_duration_fails(self):
+        source = append_html(self.canonical["services.html"], "Current session duration: 60 minutes.")
+        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+
+    def test_secondwave_zoom_delivery_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The delivery platform is Zoom.</p>",
+        )
+        self.assert_finding(
+            "delivery.unapproved_platform",
+            self.findings_for({"services.html": source}),
+        )
+
+    def test_secondwave_public_availability_fails(self):
+        source = append_html(self.canonical["index.html"], "The pilot is now publicly available.")
+        self.assert_finding("launch.public_availability", self.findings_for({"index.html": source}))
+
+    def test_secondwave_split_node_price_fails(self):
+        for split_price in (
+            "<span>R</span><span>M450</span>",
+            "<span>RM4</span><strong>50</strong>",
+            "<span>R </span><em>M4\n</em><span>50</span>",
+        ):
+            with self.subTest(split_price=split_price):
+                source = self.canonical["services.html"].replace(
+                    "RM350 | 45 minutes | Google Meet",
+                    f"{split_price} | 45 minutes | Google Meet",
+                    1,
+                )
+                self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_secondwave_pay_first_then_approval_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Pay first, then request approval.</p>",
+        )
+        self.assert_finding(
+            "booking.sequence_reordered",
+            self.findings_for({"services.html": source}),
+        )
+
+    def test_all_secondwave_cases_fail_together(self):
+        services = self.canonical["services.html"].replace(
+            "RM350 | 45 minutes | Google Meet",
+            "<span>R</span><span>M450</span> | 45 minutes | <span>on<strong>line</strong></span>",
+            1,
+        )
+        for claim in (
+            "The session accepts PayPal.",
+            "The delivery platform is Zoom.",
+            "Pay first, then request approval.",
+        ):
+            services = insert_in_session_article(services, f"<p>{claim}</p>")
+        services = append_html(services, "Current session price: RM450.")
+        index = append_html(self.canonical["index.html"], "The pilot is now publicly available.")
+        identifiers = {
+            finding.identifier
+            for finding in self.findings_for({"services.html": services, "index.html": index})
+        }
+        expected = {
+            "delivery.generic_online",
+            "payment.unsupported_rm350_method",
+            "value.session_price",
+            "delivery.unapproved_platform",
+            "launch.public_availability",
+            "booking.sequence_reordered",
+        }
+        self.assertTrue(expected.issubset(identifiers), expected - identifiers)
+
+    def test_nested_inline_and_whitespace_token_splits_fail(self):
+        variants = (
+            "<span>on<em>line</em></span>",
+            "<span>on\n<strong>line</strong></span>",
+        )
+        for variant in variants:
+            with self.subTest(variant=variant):
+                source = self.canonical["services.html"].replace(
+                    "RM350 | 45 minutes | Google Meet",
+                    f"RM350 | 45 minutes | {variant}",
+                    1,
+                )
+                self.assert_finding(
+                    "delivery.generic_online",
+                    self.findings_for({"services.html": source}),
+                )
+        duration = self.canonical["services.html"].replace(
+            "45 minutes | Google Meet",
+            "<span>6</span><em>0</em> minutes | Google Meet",
+            1,
+        )
+        self.assert_finding("value.session_duration", self.findings_for({"services.html": duration}))
+
+    def test_alternative_payment_method_allowlist(self):
+        for method in ("PayPal", "cash", "credit card", "cryptocurrency", "Maybank transfer or PayPal"):
+            with self.subTest(method=method):
+                source = insert_in_session_article(
+                    self.canonical["services.html"],
+                    f"<p>The session accepts {method} payment.</p>",
+                )
+                self.assert_finding(
+                    "payment.unsupported_rm350_method",
+                    self.findings_for({"services.html": source}),
+                )
+        for claim in (
+            "PayPal is offered for RM350.",
+            "The RM350 session offers cash as payment.",
+        ):
+            with self.subTest(claim=claim):
+                source = insert_in_session_article(
+                    self.canonical["services.html"],
+                    f"<p>{claim}</p>",
+                )
+                self.assert_finding(
+                    "payment.unsupported_rm350_method",
+                    self.findings_for({"services.html": source}),
+                )
+
+    def test_alternative_delivery_platform_allowlist(self):
+        for platform in ("Zoom", "Microsoft Teams", "Webex", "Google Meet or Zoom"):
+            with self.subTest(platform=platform):
+                source = insert_in_session_article(
+                    self.canonical["services.html"],
+                    f"<p>The delivery platform is {platform}.</p>",
+                )
+                self.assert_finding(
+                    "delivery.unapproved_platform",
+                    self.findings_for({"services.html": source}),
+                )
+
+    def test_public_availability_equivalents_fail(self):
+        for claim in (
+            "APC is open to the public.",
+            "The service is available to the public.",
+        ):
+            with self.subTest(claim=claim):
+                source = append_html(self.canonical["index.html"], claim)
+                self.assert_finding(
+                    "launch.public_availability",
+                    self.findings_for({"index.html": source}),
+                )
+
+    def test_confirmation_first_sequence_fails(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>Confirm the booking first, before payment proof verification.</p>",
+        )
+        self.assert_finding(
+            "booking.sequence_reordered",
+            self.findings_for({"services.html": source}),
+        )
+
+    def test_required_booking_flow_order_is_page_scoped(self):
+        source = self.canonical["services.html"].replace(
+            "CJ verifies payment before confirming the booking",
+            "CJ records payment before confirming the booking",
+        )
+        self.assert_finding(
+            "required.services.html.booking_sequence",
+            self.findings_for({"services.html": source}),
+        )
+
+    def test_current_payment_and_delivery_allowlists_pass(self):
+        source = insert_in_session_article(
+            self.canonical["services.html"],
+            "<p>The session is delivered via Google Meet. Pay by Maybank transfer or DuitNow QR only.</p>",
+        )
+        self.assertEqual([], self.findings_for({"services.html": source}))
+
+    def test_home_support_wise_remains_allowed(self):
+        source = append_html(
+            self.canonical["pay/index.html"],
+            "For the RM1,800 Home Support Programme, Wise is available only after CJ confirms fit.",
+        )
+        self.assertEqual([], self.findings_for({"pay/index.html": source}))
 
 
 if __name__ == "__main__":
