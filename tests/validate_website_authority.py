@@ -430,6 +430,83 @@ def _field_map(surface: Surface) -> dict[str, str]:
     return {normalize(key).casefold(): normalize(value) for key, value in surface.fields}
 
 
+STRUCTURED_CONTEXT_KEYS = frozenset({"name", "offer", "service", "product", "title"})
+
+
+def _governed_context_fields(
+    fields: Iterable[tuple[str, str]],
+    inherited: tuple[tuple[str, str], ...] = (),
+) -> tuple[tuple[str, str], ...]:
+    local = tuple(
+        (normalize(key), normalize(value))
+        for key, value in fields
+        if re.sub(r"[^a-z]", "", normalize(key).casefold()) in STRUCTURED_CONTEXT_KEYS
+    )
+    local_text = normalize(" ".join(value for _, value in local))
+    if re.search(SESSION_POLICY.context, local_text, FLAGS) or HOME_CONTEXT.search(local_text):
+        return local
+    return inherited
+
+
+def _contextual_fields(
+    fields: Iterable[tuple[str, str]],
+    context: tuple[tuple[str, str], ...],
+) -> tuple[tuple[str, str], ...]:
+    local = tuple((normalize(key), normalize(value)) for key, value in fields)
+    inherited = tuple(item for item in context if item not in local)
+    return inherited + local
+
+
+def _javascript_containers(script: str) -> list[dict[str, Any]]:
+    containers: list[dict[str, Any]] = []
+    stack: list[int] = []
+    closers = {"{": "}", "[": "]"}
+    index = 0
+    while index < len(script):
+        character = script[index]
+        if character in {"'", '"', "`"}:
+            quote = character
+            index += 1
+            while index < len(script):
+                if script[index] == "\\":
+                    index += 2
+                    continue
+                if script[index] == quote:
+                    index += 1
+                    break
+                index += 1
+            continue
+        if script.startswith("//", index):
+            newline = script.find("\n", index + 2)
+            index = len(script) if newline == -1 else newline + 1
+            continue
+        if script.startswith("/*", index):
+            closing = script.find("*/", index + 2)
+            index = len(script) if closing == -1 else closing + 2
+            continue
+        if character in closers:
+            parent = stack[-1] if stack else None
+            node: dict[str, Any] = {
+                "opener": character,
+                "start": index,
+                "end": None,
+                "parent": parent,
+                "children": [],
+            }
+            containers.append(node)
+            node_index = len(containers) - 1
+            if parent is not None:
+                containers[parent]["children"].append(node_index)
+            stack.append(node_index)
+        elif character in closers.values() and stack:
+            node_index = stack[-1]
+            if closers[containers[node_index]["opener"]] == character:
+                containers[node_index]["end"] = index
+                stack.pop()
+        index += 1
+    return [container for container in containers if container["end"] is not None]
+
+
 class AuthorityHTMLParser(HTMLParser):
     def __init__(self, path: str):
         super().__init__(convert_charrefs=True)
@@ -515,27 +592,32 @@ class AuthorityHTMLParser(HTMLParser):
             self.surfaces.append(Surface(self.path, "jsonld_invalid", "invalid"))
             return
 
-        def visit(value: object) -> None:
+        def visit(
+            value: object,
+            inherited_context: tuple[tuple[str, str], ...] = (),
+        ) -> None:
             if isinstance(value, dict):
-                scalar_items = [
-                    (str(key), str(item))
+                scalar_items = tuple(
+                    (normalize(str(key)), normalize(str(item)))
                     for key, item in value.items()
                     if isinstance(item, (str, int, float, bool))
-                ]
+                )
+                context = _governed_context_fields(scalar_items, inherited_context)
                 if scalar_items:
+                    fields = _contextual_fields(scalar_items, context)
                     self.surfaces.append(
                         Surface(
                             self.path,
                             "jsonld_record",
-                            normalize(". ".join(f"{key}={item}" for key, item in scalar_items)),
-                            tuple((normalize(key), normalize(item)) for key, item in scalar_items),
+                            normalize(". ".join(f"{key}={item}" for key, item in fields)),
+                            fields,
                         )
                     )
                 for item in value.values():
-                    visit(item)
+                    visit(item, context)
             elif isinstance(value, list):
                 for item in value:
-                    visit(item)
+                    visit(item, inherited_context)
 
         visit(data)
 
@@ -544,23 +626,38 @@ class AuthorityHTMLParser(HTMLParser):
             value = normalize(match.group(2))
             if value:
                 self.surfaces.append(Surface(self.path, "javascript_string", value))
-        for match in re.finditer(r"\{([^{}]{1,3000})\}", script, FLAGS):
+        field_pattern = re.compile(
+            r"(?:['\"])?([A-Za-z_$][\w$-]*)(?:['\"])?\s*:\s*"
+            r"(?:(['\"])(.*?)(?<!\\)\2|(-?\d+(?:\.\d+)?)|\b(true|false|null)\b)",
+            FLAGS,
+        )
+        containers = _javascript_containers(script)
+        contexts: dict[int, tuple[tuple[str, str], ...]] = {}
+        for container_index, container in enumerate(containers):
+            parent_context = contexts.get(container["parent"], ())
+            if container["opener"] != "{":
+                contexts[container_index] = parent_context
+                continue
+            body = list(script[container["start"] + 1 : container["end"]])
+            for child_index in container["children"]:
+                child = containers[child_index]
+                start = child["start"] - container["start"] - 1
+                end = child["end"] - container["start"]
+                body[start:end] = " " * (end - start)
             fields: list[tuple[str, str]] = []
-            field_pattern = re.compile(
-                r"(?:['\"])?([A-Za-z_$][\w$-]*)(?:['\"])?\s*:\s*"
-                r"(?:(['\"])(.*?)(?<!\\)\2|(-?\d+(?:\.\d+)?)|\b(true|false|null)\b)",
-                FLAGS,
-            )
-            for item in field_pattern.finditer(match.group(1)):
+            for item in field_pattern.finditer("".join(body)):
                 raw_value = item.group(3) or item.group(4) or item.group(5) or ""
                 fields.append((normalize(item.group(1)), normalize(raw_value)))
+            context = _governed_context_fields(fields, parent_context)
+            contexts[container_index] = context
             if fields:
+                contextual = _contextual_fields(fields, context)
                 self.surfaces.append(
                     Surface(
                         self.path,
                         "javascript_record",
-                        normalize(". ".join(f"{key}={value}" for key, value in fields)),
-                        tuple(fields),
+                        normalize(". ".join(f"{key}={value}" for key, value in contextual)),
+                        contextual,
                     )
                 )
 
@@ -931,9 +1028,11 @@ def _authority_findings(surfaces: Iterable[Surface]) -> set[Finding]:
         fields = _field_map(surface)
         for key, value in fields.items():
             compact_key = re.sub(r"[^a-z]", "", key)
-            if compact_key in STRUCTURED_PAYMENT_KEYS and PAYMENT_METHOD_TOKEN.search(value):
-                if _payment_claim_is_invalid(surface, f"payment method is {value}"):
-                    findings.add(Finding("payment.unsupported_rm350_method", surface.path, surface.kind))
+            if compact_key in STRUCTURED_PAYMENT_KEYS:
+                explicit_payment_field = compact_key not in {"href", "action"}
+                if explicit_payment_field or PAYMENT_METHOD_TOKEN.search(value):
+                    if _payment_claim_is_invalid(surface, f"payment method is {value}"):
+                        findings.add(Finding("payment.unsupported_rm350_method", surface.path, surface.kind))
             if compact_key in STRUCTURED_DELIVERY_KEYS:
                 if _delivery_claim_is_invalid(f"delivery platform is {value}"):
                     findings.add(Finding("delivery.unapproved_platform", surface.path, surface.kind))

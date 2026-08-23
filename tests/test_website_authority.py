@@ -26,6 +26,14 @@ def append_html(source: str, claim: str, before: bool = False) -> str:
     return source.replace(marker, insertion + marker, 1)
 
 
+def append_script(source: str, payload: str, script_type: str = "") -> str:
+    type_attribute = f' type="{script_type}"' if script_type else ""
+    script = f"<script{type_attribute}>{payload}</script>"
+    if "</body>" not in source:
+        raise AssertionError("missing fixture marker: </body>")
+    return source.replace("</body>", script + "</body>", 1)
+
+
 SESSION_ARTICLE_NAME = "one-concern parent session"
 HEADING_TAGS = frozenset({"h1", "h2", "h3", "h4", "h5", "h6"})
 
@@ -931,6 +939,165 @@ class AuthorityValidatorTests(unittest.TestCase):
         findings = self.findings_for({"services.html": source})
         self.assert_finding("value.session_price", findings)
         self.assert_finding("value.session_duration", findings)
+
+    def test_nested_jsonld_conflicting_price_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","offers":{"price":450}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_nested_jsonld_conflicting_currency_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","offers":{"priceCurrency":"USD"}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_currency", self.findings_for({"services.html": source}))
+
+    def test_nested_jsonld_conflicting_duration_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","terms":{"duration":"PT1H"}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+
+    def test_nested_jsonld_conflicting_delivery_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","terms":{"deliveryPlatform":"Zoom"}}',
+            "application/ld+json",
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_nested_jsonld_conflicting_payment_method_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","terms":{"paymentMethod":"PayPal"}}',
+            "application/ld+json",
+        )
+        self.assert_finding(
+            "payment.unsupported_rm350_method", self.findings_for({"services.html": source})
+        )
+
+    def test_nested_javascript_conflicting_price_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            'const offer={name:"One-Concern Parent Session",terms:{price:450}};',
+        )
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_nested_javascript_conflicting_currency_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            'const offer={name:"One-Concern Parent Session",terms:{priceCurrency:"USD"}};',
+        )
+        self.assert_finding("value.session_currency", self.findings_for({"services.html": source}))
+
+    def test_nested_javascript_conflicting_duration_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            'const offer={name:"One-Concern Parent Session",terms:{durationMinutes:60}};',
+        )
+        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+
+    def test_nested_javascript_conflicting_delivery_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            'const offer={name:"One-Concern Parent Session",terms:{deliveryPlatform:"Zoom"}};',
+        )
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+
+    def test_nested_javascript_conflicting_payment_method_fails(self):
+        source = append_script(
+            self.canonical["services.html"],
+            'const offer={name:"One-Concern Parent Session",terms:{paymentMethod:"PayPal"}};',
+        )
+        self.assert_finding(
+            "payment.unsupported_rm350_method", self.findings_for({"services.html": source})
+        )
+
+    def test_nested_structured_multiple_object_levels_fail(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","catalog":{"terms":{"offers":{"price":450}}}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",catalog:{terms:{offers:{price:450}}}};',
+        )
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_nested_structured_arrays_retain_context(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","catalog":[{"offers":[{"price":450}]}]}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",catalog:[{offers:[{price:450}]}]};',
+        )
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_nested_structured_sibling_children_share_context(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","pricing":{"price":450},'
+            '"meeting":{"deliveryPlatform":"Zoom"},"payment":{"paymentMethod":"PayPal"}}',
+            "application/ld+json",
+        )
+        findings = self.findings_for({"services.html": source})
+        self.assert_finding("value.session_price", findings)
+        self.assert_finding("delivery.unapproved_platform", findings)
+        self.assert_finding("payment.unsupported_rm350_method", findings)
+
+    def test_canonical_nested_structured_values_pass(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","offers":{"price":350,'
+            '"priceCurrency":"MYR","durationMinutes":45,"deliveryPlatform":"Google Meet",'
+            '"paymentMethod":"Maybank bank transfer"}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",terms:{price:350,'
+            'priceCurrency:"MYR",durationMinutes:45,deliveryPlatform:"Google Meet",'
+            'paymentMethod:"DuitNow QR"}};',
+        )
+        self.assertEqual([], self.findings_for({"services.html": source}))
+
+    def test_unrelated_nested_structured_data_passes(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"Unrelated webinar","offers":{"price":450,"priceCurrency":"USD",'
+            '"durationMinutes":60,"deliveryPlatform":"Zoom","paymentMethod":"PayPal"}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const webinar={name:"Unrelated webinar",terms:{price:450,priceCurrency:"USD",'
+            'durationMinutes:60,deliveryPlatform:"Zoom",paymentMethod:"PayPal"}};',
+        )
+        self.assertEqual([], self.findings_for({"services.html": source}))
+
+    def test_nested_home_support_wise_remains_accepted(self):
+        source = append_script(
+            self.canonical["pay/index.html"],
+            '{"name":"One-Concern Parent Session","related":{"name":"APC Home Support Programme",'
+            '"overseas":{"paymentMethod":"Wise","authorization":"already authorized only"}}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",related:{name:"APC Home Support Programme",'
+            'overseas:{paymentMethod:"Wise",authorization:"already authorized only"}}};',
+        )
+        self.assertEqual([], self.findings_for({"pay/index.html": source}))
 
 
 if __name__ == "__main__":
