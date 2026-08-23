@@ -1,0 +1,653 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap');
+
+:root {
+  --apc-dark-teal: #073734;
+  --apc-primary-teal: #0f766e;
+  --apc-bright-teal: #2dd4bf;
+  --apc-cream: #fff9f1;
+  --apc-warm-white: #f8f5ef;
+  --apc-coral: #e8997a;
+  --apc-sage: #6b9e7a;
+  --apc-text: #253532;
+  --apc-muted: #5b6b68;
+  --apc-border: rgba(7, 55, 52, 0.12);
+  --apc-radius-sm: 16px;
+  --apc-radius-lg: 24px;
+  --apc-shadow: 0 12px 32px rgba(7, 55, 52, 0.055);
+  --apc-content: 1080px;
+  --apc-reading: 680px;
+  --apc-section-space: clamp(72px, 7vw, 88px);
+}
+
+html {
+  color: var(--apc-text);
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  background: var(--apc-cream);
+  color: var(--apc-text);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.apc-home-title,
+.apc-services-title,
+.apc-start-clean-title,
+.card-title,
+.topic-title {
+  color: var(--apc-dark-teal);
+  font-family: 'DM Serif Display', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em;
+}
+
+p,
+li,
+a,
+button,
+input,
+select,
+textarea,
+summary {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+p,
+li {
+  color: var(--apc-text);
+}
+
+a {
+  text-underline-offset: 0.18em;
+}
+
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--apc-bright-teal);
+  outline-offset: 3px;
+}
+
+.apc-home-section,
+.apc-services-section,
+.apc-start-clean-section,
+.about-minimal-section {
+  padding-top: var(--apc-section-space);
+  padding-bottom: var(--apc-section-space);
+}
+
+.apc-hero-visual-wrap,
+.apc-home-section,
+.home-container,
+.apc-services-page,
+.apc-services-hero,
+.apc-services-section,
+.apc-start-clean-wrap,
+.about-minimal-container,
+.section,
+.apc-pay-page,
+.apc-footer-inner {
+  width: min(calc(100% - 40px), var(--apc-content));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.apc-home-title,
+.apc-services-title,
+.apc-start-clean-title,
+.section-heading,
+.hero-sub,
+.apc-pay-lead {
+  max-width: var(--apc-reading);
+}
+
+.btn,
+.btn-main,
+.mini-btn,
+.apc-start-clean-btn,
+.apc-pay-button,
+.btn-teal-accent,
+.nav-cta {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.btn:hover,
+.btn-main:hover,
+.mini-btn:hover,
+.apc-start-clean-btn:hover,
+.apc-pay-button:hover,
+.btn-teal-accent:hover,
+.nav-cta:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary,
+.btn-main,
+.mini-btn.primary,
+.apc-start-clean-btn:not(.secondary),
+.apc-pay-button.primary,
+.btn-teal,
+.btn-coral,
+.btn-teal-accent,
+.nav-cta {
+  background: var(--apc-primary-teal);
+  border-color: var(--apc-primary-teal);
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(15, 118, 110, 0.14);
+}
+
+.btn-primary:hover,
+.btn-main:hover,
+.mini-btn.primary:hover,
+.apc-start-clean-btn:not(.secondary):hover,
+.apc-pay-button.primary:hover,
+.btn-teal:hover,
+.btn-coral:hover,
+.btn-teal-accent:hover,
+.nav-cta:hover {
+  background: var(--apc-dark-teal);
+  border-color: var(--apc-dark-teal);
+  color: #fff;
+}
+
+.btn-secondary,
+.btn-ghost,
+.btn-ghost-white,
+.mini-btn.secondary,
+.apc-start-clean-btn.secondary,
+.apc-pay-button.secondary {
+  background: #fff;
+  border-color: rgba(15, 118, 110, 0.42);
+  color: var(--apc-primary-teal);
+  box-shadow: none;
+}
+
+.btn-secondary:hover,
+.btn-ghost:hover,
+.btn-ghost-white:hover,
+.mini-btn.secondary:hover,
+.apc-start-clean-btn.secondary:hover,
+.apc-pay-button.secondary:hover {
+  background: var(--apc-cream);
+  border-color: var(--apc-primary-teal);
+  color: var(--apc-dark-teal);
+}
+
+.btn-text {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 8px 2px;
+  color: var(--apc-primary-teal);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.apc-mini-card,
+.apc-proof-card,
+.apc-start-card,
+.apc-service-card,
+.apc-start-clean-card,
+.apc-start-decision-card,
+.featured-card,
+.guide-card,
+.topic-card,
+.apc-pay-card,
+.apc-pay-bank-card {
+  border: 1px solid var(--apc-border);
+  border-radius: var(--apc-radius-lg);
+  box-shadow: var(--apc-shadow);
+}
+
+.apc-start-card,
+.apc-service-card,
+.apc-start-clean-card,
+.apc-start-decision-card,
+.featured-card,
+.guide-card,
+.topic-card,
+.apc-pay-card,
+.apc-pay-bank-card {
+  padding: clamp(22px, 3vw, 30px);
+}
+
+.apc-service-card,
+.apc-start-decision-card,
+.apc-pay-card,
+.apc-pay-bank-card {
+  background: #fff;
+}
+
+.apc-services-page,
+.apc-start-clean,
+.about-minimal-page,
+.apc-pay-page {
+  max-width: none;
+}
+
+.apc-services-hero,
+.apc-services-section {
+  width: 100%;
+  max-width: var(--apc-content);
+}
+
+#services-hero {
+  min-height: 0 !important;
+  padding-top: 76px;
+  padding-bottom: 62px;
+}
+
+.apc-hero-trust-line {
+  max-width: 620px;
+  color: var(--apc-muted) !important;
+  font-size: 0.94rem !important;
+  font-weight: 500 !important;
+}
+
+.apc-service-grid {
+  align-items: stretch;
+  gap: 22px;
+}
+
+.apc-service-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.apc-service-card.featured {
+  border-color: rgba(15, 118, 110, 0.32);
+  box-shadow: 0 14px 34px rgba(7, 55, 52, 0.075);
+}
+
+.apc-service-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.apc-service-actions .btn-text {
+  font-size: 0.9rem;
+}
+
+.apc-concern-card,
+.apc-process-step,
+.apc-faq-card {
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.apc-start-decision-grid {
+  align-items: stretch;
+  gap: 20px;
+}
+
+.apc-start-decision-card {
+  display: flex;
+  min-height: 260px;
+  flex-direction: column;
+}
+
+.apc-start-decision-card p {
+  margin-bottom: 20px;
+}
+
+.apc-start-decision-card .apc-start-clean-btn {
+  width: 100%;
+  margin-top: auto;
+}
+
+#parent-testimonials .apc-proof-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(30px, 5vw, 52px);
+  background: var(--apc-warm-white);
+  border: 0;
+  box-shadow: none;
+}
+
+#parent-testimonials .apc-proof-card::before {
+  content: '\201C';
+  position: absolute;
+  top: 2px;
+  left: 20px;
+  color: rgba(15, 118, 110, 0.13);
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 7rem;
+  line-height: 1;
+}
+
+#parent-testimonials .apc-quote {
+  position: relative;
+  max-width: 820px;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.25rem, 2.3vw, 1.75rem);
+  line-height: 1.5;
+}
+
+#start-here .apc-grid-3 {
+  gap: 22px;
+}
+
+#start-here .apc-start-card.featured {
+  border-color: rgba(15, 118, 110, 0.34);
+  box-shadow: 0 16px 36px rgba(7, 55, 52, 0.08);
+}
+
+.about-minimal-hero {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+.about-minimal-hero .hero-photo-card {
+  border-radius: var(--apc-radius-lg);
+  box-shadow: var(--apc-shadow);
+}
+
+.about-minimal-hero .hero-copy h1 {
+  color: var(--apc-dark-teal) !important;
+}
+
+.trust-grid article,
+.quiet-panel,
+.scope-strip {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.trust-grid article {
+  padding: 10px 24px 10px 0;
+}
+
+.quiet-panel,
+.scope-strip {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.training-accordion details {
+  border-color: var(--apc-border);
+  border-radius: var(--apc-radius-sm);
+  box-shadow: none;
+}
+
+.about-minimal-section.final .final-card {
+  border-radius: var(--apc-radius-lg);
+  box-shadow: none;
+}
+
+.hero {
+  padding-top: 76px;
+  padding-bottom: 68px;
+}
+
+.section {
+  padding-top: 68px;
+  padding-bottom: 76px;
+}
+
+.sec-label {
+  margin-top: 68px;
+  margin-bottom: 24px;
+}
+
+.sec-label:first-child {
+  margin-top: 0;
+}
+
+.featured-grid,
+.topic-grid {
+  gap: 20px;
+}
+
+.featured-card,
+.guide-card,
+.topic-card {
+  background: #fff;
+}
+
+.featured-card.fc-teal,
+.featured-card.fc-coral {
+  background: #fff;
+  color: var(--apc-text);
+}
+
+.featured-card.fc-teal p,
+.featured-card.fc-coral p,
+.featured-card.fc-teal li,
+.featured-card.fc-coral li,
+.featured-card.fc-teal h2,
+.featured-card.fc-coral h2 {
+  color: var(--apc-text);
+}
+
+.topic-card {
+  min-height: 0;
+}
+
+.topic-card::before {
+  height: 4px;
+  background: var(--apc-bright-teal);
+}
+
+.topic-link {
+  min-height: 44px;
+  color: var(--apc-primary-teal);
+}
+
+.apc-pay-page {
+  padding-top: 52px;
+  padding-bottom: 76px;
+}
+
+.apc-pay-hero {
+  padding: 48px clamp(20px, 4vw, 44px);
+  background: var(--apc-warm-white);
+  border: 1px solid var(--apc-border);
+  border-radius: var(--apc-radius-lg);
+  box-shadow: none;
+}
+
+.apc-pay-hero h1,
+.apc-pay-section h2,
+.apc-pay-card h3,
+.apc-pay-price {
+  color: var(--apc-dark-teal);
+}
+
+.apc-pay-alert {
+  border-radius: var(--apc-radius-sm);
+  color: var(--apc-text);
+}
+
+.apc-pay-selected-summary {
+  display: none;
+  max-width: 620px;
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  border-radius: var(--apc-radius-sm);
+  background: #fff;
+  color: var(--apc-dark-teal);
+  font-weight: 700;
+  text-align: center;
+}
+
+.apc-pay-selected-summary.is-active {
+  display: block;
+}
+
+.apc-pay-cards,
+.apc-pay-bank-grid {
+  gap: 20px;
+}
+
+.apc-pay-card,
+.apc-pay-bank-card,
+.apc-pay-step {
+  border-color: var(--apc-border);
+  border-radius: var(--apc-radius-lg);
+  box-shadow: var(--apc-shadow);
+}
+
+.apc-pay-card.is-selected {
+  border-color: rgba(15, 118, 110, 0.42);
+  box-shadow: 0 14px 34px rgba(7, 55, 52, 0.08);
+}
+
+.apc-pay-bank-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.apc-pay-bank-card:last-child {
+  grid-column: 1 / -1;
+  background: var(--apc-warm-white);
+  box-shadow: none;
+}
+
+.apc-pay-qr-image-wrap {
+  min-height: 0;
+  padding: 12px;
+  border-radius: var(--apc-radius-sm);
+}
+
+.apc-pay-qr-image {
+  width: min(210px, 100%);
+  border-radius: var(--apc-radius-sm);
+}
+
+.apc-pay-after-list li,
+.apc-pay-scope,
+.apc-pay-copy-note {
+  border-radius: var(--apc-radius-sm);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --apc-section-space: clamp(44px, 11vw, 56px);
+  }
+
+  .apc-hero-visual-wrap,
+  .apc-home-section,
+  .home-container,
+  .apc-services-page,
+  #services-hero,
+  .apc-services-section,
+  .apc-start-clean-wrap,
+  .about-minimal-container,
+  .section,
+  .apc-pay-page,
+  .apc-footer-inner {
+    width: min(calc(100% - 32px), var(--apc-content));
+  }
+
+  #services-hero,
+  .about-minimal-hero,
+  .hero {
+    padding-top: 52px;
+    padding-bottom: 48px;
+  }
+
+  .apc-pay-bank-grid,
+  .apc-pay-steps,
+  .apc-pay-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .apc-pay-bank-card:last-child {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-minimal-hero .hero-photo-card {
+    order: 1 !important;
+    grid-row: 1 !important;
+    margin: 0 auto 30px !important;
+  }
+
+  .about-minimal-hero .hero-copy {
+    order: 2 !important;
+    grid-row: 2 !important;
+  }
+
+  .apc-start-decision-card {
+    min-height: 0;
+  }
+
+  .apc-service-actions,
+  .apc-service-actions .btn,
+  .apc-start-decision-card .apc-start-clean-btn,
+  .apc-pay-actions .apc-pay-button {
+    width: 100%;
+  }
+
+  .apc-start-card,
+  .apc-service-card,
+  .apc-start-clean-card,
+  .apc-start-decision-card,
+  .featured-card,
+  .guide-card,
+  .topic-card,
+  .apc-pay-card,
+  .apc-pay-bank-card {
+    padding: 22px;
+  }
+
+  #parent-testimonials .apc-proof-card {
+    padding: 30px 24px;
+  }
+
+  .apc-pay-page {
+    padding-top: 28px;
+    padding-bottom: 52px;
+  }
+
+  .apc-pay-hero {
+    padding: 34px 20px;
+  }
+
+  .apc-pay-bank-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

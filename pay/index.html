@@ -964,6 +964,7 @@
   }
 }
 </style>
+<link rel="stylesheet" href="/apc-design-system.css">
 </head>
 <body>
 <a class="apc-skip-link" href="#main-content">Skip to main content</a>
@@ -994,6 +995,7 @@
     <p class="apc-pay-lead">
       Make payment by bank transfer or DuitNow, then send your payment confirmation on WhatsApp so CJ can verify it.
     </p>
+    <div id="apc-pay-summary" class="apc-pay-selected-summary" role="status"></div>
     <div class="apc-pay-alert">
       For the RM350 One-Concern Parent Session, request your booking through Cal.com first. For the RM1,800 Home Support Programme, only pay after CJ has confirmed that the programme is a good fit. If your quoted amount is different from the options below, follow the amount confirmed in WhatsApp or on your invoice.
     </div>
@@ -1190,6 +1192,12 @@
   if (banner) {
     banner.textContent = "You are paying for the " + offers[sel].name + " at " + offers[sel].price + ". " + offers[sel].status;
     banner.classList.add("is-active");
+  }
+
+  var summary = document.getElementById("apc-pay-summary");
+  if (summary) {
+    summary.textContent = "Selected: " + offers[sel].name + " | " + offers[sel].price;
+    summary.classList.add("is-active");
   }
 
   var target = document.getElementById("payment-details");
