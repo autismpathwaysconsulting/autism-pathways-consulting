@@ -43,6 +43,7 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 - `/page.html` 308-redirects to extensionless `/page` (and `/index.html` → `/`). Canonical, `og:url`,
   and `sitemap.xml` all use the extensionless form. `pay/index.html` serves `/pay/`; `connect/index.html` serves `/connect`.
 - Payment: `/pay/` (real page, supports `?s=350` / `?s=1800`); root `pay.html` redirects to it.
+- Clean payment routes `/pay/350` and `/pay/1800` redirect to the matching filtered view of `/pay/`. Do not duplicate payment details into separate pages.
 - Brevo email capture: free parent guide (on `resources.html` + homepage card) and the course waitlist
   (`course-waitlist.html`) are separate Brevo forms. The course sales page is `/connect`.
 - Booking is embedded inline via the Cal.com embed on `index.html`.
@@ -50,6 +51,7 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
   - Unsure parents: Free 15-Min First Step Call.
   - One clear concern: direct RM350 One-Concern Parent Session.
 - Do not reintroduce the large inline Cal.com calendar on `services.html` unless separately approved.
+- `apc-design-system.css` is the authoritative shared visual layer for the main parent-facing pages. Load it after page-specific styles so its tokens and consistency overrides apply last.
 - Custom `404.html` + `_redirects` (`/* /404.html 404`). Accessibility baseline: `<style id="apc-a11y">`,
   a skip link, and `id="main-content"` on each `<main>` already exist on live pages; do not re-add.
 
