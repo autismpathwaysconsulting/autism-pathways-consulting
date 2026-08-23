@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap');
 
 :root {
+  --apc-font-heading: 'DM Serif Display', Georgia, serif;
+  --apc-font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --apc-type-body: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --apc-leading-body: 1.65;
   --apc-dark-teal: #073734;
   --apc-primary-teal: #0f766e;
   --apc-bright-teal: #2dd4bf;
@@ -11,12 +15,22 @@
   --apc-text: #253532;
   --apc-muted: #5b6b68;
   --apc-border: rgba(7, 55, 52, 0.12);
+  --apc-space-1: 8px;
+  --apc-space-2: 12px;
+  --apc-space-3: 16px;
+  --apc-space-4: 24px;
+  --apc-space-5: 32px;
+  --apc-space-6: 48px;
   --apc-radius-sm: 16px;
   --apc-radius-lg: 24px;
-  --apc-shadow: 0 12px 32px rgba(7, 55, 52, 0.055);
+  --apc-radius-pill: 999px;
+  --apc-shadow-soft: 0 12px 32px rgba(7, 55, 52, 0.055);
+  --apc-shadow: var(--apc-shadow-soft);
   --apc-content: 1080px;
   --apc-reading: 680px;
   --apc-section-space: clamp(72px, 7vw, 88px);
+  --apc-transition-fast: 160ms;
+  --apc-transition-ease: ease;
 }
 
 html {
@@ -28,9 +42,9 @@ body {
   overflow-x: hidden;
   background: var(--apc-cream);
   color: var(--apc-text);
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-  font-size: 16px;
-  line-height: 1.65;
+  font-family: var(--apc-font-body) !important;
+  font-size: var(--apc-type-body);
+  line-height: var(--apc-leading-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -46,9 +60,10 @@ h6,
 .card-title,
 .topic-title {
   color: var(--apc-dark-teal);
-  font-family: 'DM Serif Display', Georgia, serif !important;
+  font-family: var(--apc-font-heading) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
 p,
@@ -59,12 +74,16 @@ input,
 select,
 textarea,
 summary {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--apc-font-body) !important;
 }
 
 p,
 li {
   color: var(--apc-text);
+}
+
+p {
+  text-wrap: pretty;
 }
 
 a {
@@ -123,14 +142,19 @@ a {
   gap: 8px;
   padding: 12px 20px;
   border: 1px solid transparent;
-  border-radius: 999px;
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-radius: var(--apc-radius-pill);
+  font-family: var(--apc-font-body);
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.25;
   text-align: center;
   text-decoration: none;
-  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  transition:
+    background-color var(--apc-transition-fast) var(--apc-transition-ease),
+    border-color var(--apc-transition-fast) var(--apc-transition-ease),
+    color var(--apc-transition-fast) var(--apc-transition-ease),
+    transform var(--apc-transition-fast) var(--apc-transition-ease),
+    box-shadow var(--apc-transition-fast) var(--apc-transition-ease);
 }
 
 .btn:hover,
