@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Registered adversarial tests for the APC authority validator."""
 
+from html.parser import HTMLParser
 from pathlib import Path
 import subprocess
 import tempfile
@@ -24,11 +25,99 @@ def append_html(source: str, claim: str, before: bool = False) -> str:
     return source.replace(marker, insertion + marker, 1)
 
 
+SESSION_ARTICLE_NAME = "one-concern parent session"
+HEADING_TAGS = frozenset({"h1", "h2", "h3", "h4", "h5", "h6"})
+
+
+def normalize_semantic_text(text: str) -> str:
+    return " ".join(text.split()).casefold()
+
+
+class SessionArticleLocator(HTMLParser):
+    def __init__(self, source: str) -> None:
+        super().__init__(convert_charrefs=True)
+        self.line_starts = [0]
+        for line in source.splitlines(keepends=True):
+            self.line_starts.append(self.line_starts[-1] + len(line))
+        self.articles: list[dict[str, object]] = []
+        self.heading: dict[str, object] | None = None
+        self.matches: list[int] = []
+        self.structure_errors: list[str] = []
+
+    def absolute_offset(self) -> int:
+        line, column = self.getpos()
+        return self.line_starts[line - 1] + column
+
+    def handle_starttag(self, tag: str, attrs) -> None:
+        tag = tag.casefold()
+        if tag == "article":
+            attributes = {name.casefold(): value or "" for name, value in attrs}
+            accessible_name = " ".join(
+                attributes.get(name, "") for name in ("aria-label", "title")
+            )
+            self.articles.append(
+                {"matches": SESSION_ARTICLE_NAME == normalize_semantic_text(accessible_name)}
+            )
+        elif tag in HEADING_TAGS and self.articles:
+            if self.heading is not None:
+                self.structure_errors.append("nested heading in article")
+                return
+            self.heading = {"tag": tag, "article": self.articles[-1], "parts": []}
+
+    def handle_startendtag(self, tag: str, attrs) -> None:
+        if tag.casefold() == "article":
+            self.structure_errors.append("self-closing article")
+
+    def handle_data(self, data: str) -> None:
+        if self.heading is not None:
+            self.heading["parts"].append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        tag = tag.casefold()
+        if tag in HEADING_TAGS and self.articles:
+            if self.heading is None or self.heading["tag"] != tag:
+                self.structure_errors.append("unbalanced heading in article")
+                return
+            heading = self.heading
+            self.heading = None
+            if SESSION_ARTICLE_NAME == normalize_semantic_text("".join(heading["parts"])):
+                heading["article"]["matches"] = True
+        elif tag == "article":
+            if not self.articles:
+                self.structure_errors.append("closing article without opening article")
+                return
+            article = self.articles[-1]
+            if self.heading is not None and self.heading["article"] is article:
+                self.structure_errors.append("article closed before its heading")
+                self.heading = None
+            self.articles.pop()
+            if article["matches"]:
+                self.matches.append(self.absolute_offset())
+
+    def finish(self) -> None:
+        if self.heading is not None:
+            self.structure_errors.append("unclosed heading in article")
+        if self.articles:
+            self.structure_errors.append("unclosed article")
+
+
 def insert_in_session_article(source: str, markup: str) -> str:
-    marker = '<div class="apc-slot-bar" aria-hidden="true">'
-    if marker not in source:
-        raise AssertionError("missing One-Concern Parent Session fixture marker")
-    return source.replace(marker, f"{markup}\n          {marker}", 1)
+    locator = SessionArticleLocator(source)
+    locator.feed(source)
+    locator.close()
+    locator.finish()
+    if locator.structure_errors:
+        detail = ", ".join(locator.structure_errors)
+        raise AssertionError(
+            f"cannot safely resolve One-Concern Parent Session article structure: {detail}"
+        )
+    if len(locator.matches) != 1:
+        raise AssertionError(
+            "expected exactly one semantic One-Concern Parent Session article; "
+            f"found {len(locator.matches)}"
+        )
+    offset = locator.matches[0]
+    return source[:offset] + markup + source[offset:]
 
 
 class AuthorityValidatorTests(unittest.TestCase):
@@ -45,6 +134,42 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def assert_finding(self, identifier: str, findings) -> None:
         self.assertIn(identifier, {finding.identifier for finding in findings})
+
+    def test_semantic_fixture_insertion_ignores_decorative_markup(self):
+        source = (
+            '<article class="redesigned-card" data-visual="changed">\n'
+            "  <div>Decorative content without a slot bar</div>\n"
+            "  <h3>\n    <span>One-Concern</span>\n    Parent Session\n  </h3>\n"
+            "  <p>Existing article content.</p>\n"
+            "</article>"
+        )
+        markup = "<p>Injected authority fixture.</p>"
+        closing_offset = source.index("</article>")
+
+        result = insert_in_session_article(source, markup)
+
+        self.assertNotIn("apc-slot-bar", source)
+        self.assertEqual(source[:closing_offset], result[:closing_offset])
+        self.assertEqual(markup, result[closing_offset : closing_offset + len(markup)])
+        self.assertEqual(source[closing_offset:], result[closing_offset + len(markup) :])
+
+    def test_semantic_fixture_insertion_fails_for_zero_or_multiple_matches(self):
+        cases = {
+            0: "<article><h2>Another service</h2></article>",
+            2: (
+                "<article><h2>One-Concern Parent Session</h2></article>"
+                "<article aria-label='One-Concern Parent Session'></article>"
+            ),
+        }
+        for count, source in cases.items():
+            with self.subTest(count=count):
+                with self.assertRaisesRegex(AssertionError, f"found {count}"):
+                    insert_in_session_article(source, "<p>fixture</p>")
+
+    def test_semantic_fixture_insertion_fails_for_unresolved_structure(self):
+        source = "<article><h2>One-Concern Parent Session</h2>"
+        with self.assertRaisesRegex(AssertionError, "cannot safely resolve"):
+            insert_in_session_article(source, "<p>fixture</p>")
 
     def test_unchanged_canonical_pages_pass(self):
         self.assertEqual([], self.findings_for())
