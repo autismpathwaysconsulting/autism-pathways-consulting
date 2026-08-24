@@ -1560,6 +1560,194 @@ class AuthorityValidatorTests(unittest.TestCase):
             with self.subTest(script_type=script_type or "javascript"):
                 self.assertTrue(expected.issubset(identifiers), expected - identifiers)
 
+    def test_javascript_context_expression_matrix(self):
+        expressions = (
+            ("undefined", "undefined", "authority.structured_expression_unsupported"),
+            ("identifier", "offerName", "authority.structured_expression_unsupported"),
+            ("function_call", "getOfferName()", "authority.structured_expression_unsupported"),
+            (
+                "symbol",
+                'Symbol("One-Concern Parent Session")',
+                "authority.structured_expression_unsupported",
+            ),
+            ("static_template", "`One-Concern Parent Session`", "value.session_price"),
+            (
+                "interpolated_template",
+                "`${offerName}`",
+                "authority.structured_expression_unsupported",
+            ),
+            ("member_access", "catalog.offerName", "authority.structured_expression_unsupported"),
+            (
+                "computed_expression",
+                '"One-Concern " + "Parent Session"',
+                "authority.structured_expression_unsupported",
+            ),
+        )
+        for context_key in ("name", "offer", "service", "product", "title"):
+            for category, expression, expected in expressions:
+                with self.subTest(context_key=context_key, category=category):
+                    findings = self.findings_from_script(
+                        f"const record={{{context_key}:{expression},terms:{{price:450}}}};"
+                    )
+                    self.assert_finding(expected, findings)
+
+    def test_javascript_undefined_context_descendant_conflict_matrix(self):
+        conflicts = (
+            ("price", "450"),
+            ("priceCurrency", '"USD"'),
+            ("durationMinutes", "60"),
+            ("deliveryPlatform", '"Zoom"'),
+            ("paymentMethods", '"PayPal"'),
+        )
+        for context_key in ("name", "offer", "service", "product", "title"):
+            for field, value in conflicts:
+                with self.subTest(context_key=context_key, field=field):
+                    findings = self.findings_from_script(
+                        f"const record={{{context_key}:undefined,terms:{{{field}:{value}}}}};"
+                    )
+                    self.assert_finding(
+                        "authority.structured_expression_unsupported",
+                        findings,
+                    )
+
+    def test_javascript_governed_value_expression_matrix(self):
+        expressions = (
+            ("price", "getPrice()"),
+            ("priceCurrency", "currency.code"),
+            ("durationMinutes", "duration + 15"),
+            ("deliveryPlatform", "getPlatform()"),
+            ("paymentMethods", "Symbol()"),
+        )
+        for field, expression in expressions:
+            with self.subTest(field=field):
+                findings = self.findings_from_script(
+                    f'const record={{name:"One-Concern Parent Session",{field}:{expression}}};'
+                )
+                self.assert_finding(
+                    "authority.structured_expression_unsupported",
+                    findings,
+                )
+
+    def test_javascript_unsupported_expression_structures_fail_closed(self):
+        cases = (
+            (
+                "context_array",
+                'const record={name:[undefined],terms:{price:450}};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "nested_governed_value",
+                'const record={name:"One-Concern Parent Session",child:{price:getPrice()}};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "beside_canonical_sibling",
+                'const record={name:"One-Concern Parent Session",title:undefined,price:350};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "unsupported_child",
+                'const record={name:"One-Concern Parent Session",child:{title:undefined,price:450}};',
+                {"authority.structured_expression_unsupported", "value.session_price"},
+            ),
+            (
+                "canonical_child",
+                'const record={name:undefined,child:{name:"One-Concern Parent Session",price:450}};',
+                {"authority.structured_expression_unsupported", "value.session_price"},
+            ),
+            (
+                "multiple_unsupported",
+                'const record={name:undefined,price:getPrice(),paymentMethods:methods.current};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "governed_array",
+                'const record={name:"One-Concern Parent Session",price:[350,getPrice()]};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "spread",
+                'const record={name:"One-Concern Parent Session",price:350,...extra};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "getter",
+                'const record={name:"One-Concern Parent Session",get price(){return 450}};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "shorthand",
+                'const record={name:"One-Concern Parent Session",price};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "computed_property",
+                'const record={name:"One-Concern Parent Session",[price]:450};',
+                {"authority.structured_expression_unsupported"},
+            ),
+            (
+                "template_operator",
+                "const record={name:`One-Concern Parent ` + `Session`,price:450};",
+                {"authority.structured_expression_unsupported"},
+            ),
+        )
+        for category, payload, expected in cases:
+            with self.subTest(category=category):
+                identifiers = {
+                    finding.identifier for finding in self.findings_from_script(payload)
+                }
+                self.assertTrue(expected.issubset(identifiers), expected - identifiers)
+
+    def test_javascript_malformed_and_unconsumed_values_fail_closed(self):
+        cases = (
+            'const record={name:"One-Concern Parent Session",price:};',
+            'const record={name:"One-Concern Parent Session",price:450 trailing};',
+            'const record={name:"One-Concern Parent Session",price:450;',
+            'const record={name:`One-Concern Parent Session,price:450};',
+        )
+        for payload in cases:
+            with self.subTest(payload=payload):
+                self.assert_finding(
+                    "authority.structured_value_malformed",
+                    self.findings_from_script(payload),
+                )
+
+    def test_javascript_static_template_literals_are_supported(self):
+        findings = self.findings_from_script(
+            "const record={name:`One-Concern Parent Session`,price:350,"
+            "priceCurrency:`MYR`,durationMinutes:45,"
+            "deliveryPlatform:`Google Meet`,paymentMethods:`DuitNow QR`};"
+        )
+        self.assertEqual([], findings)
+
+    def test_javascript_ordinary_application_code_is_not_governed(self):
+        source = append_script(
+            self.canonical["services.html"],
+            "function renderCard(item){const model={name:item.name,title:item.title,"
+            "render(){return true}};return model;}"
+            "const webinar={name:`Unrelated webinar`,price:getPrice()};"
+            "const mixed={name:`Unrelated webinar`,title:undefined,price:450};",
+        )
+        self.assertEqual([], self.findings_for({"services.html": source}))
+
+    def test_javascript_unsupported_siblings_do_not_hide_supported_conflicts(self):
+        identifiers = {
+            finding.identifier
+            for finding in self.findings_from_script(
+                'const record={name:"One-Concern Parent Session",price:getPrice(),'
+                'priceCurrency:"USD",durationMinutes:60,deliveryPlatform:"Zoom",'
+                'paymentMethods:"PayPal"};'
+            )
+        }
+        expected = {
+            "authority.structured_expression_unsupported",
+            "value.session_currency",
+            "value.session_duration",
+            "delivery.unapproved_platform",
+            "payment.unsupported_rm350_method",
+        }
+        self.assertTrue(expected.issubset(identifiers), expected - identifiers)
+
 
 if __name__ == "__main__":
     unittest.main()
