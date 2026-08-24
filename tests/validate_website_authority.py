@@ -566,9 +566,30 @@ def _contextual_fields(
     return inherited + local
 
 
-EXECUTABLE_JAVASCRIPT_TYPES = frozenset(
-    {"", "application/javascript", "text/javascript", "module"}
+# Complete JavaScript MIME essence set from the MIME Sniffing Standard:
+# https://mimesniff.spec.whatwg.org/#javascript-mime-type
+JAVASCRIPT_MIME_ESSENCES = frozenset(
+    {
+        "application/ecmascript",
+        "application/javascript",
+        "application/x-ecmascript",
+        "application/x-javascript",
+        "text/ecmascript",
+        "text/javascript",
+        "text/javascript1.0",
+        "text/javascript1.1",
+        "text/javascript1.2",
+        "text/javascript1.3",
+        "text/javascript1.4",
+        "text/javascript1.5",
+        "text/jscript",
+        "text/livescript",
+        "text/x-ecmascript",
+        "text/x-javascript",
+    }
 )
+ASCII_WHITESPACE = "\t\n\f\r "
+JAVASCRIPT_URL_SCHEME = re.compile(r"^[\t\n\f\r ]*javascript:", FLAGS)
 EXECUTABLE_AUTHORITY_CONTEXT_WORDS = frozenset(
     {"name", "offer", "service", "product", "title"}
 )
@@ -705,6 +726,33 @@ def _executable_javascript_contains_authority(source: str) -> bool:
     )
 
 
+def _script_type_classification(raw_type: str) -> str:
+    normalized = raw_type.strip(ASCII_WHITESPACE).casefold()
+    if not normalized or normalized == "module":
+        return "javascript"
+    essence = normalized.split(";", 1)[0].rstrip(ASCII_WHITESPACE)
+    if essence == "application/ld+json":
+        return "jsonld"
+    if essence == "application/json":
+        return "application_json"
+    if essence in JAVASCRIPT_MIME_ESSENCES:
+        return "javascript"
+    return "inert"
+
+
+def _javascript_url_source(value: str) -> str | None:
+    match = JAVASCRIPT_URL_SCHEME.match(value)
+    return value[match.end():] if match else None
+
+
+def _is_executable_javascript_invalid_kind(kind: str) -> bool:
+    return bool(
+        kind == "javascript_authority_invalid"
+        or kind.startswith("javascript_event_handler_")
+        or kind.startswith("javascript_url_")
+    )
+
+
 class AuthorityHTMLParser(HTMLParser):
     def __init__(self, path: str):
         super().__init__(convert_charrefs=True)
@@ -718,6 +766,7 @@ class AuthorityHTMLParser(HTMLParser):
         self.structure_errors: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        self._add_executable_attribute_surfaces(tag, attrs)
         values = {name.casefold(): value or "" for name, value in attrs}
         if tag in {"style", "template"}:
             self.skip_depth += 1
@@ -742,6 +791,11 @@ class AuthorityHTMLParser(HTMLParser):
                 for _, parts in self.blocks:
                     parts.append(f" {rendered} ")
 
+    def handle_startendtag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        self._add_executable_attribute_surfaces(tag, attrs)
+
     def handle_data(self, data: str) -> None:
         if self.script_type is not None:
             self.script_parts.append(data)
@@ -759,15 +813,16 @@ class AuthorityHTMLParser(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag == "script" and self.script_type is not None:
             script = "".join(self.script_parts)
-            if self.script_type == "application/ld+json":
+            script_classification = _script_type_classification(self.script_type)
+            if script_classification == "jsonld":
                 self._add_json(script, "jsonld_record", "jsonld_invalid")
-            elif self.script_type == "application/json":
+            elif script_classification == "application_json":
                 self._add_json(
                     script,
                     "application_json_record",
                     "application_json_invalid",
                 )
-            elif self.script_type in EXECUTABLE_JAVASCRIPT_TYPES:
+            elif script_classification == "javascript":
                 self._add_executable_javascript(script)
             self.script_type = None
             self.script_parts = []
@@ -833,6 +888,33 @@ class AuthorityHTMLParser(HTMLParser):
             self.surfaces.append(
                 Surface(self.path, "javascript_authority_invalid", "invalid")
             )
+
+    def _add_executable_attribute_surfaces(
+        self, tag: str, attrs: Iterable[tuple[str, str | None]]
+    ) -> None:
+        element = normalize(tag).casefold() or "element"
+        for raw_attribute, raw_value in attrs:
+            attribute = normalize(raw_attribute).casefold()
+            value = raw_value or ""
+            if attribute.startswith("on") and _executable_javascript_contains_authority(value):
+                self.surfaces.append(
+                    Surface(
+                        self.path,
+                        f"javascript_event_handler_{element}_{attribute}_invalid",
+                        "invalid",
+                    )
+                )
+            javascript_source = _javascript_url_source(value)
+            if javascript_source is not None and _executable_javascript_contains_authority(
+                javascript_source
+            ):
+                self.surfaces.append(
+                    Surface(
+                        self.path,
+                        f"javascript_url_{element}_{attribute}_invalid",
+                        "invalid",
+                    )
+                )
 
     def _add_json(
         self,
@@ -954,7 +1036,7 @@ def load_tracked_documents(root: Path) -> dict[str, str]:
         path = root / relative
         if not path.is_file():
             continue
-        if relative.endswith((".html", ".py", ".md", ".js", ".mjs")):
+        if relative.endswith((".html", ".py", ".md", ".js", ".mjs", ".cjs")):
             documents[relative] = path.read_text(encoding="utf-8")
     return documents
 
@@ -1273,7 +1355,7 @@ def _authority_findings(surfaces: Iterable[Surface]) -> set[Finding]:
     material = tuple(surfaces)
     bindings, findings = _governed_bindings(material)
     for surface in material:
-        if surface.kind == "javascript_authority_invalid":
+        if _is_executable_javascript_invalid_kind(surface.kind):
             findings.add(
                 Finding(
                     "authority.executable_javascript_forbidden",
@@ -1352,7 +1434,7 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
             findings.add(Finding("mutator.website_writer", path, "python"))
 
     for path, source in documents.items():
-        if path.endswith((".js", ".mjs")) and _executable_javascript_contains_authority(source):
+        if path.endswith((".js", ".mjs", ".cjs")) and _executable_javascript_contains_authority(source):
             findings.add(
                 Finding(
                     "authority.executable_javascript_forbidden",

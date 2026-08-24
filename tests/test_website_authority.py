@@ -10,6 +10,7 @@ import unittest
 
 from validate_website_authority import (
     AUTHORITY,
+    JAVASCRIPT_MIME_ESSENCES,
     ROOT,
     committed_tracked_paths,
     extract_surfaces,
@@ -148,6 +149,12 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def findings_from_script(self, payload: str, script_type: str = ""):
         source = append_script(self.canonical["services.html"], payload, script_type)
+        return self.findings_for({"services.html": source})
+
+    def findings_from_markup(self, markup: str):
+        source = self.canonical["services.html"].replace(
+            "</body>", markup + "</body>", 1
+        )
         return self.findings_for({"services.html": source})
 
     def test_semantic_fixture_insertion_ignores_decorative_markup(self):
@@ -1772,6 +1779,14 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assert_finding("authority.executable_javascript_forbidden", findings)
 
+    def test_javascript_static_template_literals_are_supported(self):
+        # Retain the historical registered identity. Supported now means the
+        # bounded recognizer detects this syntax and rejects its authority claim.
+        findings = self.findings_from_script(
+            "const label=`One-Concern Parent Session`;"
+        )
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
+
     def test_javascript_ordinary_application_code_is_not_governed(self):
         source = append_script(
             self.canonical["services.html"],
@@ -1820,17 +1835,156 @@ class AuthorityValidatorTests(unittest.TestCase):
                 self.assertNotIn(payload, repr(findings))
 
     def test_tracked_executable_javascript_files_use_the_same_boundary(self):
-        findings = self.findings_for(
-            additions={
-                "assets/authority.js":
-                    'export const offerName="One-Concern Parent Session";'
-            }
+        for suffix in (".js", ".mjs", ".cjs"):
+            with self.subTest(suffix=suffix):
+                findings = self.findings_for(
+                    additions={
+                        "assets/authority" + suffix:
+                            'export const offerName="One-Concern Parent Session";'
+                    }
+                )
+                self.assert_finding("authority.executable_javascript_forbidden", findings)
+                unrelated = self.findings_for(
+                    additions={
+                        "assets/ui" + suffix:
+                            "export function toggleMenu(){return true;}"
+                    }
+                )
+                self.assertEqual([], unrelated)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            asset = root / "authority.cjs"
+            asset.write_text(
+                'export const offerName="One-Concern Parent Session";',
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "authority.cjs"], cwd=root, check=True)
+            self.assertIn("authority.cjs", load_tracked_documents(root))
+
+    def test_all_standard_javascript_mime_types_are_rejected(self):
+        expected = {
+            "application/ecmascript",
+            "application/javascript",
+            "application/x-ecmascript",
+            "application/x-javascript",
+            "text/ecmascript",
+            "text/javascript",
+            "text/javascript1.0",
+            "text/javascript1.1",
+            "text/javascript1.2",
+            "text/javascript1.3",
+            "text/javascript1.4",
+            "text/javascript1.5",
+            "text/jscript",
+            "text/livescript",
+            "text/x-ecmascript",
+            "text/x-javascript",
+        }
+        self.assertEqual(expected, JAVASCRIPT_MIME_ESSENCES)
+        payload = 'const record={name:"One-Concern Parent Session",price:350};'
+        for script_type in sorted(expected):
+            with self.subTest(script_type=script_type):
+                self.assert_finding(
+                    "authority.executable_javascript_forbidden",
+                    self.findings_from_script(payload, script_type),
+                )
+
+    def test_javascript_mime_parameters_case_whitespace_and_module_are_rejected(self):
+        payload = 'const record={name:"One-Concern Parent Session",price:350};'
+        for script_type in (
+            "text/javascript; charset=utf-8",
+            " application/javascript ; charset=UTF-8 ",
+            " TeXt/JaVaScRiPt ",
+            "   ",
+            "module",
+            " MoDuLe ",
+        ):
+            with self.subTest(script_type=script_type):
+                self.assert_finding(
+                    "authority.executable_javascript_forbidden",
+                    self.findings_from_script(payload, script_type),
+                )
+
+    def test_computed_and_spread_authority_reject_for_new_mime_types(self):
+        cases = (
+            (
+                "application/ecmascript",
+                'const x={["name"]:"One-Concern Parent Session",price:450};',
+            ),
+            (
+                "text/x-javascript",
+                'const x={...{name:"One-Concern Parent Session"},price:450};',
+            ),
         )
-        self.assert_finding("authority.executable_javascript_forbidden", findings)
-        unrelated = self.findings_for(
-            additions={"assets/ui.js": "export function toggleMenu(){return true;}"}
+        for script_type, payload in cases:
+            with self.subTest(script_type=script_type):
+                self.assert_finding(
+                    "authority.executable_javascript_forbidden",
+                    self.findings_from_script(payload, script_type),
+                )
+
+    def test_event_handler_attribute_matrix_is_rejected(self):
+        payload = 'window.record={name:"One-Concern Parent Session",price:350}'
+        cases = (
+            ("button", "onclick"),
+            ("svg", "onload"),
+            ("img", "onerror"),
+            ("form", "onsubmit"),
+            ("select", "onchange"),
+            ("input", "onfocus"),
+            ("button", "oNcLiCk"),
         )
-        self.assertEqual([], unrelated)
+        for element, attribute in cases:
+            with self.subTest(element=element, attribute=attribute):
+                findings = self.findings_from_markup(
+                    f"<{element} {attribute}='{payload}'></{element}>"
+                )
+                self.assert_finding("authority.executable_javascript_forbidden", findings)
+                self.assertNotIn(payload, repr(findings))
+
+    def test_javascript_url_attribute_matrix_is_rejected(self):
+        payload = 'window.record={name:"One-Concern Parent Session",price:350}'
+        cases = (
+            ("a", "href", "javascript:"),
+            ("form", "action", " JAVASCRIPT:"),
+            ("button", "formaction", "\nJaVaScRiPt:"),
+            ("iframe", "src", "\tjavascript:"),
+            ("div", "data-run", "javascript:"),
+        )
+        for element, attribute, scheme in cases:
+            with self.subTest(element=element, attribute=attribute):
+                findings = self.findings_from_markup(
+                    f"<{element} {attribute}='{scheme}{payload}'></{element}>"
+                )
+                self.assert_finding("authority.executable_javascript_forbidden", findings)
+                self.assertNotIn(payload, repr(findings))
+
+    def test_executable_surface_negative_controls_remain_accepted(self):
+        scripts = (
+            '<script type="module">export function toggleMenu(){return true;}</script>',
+            '<script type="text/x-javascript">function openPanel(){return true;}</script>',
+            '<button onclick="return toggleMenu(this)">Menu</button>',
+            '<a href="javascript:void document.body.classList.toggle(\'menu-open\')">Menu</a>',
+            '<script type="importmap">{"imports":{"widget":"/widget.js"}}</script>',
+            '<script type="speculationrules">{"prefetch":[]}</script>',
+            '<script type="application/x-apc-widget">{"view":"compact"}</script>',
+            '<script type="application/ld+json">'
+            '{"name":"One-Concern Parent Session","price":350,'
+            '"priceCurrency":"MYR","durationMinutes":45,'
+            '"deliveryPlatform":"Google Meet","paymentMethods":"DuitNow QR"}'
+            '</script>',
+            '<script type="application/json">'
+            '{"name":"One-Concern Parent Session","price":350,'
+            '"priceCurrency":"MYR","durationMinutes":45,'
+            '"deliveryPlatform":"Google Meet","paymentMethods":"DuitNow QR"}'
+            '</script>',
+        )
+        source = self.canonical["services.html"].replace(
+            "</body>", "".join(scripts) + "</body>", 1
+        )
+        self.assertEqual([], self.findings_for({"services.html": source}))
 
     def test_application_json_is_authorised_and_malformed_data_fails_closed(self):
         canonical = self.findings_from_script(
