@@ -11,6 +11,7 @@ from validate_website_authority import (
     AUTHORITY,
     ROOT,
     committed_tracked_paths,
+    extract_surfaces,
     load_tracked_documents,
     validate_documents,
 )
@@ -143,6 +144,10 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def assert_finding(self, identifier: str, findings) -> None:
         self.assertIn(identifier, {finding.identifier for finding in findings})
+
+    def findings_from_script(self, payload: str, script_type: str = ""):
+        source = append_script(self.canonical["services.html"], payload, script_type)
+        return self.findings_for({"services.html": source})
 
     def test_semantic_fixture_insertion_ignores_decorative_markup(self):
         source = (
@@ -1098,6 +1103,269 @@ class AuthorityValidatorTests(unittest.TestCase):
             'overseas:{paymentMethod:"Wise",authorization:"already authorized only"}}};',
         )
         self.assertEqual([], self.findings_for({"pay/index.html": source}))
+
+    def test_scalar_array_jsonld_conflicting_price_fails(self):
+        findings = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","terms":{"price":[450]}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_price", findings)
+
+    def test_scalar_array_jsonld_conflicting_currency_fails(self):
+        findings = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","terms":{"priceCurrency":["USD"]}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_currency", findings)
+
+    def test_scalar_array_jsonld_conflicting_duration_fails(self):
+        findings = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","terms":{"durationMinutes":[60]}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_duration", findings)
+
+    def test_scalar_array_jsonld_conflicting_delivery_fails(self):
+        findings = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","terms":{"deliveryPlatform":["Zoom"]}}',
+            "application/ld+json",
+        )
+        self.assert_finding("delivery.unapproved_platform", findings)
+
+    def test_scalar_array_jsonld_conflicting_payment_fails(self):
+        findings = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","terms":{"paymentMethods":["PayPal"]}}',
+            "application/ld+json",
+        )
+        self.assert_finding("payment.unsupported_rm350_method", findings)
+
+    def test_scalar_array_javascript_conflicting_price_fails(self):
+        findings = self.findings_from_script(
+            'const offer={name:"One-Concern Parent Session",terms:{price:[450]}};'
+        )
+        self.assert_finding("value.session_price", findings)
+
+    def test_scalar_array_javascript_conflicting_currency_fails(self):
+        findings = self.findings_from_script(
+            'const offer={name:"One-Concern Parent Session",terms:{priceCurrency:["USD"]}};'
+        )
+        self.assert_finding("value.session_currency", findings)
+
+    def test_scalar_array_javascript_conflicting_duration_fails(self):
+        findings = self.findings_from_script(
+            'const offer={name:"One-Concern Parent Session",terms:{durationMinutes:[60]}};'
+        )
+        self.assert_finding("value.session_duration", findings)
+
+    def test_scalar_array_javascript_conflicting_delivery_fails(self):
+        findings = self.findings_from_script(
+            'const offer={name:"One-Concern Parent Session",terms:{deliveryPlatform:["Zoom"]}};'
+        )
+        self.assert_finding("delivery.unapproved_platform", findings)
+
+    def test_scalar_array_javascript_conflicting_payment_fails(self):
+        findings = self.findings_from_script(
+            'const offer={name:"One-Concern Parent Session",terms:{paymentMethods:["PayPal"]}};'
+        )
+        self.assert_finding("payment.unsupported_rm350_method", findings)
+
+    def test_scalar_array_canonical_singleton_and_multi_values_pass(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","terms":{"price":[350],'
+            '"priceCurrency":["MYR"],"durationMinutes":[45],'
+            '"deliveryPlatform":["Google Meet"],'
+            '"paymentMethods":["Maybank bank transfer","DuitNow QR"]}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",terms:{price:[350],'
+            'priceCurrency:["MYR"],durationMinutes:[45],deliveryPlatform:["Google Meet"],'
+            'paymentMethods:["Maybank bank transfer","DuitNow QR"]}};',
+        )
+        self.assertEqual([], self.findings_for({"services.html": source}))
+
+    def test_scalar_array_mixed_authorised_and_conflicting_values_fail(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","terms":{"price":[350,450],'
+            '"paymentMethods":["Maybank bank transfer","PayPal"]}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",terms:{price:[350,450],'
+            'paymentMethods:["DuitNow QR","PayPal"]}};',
+        )
+        findings = self.findings_for({"services.html": source})
+        self.assert_finding("value.session_price", findings)
+        self.assert_finding("payment.unsupported_rm350_method", findings)
+
+    def test_scalar_array_nested_arrays_retain_context_and_path(self):
+        jsonld = (
+            '<script type="application/ld+json">'
+            '{"name":"One-Concern Parent Session","terms":{"price":[[450]]}}'
+            "</script>"
+        )
+        javascript = (
+            '<script>const offer={name:"One-Concern Parent Session",'
+            'terms:{price:[[450]]}};</script>'
+        )
+        source = f"<html><body>{jsonld}{javascript}</body></html>"
+        surfaces = extract_surfaces("fixture.html", source)
+        matches = [
+            surface
+            for surface in surfaces
+            if dict(surface.fields).get("price") == "450"
+        ]
+        self.assertEqual(
+            {"jsonld_record", "javascript_record"},
+            {surface.kind for surface in matches},
+        )
+        self.assertTrue(
+            all(surface.structured_path == ("terms", "price", "[0]", "[0]") for surface in matches)
+        )
+        findings = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","terms":{"price":[[450]]}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_price", findings)
+        self.assert_finding(
+            "value.session_price",
+            self.findings_from_script(
+                'const offer={name:"One-Concern Parent Session",terms:{price:[[450]]}};'
+            ),
+        )
+
+    def test_scalar_array_multiple_object_levels_fail(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","catalog":{"details":{"terms":'
+            '{"deliveryPlatform":["Zoom"]}}}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",catalog:{details:{terms:'
+            '{deliveryPlatform:["Zoom"]}}}};',
+        )
+        self.assert_finding(
+            "delivery.unapproved_platform",
+            self.findings_for({"services.html": source}),
+        )
+
+    def test_scalar_array_mixed_scalars_and_child_records_fail(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","terms":{"price":[350,{"value":450}]}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",terms:{price:[350,{value:450}]}};',
+        )
+        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+
+    def test_scalar_array_empty_values_fail_closed(self):
+        expected = {
+            "value.session_price",
+            "value.session_currency",
+            "value.session_duration",
+            "delivery.unapproved_platform",
+            "payment.unsupported_rm350_method",
+        }
+        for script_type, payload in (
+            (
+                "application/ld+json",
+                '{"name":"One-Concern Parent Session","terms":{"price":[],"priceCurrency":[],'
+                '"durationMinutes":[],"deliveryPlatform":[],"paymentMethods":[]}}',
+            ),
+            (
+                "",
+                'const offer={name:"One-Concern Parent Session",terms:{price:[],priceCurrency:[],'
+                'durationMinutes:[],deliveryPlatform:[],paymentMethods:[]}};',
+            ),
+        ):
+            with self.subTest(script_type=script_type or "javascript"):
+                identifiers = {
+                    finding.identifier
+                    for finding in self.findings_from_script(payload, script_type)
+                }
+                self.assertTrue(expected.issubset(identifiers), expected - identifiers)
+
+    def test_scalar_array_null_boolean_object_and_unsupported_values_fail_closed(self):
+        json_findings = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","terms":{"price":null,'
+            '"durationMinutes":true,"paymentMethods":{}}}',
+            "application/ld+json",
+        )
+        self.assert_finding("value.session_price", json_findings)
+        self.assert_finding("value.session_duration", json_findings)
+        self.assert_finding("payment.unsupported_rm350_method", json_findings)
+        javascript_findings = self.findings_from_script(
+            'const offer={name:"One-Concern Parent Session",terms:{price:null,'
+            'durationMinutes:true,paymentMethods:{},deliveryPlatform:getPlatform()}};'
+        )
+        self.assert_finding("value.session_price", javascript_findings)
+        self.assert_finding("value.session_duration", javascript_findings)
+        self.assert_finding("payment.unsupported_rm350_method", javascript_findings)
+        self.assert_finding("delivery.unapproved_platform", javascript_findings)
+
+    def test_scalar_array_unrelated_structured_arrays_pass(self):
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"Unrelated webinar","terms":{"price":[450],"priceCurrency":["USD"],'
+            '"durationMinutes":[60],"deliveryPlatform":["Zoom"],'
+            '"paymentMethods":["PayPal"]}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const webinar={name:"Unrelated webinar",terms:{price:[450],priceCurrency:["USD"],'
+            'durationMinutes:[60],deliveryPlatform:["Zoom"],paymentMethods:["PayPal"]}};',
+        )
+        self.assertEqual([], self.findings_for({"services.html": source}))
+
+    def test_scalar_array_home_support_wise_remains_accepted(self):
+        source = append_script(
+            self.canonical["pay/index.html"],
+            '{"name":"APC Home Support Programme","overseas":'
+            '{"paymentMethods":["Wise"],"authorization":"already authorized only"}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"APC Home Support Programme",overseas:'
+            '{paymentMethods:["Wise"],authorization:"already authorized only"}};',
+        )
+        self.assertEqual([], self.findings_for({"pay/index.html": source}))
+
+    def test_scalar_array_all_five_conflicts_fail_together(self):
+        expected = {
+            "value.session_price",
+            "value.session_currency",
+            "value.session_duration",
+            "delivery.unapproved_platform",
+            "payment.unsupported_rm350_method",
+        }
+        source = append_script(
+            self.canonical["services.html"],
+            '{"name":"One-Concern Parent Session","terms":{"price":[450],'
+            '"priceCurrency":["USD"],"durationMinutes":[60],'
+            '"deliveryPlatform":["Zoom"],"paymentMethods":["PayPal"]}}',
+            "application/ld+json",
+        )
+        source = append_script(
+            source,
+            'const offer={name:"One-Concern Parent Session",terms:{price:[450],'
+            'priceCurrency:["USD"],durationMinutes:[60],deliveryPlatform:["Zoom"],'
+            'paymentMethods:["PayPal"]}};',
+        )
+        identifiers = {
+            finding.identifier for finding in self.findings_for({"services.html": source})
+        }
+        self.assertTrue(expected.issubset(identifiers), expected - identifiers)
 
 
 if __name__ == "__main__":

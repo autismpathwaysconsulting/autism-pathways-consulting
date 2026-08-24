@@ -3,12 +3,14 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass
 from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 import json
+import math
 import re
 import subprocess
 import sys
@@ -66,6 +68,7 @@ class Surface:
     kind: str
     text: str
     fields: tuple[tuple[str, str], ...] = ()
+    structured_path: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, order=True)
@@ -431,6 +434,37 @@ def _field_map(surface: Surface) -> dict[str, str]:
 
 
 STRUCTURED_CONTEXT_KEYS = frozenset({"name", "offer", "service", "product", "title"})
+STRUCTURED_INVALID_VALUE = "__apc_invalid_structured_value__"
+STRUCTURED_GOVERNED_KEYS = frozenset().union(
+    STRUCTURED_PRICE_KEYS,
+    STRUCTURED_CURRENCY_KEYS,
+    STRUCTURED_DURATION_KEYS,
+    STRUCTURED_DELIVERY_KEYS,
+    STRUCTURED_PAYMENT_KEYS,
+    STRUCTURED_LAUNCH_KEYS,
+)
+
+
+def _compact_structured_key(key: str) -> str:
+    return re.sub(r"[^a-z]", "", normalize(key).casefold())
+
+
+def _structured_governing_key(key: str, inherited: str | None = None) -> str | None:
+    normalized = normalize(key)
+    if _compact_structured_key(normalized) in STRUCTURED_GOVERNED_KEYS:
+        return normalized
+    return inherited
+
+
+def _structured_scalar_text(value: object) -> str:
+    if value is None or isinstance(value, bool):
+        return STRUCTURED_INVALID_VALUE
+    if isinstance(value, float) and not math.isfinite(value):
+        return STRUCTURED_INVALID_VALUE
+    if isinstance(value, (str, int, float)):
+        rendered = normalize(str(value))
+        return rendered or STRUCTURED_INVALID_VALUE
+    return STRUCTURED_INVALID_VALUE
 
 
 def _governed_context_fields(
@@ -505,6 +539,80 @@ def _javascript_containers(script: str) -> list[dict[str, Any]]:
                 stack.pop()
         index += 1
     return [container for container in containers if container["end"] is not None]
+
+
+def _javascript_child_key(script: str, parent: dict[str, Any], child: dict[str, Any]) -> str | None:
+    if parent["opener"] != "{":
+        return None
+    prefix = script[parent["start"] + 1 : child["start"]]
+    match = re.search(
+        r"(?:['\"])?([A-Za-z_$][\w$-]*)(?:['\"])?\s*:\s*$",
+        prefix,
+        FLAGS,
+    )
+    return normalize(match.group(1)) if match else None
+
+
+def _javascript_array_items(
+    script: str,
+    container: dict[str, Any],
+    containers: list[dict[str, Any]],
+) -> list[tuple[str, int | None]]:
+    start = container["start"] + 1
+    end = container["end"]
+    children = {containers[index]["start"]: index for index in container["children"]}
+    spans: list[tuple[int, int]] = []
+    item_start = start
+    index = start
+    quote: str | None = None
+    while index < end:
+        if quote is not None:
+            if script[index] == "\\":
+                index += 2
+                continue
+            if script[index] == quote:
+                quote = None
+            index += 1
+            continue
+        if script[index] in {"'", '"', "`"}:
+            quote = script[index]
+            index += 1
+            continue
+        child_index = children.get(index)
+        if child_index is not None:
+            index = containers[child_index]["end"] + 1
+            continue
+        if script[index] == ",":
+            spans.append((item_start, index))
+            item_start = index + 1
+        index += 1
+    if script[item_start:end].strip():
+        spans.append((item_start, end))
+
+    items: list[tuple[str, int | None]] = []
+    for left, right in spans:
+        while left < right and script[left].isspace():
+            left += 1
+        while right > left and script[right - 1].isspace():
+            right -= 1
+        child_index = children.get(left)
+        if child_index is not None and containers[child_index]["end"] + 1 == right:
+            items.append(("", child_index))
+        else:
+            items.append((script[left:right], None))
+    return items
+
+
+def _javascript_scalar_text(raw: str) -> str:
+    value = raw.strip()
+    if not value or value.casefold() in {"true", "false", "null", "undefined"}:
+        return STRUCTURED_INVALID_VALUE
+    if re.fullmatch(r"-?\d+(?:\.\d+)?", value):
+        return normalize(value)
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        rendered = normalize(value[1:-1])
+        return rendered or STRUCTURED_INVALID_VALUE
+    return STRUCTURED_INVALID_VALUE
 
 
 class AuthorityHTMLParser(HTMLParser):
@@ -585,6 +693,26 @@ class AuthorityHTMLParser(HTMLParser):
         if self.blocks:
             self.structure_errors.append("unclosed governed block")
 
+    def _add_structured_scalar(
+        self,
+        kind: str,
+        context: tuple[tuple[str, str], ...],
+        governing_key: str,
+        value: object,
+        structured_path: tuple[str, ...],
+    ) -> None:
+        rendered = value if isinstance(value, str) else _structured_scalar_text(value)
+        fields = _contextual_fields(((normalize(governing_key), normalize(rendered)),), context)
+        self.surfaces.append(
+            Surface(
+                self.path,
+                kind,
+                normalize(". ".join(f"{key}={item}" for key, item in fields)),
+                fields,
+                structured_path,
+            )
+        )
+
     def _add_jsonld(self, script: str) -> None:
         try:
             data = json.loads(script)
@@ -595,6 +723,8 @@ class AuthorityHTMLParser(HTMLParser):
         def visit(
             value: object,
             inherited_context: tuple[tuple[str, str], ...] = (),
+            structured_path: tuple[str, ...] = (),
+            governing_key: str | None = None,
         ) -> None:
             if isinstance(value, dict):
                 scalar_items = tuple(
@@ -611,13 +741,49 @@ class AuthorityHTMLParser(HTMLParser):
                             "jsonld_record",
                             normalize(". ".join(f"{key}={item}" for key, item in fields)),
                             fields,
+                            structured_path,
                         )
                     )
-                for item in value.values():
-                    visit(item, context)
+                if not value and governing_key is not None:
+                    self._add_structured_scalar(
+                        "jsonld_record",
+                        context,
+                        governing_key,
+                        STRUCTURED_INVALID_VALUE,
+                        structured_path,
+                    )
+                for key, item in value.items():
+                    normalized_key = normalize(str(key))
+                    visit(
+                        item,
+                        context,
+                        structured_path + (normalized_key,),
+                        _structured_governing_key(normalized_key, governing_key),
+                    )
             elif isinstance(value, list):
-                for item in value:
-                    visit(item, inherited_context)
+                if not value and governing_key is not None:
+                    self._add_structured_scalar(
+                        "jsonld_record",
+                        inherited_context,
+                        governing_key,
+                        STRUCTURED_INVALID_VALUE,
+                        structured_path,
+                    )
+                for index, item in enumerate(value):
+                    visit(
+                        item,
+                        inherited_context,
+                        structured_path + (f"[{index}]",),
+                        governing_key,
+                    )
+            elif governing_key is not None:
+                self._add_structured_scalar(
+                    "jsonld_record",
+                    inherited_context,
+                    governing_key,
+                    _structured_scalar_text(value),
+                    structured_path,
+                )
 
         visit(data)
 
@@ -633,10 +799,37 @@ class AuthorityHTMLParser(HTMLParser):
         )
         containers = _javascript_containers(script)
         contexts: dict[int, tuple[tuple[str, str], ...]] = {}
+        structured_paths: dict[int, tuple[str, ...]] = {}
+        governing_keys: dict[int, str | None] = {}
         for container_index, container in enumerate(containers):
             parent_context = contexts.get(container["parent"], ())
-            if container["opener"] != "{":
+            structured_path = structured_paths.get(container_index, ())
+            governing_key = governing_keys.get(container_index)
+            if container["opener"] == "[":
                 contexts[container_index] = parent_context
+                items = _javascript_array_items(script, container, containers)
+                if not items and governing_key is not None:
+                    self._add_structured_scalar(
+                        "javascript_record",
+                        parent_context,
+                        governing_key,
+                        STRUCTURED_INVALID_VALUE,
+                        structured_path,
+                    )
+                for item_index, (raw, child_index) in enumerate(items):
+                    item_path = structured_path + (f"[{item_index}]",)
+                    if child_index is not None:
+                        contexts[child_index] = parent_context
+                        structured_paths[child_index] = item_path
+                        governing_keys[child_index] = governing_key
+                    elif governing_key is not None:
+                        self._add_structured_scalar(
+                            "javascript_record",
+                            parent_context,
+                            governing_key,
+                            _javascript_scalar_text(raw),
+                            item_path,
+                        )
                 continue
             body = list(script[container["start"] + 1 : container["end"]])
             for child_index in container["children"]:
@@ -645,9 +838,18 @@ class AuthorityHTMLParser(HTMLParser):
                 end = child["end"] - container["start"]
                 body[start:end] = " " * (end - start)
             fields: list[tuple[str, str]] = []
+            structured_fields: list[tuple[str, str]] = []
             for item in field_pattern.finditer("".join(body)):
                 raw_value = item.group(3) or item.group(4) or item.group(5) or ""
-                fields.append((normalize(item.group(1)), normalize(raw_value)))
+                key = normalize(item.group(1))
+                fields.append((key, normalize(raw_value)))
+                if item.group(2) is not None:
+                    structured_value = normalize(item.group(3) or "") or STRUCTURED_INVALID_VALUE
+                elif item.group(4) is not None:
+                    structured_value = normalize(item.group(4))
+                else:
+                    structured_value = STRUCTURED_INVALID_VALUE
+                structured_fields.append((key, structured_value))
             context = _governed_context_fields(fields, parent_context)
             contexts[container_index] = context
             if fields:
@@ -658,8 +860,72 @@ class AuthorityHTMLParser(HTMLParser):
                         "javascript_record",
                         normalize(". ".join(f"{key}={value}" for key, value in contextual)),
                         contextual,
+                        structured_path,
                     )
                 )
+            for key, value in structured_fields:
+                field_governing_key = _structured_governing_key(key, governing_key)
+                if field_governing_key is not None:
+                    self._add_structured_scalar(
+                        "javascript_record",
+                        context,
+                        field_governing_key,
+                        value,
+                        structured_path + (normalize(key),),
+                    )
+            child_keys = [
+                key
+                for child_index in container["children"]
+                if (key := _javascript_child_key(script, container, containers[child_index]))
+                is not None
+            ]
+            supported_properties = Counter(
+                _compact_structured_key(key) for key, _ in fields
+            )
+            supported_properties.update(_compact_structured_key(key) for key in child_keys)
+            for property_match in re.finditer(
+                r"(?:['\"])?([A-Za-z_$][\w$-]*)(?:['\"])?\s*:",
+                "".join(body),
+                FLAGS,
+            ):
+                property_key = normalize(property_match.group(1))
+                compact_property = _compact_structured_key(property_key)
+                if supported_properties[compact_property]:
+                    supported_properties[compact_property] -= 1
+                    continue
+                invalid_governing_key = _structured_governing_key(
+                    property_key,
+                    governing_key,
+                )
+                if invalid_governing_key is not None:
+                    self._add_structured_scalar(
+                        "javascript_record",
+                        context,
+                        invalid_governing_key,
+                        STRUCTURED_INVALID_VALUE,
+                        structured_path + (property_key,),
+                    )
+            if not fields and not container["children"] and governing_key is not None:
+                self._add_structured_scalar(
+                    "javascript_record",
+                    context,
+                    governing_key,
+                    STRUCTURED_INVALID_VALUE,
+                    structured_path,
+                )
+            for child_index in container["children"]:
+                child = containers[child_index]
+                child_key = _javascript_child_key(script, container, child)
+                contexts[child_index] = context
+                if child_key is None:
+                    structured_paths[child_index] = structured_path + ("{}",)
+                    governing_keys[child_index] = governing_key
+                else:
+                    structured_paths[child_index] = structured_path + (child_key,)
+                    governing_keys[child_index] = _structured_governing_key(
+                        child_key,
+                        governing_key,
+                    )
 
 
 def extract_surfaces(path: str, source: str) -> list[Surface]:
@@ -907,8 +1173,15 @@ def _session_value_findings(surface: Surface) -> set[Finding]:
     fields = _field_map(surface)
     for key, value in fields.items():
         compact_key = re.sub(r"[^a-z]", "", key)
-        if compact_key in STRUCTURED_PRICE_KEYS and re.fullmatch(r"[0-9]+(?:\.0+)?", value):
-            if str(int(float(value))) != SESSION_POLICY.allowed_price:
+        if compact_key in STRUCTURED_PRICE_KEYS:
+            numeric_value: str | None = None
+            if re.fullmatch(r"[0-9]+(?:\.0+)?", value):
+                numeric_value = str(int(float(value)))
+            else:
+                price_match = PRICE_VALUE.fullmatch(value)
+                if price_match:
+                    numeric_value = _canonical_number(price_match.group(1))
+            if numeric_value != SESSION_POLICY.allowed_price:
                 findings.add(Finding("value.session_price", surface.path, surface.kind))
         if compact_key in STRUCTURED_CURRENCY_KEYS:
             allowed_currencies = {
@@ -924,11 +1197,12 @@ def _session_value_findings(surface: Surface) -> set[Finding]:
             iso_minutes = None
             if iso_match:
                 iso_minutes = int(iso_match.group(1) or 0) * 60 + int(iso_match.group(2) or 0)
-            if HOUR_VALUE.search(value) or (
-                minute_match and minute_match.group(1) != SESSION_POLICY.allowed_duration
-            ) or (
-                iso_minutes is not None and str(iso_minutes) != SESSION_POLICY.allowed_duration
-            ):
+            normalized_minutes = None
+            if minute_match:
+                normalized_minutes = minute_match.group(1)
+            elif iso_minutes is not None:
+                normalized_minutes = str(iso_minutes)
+            if HOUR_VALUE.search(value) or normalized_minutes != SESSION_POLICY.allowed_duration:
                 findings.add(Finding("value.session_duration", surface.path, surface.kind))
     return findings
 
