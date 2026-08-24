@@ -435,6 +435,11 @@ def _field_map(surface: Surface) -> dict[str, str]:
 
 STRUCTURED_CONTEXT_KEYS = frozenset({"name", "offer", "service", "product", "title"})
 STRUCTURED_INVALID_VALUE = "__apc_invalid_structured_value__"
+STRUCTURED_CONTEXT_STATUS_KEY = "__apc_structured_context_status__"
+STRUCTURED_CONTEXT_INVALID = "invalid"
+STRUCTURED_CONTEXT_PENDING = "pending"
+STRUCTURED_CONTEXT_UNRELATED = "unrelated"
+STRUCTURED_CONTEXT_OBJECT = "__apc_structured_context_object__"
 STRUCTURED_GOVERNED_KEYS = frozenset().union(
     STRUCTURED_PRICE_KEYS,
     STRUCTURED_CURRENCY_KEYS,
@@ -467,6 +472,30 @@ def _structured_scalar_text(value: object) -> str:
     return STRUCTURED_INVALID_VALUE
 
 
+def _context_status(context: Iterable[tuple[str, str]]) -> str | None:
+    return next(
+        (
+            normalize(value).casefold()
+            for key, value in context
+            if normalize(key).casefold() == STRUCTURED_CONTEXT_STATUS_KEY
+        ),
+        None,
+    )
+
+
+def _context_with_status(
+    context: tuple[tuple[str, str], ...],
+    status: str,
+    evidence: Iterable[tuple[str, str]] = (),
+) -> tuple[tuple[str, str], ...]:
+    material = tuple(
+        item for item in context if normalize(item[0]).casefold() != STRUCTURED_CONTEXT_STATUS_KEY
+    )
+    local = tuple((normalize(key), normalize(value)) for key, value in evidence)
+    combined = tuple(item for item in material if item not in local) + local
+    return combined + ((STRUCTURED_CONTEXT_STATUS_KEY, status),)
+
+
 def _governed_context_fields(
     fields: Iterable[tuple[str, str]],
     inherited: tuple[tuple[str, str], ...] = (),
@@ -474,12 +503,59 @@ def _governed_context_fields(
     local = tuple(
         (normalize(key), normalize(value))
         for key, value in fields
-        if re.sub(r"[^a-z]", "", normalize(key).casefold()) in STRUCTURED_CONTEXT_KEYS
+        if _compact_structured_key(key) in STRUCTURED_CONTEXT_KEYS
     )
-    local_text = normalize(" ".join(value for _, value in local))
-    if re.search(SESSION_POLICY.context, local_text, FLAGS) or HOME_CONTEXT.search(local_text):
-        return local
-    return inherited
+    if not local:
+        return inherited
+
+    malformed = any(value == STRUCTURED_INVALID_VALUE for _, value in local)
+    has_object = any(value == STRUCTURED_CONTEXT_OBJECT for _, value in local)
+    scalar = tuple(
+        (key, value)
+        for key, value in local
+        if value not in {STRUCTURED_INVALID_VALUE, STRUCTURED_CONTEXT_OBJECT}
+    )
+    classifications = set()
+    for _, value in scalar:
+        has_session = bool(re.search(SESSION_POLICY.context, value, FLAGS))
+        has_home = bool(HOME_CONTEXT.search(value))
+        if has_session and has_home:
+            classifications.add(STRUCTURED_CONTEXT_INVALID)
+        elif has_session:
+            classifications.add("session")
+        elif has_home:
+            classifications.add("home")
+        else:
+            classifications.add(STRUCTURED_CONTEXT_UNRELATED)
+
+    if malformed or len(classifications) > 1 or STRUCTURED_CONTEXT_INVALID in classifications:
+        return _context_with_status(inherited, STRUCTURED_CONTEXT_INVALID, scalar)
+    if classifications:
+        classification = next(iter(classifications))
+        if classification == STRUCTURED_CONTEXT_UNRELATED:
+            return _context_with_status((), STRUCTURED_CONTEXT_UNRELATED, scalar)
+        return scalar
+    if has_object:
+        return inherited or ((STRUCTURED_CONTEXT_STATUS_KEY, STRUCTURED_CONTEXT_PENDING),)
+    return _context_with_status(inherited, STRUCTURED_CONTEXT_INVALID)
+
+
+def _json_context_fields(value: object, key: str) -> tuple[tuple[str, str], ...]:
+    normalized_key = normalize(key)
+    if isinstance(value, str):
+        return ((normalized_key, normalize(value) or STRUCTURED_INVALID_VALUE),)
+    if isinstance(value, list):
+        if not value:
+            return ((normalized_key, STRUCTURED_INVALID_VALUE),)
+        return tuple(
+            item
+            for child in value
+            for item in _json_context_fields(child, normalized_key)
+        )
+    if isinstance(value, dict):
+        marker = STRUCTURED_CONTEXT_OBJECT if value else STRUCTURED_INVALID_VALUE
+        return ((normalized_key, marker),)
+    return ((normalized_key, STRUCTURED_INVALID_VALUE),)
 
 
 def _contextual_fields(
@@ -615,6 +691,41 @@ def _javascript_scalar_text(raw: str) -> str:
     return STRUCTURED_INVALID_VALUE
 
 
+def _javascript_context_container_fields(
+    script: str,
+    container_index: int,
+    containers: list[dict[str, Any]],
+    key: str,
+) -> tuple[tuple[str, str], ...]:
+    container = containers[container_index]
+    normalized_key = normalize(key)
+    if container["opener"] == "{":
+        marker = (
+            STRUCTURED_CONTEXT_OBJECT
+            if script[container["start"] + 1 : container["end"]].strip()
+            else STRUCTURED_INVALID_VALUE
+        )
+        return ((normalized_key, marker),)
+
+    items = _javascript_array_items(script, container, containers)
+    if not items:
+        return ((normalized_key, STRUCTURED_INVALID_VALUE),)
+    return tuple(
+        field
+        for raw, child_index in items
+        for field in (
+            _javascript_context_container_fields(
+                script,
+                child_index,
+                containers,
+                normalized_key,
+            )
+            if child_index is not None
+            else ((normalized_key, _javascript_scalar_text(raw)),)
+        )
+    )
+
+
 class AuthorityHTMLParser(HTMLParser):
     def __init__(self, path: str):
         super().__init__(convert_charrefs=True)
@@ -713,6 +824,24 @@ class AuthorityHTMLParser(HTMLParser):
             )
         )
 
+    def _add_invalid_structured_context(
+        self,
+        kind: str,
+        context: tuple[tuple[str, str], ...],
+        structured_path: tuple[str, ...],
+    ) -> None:
+        if _context_status(context) != STRUCTURED_CONTEXT_INVALID:
+            return
+        self.surfaces.append(
+            Surface(
+                self.path,
+                kind,
+                normalize(". ".join(f"{key}={value}" for key, value in context)),
+                context,
+                structured_path,
+            )
+        )
+
     def _add_jsonld(self, script: str) -> None:
         try:
             data = json.loads(script)
@@ -732,7 +861,18 @@ class AuthorityHTMLParser(HTMLParser):
                     for key, item in value.items()
                     if isinstance(item, (str, int, float, bool))
                 )
-                context = _governed_context_fields(scalar_items, inherited_context)
+                context_items = tuple(
+                    field
+                    for key, item in value.items()
+                    if _compact_structured_key(str(key)) in STRUCTURED_CONTEXT_KEYS
+                    for field in _json_context_fields(item, str(key))
+                )
+                context = _governed_context_fields(context_items, inherited_context)
+                self._add_invalid_structured_context(
+                    "jsonld_record",
+                    context,
+                    structured_path,
+                )
                 if scalar_items:
                     fields = _contextual_fields(scalar_items, context)
                     self.surfaces.append(
@@ -839,6 +979,7 @@ class AuthorityHTMLParser(HTMLParser):
                 body[start:end] = " " * (end - start)
             fields: list[tuple[str, str]] = []
             structured_fields: list[tuple[str, str]] = []
+            scalar_context_fields: list[tuple[str, str]] = []
             for item in field_pattern.finditer("".join(body)):
                 raw_value = item.group(3) or item.group(4) or item.group(5) or ""
                 key = normalize(item.group(1))
@@ -850,8 +991,42 @@ class AuthorityHTMLParser(HTMLParser):
                 else:
                     structured_value = STRUCTURED_INVALID_VALUE
                 structured_fields.append((key, structured_value))
-            context = _governed_context_fields(fields, parent_context)
+                if _compact_structured_key(key) in STRUCTURED_CONTEXT_KEYS:
+                    context_value = (
+                        structured_value
+                        if item.group(2) is not None
+                        else STRUCTURED_INVALID_VALUE
+                    )
+                    scalar_context_fields.append((key, context_value))
+            child_keys = {
+                child_index: _javascript_child_key(
+                    script,
+                    container,
+                    containers[child_index],
+                )
+                for child_index in container["children"]
+            }
+            context_items = list(scalar_context_fields)
+            for child_index, child_key in child_keys.items():
+                if child_key is None or (
+                    _compact_structured_key(child_key) not in STRUCTURED_CONTEXT_KEYS
+                ):
+                    continue
+                context_items.extend(
+                    _javascript_context_container_fields(
+                        script,
+                        child_index,
+                        containers,
+                        child_key,
+                    )
+                )
+            context = _governed_context_fields(context_items, parent_context)
             contexts[container_index] = context
+            self._add_invalid_structured_context(
+                "javascript_record",
+                context,
+                structured_path,
+            )
             if fields:
                 contextual = _contextual_fields(fields, context)
                 self.surfaces.append(
@@ -873,16 +1048,11 @@ class AuthorityHTMLParser(HTMLParser):
                         value,
                         structured_path + (normalize(key),),
                     )
-            child_keys = [
-                key
-                for child_index in container["children"]
-                if (key := _javascript_child_key(script, container, containers[child_index]))
-                is not None
-            ]
+            named_child_keys = [key for key in child_keys.values() if key is not None]
             supported_properties = Counter(
                 _compact_structured_key(key) for key, _ in fields
             )
-            supported_properties.update(_compact_structured_key(key) for key in child_keys)
+            supported_properties.update(_compact_structured_key(key) for key in named_child_keys)
             for property_match in re.finditer(
                 r"(?:['\"])?([A-Za-z_$][\w$-]*)(?:['\"])?\s*:",
                 "".join(body),
@@ -915,7 +1085,7 @@ class AuthorityHTMLParser(HTMLParser):
                 )
             for child_index in container["children"]:
                 child = containers[child_index]
-                child_key = _javascript_child_key(script, container, child)
+                child_key = child_keys[child_index]
                 contexts[child_index] = context
                 if child_key is None:
                     structured_paths[child_index] = structured_path + ("{}",)
@@ -1271,6 +1441,19 @@ def _launch_findings(surfaces: Iterable[Surface]) -> set[Finding]:
 def _authority_findings(surfaces: Iterable[Surface]) -> set[Finding]:
     material = tuple(surfaces)
     bindings, findings = _governed_bindings(material)
+    for surface in material:
+        fields = _field_map(surface)
+        status = fields.get(STRUCTURED_CONTEXT_STATUS_KEY)
+        governed_value_present = any(
+            _compact_structured_key(key) in STRUCTURED_GOVERNED_KEYS
+            for key, _ in surface.fields
+        )
+        if status == STRUCTURED_CONTEXT_INVALID or (
+            status == STRUCTURED_CONTEXT_PENDING and governed_value_present
+        ):
+            findings.add(
+                Finding("authority.structured_context_invalid", surface.path, surface.kind)
+            )
     session_surfaces = {
         surface
         for matches in (

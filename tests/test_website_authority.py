@@ -2,6 +2,7 @@
 """Registered adversarial tests for the APC authority validator."""
 
 from html.parser import HTMLParser
+import json
 from pathlib import Path
 import subprocess
 import tempfile
@@ -1366,6 +1367,198 @@ class AuthorityValidatorTests(unittest.TestCase):
             finding.identifier for finding in self.findings_for({"services.html": source})
         }
         self.assertTrue(expected.issubset(identifiers), expected - identifiers)
+
+    def test_context_array_full_governed_conflict_matrix(self):
+        context_keys = ("name", "offer", "service", "product", "title")
+        conflicts = (
+            ("price", 450, "value.session_price"),
+            ("priceCurrency", "USD", "value.session_currency"),
+            ("durationMinutes", 60, "value.session_duration"),
+            ("deliveryPlatform", "Zoom", "delivery.unapproved_platform"),
+            ("paymentMethods", "PayPal", "payment.unsupported_rm350_method"),
+        )
+        formats = (("jsonld", "application/ld+json"), ("javascript", ""))
+        for context_key in context_keys:
+            for field, value, expected in conflicts:
+                for format_name, script_type in formats:
+                    record = {
+                        context_key: ["One-Concern Parent Session"],
+                        "terms": {field: value},
+                    }
+                    serialized = json.dumps(record)
+                    payload = serialized if script_type else f"const record={serialized};"
+                    with self.subTest(
+                        context_key=context_key,
+                        field=field,
+                        format=format_name,
+                    ):
+                        self.assert_finding(
+                            expected,
+                            self.findings_from_script(payload, script_type),
+                        )
+
+    def test_context_array_canonical_singletons_pass_for_every_key_and_format(self):
+        canonical_terms = {
+            "price": 350,
+            "priceCurrency": "MYR",
+            "durationMinutes": 45,
+            "deliveryPlatform": "Google Meet",
+            "paymentMethods": "DuitNow QR",
+        }
+        for context_key in ("name", "offer", "service", "product", "title"):
+            for script_type in ("application/ld+json", ""):
+                record = {
+                    context_key: ["One-Concern Parent Session"],
+                    "terms": canonical_terms,
+                }
+                serialized = json.dumps(record)
+                payload = serialized if script_type else f"const record={serialized};"
+                with self.subTest(context_key=context_key, script_type=script_type or "javascript"):
+                    self.assertEqual([], self.findings_from_script(payload, script_type))
+
+    def test_context_array_nested_and_equivalent_canonical_values_pass(self):
+        context_values = (
+            [["One-Concern Parent Session"]],
+            ["One-Concern Parent Session", "One-Concern Parent Session"],
+        )
+        for value in context_values:
+            for script_type in ("application/ld+json", ""):
+                record = {"name": value, "terms": {"price": 350}}
+                serialized = json.dumps(record)
+                payload = serialized if script_type else f"const record={serialized};"
+                with self.subTest(value=value, script_type=script_type or "javascript"):
+                    self.assertEqual([], self.findings_from_script(payload, script_type))
+
+    def test_context_array_ambiguous_values_fail_closed(self):
+        ambiguous_values = (
+            ["One-Concern Parent Session", "Unrelated webinar"],
+            ["One-Concern Parent Session", "APC Home Support Programme"],
+        )
+        for value in ambiguous_values:
+            for script_type in ("application/ld+json", ""):
+                record = {"name": value, "terms": {"price": 450}}
+                serialized = json.dumps(record)
+                payload = serialized if script_type else f"const record={serialized};"
+                with self.subTest(value=value, script_type=script_type or "javascript"):
+                    self.assert_finding(
+                        "authority.structured_context_invalid",
+                        self.findings_from_script(payload, script_type),
+                    )
+
+    def test_context_array_malformed_types_fail_closed(self):
+        malformed_values = ([], None, True, 7, {})
+        for value in malformed_values:
+            for script_type in ("application/ld+json", ""):
+                record = {"name": value, "terms": {"price": 450}}
+                serialized = json.dumps(record)
+                payload = serialized if script_type else f"const record={serialized};"
+                with self.subTest(value=value, script_type=script_type or "javascript"):
+                    self.assert_finding(
+                        "authority.structured_context_invalid",
+                        self.findings_from_script(payload, script_type),
+                    )
+
+    def test_context_array_governed_child_objects_retain_context(self):
+        record = {
+            "offer": [
+                {
+                    "name": "One-Concern Parent Session",
+                    "terms": {"price": 450},
+                }
+            ]
+        }
+        serialized = json.dumps(record)
+        for script_type in ("application/ld+json", ""):
+            payload = serialized if script_type else f"const record={serialized};"
+            with self.subTest(script_type=script_type or "javascript"):
+                self.assert_finding(
+                    "value.session_price",
+                    self.findings_from_script(payload, script_type),
+                )
+
+    def test_context_array_unclassified_child_objects_fail_closed(self):
+        record = {"offer": [{"terms": {"price": 450}}]}
+        serialized = json.dumps(record)
+        for script_type in ("application/ld+json", ""):
+            payload = serialized if script_type else f"const record={serialized};"
+            with self.subTest(script_type=script_type or "javascript"):
+                self.assert_finding(
+                    "authority.structured_context_invalid",
+                    self.findings_from_script(payload, script_type),
+                )
+
+    def test_context_array_mixed_scalar_and_object_content_retains_context(self):
+        record = {
+            "offer": [
+                "One-Concern Parent Session",
+                {"terms": {"deliveryPlatform": "Zoom"}},
+            ]
+        }
+        serialized = json.dumps(record)
+        for script_type in ("application/ld+json", ""):
+            payload = serialized if script_type else f"const record={serialized};"
+            with self.subTest(script_type=script_type or "javascript"):
+                self.assert_finding(
+                    "delivery.unapproved_platform",
+                    self.findings_from_script(payload, script_type),
+                )
+
+    def test_context_array_malformed_child_preserves_valid_ancestor(self):
+        record = {
+            "name": "One-Concern Parent Session",
+            "related": {"title": [], "price": 450},
+        }
+        serialized = json.dumps(record)
+        for script_type in ("application/ld+json", ""):
+            payload = serialized if script_type else f"const record={serialized};"
+            findings = self.findings_from_script(payload, script_type)
+            with self.subTest(script_type=script_type or "javascript"):
+                self.assert_finding("authority.structured_context_invalid", findings)
+                self.assert_finding("value.session_price", findings)
+
+    def test_context_array_unrelated_records_pass_for_every_key_and_format(self):
+        unrelated_terms = {
+            "price": 450,
+            "priceCurrency": "USD",
+            "durationMinutes": 60,
+            "deliveryPlatform": "Zoom",
+            "paymentMethods": "PayPal",
+        }
+        for context_key in ("name", "offer", "service", "product", "title"):
+            for script_type in ("application/ld+json", ""):
+                record = {context_key: ["Unrelated webinar"], "terms": unrelated_terms}
+                serialized = json.dumps(record)
+                payload = serialized if script_type else f"const record={serialized};"
+                with self.subTest(context_key=context_key, script_type=script_type or "javascript"):
+                    self.assertEqual([], self.findings_from_script(payload, script_type))
+
+    def test_context_array_all_five_descendant_conflicts_fail_together(self):
+        expected = {
+            "value.session_price",
+            "value.session_currency",
+            "value.session_duration",
+            "delivery.unapproved_platform",
+            "payment.unsupported_rm350_method",
+        }
+        record = {
+            "name": ["One-Concern Parent Session"],
+            "offers": {
+                "price": 450,
+                "priceCurrency": "USD",
+                "durationMinutes": 60,
+                "deliveryPlatform": "Zoom",
+                "paymentMethods": "PayPal",
+            },
+        }
+        serialized = json.dumps(record)
+        for script_type in ("application/ld+json", ""):
+            payload = serialized if script_type else f"const record={serialized};"
+            identifiers = {
+                finding.identifier
+                for finding in self.findings_from_script(payload, script_type)
+            }
+            with self.subTest(script_type=script_type or "javascript"):
+                self.assertTrue(expected.issubset(identifiers), expected - identifiers)
 
 
 if __name__ == "__main__":
