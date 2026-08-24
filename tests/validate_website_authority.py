@@ -204,7 +204,7 @@ GLOBAL_RULES = (
         r"\bon\s*line\b",
         context=r"\b(?:one-concern parent session|rm\s*350)\b",
         negation=r"\b(?:not|never|does not|is not|cannot)\b.{0,50}\bon\s*line\b",
-        kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "javascript_record"}),
+        kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "application_json_record"}),
     ),
     Rule(
         "booking.automatic_confirmation",
@@ -220,7 +220,7 @@ GLOBAL_RULES = (
         "payment.before_permission",
         r"\b(?:pay|payment)\b.{0,80}\bbefore\b.{0,120}\b(?:founder|cj)\b.{0,120}\b(?:permission|review|suitability|availability|confirm)\w*\b",
         context=r"\b(?:one-concern parent session|rm\s*350)\b",
-        kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "javascript_record"}),
+        kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "application_json_record"}),
     ),
     Rule(
         "home.additional_checkin",
@@ -255,7 +255,7 @@ BLOCK_TAGS = frozenset(
 )
 RELEVANT_ATTRIBUTES = frozenset({"href", "src", "action", "content", "value", "aria-label"})
 OFFER_BLOCK_KINDS = frozenset(
-    {"article", "li", "ol", "p", "jsonld_record", "javascript_record"}
+    {"article", "li", "ol", "p", "jsonld_record", "application_json_record"}
 )
 SESSION_AUTHORITY = AUTHORITY["offers"]["one_concern"]
 HOME_AUTHORITY = AUTHORITY["offers"]["home_support"]
@@ -439,13 +439,6 @@ STRUCTURED_CONTEXT_INVALID = "invalid"
 STRUCTURED_CONTEXT_PENDING = "pending"
 STRUCTURED_CONTEXT_UNRELATED = "unrelated"
 STRUCTURED_CONTEXT_OBJECT = "__apc_structured_context_object__"
-STRUCTURED_UNSUPPORTED_EXPRESSION = "__apc_unsupported_expression__"
-STRUCTURED_MALFORMED_VALUE = "__apc_malformed_structured_value__"
-STRUCTURED_RECORD_STATUS_KEY = "__apc_javascript_record_status__"
-JAVASCRIPT_SUPPORTED_STATIC_VALUE = "supported_static_value"
-JAVASCRIPT_SUPPORTED_STATIC_CONTAINER = "supported_static_array_or_object"
-JAVASCRIPT_UNSUPPORTED_EXPRESSION = "unsupported_expression"
-JAVASCRIPT_MALFORMED_VALUE = "malformed_value"
 STRUCTURED_GOVERNED_KEYS = frozenset().union(
     STRUCTURED_PRICE_KEYS,
     STRUCTURED_CURRENCY_KEYS,
@@ -502,49 +495,6 @@ def _context_with_status(
     return combined + ((STRUCTURED_CONTEXT_STATUS_KEY, status),)
 
 
-def _governed_context_has_offer(context: tuple[tuple[str, str], ...]) -> bool:
-    text = normalize(
-        " ".join(
-            value
-            for key, value in context
-            if normalize(key).casefold() != STRUCTURED_CONTEXT_STATUS_KEY
-        )
-    )
-    return bool(
-        re.search(SESSION_POLICY.context, text, FLAGS)
-        or HOME_CONTEXT.search(text)
-    )
-
-
-def _governed_context_has_explicit_unrelated(
-    context: tuple[tuple[str, str], ...],
-) -> bool:
-    ignored = {
-        STRUCTURED_INVALID_VALUE,
-        STRUCTURED_CONTEXT_OBJECT,
-        STRUCTURED_UNSUPPORTED_EXPRESSION,
-        STRUCTURED_MALFORMED_VALUE,
-    }
-    return any(
-        value not in ignored
-        and not re.search(SESSION_POLICY.context, value, FLAGS)
-        and not HOME_CONTEXT.search(value)
-        for key, value in context
-        if normalize(key).casefold() != STRUCTURED_CONTEXT_STATUS_KEY
-    )
-
-
-def _governed_context_is_candidate(context: tuple[tuple[str, str], ...]) -> bool:
-    return bool(
-        _governed_context_has_offer(context)
-        or (
-            _context_status(context)
-            in {STRUCTURED_CONTEXT_INVALID, STRUCTURED_CONTEXT_PENDING}
-            and not _governed_context_has_explicit_unrelated(context)
-        )
-    ) and _context_status(context) != STRUCTURED_CONTEXT_UNRELATED
-
-
 def _governed_context_fields(
     fields: Iterable[tuple[str, str]],
     inherited: tuple[tuple[str, str], ...] = (),
@@ -557,26 +507,12 @@ def _governed_context_fields(
     if not local:
         return inherited
 
-    malformed = any(
-        value
-        in {
-            STRUCTURED_INVALID_VALUE,
-            STRUCTURED_UNSUPPORTED_EXPRESSION,
-            STRUCTURED_MALFORMED_VALUE,
-        }
-        for _, value in local
-    )
+    malformed = any(value == STRUCTURED_INVALID_VALUE for _, value in local)
     has_object = any(value == STRUCTURED_CONTEXT_OBJECT for _, value in local)
     scalar = tuple(
         (key, value)
         for key, value in local
-        if value
-        not in {
-            STRUCTURED_INVALID_VALUE,
-            STRUCTURED_CONTEXT_OBJECT,
-            STRUCTURED_UNSUPPORTED_EXPRESSION,
-            STRUCTURED_MALFORMED_VALUE,
-        }
+        if value not in {STRUCTURED_INVALID_VALUE, STRUCTURED_CONTEXT_OBJECT}
     )
     classifications = set()
     for _, value in scalar:
@@ -591,14 +527,8 @@ def _governed_context_fields(
         else:
             classifications.add(STRUCTURED_CONTEXT_UNRELATED)
 
-    if (
-        malformed
-        and classifications == {STRUCTURED_CONTEXT_UNRELATED}
-        and not _governed_context_has_offer(inherited)
-    ):
-        return _context_with_status((), STRUCTURED_CONTEXT_UNRELATED, scalar)
     if malformed or len(classifications) > 1 or STRUCTURED_CONTEXT_INVALID in classifications:
-        return _context_with_status(inherited, STRUCTURED_CONTEXT_INVALID, local)
+        return _context_with_status(inherited, STRUCTURED_CONTEXT_INVALID, scalar)
     if classifications:
         classification = next(iter(classifications))
         if classification == STRUCTURED_CONTEXT_UNRELATED:
@@ -636,366 +566,141 @@ def _contextual_fields(
     return inherited + local
 
 
-def _javascript_containers(script: str) -> list[dict[str, Any]]:
-    containers: list[dict[str, Any]] = []
-    stack: list[int] = []
-    closers = {"{": "}", "[": "]"}
+EXECUTABLE_JAVASCRIPT_TYPES = frozenset(
+    {"", "application/javascript", "text/javascript", "module"}
+)
+EXECUTABLE_AUTHORITY_CONTEXT_WORDS = frozenset(
+    {"name", "offer", "service", "product", "title"}
+)
+EXECUTABLE_AUTHORITY_FACT_WORDS = frozenset(
+    {
+        "price",
+        "currency",
+        "duration",
+        "delivery",
+        "platform",
+        "payment",
+        "method",
+        "booking",
+        "confirmation",
+        "scope",
+        "launch",
+        "availability",
+    }
+)
+EXECUTABLE_AUTHORITY_STRONG_IDENTIFIERS = frozenset(
+    {
+        "offername",
+        "servicename",
+        "productname",
+        "sessionprice",
+        "serviceprice",
+        "productprice",
+        "price",
+        "pricecurrency",
+        "currency",
+        "duration",
+        "durationminutes",
+        "delivery",
+        "deliveryplatform",
+        "paymentmethod",
+        "paymentmethods",
+        "bookingsequence",
+        "confirmationsequence",
+        "programmescope",
+        "launchstate",
+        "availabilitystate",
+    }
+)
+EXECUTABLE_AUTHORITY_PROPERTY = re.compile(
+    r"(?:^|[,{;])\s*(?:get\s+|set\s+)?(?:\[\s*)?['\"]?"
+    r"(?:price|currency|duration|delivery|payment|booking|confirmation|scope|launch|availability)"
+    r"['\"]?(?:\s*\])?\s*(?::|\()",
+    FLAGS,
+)
+EXECUTABLE_AUTHORITY_PHRASES = tuple(
+    re.compile(pattern, FLAGS)
+    for pattern in (
+        r"\bone concern(?:\s+\w+){0,3}\s+parent session\b",
+        r"\b(?:apc\s+)?home support programme\b",
+        r"\bparent strategy session\b",
+        r"\bone focused parent concern\b",
+        r"\brm\s*(?:350|1\s*800)\b",
+        r"\bgoogle meet\b",
+        r"\bmaybank bank transfer\b",
+        r"\bduitnow qr\b",
+        r"\bbooking request\b",
+        r"\b(?:automatic booking|manual) confirmation\b",
+        r"\b(?:public launch|bookings open|enrolment open|available nationwide)\b",
+        r"\bpreparation not launched\b",
+        r"\bnot authori[sz]ed\b",
+        r"\badditional post programme check in\b",
+    )
+)
+
+
+def _javascript_without_comments(source: str) -> str:
+    """Remove comments lexically without evaluating or parsing JavaScript."""
+    output: list[str] = []
     index = 0
-    while index < len(script):
-        character = script[index]
+    quote: str | None = None
+    while index < len(source):
+        character = source[index]
+        if quote is not None:
+            output.append(character)
+            if character == "\\" and index + 1 < len(source):
+                index += 1
+                output.append(source[index])
+            elif character == quote:
+                quote = None
+            index += 1
+            continue
         if character in {"'", '"', "`"}:
             quote = character
-            index += 1
-            while index < len(script):
-                if script[index] == "\\":
-                    index += 2
-                    continue
-                if script[index] == quote:
-                    index += 1
-                    break
-                index += 1
-            continue
-        if script.startswith("//", index):
-            newline = script.find("\n", index + 2)
-            index = len(script) if newline == -1 else newline + 1
-            continue
-        if script.startswith("/*", index):
-            closing = script.find("*/", index + 2)
-            index = len(script) if closing == -1 else closing + 2
-            continue
-        if character in closers:
-            parent = stack[-1] if stack else None
-            node: dict[str, Any] = {
-                "opener": character,
-                "start": index,
-                "end": None,
-                "parent": parent,
-                "children": [],
-            }
-            containers.append(node)
-            node_index = len(containers) - 1
-            if parent is not None:
-                containers[parent]["children"].append(node_index)
-            stack.append(node_index)
-        elif character in closers.values() and stack:
-            node_index = stack[-1]
-            if closers[containers[node_index]["opener"]] == character:
-                containers[node_index]["end"] = index
-                stack.pop()
-        index += 1
-    return [container for container in containers if container["end"] is not None]
-
-
-def _javascript_item_spans(
-    script: str,
-    container: dict[str, Any],
-    containers: list[dict[str, Any]],
-) -> list[tuple[int, int]]:
-    start = container["start"] + 1
-    end = container["end"]
-    children = {containers[index]["start"]: index for index in container["children"]}
-    spans: list[tuple[int, int]] = []
-    item_start = start
-    index = start
-    quote: str | None = None
-    parenthesis_depth = 0
-    while index < end:
-        if quote is not None:
-            if script[index] == "\\":
-                index += 2
-                continue
-            if script[index] == quote:
-                quote = None
+            output.append(character)
             index += 1
             continue
-        if script[index] in {"'", '"', "`"}:
-            quote = script[index]
-            index += 1
+        if source.startswith("//", index):
+            newline = source.find("\n", index + 2)
+            if newline == -1:
+                break
+            output.append("\n")
+            index = newline + 1
             continue
-        if script.startswith("//", index):
-            newline = script.find("\n", index + 2)
-            index = end if newline == -1 or newline >= end else newline + 1
-            continue
-        if script.startswith("/*", index):
-            closing = script.find("*/", index + 2)
-            index = end if closing == -1 or closing >= end else closing + 2
-            continue
-        child_index = children.get(index)
-        if child_index is not None:
-            index = containers[child_index]["end"] + 1
-            continue
-        if script[index] == "(":
-            parenthesis_depth += 1
-        elif script[index] == ")" and parenthesis_depth:
-            parenthesis_depth -= 1
-        elif script[index] == "," and not parenthesis_depth:
-            spans.append((item_start, index))
-            item_start = index + 1
-        index += 1
-    if script[item_start:end].strip():
-        spans.append((item_start, end))
-    return spans
-
-
-def _javascript_array_items(
-    script: str,
-    container: dict[str, Any],
-    containers: list[dict[str, Any]],
-) -> list[tuple[str, int | None]]:
-    children = {containers[index]["start"]: index for index in container["children"]}
-
-    items: list[tuple[str, int | None]] = []
-    for left, right in _javascript_item_spans(script, container, containers):
-        while left < right and script[left].isspace():
-            left += 1
-        while right > left and script[right - 1].isspace():
-            right -= 1
-        child_index = children.get(left)
-        if child_index is not None and containers[child_index]["end"] + 1 == right:
-            items.append(("", child_index))
-        else:
-            items.append((script[left:right], None))
-    return items
-
-
-def _javascript_quoted_literal(value: str) -> str | None:
-    if len(value) < 2 or value[0] not in {"'", '"'}:
-        return None
-    quote = value[0]
-    index = 1
-    while index < len(value):
-        if value[index] == "\\":
-            index += 2
-            continue
-        if value[index] == quote:
-            if index != len(value) - 1:
-                return None
-            rendered = normalize(value[1:index])
-            return rendered or STRUCTURED_MALFORMED_VALUE
-        index += 1
-    return None
-
-
-def _javascript_template_literal(value: str) -> tuple[str, str, str | None] | None:
-    if not value.startswith("`"):
-        return None
-    index = 1
-    while index < len(value):
-        if value[index] == "\\":
-            index += 2
-            continue
-        if value.startswith("${", index):
-            return (
-                JAVASCRIPT_UNSUPPORTED_EXPRESSION,
-                STRUCTURED_UNSUPPORTED_EXPRESSION,
-                None,
-            )
-        if value[index] == "`":
-            if index != len(value) - 1:
-                return (
-                    JAVASCRIPT_UNSUPPORTED_EXPRESSION,
-                    STRUCTURED_UNSUPPORTED_EXPRESSION,
-                    None,
-                )
-            rendered = normalize(value[1:index])
-            if not rendered:
-                return JAVASCRIPT_MALFORMED_VALUE, STRUCTURED_MALFORMED_VALUE, None
-            return JAVASCRIPT_SUPPORTED_STATIC_VALUE, rendered, "string"
-        index += 1
-    return JAVASCRIPT_MALFORMED_VALUE, STRUCTURED_MALFORMED_VALUE, None
-
-
-def _javascript_scalar_classification(raw: str) -> tuple[str, str, str | None]:
-    value = raw.strip()
-    if not value or value.casefold() in {"true", "false", "null"}:
-        return JAVASCRIPT_MALFORMED_VALUE, STRUCTURED_MALFORMED_VALUE, None
-    if re.fullmatch(r"-?\d+(?:\.\d+)?", value):
-        return JAVASCRIPT_SUPPORTED_STATIC_VALUE, normalize(value), "number"
-    quoted = _javascript_quoted_literal(value)
-    if quoted is not None:
-        if quoted == STRUCTURED_MALFORMED_VALUE:
-            return JAVASCRIPT_MALFORMED_VALUE, quoted, None
-        return JAVASCRIPT_SUPPORTED_STATIC_VALUE, quoted, "string"
-    template = _javascript_template_literal(value)
-    if template is not None:
-        return template
-    if re.match(r"-?\d+(?:\.\d+)?\s+[A-Za-z_$]", value):
-        return JAVASCRIPT_MALFORMED_VALUE, STRUCTURED_MALFORMED_VALUE, None
-    return (
-        JAVASCRIPT_UNSUPPORTED_EXPRESSION,
-        STRUCTURED_UNSUPPORTED_EXPRESSION,
-        None,
-    )
-
-
-@dataclass(frozen=True)
-class JavascriptObjectMember:
-    key: str | None
-    category: str
-    value: str
-    value_kind: str | None = None
-    child_index: int | None = None
-
-
-def _javascript_object_members(
-    script: str,
-    container: dict[str, Any],
-    containers: list[dict[str, Any]],
-) -> tuple[JavascriptObjectMember, ...]:
-    members: list[JavascriptObjectMember] = []
-    for left, right in _javascript_item_spans(script, container, containers):
-        while left < right and script[left].isspace():
-            left += 1
-        while right > left and script[right - 1].isspace():
-            right -= 1
-        raw = script[left:right]
-        property_match = re.match(
-            r"\s*(?:(['\"])([A-Za-z_$][\w$-]*)\1|([A-Za-z_$][\w$-]*))\s*:\s*",
-            raw,
-            FLAGS,
-        )
-        if property_match:
-            key = normalize(property_match.group(2) or property_match.group(3))
-            value_start = left + property_match.end()
-            while value_start < right and script[value_start].isspace():
-                value_start += 1
-            value_end = right
-            while value_end > value_start and script[value_end - 1].isspace():
-                value_end -= 1
-            child_matches = [
-                child_index
-                for child_index in container["children"]
-                if containers[child_index]["start"] >= value_start
-                and containers[child_index]["end"] < value_end
-            ]
-            if (
-                len(child_matches) == 1
-                and containers[child_matches[0]]["start"] == value_start
-                and containers[child_matches[0]]["end"] + 1 == value_end
-            ):
-                members.append(
-                    JavascriptObjectMember(
-                        key,
-                        JAVASCRIPT_SUPPORTED_STATIC_CONTAINER,
-                        STRUCTURED_CONTEXT_OBJECT,
-                        child_index=child_matches[0],
-                    )
-                )
-                continue
-            if child_matches:
-                members.append(
-                    JavascriptObjectMember(
-                        key,
-                        JAVASCRIPT_UNSUPPORTED_EXPRESSION,
-                        STRUCTURED_UNSUPPORTED_EXPRESSION,
-                    )
-                )
-                continue
-            category, value, value_kind = _javascript_scalar_classification(
-                script[value_start:value_end]
-            )
-            members.append(JavascriptObjectMember(key, category, value, value_kind))
-            continue
-
-        shorthand_match = re.fullmatch(r"\s*([A-Za-z_$][\w$-]*)\s*", raw, FLAGS)
-        callable_match = re.match(
-            r"\s*(?:(?:get|set)\s+)?(?:['\"])?([A-Za-z_$][\w$-]*)(?:['\"])?\s*\(",
-            raw,
-            FLAGS,
-        )
-        key = normalize(
-            shorthand_match.group(1)
-            if shorthand_match
-            else callable_match.group(1)
-            if callable_match
-            else ""
-        ) or None
-        members.append(
-            JavascriptObjectMember(
-                key,
-                JAVASCRIPT_UNSUPPORTED_EXPRESSION if raw else JAVASCRIPT_MALFORMED_VALUE,
-                STRUCTURED_UNSUPPORTED_EXPRESSION if raw else STRUCTURED_MALFORMED_VALUE,
-            )
-        )
-    return tuple(members)
-
-
-def _javascript_structure_complete(script: str) -> bool:
-    stack: list[str] = []
-    closers = {"{": "}", "[": "]", "(": ")"}
-    index = 0
-    quote: str | None = None
-    while index < len(script):
-        if quote is not None:
-            if script[index] == "\\":
-                index += 2
-                continue
-            if script[index] == quote:
-                quote = None
-            index += 1
-            continue
-        if script[index] in {"'", '"', "`"}:
-            quote = script[index]
-            index += 1
-            continue
-        if script.startswith("//", index):
-            newline = script.find("\n", index + 2)
-            index = len(script) if newline == -1 else newline + 1
-            continue
-        if script.startswith("/*", index):
-            closing = script.find("*/", index + 2)
+        if source.startswith("/*", index):
+            closing = source.find("*/", index + 2)
             if closing == -1:
-                return False
+                break
+            output.append(" ")
             index = closing + 2
             continue
-        character = script[index]
-        if character in closers:
-            stack.append(character)
-        elif character in closers.values():
-            if not stack or closers[stack.pop()] != character:
-                return False
+        output.append(character)
         index += 1
-    return quote is None and not stack
+    return "".join(output)
 
 
-def _javascript_context_scalar_field(raw: str, key: str) -> tuple[tuple[str, str], ...]:
-    category, value, value_kind = _javascript_scalar_classification(raw)
-    if category == JAVASCRIPT_SUPPORTED_STATIC_VALUE and value_kind != "string":
-        value = STRUCTURED_MALFORMED_VALUE
-    return ((normalize(key), value),)
+def _javascript_authority_text(source: str) -> str:
+    uncommented = _javascript_without_comments(source)
+    separated = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", uncommented)
+    return normalize(re.sub(r"[^A-Za-z0-9]+", " ", separated)).casefold()
 
 
-def _javascript_context_container_fields(
-    script: str,
-    container_index: int,
-    containers: list[dict[str, Any]],
-    key: str,
-) -> tuple[tuple[str, str], ...]:
-    container = containers[container_index]
-    normalized_key = normalize(key)
-    if container["opener"] == "{":
-        marker = (
-            STRUCTURED_CONTEXT_OBJECT
-            if script[container["start"] + 1 : container["end"]].strip()
-            else STRUCTURED_INVALID_VALUE
-        )
-        return ((normalized_key, marker),)
-
-    items = _javascript_array_items(script, container, containers)
-    if not items:
-        return ((normalized_key, STRUCTURED_INVALID_VALUE),)
-    return tuple(
-        field
-        for raw, child_index in items
-        for field in (
-            _javascript_context_container_fields(
-                script,
-                child_index,
-                containers,
-                normalized_key,
-            )
-            if child_index is not None
-            else _javascript_context_scalar_field(raw, normalized_key)
+def _executable_javascript_contains_authority(source: str) -> bool:
+    """Recognize a bounded authority surface without interpreting JavaScript."""
+    uncommented = _javascript_without_comments(source)
+    authority_text = _javascript_authority_text(source)
+    words = frozenset(authority_text.split())
+    compact_identifiers = {
+        re.sub(r"[^a-z]", "", value.casefold())
+        for value in re.findall(r"[A-Za-z_$][\w$-]*", uncommented)
+    }
+    return bool(
+        any(pattern.search(authority_text) for pattern in EXECUTABLE_AUTHORITY_PHRASES)
+        or EXECUTABLE_AUTHORITY_PROPERTY.search(uncommented)
+        or compact_identifiers & EXECUTABLE_AUTHORITY_STRONG_IDENTIFIERS
+        or (
+            words & EXECUTABLE_AUTHORITY_CONTEXT_WORDS
+            and words & EXECUTABLE_AUTHORITY_FACT_WORDS
         )
     )
 
@@ -1055,9 +760,15 @@ class AuthorityHTMLParser(HTMLParser):
         if tag == "script" and self.script_type is not None:
             script = "".join(self.script_parts)
             if self.script_type == "application/ld+json":
-                self._add_jsonld(script)
-            elif self.script_type in {"", "application/javascript", "text/javascript", "module"}:
-                self._add_javascript(script)
+                self._add_json(script, "jsonld_record", "jsonld_invalid")
+            elif self.script_type == "application/json":
+                self._add_json(
+                    script,
+                    "application_json_record",
+                    "application_json_invalid",
+                )
+            elif self.script_type in EXECUTABLE_JAVASCRIPT_TYPES:
+                self._add_executable_javascript(script)
             self.script_type = None
             self.script_parts = []
             return
@@ -1117,28 +828,22 @@ class AuthorityHTMLParser(HTMLParser):
             )
         )
 
-    def _add_javascript_record_status(
-        self,
-        context: tuple[tuple[str, str], ...],
-        status: str,
-        structured_path: tuple[str, ...],
-    ) -> None:
-        fields = _contextual_fields(((STRUCTURED_RECORD_STATUS_KEY, status),), context)
-        self.surfaces.append(
-            Surface(
-                self.path,
-                "javascript_record",
-                normalize(". ".join(f"{key}={value}" for key, value in fields)),
-                fields,
-                structured_path,
+    def _add_executable_javascript(self, script: str) -> None:
+        if _executable_javascript_contains_authority(script):
+            self.surfaces.append(
+                Surface(self.path, "javascript_authority_invalid", "invalid")
             )
-        )
 
-    def _add_jsonld(self, script: str) -> None:
+    def _add_json(
+        self,
+        script: str,
+        record_kind: str,
+        invalid_kind: str,
+    ) -> None:
         try:
             data = json.loads(script)
         except (TypeError, ValueError):
-            self.surfaces.append(Surface(self.path, "jsonld_invalid", "invalid"))
+            self.surfaces.append(Surface(self.path, invalid_kind, "invalid"))
             return
 
         def visit(
@@ -1161,7 +866,7 @@ class AuthorityHTMLParser(HTMLParser):
                 )
                 context = _governed_context_fields(context_items, inherited_context)
                 self._add_invalid_structured_context(
-                    "jsonld_record",
+                    record_kind,
                     context,
                     structured_path,
                 )
@@ -1170,7 +875,7 @@ class AuthorityHTMLParser(HTMLParser):
                     self.surfaces.append(
                         Surface(
                             self.path,
-                            "jsonld_record",
+                            record_kind,
                             normalize(". ".join(f"{key}={item}" for key, item in fields)),
                             fields,
                             structured_path,
@@ -1178,7 +883,7 @@ class AuthorityHTMLParser(HTMLParser):
                     )
                 if not value and governing_key is not None:
                     self._add_structured_scalar(
-                        "jsonld_record",
+                        record_kind,
                         context,
                         governing_key,
                         STRUCTURED_INVALID_VALUE,
@@ -1195,7 +900,7 @@ class AuthorityHTMLParser(HTMLParser):
             elif isinstance(value, list):
                 if not value and governing_key is not None:
                     self._add_structured_scalar(
-                        "jsonld_record",
+                        record_kind,
                         inherited_context,
                         governing_key,
                         STRUCTURED_INVALID_VALUE,
@@ -1210,7 +915,7 @@ class AuthorityHTMLParser(HTMLParser):
                     )
             elif governing_key is not None:
                 self._add_structured_scalar(
-                    "jsonld_record",
+                    record_kind,
                     inherited_context,
                     governing_key,
                     _structured_scalar_text(value),
@@ -1218,222 +923,6 @@ class AuthorityHTMLParser(HTMLParser):
                 )
 
         visit(data)
-
-    def _add_javascript(self, script: str) -> None:
-        for match in re.finditer(r"(['\"])(.*?)(?<!\\)\1", script, FLAGS):
-            value = normalize(match.group(2))
-            if value:
-                self.surfaces.append(Surface(self.path, "javascript_string", value))
-        containers = _javascript_containers(script)
-        members_by_index = {
-            container_index: _javascript_object_members(script, container, containers)
-            for container_index, container in enumerate(containers)
-            if container["opener"] == "{"
-        }
-
-        subtree_governed_cache: dict[int, bool] = {}
-
-        def subtree_has_governed(container_index: int) -> bool:
-            if container_index in subtree_governed_cache:
-                return subtree_governed_cache[container_index]
-            container = containers[container_index]
-            direct = any(
-                member.key is not None
-                and _compact_structured_key(member.key) in STRUCTURED_GOVERNED_KEYS
-                for member in members_by_index.get(container_index, ())
-            )
-            result = direct or any(
-                subtree_has_governed(child_index)
-                for child_index in container["children"]
-            )
-            subtree_governed_cache[container_index] = result
-            return result
-
-        if not _javascript_structure_complete(script):
-            raw_keys = {
-                _compact_structured_key(match.group(1))
-                for match in re.finditer(
-                    r"(?:['\"])?([A-Za-z_$][\w$-]*)(?:['\"])?\s*:",
-                    script,
-                    FLAGS,
-                )
-            }
-            if raw_keys & STRUCTURED_CONTEXT_KEYS and raw_keys & STRUCTURED_GOVERNED_KEYS:
-                self._add_javascript_record_status(
-                    (),
-                    JAVASCRIPT_MALFORMED_VALUE,
-                    (),
-                )
-
-        contexts: dict[int, tuple[tuple[str, str], ...]] = {}
-        structured_paths: dict[int, tuple[str, ...]] = {}
-        governing_keys: dict[int, str | None] = {}
-        for container_index, container in enumerate(containers):
-            parent_context = contexts.get(container["parent"], ())
-            structured_path = structured_paths.get(container_index, ())
-            governing_key = governing_keys.get(container_index)
-            if container["opener"] == "[":
-                contexts[container_index] = parent_context
-                items = _javascript_array_items(script, container, containers)
-                if not items and governing_key is not None:
-                    self._add_structured_scalar(
-                        "javascript_record",
-                        parent_context,
-                        governing_key,
-                        STRUCTURED_INVALID_VALUE,
-                        structured_path,
-                    )
-                for item_index, (raw, child_index) in enumerate(items):
-                    item_path = structured_path + (f"[{item_index}]",)
-                    if child_index is not None:
-                        contexts[child_index] = parent_context
-                        structured_paths[child_index] = item_path
-                        governing_keys[child_index] = governing_key
-                    elif governing_key is not None:
-                        category, value, _ = _javascript_scalar_classification(raw)
-                        self._add_structured_scalar(
-                            "javascript_record",
-                            parent_context,
-                            governing_key,
-                            value,
-                            item_path,
-                        )
-                        if (
-                            category
-                            in {
-                                JAVASCRIPT_UNSUPPORTED_EXPRESSION,
-                                JAVASCRIPT_MALFORMED_VALUE,
-                            }
-                            and _governed_context_is_candidate(parent_context)
-                        ):
-                            self._add_javascript_record_status(
-                                parent_context,
-                                category,
-                                item_path,
-                            )
-                continue
-
-            members = members_by_index[container_index]
-            fields: list[tuple[str, str]] = []
-            structured_fields: list[tuple[str, str]] = []
-            context_items: list[tuple[str, str]] = []
-            governed_issues: list[JavascriptObjectMember] = []
-            record_issues: list[str] = []
-            child_keys = {child_index: None for child_index in container["children"]}
-
-            for member in members:
-                if member.key is None:
-                    record_issues.append(member.category)
-                    continue
-                key = normalize(member.key)
-                compact_key = _compact_structured_key(key)
-                if member.category == JAVASCRIPT_SUPPORTED_STATIC_CONTAINER:
-                    if member.child_index is not None:
-                        child_keys[member.child_index] = key
-                    continue
-                if member.category == JAVASCRIPT_SUPPORTED_STATIC_VALUE:
-                    fields.append((key, member.value))
-                    structured_fields.append((key, member.value))
-                    if compact_key in STRUCTURED_CONTEXT_KEYS:
-                        context_value = (
-                            member.value
-                            if member.value_kind == "string"
-                            else STRUCTURED_MALFORMED_VALUE
-                        )
-                        context_items.append((key, context_value))
-                        if member.value_kind != "string":
-                            record_issues.append(JAVASCRIPT_MALFORMED_VALUE)
-                    continue
-                if compact_key in STRUCTURED_CONTEXT_KEYS:
-                    context_items.append((key, member.value))
-                    record_issues.append(member.category)
-                elif compact_key in STRUCTURED_GOVERNED_KEYS:
-                    governed_issues.append(member)
-                    record_issues.append(member.category)
-
-            for child_index, child_key in child_keys.items():
-                if child_key is None or (
-                    _compact_structured_key(child_key) not in STRUCTURED_CONTEXT_KEYS
-                ):
-                    continue
-                context_items.extend(
-                    _javascript_context_container_fields(
-                        script,
-                        child_index,
-                        containers,
-                        child_key,
-                    )
-                )
-            context = _governed_context_fields(context_items, parent_context)
-            contexts[container_index] = context
-            candidate = bool(
-                _governed_context_has_offer(context)
-                or (
-                    _governed_context_is_candidate(context)
-                    and subtree_has_governed(container_index)
-                )
-            )
-            self._add_invalid_structured_context(
-                "javascript_record",
-                context,
-                structured_path,
-                candidate,
-            )
-            if candidate:
-                for status in sorted(set(record_issues)):
-                    self._add_javascript_record_status(context, status, structured_path)
-            if fields:
-                contextual = _contextual_fields(fields, context)
-                self.surfaces.append(
-                    Surface(
-                        self.path,
-                        "javascript_record",
-                        normalize(". ".join(f"{key}={value}" for key, value in contextual)),
-                        contextual,
-                        structured_path,
-                    )
-                )
-            for key, value in structured_fields:
-                field_governing_key = _structured_governing_key(key, governing_key)
-                if field_governing_key is not None:
-                    self._add_structured_scalar(
-                        "javascript_record",
-                        context,
-                        field_governing_key,
-                        value,
-                        structured_path + (normalize(key),),
-                    )
-            if candidate:
-                for member in governed_issues:
-                    self._add_structured_scalar(
-                        "javascript_record",
-                        context,
-                        member.key or governing_key or "authority",
-                        member.value,
-                        structured_path + ((member.key or "authority"),),
-                    )
-            if not members and not container["children"] and governing_key is not None:
-                self._add_structured_scalar(
-                    "javascript_record",
-                    context,
-                    governing_key,
-                    STRUCTURED_INVALID_VALUE,
-                    structured_path,
-                )
-            for child_index in container["children"]:
-                child = containers[child_index]
-                child_key = child_keys[child_index]
-                contexts[child_index] = context
-                if child_key is None:
-                    structured_paths[child_index] = structured_path + ("{}",)
-                    governing_keys[child_index] = governing_key
-                else:
-                    structured_paths[child_index] = structured_path + (child_key,)
-                    governing_keys[child_index] = _structured_governing_key(
-                        child_key,
-                        governing_key,
-                    )
-
 
 def extract_surfaces(path: str, source: str) -> list[Surface]:
     parser = AuthorityHTMLParser(path)
@@ -1465,7 +954,7 @@ def load_tracked_documents(root: Path) -> dict[str, str]:
         path = root / relative
         if not path.is_file():
             continue
-        if relative.endswith((".html", ".py", ".md")):
+        if relative.endswith((".html", ".py", ".md", ".js", ".mjs")):
             documents[relative] = path.read_text(encoding="utf-8")
     return documents
 
@@ -1484,7 +973,12 @@ def _rule_matches(rule: Rule, surface: Surface) -> bool:
 
 def _active_claim_surfaces(surfaces: Iterable[Surface]) -> Iterable[Surface]:
     for surface in surfaces:
-        if surface.kind in {"html_invalid", "jsonld_invalid"}:
+        if surface.kind in {
+            "html_invalid",
+            "jsonld_invalid",
+            "application_json_invalid",
+            "javascript_authority_invalid",
+        }:
             yield surface
             continue
         if surface.kind in {"article", "li", "section", "div", "p", "page", "text"}:
@@ -1779,46 +1273,21 @@ def _authority_findings(surfaces: Iterable[Surface]) -> set[Finding]:
     material = tuple(surfaces)
     bindings, findings = _governed_bindings(material)
     for surface in material:
+        if surface.kind == "javascript_authority_invalid":
+            findings.add(
+                Finding(
+                    "authority.executable_javascript_forbidden",
+                    surface.path,
+                    surface.kind,
+                )
+            )
+            continue
         fields = _field_map(surface)
         status = fields.get(STRUCTURED_CONTEXT_STATUS_KEY)
-        record_status = fields.get(STRUCTURED_RECORD_STATUS_KEY)
-        if record_status == JAVASCRIPT_UNSUPPORTED_EXPRESSION:
-            findings.add(
-                Finding(
-                    "authority.structured_expression_unsupported",
-                    surface.path,
-                    surface.kind,
-                )
-            )
-        elif record_status == JAVASCRIPT_MALFORMED_VALUE:
-            findings.add(
-                Finding(
-                    "authority.structured_value_malformed",
-                    surface.path,
-                    surface.kind,
-                )
-            )
         governed_value_present = any(
             _compact_structured_key(key) in STRUCTURED_GOVERNED_KEYS
             for key, _ in surface.fields
         )
-        field_values = {normalize(value) for _, value in surface.fields}
-        if governed_value_present and STRUCTURED_UNSUPPORTED_EXPRESSION in field_values:
-            findings.add(
-                Finding(
-                    "authority.structured_expression_unsupported",
-                    surface.path,
-                    surface.kind,
-                )
-            )
-        elif governed_value_present and STRUCTURED_MALFORMED_VALUE in field_values:
-            findings.add(
-                Finding(
-                    "authority.structured_value_malformed",
-                    surface.path,
-                    surface.kind,
-                )
-            )
         if status == STRUCTURED_CONTEXT_INVALID or (
             status == STRUCTURED_CONTEXT_PENDING and governed_value_present
         ):
@@ -1882,6 +1351,16 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
         if MUTATION_SIGNAL.search(source) and HTML_TARGET_SIGNAL.search(source):
             findings.add(Finding("mutator.website_writer", path, "python"))
 
+    for path, source in documents.items():
+        if path.endswith((".js", ".mjs")) and _executable_javascript_contains_authority(source):
+            findings.add(
+                Finding(
+                    "authority.executable_javascript_forbidden",
+                    path,
+                    "javascript_authority_invalid",
+                )
+            )
+
     all_surfaces: list[Surface] = []
     surfaces_by_page: dict[str, list[Surface]] = {}
     for path, source in documents.items():
@@ -1891,7 +1370,11 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
         surfaces_by_page[path] = page_surfaces
         all_surfaces.extend(page_surfaces)
         for surface in page_surfaces:
-            if surface.kind in {"html_invalid", "jsonld_invalid"}:
+            if surface.kind in {
+                "html_invalid",
+                "jsonld_invalid",
+                "application_json_invalid",
+            }:
                 findings.add(Finding(f"syntax.{surface.kind}", path, surface.kind))
 
     for path, requirements in PAGE_REQUIREMENTS.items():
@@ -1951,7 +1434,10 @@ def main() -> int:
             )
         return 1
     print("PASS: tracked-only per-page APC authority validation")
-    print("PASS: active HTML, JavaScript data, JSON-LD, payment, and launch checks")
+    print(
+        "PASS: governed HTML, JSON records, executable-JavaScript boundary, "
+        "payment, and launch checks"
+    )
     print("PASS: no tracked Python website mutator")
     return 0
 

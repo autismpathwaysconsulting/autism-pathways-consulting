@@ -274,7 +274,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = self.canonical["services.html"].replace("</body>", script + "\n</body>", 1)
         self.assert_finding(
-            "delivery.generic_online",
+            "authority.executable_javascript_forbidden",
             self.findings_for({"services.html": source}),
         )
 
@@ -674,7 +674,10 @@ class AuthorityValidatorTests(unittest.TestCase):
     def test_structural_13_numeric_javascript_price_fails(self):
         script = '<script>const offer={name:"One-Concern Parent Session",price:450};</script>'
         source = self.canonical["services.html"].replace("</body>", script + "\n</body>", 1)
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding(
+            "authority.executable_javascript_forbidden",
+            self.findings_for({"services.html": source}),
+        )
 
     def test_structural_14_one_hour_duration_fails(self):
         source = insert_in_session_article(
@@ -737,7 +740,10 @@ class AuthorityValidatorTests(unittest.TestCase):
             self.canonical["services.html"],
             "<p>The booking is not delayed and is automatically confirmed.</p>",
         )
-        self.assert_finding("booking.automatic_confirmation", self.findings_for({"services.html": source}))
+        self.assert_finding(
+            "booking.automatic_confirmation",
+            self.findings_for({"services.html": source}),
+        )
 
     def test_structural_all_23_cases_fail_together(self):
         services = self.canonical["services.html"]
@@ -836,7 +842,10 @@ class AuthorityValidatorTests(unittest.TestCase):
             'confirmation:"automatic"};</script>'
         )
         source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
-        self.assert_finding("booking.automatic_confirmation", self.findings_for({"services.html": source}))
+        self.assert_finding(
+            "authority.executable_javascript_forbidden",
+            self.findings_for({"services.html": source}),
+        )
 
     def test_structural_jsonld_availability_field_fails(self):
         script = (
@@ -993,28 +1002,40 @@ class AuthorityValidatorTests(unittest.TestCase):
             self.canonical["services.html"],
             'const offer={name:"One-Concern Parent Session",terms:{price:450}};',
         )
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding(
+            "authority.executable_javascript_forbidden",
+            self.findings_for({"services.html": source}),
+        )
 
     def test_nested_javascript_conflicting_currency_fails(self):
         source = append_script(
             self.canonical["services.html"],
             'const offer={name:"One-Concern Parent Session",terms:{priceCurrency:"USD"}};',
         )
-        self.assert_finding("value.session_currency", self.findings_for({"services.html": source}))
+        self.assert_finding(
+            "authority.executable_javascript_forbidden",
+            self.findings_for({"services.html": source}),
+        )
 
     def test_nested_javascript_conflicting_duration_fails(self):
         source = append_script(
             self.canonical["services.html"],
             'const offer={name:"One-Concern Parent Session",terms:{durationMinutes:60}};',
         )
-        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+        self.assert_finding(
+            "authority.executable_javascript_forbidden",
+            self.findings_for({"services.html": source}),
+        )
 
     def test_nested_javascript_conflicting_delivery_fails(self):
         source = append_script(
             self.canonical["services.html"],
             'const offer={name:"One-Concern Parent Session",terms:{deliveryPlatform:"Zoom"}};',
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding(
+            "authority.executable_javascript_forbidden",
+            self.findings_for({"services.html": source}),
+        )
 
     def test_nested_javascript_conflicting_payment_method_fails(self):
         source = append_script(
@@ -1022,7 +1043,8 @@ class AuthorityValidatorTests(unittest.TestCase):
             'const offer={name:"One-Concern Parent Session",terms:{paymentMethod:"PayPal"}};',
         )
         self.assert_finding(
-            "payment.unsupported_rm350_method", self.findings_for({"services.html": source})
+            "authority.executable_javascript_forbidden",
+            self.findings_for({"services.html": source}),
         )
 
     def test_nested_structured_multiple_object_levels_fail(self):
@@ -1033,7 +1055,9 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",catalog:{terms:{offers:{price:450}}}};',
+            '{"name":"One-Concern Parent Session","catalog":{"terms":'
+            '{"offers":{"price":450}}}}',
+            "application/json",
         )
         self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
 
@@ -1045,7 +1069,9 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",catalog:[{offers:[{price:450}]}]};',
+            '{"name":"One-Concern Parent Session","catalog":'
+            '[{"offers":[{"price":450}]}]}',
+            "application/json",
         )
         self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
 
@@ -1071,9 +1097,10 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",terms:{price:350,'
-            'priceCurrency:"MYR",durationMinutes:45,deliveryPlatform:"Google Meet",'
-            'paymentMethod:"DuitNow QR"}};',
+            '{"name":"One-Concern Parent Session","terms":{"price":350,'
+            '"priceCurrency":"MYR","durationMinutes":45,'
+            '"deliveryPlatform":"Google Meet","paymentMethod":"DuitNow QR"}}',
+            "application/json",
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
@@ -1086,8 +1113,9 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const webinar={name:"Unrelated webinar",terms:{price:450,priceCurrency:"USD",'
-            'durationMinutes:60,deliveryPlatform:"Zoom",paymentMethod:"PayPal"}};',
+            '{"name":"Unrelated webinar","terms":{"price":450,"priceCurrency":"USD",'
+            '"durationMinutes":60,"deliveryPlatform":"Zoom","paymentMethod":"PayPal"}}',
+            "application/json",
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
@@ -1100,8 +1128,10 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",related:{name:"APC Home Support Programme",'
-            'overseas:{paymentMethod:"Wise",authorization:"already authorized only"}}};',
+            '{"name":"One-Concern Parent Session","related":'
+            '{"name":"APC Home Support Programme","overseas":'
+            '{"paymentMethod":"Wise","authorization":"already authorized only"}}}',
+            "application/json",
         )
         self.assertEqual([], self.findings_for({"pay/index.html": source}))
 
@@ -1144,31 +1174,31 @@ class AuthorityValidatorTests(unittest.TestCase):
         findings = self.findings_from_script(
             'const offer={name:"One-Concern Parent Session",terms:{price:[450]}};'
         )
-        self.assert_finding("value.session_price", findings)
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
 
     def test_scalar_array_javascript_conflicting_currency_fails(self):
         findings = self.findings_from_script(
             'const offer={name:"One-Concern Parent Session",terms:{priceCurrency:["USD"]}};'
         )
-        self.assert_finding("value.session_currency", findings)
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
 
     def test_scalar_array_javascript_conflicting_duration_fails(self):
         findings = self.findings_from_script(
             'const offer={name:"One-Concern Parent Session",terms:{durationMinutes:[60]}};'
         )
-        self.assert_finding("value.session_duration", findings)
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
 
     def test_scalar_array_javascript_conflicting_delivery_fails(self):
         findings = self.findings_from_script(
             'const offer={name:"One-Concern Parent Session",terms:{deliveryPlatform:["Zoom"]}};'
         )
-        self.assert_finding("delivery.unapproved_platform", findings)
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
 
     def test_scalar_array_javascript_conflicting_payment_fails(self):
         findings = self.findings_from_script(
             'const offer={name:"One-Concern Parent Session",terms:{paymentMethods:["PayPal"]}};'
         )
-        self.assert_finding("payment.unsupported_rm350_method", findings)
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
 
     def test_scalar_array_canonical_singleton_and_multi_values_pass(self):
         source = append_script(
@@ -1181,9 +1211,11 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",terms:{price:[350],'
-            'priceCurrency:["MYR"],durationMinutes:[45],deliveryPlatform:["Google Meet"],'
-            'paymentMethods:["Maybank bank transfer","DuitNow QR"]}};',
+            '{"name":"One-Concern Parent Session","terms":{"price":[350],'
+            '"priceCurrency":["MYR"],"durationMinutes":[45],'
+            '"deliveryPlatform":["Google Meet"],'
+            '"paymentMethods":["Maybank bank transfer","DuitNow QR"]}}',
+            "application/json",
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
@@ -1196,8 +1228,9 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",terms:{price:[350,450],'
-            'paymentMethods:["DuitNow QR","PayPal"]}};',
+            '{"name":"One-Concern Parent Session","terms":{"price":[350,450],'
+            '"paymentMethods":["DuitNow QR","PayPal"]}}',
+            "application/json",
         )
         findings = self.findings_for({"services.html": source})
         self.assert_finding("value.session_price", findings)
@@ -1209,11 +1242,12 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"name":"One-Concern Parent Session","terms":{"price":[[450]]}}'
             "</script>"
         )
-        javascript = (
-            '<script>const offer={name:"One-Concern Parent Session",'
-            'terms:{price:[[450]]}};</script>'
+        application_json = (
+            '<script type="application/json">'
+            '{"name":"One-Concern Parent Session","terms":{"price":[[450]]}}'
+            "</script>"
         )
-        source = f"<html><body>{jsonld}{javascript}</body></html>"
+        source = f"<html><body>{jsonld}{application_json}</body></html>"
         surfaces = extract_surfaces("fixture.html", source)
         matches = [
             surface
@@ -1221,7 +1255,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             if dict(surface.fields).get("price") == "450"
         ]
         self.assertEqual(
-            {"jsonld_record", "javascript_record"},
+            {"jsonld_record", "application_json_record"},
             {surface.kind for surface in matches},
         )
         self.assertTrue(
@@ -1235,7 +1269,8 @@ class AuthorityValidatorTests(unittest.TestCase):
         self.assert_finding(
             "value.session_price",
             self.findings_from_script(
-                'const offer={name:"One-Concern Parent Session",terms:{price:[[450]]}};'
+                '{"name":"One-Concern Parent Session","terms":{"price":[[450]]}}',
+                "application/json",
             ),
         )
 
@@ -1248,8 +1283,9 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",catalog:{details:{terms:'
-            '{deliveryPlatform:["Zoom"]}}}};',
+            '{"name":"One-Concern Parent Session","catalog":{"details":{"terms":'
+            '{"deliveryPlatform":["Zoom"]}}}}',
+            "application/json",
         )
         self.assert_finding(
             "delivery.unapproved_platform",
@@ -1264,7 +1300,9 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",terms:{price:[350,{value:450}]}};',
+            '{"name":"One-Concern Parent Session","terms":'
+            '{"price":[350,{"value":450}]}}',
+            "application/json",
         )
         self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
 
@@ -1283,9 +1321,10 @@ class AuthorityValidatorTests(unittest.TestCase):
                 '"durationMinutes":[],"deliveryPlatform":[],"paymentMethods":[]}}',
             ),
             (
-                "",
-                'const offer={name:"One-Concern Parent Session",terms:{price:[],priceCurrency:[],'
-                'durationMinutes:[],deliveryPlatform:[],paymentMethods:[]}};',
+                "application/json",
+                '{"name":"One-Concern Parent Session","terms":{"price":[],'
+                '"priceCurrency":[],"durationMinutes":[],"deliveryPlatform":[],'
+                '"paymentMethods":[]}}',
             ),
         ):
             with self.subTest(script_type=script_type or "javascript"):
@@ -1308,10 +1347,10 @@ class AuthorityValidatorTests(unittest.TestCase):
             'const offer={name:"One-Concern Parent Session",terms:{price:null,'
             'durationMinutes:true,paymentMethods:{},deliveryPlatform:getPlatform()}};'
         )
-        self.assert_finding("value.session_price", javascript_findings)
-        self.assert_finding("value.session_duration", javascript_findings)
-        self.assert_finding("payment.unsupported_rm350_method", javascript_findings)
-        self.assert_finding("delivery.unapproved_platform", javascript_findings)
+        self.assert_finding(
+            "authority.executable_javascript_forbidden",
+            javascript_findings,
+        )
 
     def test_scalar_array_unrelated_structured_arrays_pass(self):
         source = append_script(
@@ -1323,8 +1362,10 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const webinar={name:"Unrelated webinar",terms:{price:[450],priceCurrency:["USD"],'
-            'durationMinutes:[60],deliveryPlatform:["Zoom"],paymentMethods:["PayPal"]}};',
+            '{"name":"Unrelated webinar","terms":{"price":[450],'
+            '"priceCurrency":["USD"],"durationMinutes":[60],'
+            '"deliveryPlatform":["Zoom"],"paymentMethods":["PayPal"]}}',
+            "application/json",
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
@@ -1337,8 +1378,9 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"APC Home Support Programme",overseas:'
-            '{paymentMethods:["Wise"],authorization:"already authorized only"}};',
+            '{"name":"APC Home Support Programme","overseas":'
+            '{"paymentMethods":["Wise"],"authorization":"already authorized only"}}',
+            "application/json",
         )
         self.assertEqual([], self.findings_for({"pay/index.html": source}))
 
@@ -1359,9 +1401,10 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = append_script(
             source,
-            'const offer={name:"One-Concern Parent Session",terms:{price:[450],'
-            'priceCurrency:["USD"],durationMinutes:[60],deliveryPlatform:["Zoom"],'
-            'paymentMethods:["PayPal"]}};',
+            '{"name":"One-Concern Parent Session","terms":{"price":[450],'
+            '"priceCurrency":["USD"],"durationMinutes":[60],'
+            '"deliveryPlatform":["Zoom"],"paymentMethods":["PayPal"]}}',
+            "application/json",
         )
         identifiers = {
             finding.identifier for finding in self.findings_for({"services.html": source})
@@ -1377,7 +1420,10 @@ class AuthorityValidatorTests(unittest.TestCase):
             ("deliveryPlatform", "Zoom", "delivery.unapproved_platform"),
             ("paymentMethods", "PayPal", "payment.unsupported_rm350_method"),
         )
-        formats = (("jsonld", "application/ld+json"), ("javascript", ""))
+        formats = (
+            ("jsonld", "application/ld+json"),
+            ("application_json", "application/json"),
+        )
         for context_key in context_keys:
             for field, value, expected in conflicts:
                 for format_name, script_type in formats:
@@ -1406,7 +1452,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             "paymentMethods": "DuitNow QR",
         }
         for context_key in ("name", "offer", "service", "product", "title"):
-            for script_type in ("application/ld+json", ""):
+            for script_type in ("application/ld+json", "application/json"):
                 record = {
                     context_key: ["One-Concern Parent Session"],
                     "terms": canonical_terms,
@@ -1422,7 +1468,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             ["One-Concern Parent Session", "One-Concern Parent Session"],
         )
         for value in context_values:
-            for script_type in ("application/ld+json", ""):
+            for script_type in ("application/ld+json", "application/json"):
                 record = {"name": value, "terms": {"price": 350}}
                 serialized = json.dumps(record)
                 payload = serialized if script_type else f"const record={serialized};"
@@ -1435,7 +1481,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             ["One-Concern Parent Session", "APC Home Support Programme"],
         )
         for value in ambiguous_values:
-            for script_type in ("application/ld+json", ""):
+            for script_type in ("application/ld+json", "application/json"):
                 record = {"name": value, "terms": {"price": 450}}
                 serialized = json.dumps(record)
                 payload = serialized if script_type else f"const record={serialized};"
@@ -1448,7 +1494,7 @@ class AuthorityValidatorTests(unittest.TestCase):
     def test_context_array_malformed_types_fail_closed(self):
         malformed_values = ([], None, True, 7, {})
         for value in malformed_values:
-            for script_type in ("application/ld+json", ""):
+            for script_type in ("application/ld+json", "application/json"):
                 record = {"name": value, "terms": {"price": 450}}
                 serialized = json.dumps(record)
                 payload = serialized if script_type else f"const record={serialized};"
@@ -1468,7 +1514,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             ]
         }
         serialized = json.dumps(record)
-        for script_type in ("application/ld+json", ""):
+        for script_type in ("application/ld+json", "application/json"):
             payload = serialized if script_type else f"const record={serialized};"
             with self.subTest(script_type=script_type or "javascript"):
                 self.assert_finding(
@@ -1479,7 +1525,7 @@ class AuthorityValidatorTests(unittest.TestCase):
     def test_context_array_unclassified_child_objects_fail_closed(self):
         record = {"offer": [{"terms": {"price": 450}}]}
         serialized = json.dumps(record)
-        for script_type in ("application/ld+json", ""):
+        for script_type in ("application/ld+json", "application/json"):
             payload = serialized if script_type else f"const record={serialized};"
             with self.subTest(script_type=script_type or "javascript"):
                 self.assert_finding(
@@ -1495,7 +1541,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             ]
         }
         serialized = json.dumps(record)
-        for script_type in ("application/ld+json", ""):
+        for script_type in ("application/ld+json", "application/json"):
             payload = serialized if script_type else f"const record={serialized};"
             with self.subTest(script_type=script_type or "javascript"):
                 self.assert_finding(
@@ -1509,7 +1555,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             "related": {"title": [], "price": 450},
         }
         serialized = json.dumps(record)
-        for script_type in ("application/ld+json", ""):
+        for script_type in ("application/ld+json", "application/json"):
             payload = serialized if script_type else f"const record={serialized};"
             findings = self.findings_from_script(payload, script_type)
             with self.subTest(script_type=script_type or "javascript"):
@@ -1525,7 +1571,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             "paymentMethods": "PayPal",
         }
         for context_key in ("name", "offer", "service", "product", "title"):
-            for script_type in ("application/ld+json", ""):
+            for script_type in ("application/ld+json", "application/json"):
                 record = {context_key: ["Unrelated webinar"], "terms": unrelated_terms}
                 serialized = json.dumps(record)
                 payload = serialized if script_type else f"const record={serialized};"
@@ -1551,7 +1597,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             },
         }
         serialized = json.dumps(record)
-        for script_type in ("application/ld+json", ""):
+        for script_type in ("application/ld+json", "application/json"):
             payload = serialized if script_type else f"const record={serialized};"
             identifiers = {
                 finding.identifier
@@ -1562,34 +1608,25 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_javascript_context_expression_matrix(self):
         expressions = (
-            ("undefined", "undefined", "authority.structured_expression_unsupported"),
-            ("identifier", "offerName", "authority.structured_expression_unsupported"),
-            ("function_call", "getOfferName()", "authority.structured_expression_unsupported"),
-            (
-                "symbol",
-                'Symbol("One-Concern Parent Session")',
-                "authority.structured_expression_unsupported",
-            ),
-            ("static_template", "`One-Concern Parent Session`", "value.session_price"),
-            (
-                "interpolated_template",
-                "`${offerName}`",
-                "authority.structured_expression_unsupported",
-            ),
-            ("member_access", "catalog.offerName", "authority.structured_expression_unsupported"),
-            (
-                "computed_expression",
-                '"One-Concern " + "Parent Session"',
-                "authority.structured_expression_unsupported",
-            ),
+            ("undefined", "undefined"),
+            ("identifier", "offerName"),
+            ("function_call", "getOfferName()"),
+            ("symbol", 'Symbol("One-Concern Parent Session")'),
+            ("static_template", "`One-Concern Parent Session`"),
+            ("interpolated_template", "`${offerName}`"),
+            ("member_access", "catalog.offerName"),
+            ("computed_expression", '"One-Concern " + "Parent Session"'),
         )
         for context_key in ("name", "offer", "service", "product", "title"):
-            for category, expression, expected in expressions:
+            for category, expression in expressions:
                 with self.subTest(context_key=context_key, category=category):
                     findings = self.findings_from_script(
                         f"const record={{{context_key}:{expression},terms:{{price:450}}}};"
                     )
-                    self.assert_finding(expected, findings)
+                    self.assert_finding(
+                        "authority.executable_javascript_forbidden",
+                        findings,
+                    )
 
     def test_javascript_undefined_context_descendant_conflict_matrix(self):
         conflicts = (
@@ -1606,7 +1643,7 @@ class AuthorityValidatorTests(unittest.TestCase):
                         f"const record={{{context_key}:undefined,terms:{{{field}:{value}}}}};"
                     )
                     self.assert_finding(
-                        "authority.structured_expression_unsupported",
+                        "authority.executable_javascript_forbidden",
                         findings,
                     )
 
@@ -1624,7 +1661,7 @@ class AuthorityValidatorTests(unittest.TestCase):
                     f'const record={{name:"One-Concern Parent Session",{field}:{expression}}};'
                 )
                 self.assert_finding(
-                    "authority.structured_expression_unsupported",
+                    "authority.executable_javascript_forbidden",
                     findings,
                 )
 
@@ -1633,62 +1670,77 @@ class AuthorityValidatorTests(unittest.TestCase):
             (
                 "context_array",
                 'const record={name:[undefined],terms:{price:450}};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "nested_governed_value",
                 'const record={name:"One-Concern Parent Session",child:{price:getPrice()}};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "beside_canonical_sibling",
                 'const record={name:"One-Concern Parent Session",title:undefined,price:350};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "unsupported_child",
                 'const record={name:"One-Concern Parent Session",child:{title:undefined,price:450}};',
-                {"authority.structured_expression_unsupported", "value.session_price"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "canonical_child",
                 'const record={name:undefined,child:{name:"One-Concern Parent Session",price:450}};',
-                {"authority.structured_expression_unsupported", "value.session_price"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "multiple_unsupported",
                 'const record={name:undefined,price:getPrice(),paymentMethods:methods.current};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "governed_array",
                 'const record={name:"One-Concern Parent Session",price:[350,getPrice()]};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "spread",
                 'const record={name:"One-Concern Parent Session",price:350,...extra};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "getter",
                 'const record={name:"One-Concern Parent Session",get price(){return 450}};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "shorthand",
                 'const record={name:"One-Concern Parent Session",price};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "computed_property",
                 'const record={name:"One-Concern Parent Session",[price]:450};',
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
+            ),
+            (
+                "computed_context_property",
+                'const record={["name"]:"One-Concern Parent Session",price:450};',
+                {"authority.executable_javascript_forbidden"},
+            ),
+            (
+                "spread_context",
+                'const record={...{name:"One-Concern Parent Session"},price:450};',
+                {"authority.executable_javascript_forbidden"},
+            ),
+            (
+                "array_spread",
+                'const record={name:"One-Concern Parent Session",price:[...values]};',
+                {"authority.executable_javascript_forbidden"},
             ),
             (
                 "template_operator",
                 "const record={name:`One-Concern Parent ` + `Session`,price:450};",
-                {"authority.structured_expression_unsupported"},
+                {"authority.executable_javascript_forbidden"},
             ),
         )
         for category, payload, expected in cases:
@@ -1708,25 +1760,25 @@ class AuthorityValidatorTests(unittest.TestCase):
         for payload in cases:
             with self.subTest(payload=payload):
                 self.assert_finding(
-                    "authority.structured_value_malformed",
+                    "authority.executable_javascript_forbidden",
                     self.findings_from_script(payload),
                 )
 
-    def test_javascript_static_template_literals_are_supported(self):
+    def test_javascript_static_template_literals_are_rejected(self):
         findings = self.findings_from_script(
             "const record={name:`One-Concern Parent Session`,price:350,"
             "priceCurrency:`MYR`,durationMinutes:45,"
             "deliveryPlatform:`Google Meet`,paymentMethods:`DuitNow QR`};"
         )
-        self.assertEqual([], findings)
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
 
     def test_javascript_ordinary_application_code_is_not_governed(self):
         source = append_script(
             self.canonical["services.html"],
             "function renderCard(item){const model={name:item.name,title:item.title,"
             "render(){return true}};return model;}"
-            "const webinar={name:`Unrelated webinar`,price:getPrice()};"
-            "const mixed={name:`Unrelated webinar`,title:undefined,price:450};",
+            "const selection=new URLSearchParams(location.search).get('s');"
+            "document.body.dataset.mode=selection;",
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
@@ -1740,13 +1792,72 @@ class AuthorityValidatorTests(unittest.TestCase):
             )
         }
         expected = {
-            "authority.structured_expression_unsupported",
-            "value.session_currency",
-            "value.session_duration",
-            "delivery.unapproved_platform",
-            "payment.unsupported_rm350_method",
+            "authority.executable_javascript_forbidden",
         }
         self.assertTrue(expected.issubset(identifiers), expected - identifiers)
+
+    def test_executable_javascript_business_authority_surface_matrix(self):
+        cases = (
+            'const label="One-Concern Parent Session";',
+            "const offerName=getLabel();",
+            "const sessionPrice=getPrice();",
+            "const record={price:350};",
+            "const record={priceCurrency:getCurrency()};",
+            "const record={durationMinutes:getDuration()};",
+            "const record={deliveryPlatform:getPlatform()};",
+            "const record={paymentMethods:getMethods()};",
+            'const message="Submit a booking request";',
+            'const scope="one focused parent concern";',
+            'const state="bookings open";',
+        )
+        for payload in cases:
+            with self.subTest(payload=payload):
+                findings = self.findings_from_script(payload)
+                self.assert_finding(
+                    "authority.executable_javascript_forbidden",
+                    findings,
+                )
+                self.assertNotIn(payload, repr(findings))
+
+    def test_tracked_executable_javascript_files_use_the_same_boundary(self):
+        findings = self.findings_for(
+            additions={
+                "assets/authority.js":
+                    'export const offerName="One-Concern Parent Session";'
+            }
+        )
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
+        unrelated = self.findings_for(
+            additions={"assets/ui.js": "export function toggleMenu(){return true;}"}
+        )
+        self.assertEqual([], unrelated)
+
+    def test_application_json_is_authorised_and_malformed_data_fails_closed(self):
+        canonical = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","price":350,'
+            '"priceCurrency":"MYR","durationMinutes":45,'
+            '"deliveryPlatform":"Google Meet","paymentMethods":"DuitNow QR"}',
+            "application/json",
+        )
+        self.assertEqual([], canonical)
+        conflicting = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","price":450}',
+            "application/json",
+        )
+        self.assert_finding("value.session_price", conflicting)
+        malformed = self.findings_from_script(
+            '{"name":"One-Concern Parent Session","price":}',
+            "application/json",
+        )
+        self.assert_finding("syntax.application_json_invalid", malformed)
+
+    def test_validator_contains_no_javascript_execution_primitive(self):
+        validator = (ROOT / "tests/validate_website_authority.py").read_text(
+            encoding="utf-8"
+        )
+        for primitive in ("eval(", "Function(", "vm.run", "vm.Script", "execjs"):
+            with self.subTest(primitive=primitive):
+                self.assertNotIn(primitive, validator)
 
 
 if __name__ == "__main__":
