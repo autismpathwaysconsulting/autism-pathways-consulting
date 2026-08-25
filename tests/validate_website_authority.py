@@ -107,6 +107,20 @@ PAGE_REQUIREMENTS: Mapping[str, tuple[Requirement, ...]] = {
         Requirement("home_sessions", r"\bfour 60-minute sessions\b"),
         Requirement("home_window", r"\bapproximately 6\s*[–-]\s*8 weeks\b"),
         Requirement("home_no_checkin", r"\bno additional post-programme check-in\b"),
+        Requirement("positioning", r"\byou already know the advice\. the hard part is knowing what to do when it happens at home\b"),
+        Requirement("first_step_boundary", r"\bnot a consultation, assessment, diagnostic service, or advice session\b"),
+        Requirement("rm350_promise", r"\bone repeated concern\. one clear next step\b"),
+        Requirement("rm350_working_understanding", r"\bworking understanding of the pattern\b"),
+        Requirement("rm350_observe", r"\bworth observing or investigating\b"),
+        Requirement("rm350_response", r"\bone practical response to try\b"),
+        Requirement("rm350_summary", r"\bconcise written next-step summary\b"),
+        Requirement("home_promise", r"\bturn autism advice into a practical home plan you can actually use\b"),
+        Requirement("home_priority", r"\bprioritise the most important concern\b"),
+        Requirement("home_plan", r"\bpractical home-support plan\b"),
+        Requirement("home_implementation", r"\bimplementation guidance\b"),
+        Requirement("home_review", r"\breview what happened\b"),
+        Requirement("home_adjust", r"\badjust the plan based on your family’s experience\b"),
+        Requirement("home_summary", r"\bfinal written plan or summary\b"),
     ),
     "terms.html": (
         Requirement("session_name", r"\bone-concern parent session\b"),
@@ -192,7 +206,7 @@ GLOBAL_RULES = (
     Rule(
         "scope.repeated_concern",
         r"\bone\s+repeated\s+concern\b",
-        negation=r"\b(?:not|never|does not|do not|is not)\b.{0,60}\bone\s+repeated\s+concern\b",
+        negation=r"\bone repeated concern[.,]\s*one clear next step\b|\b(?:not|never|does not|do not|is not)\b.{0,60}\bone\s+repeated\s+concern\b",
     ),
     Rule(
         "scope.repeated_pattern",
@@ -1064,7 +1078,13 @@ def _active_claim_surfaces(surfaces: Iterable[Surface]) -> Iterable[Surface]:
             yield surface
             continue
         if surface.kind in {"article", "li", "section", "div", "p", "page", "text"}:
-            for claim in split_clauses(surface.text):
+            approved_promise = re.sub(
+                r"\bone repeated concern\.\s*one clear next step\.",
+                "One repeated concern, one clear next step.",
+                surface.text,
+                flags=FLAGS,
+            )
+            for claim in split_clauses(approved_promise):
                 yield Surface(surface.path, surface.kind, claim)
         else:
             yield surface

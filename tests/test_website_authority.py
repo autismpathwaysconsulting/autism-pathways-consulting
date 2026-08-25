@@ -923,10 +923,14 @@ class AuthorityValidatorTests(unittest.TestCase):
         home = AUTHORITY["offers"]["home_support"]
         self.assertEqual(350, session["price"]["value"])
         self.assertEqual(45, session["duration_minutes"])
+        self.assertEqual("One repeated concern. One clear next step.", session["promise"])
+        self.assertEqual(5, len(session["deliverables"]))
         self.assertEqual(["Google Meet"], session["delivery_platforms"])
         self.assertEqual(["Maybank bank transfer", "DuitNow QR"], session["payment_methods"])
         self.assertEqual(1800, home["price"]["value"])
         self.assertEqual([6, 8], home["window_weeks"])
+        self.assertEqual(6, len(home["deliverables"]))
+        self.assertFalse(AUTHORITY["first_step_call"]["compulsory_before_rm350"])
         self.assertEqual(
             {"services.html", "terms.html", "pay/index.html"},
             set(session["bindings"]),

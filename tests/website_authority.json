@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
   "offers": {
-    "one_concern": {
-      "canonical_name": "One-Concern Parent Session",
+        "one_concern": {
+            "canonical_name": "One-Concern Parent Session",
+            "promise": "One repeated concern. One clear next step.",
+            "intended_parent_outcome": "Clearer working understanding and one practical next step",
+            "deliverables": [
+                "Focused exploration of one recurring concern",
+                "Working understanding of the pattern",
+                "What may be worth observing or investigating",
+                "One practical response to try",
+                "Concise written next-step summary"
+            ],
       "price": {
         "currency": ["RM", "MYR"],
         "value": 350
@@ -35,8 +44,18 @@
         }
       }
     },
-    "home_support": {
-      "canonical_name": "APC Home Support Programme",
+        "home_support": {
+            "canonical_name": "APC Home Support Programme",
+            "promise": "Turn autism advice into a practical home plan you can actually use.",
+            "intended_parent_outcome": "Build, test, review, and adjust a practical home-support plan",
+            "deliverables": [
+                "Prioritise the most important concern",
+                "Practical home-support plan",
+                "Implementation guidance",
+                "Review what happened",
+                "Adjust the plan based on the family's experience",
+                "Final written plan or summary"
+            ],
       "price": {
         "currency": ["RM", "MYR"],
         "value": 1800
@@ -61,6 +80,14 @@
         }
       }
     }
+  },
+  "first_step_call": {
+    "canonical_name": "Free 15-Minute First Step Call",
+    "price": 0,
+    "duration_minutes": 15,
+    "promise": "Find the right next step.",
+    "boundary": "Not a consultation, assessment, diagnostic service, or advice session",
+    "compulsory_before_rm350": false
   },
   "launch": {
     "required_governance_states": ["PREPARATION_NOT_LAUNCHED", "NOT_AUTHORISED"],
