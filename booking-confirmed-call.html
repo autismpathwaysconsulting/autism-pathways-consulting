@@ -17,6 +17,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,247,0.95);backdrop
 .nav-in{max-width:980px;margin:0 auto;display:flex;align-items:center;height:58px;gap:20px}
 .nav-logo{font-family:'DM Serif Display',serif;font-size:17px;color:var(--teal);font-weight:600}
 .nav-links{display:flex;gap:18px;margin-left:auto;font-size:14px;font-weight:700;color:var(--muted)}
+.nav-links a{display:inline-flex;min-height:24px;align-items:center}
 .nav-links a:hover{color:var(--teal)}
 .nav-cta{background:var(--teal);color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:.02em;transition:background .2s}
 .nav-cta:hover{background:var(--teal-d)!important}
@@ -259,6 +260,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   font-size: 0.86rem !important;
   font-weight: 500 !important;
   line-height: 1.35 !important;
+  min-height: 24px !important;
   text-align: left !important;
   text-decoration: none !important;
   transition: color 160ms ease, transform 160ms ease !important;
@@ -368,7 +370,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
   gap: 0.85rem;
 }
 
-.confirm-info h3 {
+.confirm-info h2 {
   margin: 0 0 0.35rem;
   color: #173936;
   font-size: 1rem;
@@ -732,7 +734,7 @@ footer{background:var(--text);color:#fff;padding:36px 20px}
       <p class="confirm-subtitle">This is a short fit-and-routing conversation to help you find the right next step.</p>
 
       <div class="confirm-info">
-        <h3>Before your call</h3>
+        <h2>Before your call</h2>
         <div class="confirm-info-item">
           <span class="confirm-number">1</span>
           <p><strong>Check your calendar invite</strong>Your meeting details will be in the calendar invitation. Please join on time so we can use the 15 minutes well.</p>

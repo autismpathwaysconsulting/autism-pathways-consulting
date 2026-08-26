@@ -1,25 +1,46 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "authority_role": "NON_AUTHORITATIVE_DERIVED_MIRROR",
+  "provenance": {
+    "source_repository": "autismpathwaysconsulting/APC-AI-OS",
+    "source_repository_origin": "https://github.com/autismpathwaysconsulting/APC-AI-OS.git",
+    "canonical_specification_path": "governance/APC_FOUNDER_RECONCILIATION_REVENUE_SPRINT_DAY0_2026-08-21.authority.json",
+    "source_authority_record_id": "APC-REV-DAY0-2026-08-21",
+    "source_schema_version": "1.2",
+    "source_authority_version": "1.2",
+    "source_candidate_commit": "b7206744965929ce1469295129661a863bbdf733",
+    "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
+    "governed_projection_sha256": "sha256:ebc93120addfedecd17b16ea99d21474a34782aef32b9cecbb25dc709d212f29",
+    "generation_method": "node tools/outcome-offer/generate-website-authority.js"
+  },
   "offers": {
-        "one_concern": {
-            "canonical_name": "One-Concern Parent Session",
-            "promise": "One repeated concern. One clear next step.",
-            "intended_parent_outcome": "Clearer working understanding and one practical next step",
-            "deliverables": [
-                "Focused exploration of one recurring concern",
-                "Working understanding of the pattern",
-                "What may be worth observing or investigating",
-                "One practical response to try",
-                "Concise written next-step summary"
-            ],
+    "one_concern": {
+      "canonical_name": "One-Concern Parent Session",
+      "promise": "One repeated concern. One clear next step.",
+      "intended_parent_outcome": "Clearer working understanding and one practical next step",
+      "deliverables": [
+        "Focused exploration of one recurring concern",
+        "Working understanding of the pattern",
+        "What may be worth observing or investigating",
+        "One practical response to try",
+        "Concise written next-step summary"
+      ],
       "price": {
-        "currency": ["RM", "MYR"],
+        "currency": [
+          "RM",
+          "MYR"
+        ],
         "value": 350
       },
       "duration_minutes": 45,
       "scope": "one focused parent concern",
-      "delivery_platforms": ["Google Meet"],
-      "payment_methods": ["Maybank bank transfer", "DuitNow QR"],
+      "delivery_platforms": [
+        "Google Meet"
+      ],
+      "payment_methods": [
+        "Bank transfer",
+        "DuitNow QR"
+      ],
       "booking_sequence": [
         "request",
         "review",
@@ -29,54 +50,94 @@
         "verification",
         "manual_confirmation"
       ],
+      "direct_booking_permitted": true,
+      "first_step_call_rule": "REQUIRED_ONLY_WHERE_SUITABILITY_OR_SCOPE_IS_UNCERTAIN",
       "bindings": {
         "services.html": {
           "kind": "article",
-          "signals": ["One-Concern Parent Session", "RM350", "45 minutes", "Google Meet"]
+          "signals": [
+            "One-Concern Parent Session",
+            "RM350",
+            "45 minutes",
+            "Google Meet"
+          ]
         },
         "terms.html": {
           "kind": "li",
-          "signals": ["One-Concern Parent Session", "RM350", "45-minute", "Google Meet"]
+          "signals": [
+            "One-Concern Parent Session",
+            "RM350",
+            "45-minute",
+            "Google Meet"
+          ]
         },
         "pay/index.html": {
           "kind": "article",
-          "signals": ["One-Concern Parent Session", "RM350", "45-minute", "Google Meet"]
+          "signals": [
+            "One-Concern Parent Session",
+            "RM350",
+            "45-minute",
+            "Google Meet"
+          ]
         }
       }
     },
-        "home_support": {
-            "canonical_name": "APC Home Support Programme",
-            "promise": "Turn autism advice into a practical home plan you can actually use.",
-            "intended_parent_outcome": "Build, test, review, and adjust a practical home-support plan",
-            "deliverables": [
-                "Prioritise the most important concern",
-                "Practical home-support plan",
-                "Implementation guidance",
-                "Review what happened",
-                "Adjust the plan based on the family's experience",
-                "Final written plan or summary"
-            ],
+    "home_support": {
+      "canonical_name": "Home Support Programme",
+      "promise": "Turn autism advice into a practical home plan you can actually use.",
+      "intended_parent_outcome": "Build, test, review, and adjust a practical home-support plan",
+      "deliverables": [
+        "Prioritise the most important concern",
+        "Practical home-support plan",
+        "Implementation guidance",
+        "Review what happened",
+        "Adjust the plan based on the family's experience",
+        "Final written plan or summary"
+      ],
       "price": {
-        "currency": ["RM", "MYR"],
+        "currency": [
+          "RM",
+          "MYR"
+        ],
         "value": 1800
       },
       "session_count": 4,
       "session_duration_minutes": 60,
-      "window_weeks": [6, 8],
+      "delivery_period": "APPROXIMATELY_6_TO_8_WEEKS",
+      "window_weeks": [
+        6,
+        8
+      ],
       "additional_post_programme_checkin": false,
-      "wise_scope": "already authorized overseas Home Support payment",
+      "fit_call_required": true,
+      "payment_methods": [
+        "Bank transfer",
+        "DuitNow QR"
+      ],
       "bindings": {
         "services.html": {
           "kind": "article",
-          "signals": ["APC Home Support Programme", "RM1,800", "Four 60-minute sessions"]
+          "signals": [
+            "APC Home Support Programme",
+            "RM1,800",
+            "Four 60-minute sessions"
+          ]
         },
         "terms.html": {
           "kind": "li",
-          "signals": ["APC Home Support Programme", "RM1,800", "four 60-minute sessions"]
+          "signals": [
+            "APC Home Support Programme",
+            "RM1,800",
+            "four 60-minute sessions"
+          ]
         },
         "pay/index.html": {
           "kind": "article",
-          "signals": ["APC Home Support Programme", "RM1,800", "Four 60-minute sessions"]
+          "signals": [
+            "APC Home Support Programme",
+            "RM1,800",
+            "Four 60-minute sessions"
+          ]
         }
       }
     }
@@ -87,10 +148,41 @@
     "duration_minutes": 15,
     "promise": "Find the right next step.",
     "boundary": "Not a consultation, assessment, diagnostic service, or advice session",
+    "routing_rule": "AVAILABLE_WHEN_SUITABILITY_OR_SCOPE_IS_UNCERTAIN_NOT_COMPULSORY_FOR_RM350",
     "compulsory_before_rm350": false
   },
+  "payment_controls": {
+    "approved_methods": [
+      "BANK_TRANSFER",
+      "DUITNOW_QR"
+    ],
+    "sequence": [
+      "REQUEST",
+      "FOUNDER_SUITABILITY_AND_AVAILABILITY_REVIEW",
+      "PERMISSION_TO_PAY",
+      "BANK_TRANSFER_OR_DUITNOW_QR",
+      "PROOF_RECEIVED",
+      "PAYMENT_VERIFIED",
+      "BOOKING_CONFIRMED"
+    ],
+    "automatic_confirmation": false,
+    "request_payment_attempt_or_screenshot_confirms_booking": false
+  },
+  "claim_boundaries": {
+    "excludes": [
+      "DIAGNOSIS",
+      "THERAPY",
+      "MEDICAL_TREATMENT",
+      "CRISIS_INTERVENTION",
+      "GUARANTEED_BEHAVIOUR_CHANGE",
+      "GUARANTEED_ACADEMIC_DEVELOPMENTAL_COMMUNICATION_EMOTIONAL_OR_FAMILY_OUTCOMES"
+    ]
+  },
   "launch": {
-    "required_governance_states": ["PREPARATION_NOT_LAUNCHED", "NOT_AUTHORISED"],
+    "required_governance_states": [
+      "PREPARATION_NOT_LAUNCHED",
+      "NOT_AUTHORISED"
+    ],
     "prohibited_public_states": [
       "enrolment open",
       "bookings open",
