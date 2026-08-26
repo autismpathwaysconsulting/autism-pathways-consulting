@@ -9,6 +9,7 @@ from validate_interim_containment import (
     MANIFEST_PATH,
     ROOT,
     load_public_sources,
+    normalise_request_path,
     validate_manifest,
     validate_repository,
     validate_surfaces,
@@ -117,6 +118,144 @@ class InterimContainmentTests(unittest.TestCase):
         self.assertIn(
             "containment.public_controls_weakened",
             validate_manifest(manifest, self.authority),
+        )
+
+    def test_paid_calcom_route_fails(self):
+        findings = self.findings_with_html(
+            "services.html",
+            '<a href="https://cal.com/autismpathwaysconsulting/parent-strategy-session">Book</a>',
+        )
+        self.assertIn("containment.paid_cal_link", findings)
+        self.assertIn("containment.unapproved_cal_url:services.html", findings)
+
+    def test_any_unapproved_calcom_event_fails(self):
+        findings = self.findings_with_html(
+            "services.html", '<a href="https://cal.com/autismpathwaysconsulting/other">Book</a>'
+        )
+        self.assertIn("containment.unapproved_cal_url:services.html", findings)
+
+    def test_legacy_confirmation_language_fails(self):
+        findings = self.findings_with_html(
+            "booking-confirmed-session.html", "<p>Your session is booked.</p>"
+        )
+        self.assertIn(
+            "containment.legacy_confirmation_unsafe:session is booked", findings
+        )
+
+    def test_legacy_redirect_removal_fails(self):
+        sources = dict(self.sources)
+        sources["_redirects"] = sources["_redirects"].replace(
+            "/booking-confirmed-session/ /booking-confirmed-session.html 302\n", ""
+        )
+        self.assertIn(
+            "containment.legacy_route_redirect_missing",
+            validate_surfaces(sources, set(self.paths)),
+        )
+
+    def test_booking_status_url_variants_fail_closed(self):
+        safe = "/booking-confirmed-session"
+        self.assertEqual(safe, normalise_request_path(safe + "?source=old#status"))
+        self.assertEqual(safe, normalise_request_path("/booking%2Dconfirmed%2Dsession"))
+        self.assertEqual(safe + "/", normalise_request_path(safe + "/?source=old"))
+        self.assertNotEqual(safe, normalise_request_path("/Booking-Confirmed-Session"))
+
+    def test_payment_url_variants_do_not_bypass_safe_route(self):
+        self.assertEqual("/pay/350", normalise_request_path("/pay/350?old=true#pay"))
+        self.assertEqual("/pay/350/", normalise_request_path("/pay/350/"))
+        self.assertEqual("/pay/350", normalise_request_path("/pay/%33%35%30"))
+        self.assertNotEqual("/pay/350", normalise_request_path("/PAY/350"))
+
+    def test_fixed_cancellation_rule_fails(self):
+        findings = self.findings_with_html(
+            "terms.html", "<p>Less than 24 hours notice means no refund.</p>"
+        )
+        self.assertIn("containment.final_policy_rule:fixed_notice_period", findings)
+        self.assertIn("containment.final_policy_rule:fixed_no_refund", findings)
+
+    def test_public_receipt_request_fails(self):
+        self.assertIn(
+            "containment.public_receipt_request",
+            self.findings_with_html("services.html", "<p>Send your receipt.</p>"),
+        )
+
+    def test_new_public_form_fails(self):
+        self.assertIn(
+            "containment.form_inventory_changed",
+            self.findings_with_html("pay/index.html", "<form></form>"),
+        )
+
+    def test_file_upload_control_fails(self):
+        findings = self.findings_with_html(
+            "pay/index.html", '<form><input type="file"></form>'
+        )
+        self.assertIn("containment.public_file_input:pay/index.html", findings)
+
+    def test_new_storage_or_network_integration_fails(self):
+        self.assertIn(
+            "containment.new_integration_surface:pay/index.html",
+            self.findings_with_html(
+                "pay/index.html", "<script>localStorage.setItem('paid','yes')</script>"
+            ),
+        )
+
+    def test_broken_internal_link_fails(self):
+        self.assertIn(
+            "containment.broken_internal_link:index.html:/missing-containment-page",
+            self.findings_with_html(
+                "index.html", '<a href="/missing-containment-page">Missing</a>'
+            ),
+        )
+
+    def test_missing_local_asset_fails(self):
+        self.assertIn(
+            "containment.missing_asset:index.html:/missing-containment.png",
+            self.findings_with_html(
+                "index.html", '<img src="/missing-containment.png" alt="Test">'
+            ),
+        )
+
+    def test_missing_image_alt_fails(self):
+        self.assertIn(
+            "containment.image_alt_missing:index.html",
+            self.findings_with_html("index.html", '<img src="/og-image.png">'),
+        )
+
+    def test_heading_skip_fails(self):
+        self.assertIn(
+            "containment.heading_skip:index.html:h1-h3",
+            self.findings_with_html("index.html", "<h1>Extra</h1><h3>Skipped</h3>"),
+        )
+
+    def test_extra_h1_fails(self):
+        self.assertIn(
+            "containment.h1_count:index.html",
+            self.findings_with_html("index.html", "<h1>Extra</h1>"),
+        )
+
+    def test_first_step_scope_expansion_fails(self):
+        self.assertIn(
+            "containment.first_step_scope_expansion",
+            self.findings_with_html(
+                "index.html", "<p>The call gives personalised direction.</p>"
+            ),
+        )
+
+    def test_policy_hold_wording_removal_fails(self):
+        sources = dict(self.sources)
+        sources["terms.html"] = sources["terms.html"].replace("OPS-HOLD-002", "")
+        self.assertIn(
+            "containment.interim_policy_missing:terms.html:ops-hold-002",
+            validate_surfaces(sources, set(self.paths)),
+        )
+
+    def test_privacy_target_guard_removal_fails(self):
+        sources = dict(self.sources)
+        sources["privacy.html"] = sources["privacy.html"].replace(
+            "min-height: 24px", "min-height: 16px"
+        )
+        self.assertIn(
+            "containment.privacy_target_guard_missing",
+            validate_surfaces(sources, set(self.paths)),
         )
 
 

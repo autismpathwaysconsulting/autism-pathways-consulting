@@ -24,7 +24,7 @@ projection may reduce public risk but cannot approve an offer, close a hold, or 
 - Scope line where relevant: "APC works with you, not instead of the therapists your child is already seeing."
 - Parent-facing CTAs should route by readiness rather than forcing every parent through the same path:
   - **Unsure what support fits:** Free 15-Min First Step Call (Cal.com event `first-step-call`).
-  - **One focused parent concern:** Submit a One-Concern Parent Session booking request through the existing Cal.com `parent-strategy-session` flow. The Founder must confirm suitability and availability and give permission before payment. Do not require a First Step Call first when suitability and scope are already clear.
+  - **One focused parent concern:** The One-Concern Parent Session remains a candidate service with no public paid booking route. The Founder must confirm suitability, capacity, and availability and give explicit written permission before payment.
   - **Ready for structured Home Support:** Start with the Free 15-Min First Step Call so CJ can check whether the RM1,800 APC Home Support Programme is a good fit.
 - Keep the Free 15-Min First Step Call clearly available for parents who are unsure and as the fit-check path for Home Support.
 - Do not turn Home Support into unrestricted direct checkout or create a new intake form unless separately approved.
@@ -44,7 +44,7 @@ projection may reduce public risk but cannot approve an offer, close a hold, or 
    sends the current Maybank bank transfer or DuitNow QR details privately after permission, receives
    payment proof, verifies payment, and manually confirms the booking and Google Meet details. A
    request, payment, or proof is not automatic booking confirmation. Cal.com slug
-   `parent-strategy-session` (slug unchanged; label is "One-Concern").
+   Do not publish or link the paid `parent-strategy-session` event while containment is active.
 3. **APC Home Support Programme**: RM1,800, four 60-minute sessions over approximately 6–8 weeks,
    personalised Home Support Plan, and existing bounded clarification during the active programme.
    There is no unlimited messaging and no additional post-programme check-in.

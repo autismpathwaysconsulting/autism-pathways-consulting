@@ -2056,10 +2056,12 @@ class AuthorityValidatorTests(unittest.TestCase):
             with self.subTest(path=path.relative_to(ROOT)):
                 self.assertIsNone(re.search(r"\bwise\b", path.read_text(encoding="utf-8"), re.I))
 
-    def test_terms_uses_first_step_call_slot_wording(self):
+    def test_terms_uses_interim_first_step_call_wording(self):
         terms = (ROOT / "terms.html").read_text(encoding="utf-8")
-        self.assertIn("limit repeated use of free First Step Call slots", terms)
+        self.assertIn("a fit-and-routing conversation", terms)
         self.assertNotIn("free consultation slots", terms)
+        self.assertNotIn("limit repeated use of free First Step Call slots", terms)
+        self.assertNotRegex(terms, r"(?i)no-?show.{0,80}(?:restrict|penalt|forfeit)")
 
     def test_booking_confirmation_heading_hierarchy(self):
         source = (ROOT / "booking-confirmed-call.html").read_text(encoding="utf-8")

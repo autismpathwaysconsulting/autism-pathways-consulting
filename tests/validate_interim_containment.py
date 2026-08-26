@@ -7,7 +7,9 @@ from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Mapping
+from urllib.parse import unquote, urlsplit
 import json
+import posixpath
 import re
 import sys
 
@@ -17,6 +19,13 @@ MANIFEST_PATH = Path(__file__).with_name("interim_containment.json")
 AUTHORITY_PATH = Path(__file__).with_name("website_authority.json")
 NOTICE_PAGES = ("index.html", "services.html", "start.html", "terms.html", "pay/index.html")
 FORBIDDEN_PAYMENT_PATHS = frozenset({"QR_Payment.JPG", "pay.html.backup-payment-price"})
+PAID_CAL_PATH = "cal.com/autismpathwaysconsulting/parent-strategy-session"
+FREE_CAL_URL = "https://cal.com/autismpathwaysconsulting/first-step-call"
+EXPECTED_FORM_COUNTS = {"schools.html": 1}
+KNOWN_HEADING_SKIPS = {
+    ("course-waitlist.html", 1, 3),
+    ("schools.html", 2, 4),
+}
 EXPECTED_SEQUENCE = [
     "REQUEST",
     "FOUNDER_SUITABILITY_AND_CAPACITY_REVIEW",
@@ -47,6 +56,75 @@ class TextExtractor(HTMLParser):
 
     def handle_data(self, data: str) -> None:
         self.parts.append(data)
+
+
+class SurfaceExtractor(HTMLParser):
+    """Collect public links, controls, forms, images, and heading order."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.links: list[str] = []
+        self.assets: list[str] = []
+        self.forms: list[dict[str, str]] = []
+        self.inputs: list[dict[str, str]] = []
+        self.images: list[dict[str, str]] = []
+        self.headings: list[int] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = {key.lower(): (value or "") for key, value in attrs}
+        tag = tag.lower()
+        if tag == "a" and values.get("href"):
+            self.links.append(values["href"])
+        if tag in {"img", "script", "source", "link"}:
+            target = values.get("src") or values.get("href")
+            if target:
+                self.assets.append(target)
+        if tag == "form":
+            self.forms.append(values)
+        if tag in {"input", "textarea", "select", "button"}:
+            self.inputs.append(values | {"tag": tag})
+        if tag == "img":
+            self.images.append(values)
+        if re.fullmatch(r"h[1-6]", tag):
+            self.headings.append(int(tag[1]))
+
+
+def parse_surface(source: str) -> SurfaceExtractor:
+    parser = SurfaceExtractor()
+    parser.feed(source)
+    parser.close()
+    return parser
+
+
+def normalise_request_path(value: str) -> str:
+    """Canonicalise safe URL syntax while preserving case for fail-closed routing."""
+    path = unquote(urlsplit(value).path)
+    suffix = "/" if path.endswith("/") and path != "/" else ""
+    return posixpath.normpath("/" + path.lstrip("/")) + suffix
+
+
+def local_target(source_path: str, value: str) -> str | None:
+    parsed = urlsplit(value)
+    if parsed.scheme or parsed.netloc or value.startswith(("mailto:", "tel:", "data:", "javascript:")):
+        return None
+    decoded = unquote(parsed.path)
+    if not decoded:
+        return None if value.startswith("#") else source_path
+    if decoded == "/":
+        return "index.html"
+    if decoded.startswith("/"):
+        candidate = decoded.lstrip("/")
+    else:
+        candidate = posixpath.normpath(posixpath.join(posixpath.dirname(source_path), decoded))
+    candidate = candidate.rstrip("/")
+    return candidate or "index.html"
+
+
+def target_exists(target: str, present_paths: set[str]) -> bool:
+    return any(
+        candidate in present_paths
+        for candidate in (target, f"{target}.html", f"{target}/index.html")
+    )
 
 
 def normalise(value: str) -> str:
@@ -144,6 +222,10 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         findings.append(f"containment.public_payment_asset:{path}")
     if re.search(r"\bwise\b", all_html, re.IGNORECASE):
         findings.append("containment.wise_public_wording")
+    if PAID_CAL_PATH in all_html_normalised:
+        findings.append("containment.paid_cal_link")
+    if re.search(r"\bpersonalised (?:direction|guidance|strategy|advice)\b", all_html_normalised):
+        findings.append("containment.first_step_scope_expansion")
     if re.search(r'href=["\']/pay/(?:350|1800)', all_html, re.IGNORECASE):
         findings.append("containment.direct_payment_route")
     if re.search(
@@ -170,6 +252,19 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         all_html_normalised,
     ):
         findings.append("containment.unsupported_guarantee")
+
+    policy_patterns = {
+        "fixed_notice_period": r"\b(?:at least|less than) 24 hours?\b",
+        "forfeiture": r"\bforfeit(?:ed|ure)?\b",
+        "fixed_no_refund": r"\b(?:no refunds?|non-?refundable)\b",
+        "no_show_penalty": r"\bno-?shows?\b.{0,100}\b(?:restrict|penalt|fee|refund|forfeit)",
+    }
+    for name, pattern in policy_patterns.items():
+        if re.search(pattern, all_html_normalised):
+            findings.append(f"containment.final_policy_rule:{name}")
+
+    if re.search(r"\b(?:send|submit|upload) (?:your )?(?:payment )?receipt\b", all_html_normalised):
+        findings.append("containment.public_receipt_request")
 
     for path in NOTICE_PAGES:
         source = sources.get(path, "")
@@ -222,19 +317,101 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
     redirects = normalise(sources.get("_redirects", ""))
     if "?s=" in redirects:
         findings.append("containment.filtered_payment_redirect")
+    if "/booking-confirmed-session/ /booking-confirmed-session.html 302" not in redirects:
+        findings.append("containment.legacy_route_redirect_missing")
 
-    first_step_pages = ("index.html", "services.html", "start.html", "booking-confirmed-call.html")
+    legacy_text = visible_text(sources.get("booking-confirmed-session.html", ""))
+    for phrase in (
+        "this page does not confirm a booking",
+        "only a written acceptance notice sent by apc establishes an appointment",
+        "do not pay without permission",
+        "candidate services, not generally available",
+    ):
+        if phrase not in legacy_text:
+            findings.append(f"containment.legacy_confirmation_missing:{phrase}")
+    for phrase in (
+        "session is booked",
+        "session confirmed",
+        "send your receipt",
+        "booking record can be confirmed",
+    ):
+        if phrase in legacy_text:
+            findings.append(f"containment.legacy_confirmation_unsafe:{phrase}")
+
+    first_step_pages = (
+        "index.html",
+        "services.html",
+        "start.html",
+        "about.html",
+        "resources.html",
+        "free-tool.html",
+        "booking-confirmed-call.html",
+    )
     for path in first_step_pages:
         text = visible_text(sources.get(path, ""))
-        required = ("fit", "not a consultation", "assessment", "advice", "therapy")
+        required = ("fit", "consultation", "assessment", "advice", "therapy")
         if any(term not in text for term in required):
             findings.append(f"containment.first_step_boundary_missing:{path}")
+
+    for path in ("terms.html", "cancellation-policy.html"):
+        text = visible_text(sources.get(path, ""))
+        for phrase in (
+            "ops-hold-002",
+            "not a final legal policy",
+            "existing written client agreement",
+            "do not pay",
+        ):
+            if phrase not in text:
+                findings.append(f"containment.interim_policy_missing:{path}:{phrase}")
 
     if "unlimited messaging" not in all_html_normalised:
         findings.append("containment.messaging_boundary_missing")
     for boundary in ("diagnosis", "therapy", "medical treatment", "crisis", "guaranteed outcomes"):
         if boundary not in pay_text:
             findings.append(f"containment.scope_boundary_missing:{boundary}")
+
+    form_counts: dict[str, int] = {}
+    integration_signals = re.compile(
+        r"\b(?:fetch\s*\(|xmlhttprequest|localstorage|sessionstorage|document\.cookie|gtag\s*\(|google-analytics|plausible\.io)",
+        re.IGNORECASE,
+    )
+    for path, source in sorted(sources.items()):
+        if not path.endswith(".html"):
+            continue
+        surface = parse_surface(source)
+        if surface.forms:
+            form_counts[path] = len(surface.forms)
+        if integration_signals.search(source):
+            findings.append(f"containment.new_integration_surface:{path}")
+        if any(control.get("type", "").lower() == "file" for control in surface.inputs):
+            findings.append(f"containment.public_file_input:{path}")
+        for image in surface.images:
+            if "alt" not in image:
+                findings.append(f"containment.image_alt_missing:{path}")
+        if surface.headings:
+            if surface.headings.count(1) != 1:
+                findings.append(f"containment.h1_count:{path}")
+            for previous, current in zip(surface.headings, surface.headings[1:]):
+                if current > previous + 1 and (path, previous, current) not in KNOWN_HEADING_SKIPS:
+                    findings.append(f"containment.heading_skip:{path}:h{previous}-h{current}")
+                    break
+        for value in surface.links:
+            parsed = urlsplit(value)
+            if parsed.netloc == "cal.com" and value.rstrip("/") != FREE_CAL_URL:
+                findings.append(f"containment.unapproved_cal_url:{path}")
+            target = local_target(path, value)
+            if target is not None and not target_exists(target, present_paths):
+                findings.append(f"containment.broken_internal_link:{path}:{value}")
+        for value in surface.assets:
+            target = local_target(path, value)
+            if target is not None and not target_exists(target, present_paths):
+                findings.append(f"containment.missing_asset:{path}:{value}")
+    if form_counts != EXPECTED_FORM_COUNTS:
+        findings.append("containment.form_inventory_changed")
+
+    privacy = sources.get("privacy.html", "")
+    if "display: inline-flex" not in privacy or "min-height: 24px" not in privacy:
+        findings.append("containment.privacy_target_guard_missing")
     return sorted(set(findings))
 
 
