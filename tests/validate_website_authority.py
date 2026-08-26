@@ -8,6 +8,7 @@ from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable, Mapping
+import hashlib
 import json
 import math
 import re
@@ -19,13 +20,61 @@ import unicodedata
 ROOT = Path(__file__).resolve().parents[1]
 FLAGS = re.IGNORECASE | re.DOTALL
 AUTHORITY_MANIFEST_PATH = Path(__file__).with_name("website_authority.json")
+SOURCE_REPOSITORY = "autismpathwaysconsulting/APC-AI-OS"
+SOURCE_REPOSITORY_ORIGIN = "https://github.com/autismpathwaysconsulting/APC-AI-OS.git"
+CANONICAL_SPECIFICATION_PATH = "governance/APC_FOUNDER_RECONCILIATION_REVENUE_SPRINT_DAY0_2026-08-21.authority.json"
+GENERATION_METHOD = "node tools/outcome-offer/generate-website-authority.js"
+
+
+def stable_json(value: object) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def validate_authority_manifest(manifest: Mapping[str, Any]) -> None:
+    if manifest.get("schema_version") != 2:
+        raise ValueError("stale website mirror schema version")
+    if manifest.get("authority_role") != "NON_AUTHORITATIVE_DERIVED_MIRROR":
+        raise ValueError("website authority data must be a non-authoritative derived mirror")
+    provenance = manifest.get("provenance")
+    if not isinstance(provenance, Mapping):
+        raise ValueError("website mirror provenance is required")
+    expected = {
+        "source_repository": SOURCE_REPOSITORY,
+        "source_repository_origin": SOURCE_REPOSITORY_ORIGIN,
+        "canonical_specification_path": CANONICAL_SPECIFICATION_PATH,
+        "source_authority_record_id": "APC-REV-DAY0-2026-08-21",
+        "source_schema_version": "1.2",
+        "source_authority_version": "1.2",
+        "generation_method": GENERATION_METHOD,
+    }
+    for field, value in expected.items():
+        if provenance.get(field) != value:
+            raise ValueError(f"website mirror canonical source identity or version is invalid: {field}")
+    if not re.fullmatch(r"[0-9a-f]{40}", str(provenance.get("source_candidate_commit", ""))):
+        raise ValueError("website mirror exact APC-AI-OS candidate commit is invalid")
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(provenance.get("canonical_source_sha256", ""))):
+        raise ValueError("website mirror canonical source SHA256 is invalid")
+    projection = {
+        key: value
+        for key, value in manifest.items()
+        if key not in {"schema_version", "authority_role", "provenance"}
+    }
+    projection_hash = "sha256:" + hashlib.sha256(stable_json(projection).encode()).hexdigest()
+    if provenance.get("governed_projection_sha256") != projection_hash:
+        raise ValueError("website mirror projection hash is invalid; regenerate it")
+    controls = manifest.get("payment_controls", {})
+    if controls.get("approved_methods") != ["BANK_TRANSFER", "DUITNOW_QR"]:
+        raise ValueError("website mirror expands approved payment methods")
+    if controls.get("automatic_confirmation") is not False:
+        raise ValueError("website mirror weakens manual payment confirmation")
+    if controls.get("request_payment_attempt_or_screenshot_confirms_booking") is not False:
+        raise ValueError("website mirror allows proof to confirm a booking")
 
 
 def load_authority_manifest() -> Mapping[str, Any]:
     with AUTHORITY_MANIFEST_PATH.open(encoding="utf-8") as handle:
         manifest = json.load(handle)
-    if manifest.get("schema_version") != 1:
-        raise ValueError("unsupported authority manifest schema")
+    validate_authority_manifest(manifest)
     return manifest
 
 
@@ -107,6 +156,20 @@ PAGE_REQUIREMENTS: Mapping[str, tuple[Requirement, ...]] = {
         Requirement("home_sessions", r"\bfour 60-minute sessions\b"),
         Requirement("home_window", r"\bapproximately 6\s*[–-]\s*8 weeks\b"),
         Requirement("home_no_checkin", r"\bno additional post-programme check-in\b"),
+        Requirement("positioning", r"\byou already know the advice\. the hard part is knowing what to do when it happens at home\b"),
+        Requirement("first_step_boundary", r"\bnot a consultation, assessment, diagnostic service, or advice session\b"),
+        Requirement("rm350_promise", r"\bone repeated concern\. one clear next step\b"),
+        Requirement("rm350_working_understanding", r"\bworking understanding of the pattern\b"),
+        Requirement("rm350_observe", r"\bworth observing or investigating\b"),
+        Requirement("rm350_response", r"\bone practical response to try\b"),
+        Requirement("rm350_summary", r"\bconcise written next-step summary\b"),
+        Requirement("home_promise", r"\bturn autism advice into a practical home plan you can actually use\b"),
+        Requirement("home_priority", r"\bprioritise the most important concern\b"),
+        Requirement("home_plan", r"\bpractical home-support plan\b"),
+        Requirement("home_implementation", r"\bimplementation guidance\b"),
+        Requirement("home_review", r"\breview what happened\b"),
+        Requirement("home_adjust", r"\badjust the plan based on your family’s experience\b"),
+        Requirement("home_summary", r"\bfinal written plan or summary\b"),
     ),
     "terms.html": (
         Requirement("session_name", r"\bone-concern parent session\b"),
@@ -192,7 +255,7 @@ GLOBAL_RULES = (
     Rule(
         "scope.repeated_concern",
         r"\bone\s+repeated\s+concern\b",
-        negation=r"\b(?:not|never|does not|do not|is not)\b.{0,60}\bone\s+repeated\s+concern\b",
+        negation=r"\bone repeated concern[.,]\s*one clear next step\b|\b(?:not|never|does not|do not|is not)\b.{0,60}\bone\s+repeated\s+concern\b",
     ),
     Rule(
         "scope.repeated_pattern",
@@ -1064,7 +1127,13 @@ def _active_claim_surfaces(surfaces: Iterable[Surface]) -> Iterable[Surface]:
             yield surface
             continue
         if surface.kind in {"article", "li", "section", "div", "p", "page", "text"}:
-            for claim in split_clauses(surface.text):
+            approved_promise = re.sub(
+                r"\bone repeated concern\.\s*one clear next step\.",
+                "One repeated concern, one clear next step.",
+                surface.text,
+                flags=FLAGS,
+            )
+            for claim in split_clauses(approved_promise):
                 yield Surface(surface.path, surface.kind, claim)
         else:
             yield surface
@@ -1141,14 +1210,6 @@ def _surface_has_home_context(surface: Surface) -> bool:
     return bool(HOME_CONTEXT.search(surface.text) or HOME_CONTEXT.search(structured_context))
 
 
-def _wise_is_home_scoped(clause: str) -> bool:
-    return bool(
-        re.search(r"\bwise\b", clause, FLAGS)
-        and HOME_CONTEXT.search(clause)
-        and re.search(r"\b(?:only|already authori[sz]ed|overseas|not available for)\b", clause, FLAGS)
-    )
-
-
 def _payment_claim_is_invalid(surface: Surface, value: str) -> bool:
     for clause in split_clauses(value):
         if _is_historical(clause):
@@ -1182,17 +1243,9 @@ def _payment_claim_is_invalid(surface: Surface, value: str) -> bool:
         for match in active_methods:
             method = normalize(match.group(0)).casefold()
             if UNAPPROVED_PAYMENT_TOKEN.fullmatch(match.group(0)):
-                if method.startswith("wise") and _wise_is_home_scoped(clause):
-                    continue
                 return True
-            if method == "bank transfer":
-                legal_summary = bool(
-                    surface.path in {"terms.html", "cancellation-policy.html"}
-                    and re.search(r"\bduitnow qr\b", clause, FLAGS)
-                )
-                if not legal_summary:
-                    return True
-            elif method not in {
+            if method not in {
+                "bank transfer",
                 "maybank transfer",
                 "maybank bank transfer",
                 "duitnow qr",
@@ -1417,6 +1470,15 @@ def _authority_findings(surfaces: Iterable[Surface]) -> set[Finding]:
                     findings.add(Finding("delivery.unapproved_platform", surface.path, surface.kind))
     for surface in home_surfaces:
         findings.update(_home_value_findings(surface))
+        if _has_active_target(surface.text, UNAPPROVED_PAYMENT_TOKEN):
+            findings.add(Finding("payment.unsupported_home_method", surface.path, surface.kind))
+        for key, value in _field_map(surface).items():
+            compact_key = re.sub(r"[^a-z]", "", key)
+            if compact_key in STRUCTURED_PAYMENT_KEYS:
+                explicit_payment_field = compact_key not in {"href", "action"}
+                if explicit_payment_field or PAYMENT_METHOD_TOKEN.search(value):
+                    if _has_active_target(value, UNAPPROVED_PAYMENT_TOKEN):
+                        findings.add(Finding("payment.unsupported_home_method", surface.path, surface.kind))
     return findings
 
 
@@ -1478,6 +1540,10 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
             findings.add(Finding(f"required.{path}.booking_sequence", path, "page"))
 
     governance = normalize(documents.get("CLAUDE.md", ""))
+    if not re.search(r"\bAPC-AI-OS\b.{0,100}\bsole canonical offer authority\b", governance, FLAGS):
+        findings.add(Finding("required.canonical_offer_authority", "CLAUDE.md", "governance"))
+    if not re.search(r"\bwebsite_authority\.json\b.{0,100}\bnon-authoritative derived mirror\b", governance, FLAGS):
+        findings.add(Finding("required.derived_mirror_boundary", "CLAUDE.md", "governance"))
     required_states = AUTHORITY["launch"]["required_governance_states"]
     if not all(normalize(state).casefold() in governance.casefold() for state in required_states):
         findings.add(Finding("required.launch_lock", "CLAUDE.md", "governance"))

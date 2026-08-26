@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "projection_role": "INTERIM_RISK_CONTAINMENT_PROJECTION_ONLY",
+  "provenance": {
+    "apc_ai_os_repository": "autismpathwaysconsulting/APC-AI-OS",
+    "apc_ai_os_main_commit": "b4d2820334be9a3e12f5a4c827bfc4e4ad1a8893",
+    "canonical_audited_ancestor": "b7206744965929ce1469295129661a863bbdf733",
+    "authority_version": "1.2",
+    "canonical_state": "CANDIDATE",
+    "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
+    "governed_projection_sha256": "sha256:ebc93120addfedecd17b16ea99d21474a34782aef32b9cecbb25dc709d212f29",
+    "website_repository": "autismpathwaysconsulting/autism-pathways-consulting",
+    "website_main_commit": "01b9565fc2891dd9354985c1acd4fd43adabe1b9",
+    "website_pr14_candidate_commit": "7e62a470db496942e640267b52acaf6c3c312ece"
+  },
+  "authority_permissions": {
+    "public_launch_authorised": false,
+    "deployment_authorised": false,
+    "publication_authorised": false,
+    "live_booking_or_payment_change_authorised": false,
+    "canonical_promotion_authorised": false,
+    "hold_closure_authorised": false
+  },
+  "holds": {
+    "OPS-HOLD-001": "OPEN",
+    "OPS-HOLD-002": "OPEN",
+    "OPS-HOLD-003": "OPEN",
+    "OPS-HOLD-004": "OPEN",
+    "OPS-HOLD-005": "OPEN",
+    "OPS-HOLD-006": "OPEN"
+  },
+  "public_controls": {
+    "paid_services_are_candidate_only": true,
+    "general_availability": false,
+    "international_services_available": false,
+    "international_payments_available": false,
+    "public_payment_details_available": false,
+    "payment_permission_is_individual": true,
+    "payment_instructions_delivered_privately": true,
+    "automatic_booking_confirmation": false,
+    "booking_sequence": [
+      "REQUEST",
+      "FOUNDER_SUITABILITY_AND_CAPACITY_REVIEW",
+      "INDIVIDUAL_PERMISSION_TO_PAY",
+      "BANK_TRANSFER_OR_DUITNOW_QR",
+      "PROOF_RECEIVED",
+      "FOUNDER_PAYMENT_VERIFICATION",
+      "FOUNDER_BOOKING_CONFIRMATION"
+    ]
+  }
+}

@@ -2,8 +2,10 @@
 """Registered adversarial tests for the APC authority validator."""
 
 from html.parser import HTMLParser
+import copy
 import json
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -15,6 +17,7 @@ from validate_website_authority import (
     committed_tracked_paths,
     extract_surfaces,
     load_tracked_documents,
+    validate_authority_manifest,
     validate_documents,
 )
 
@@ -585,19 +588,22 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
-    def test_home_support_wise_remains_allowed(self):
+    def test_home_support_wise_is_rejected(self):
         source = append_html(
             self.canonical["pay/index.html"],
             "For the RM1,800 Home Support Programme, Wise is available only after CJ confirms fit.",
         )
-        self.assertEqual([], self.findings_for({"pay/index.html": source}))
+        self.assert_finding(
+            "payment.unsupported_home_method",
+            self.findings_for({"pay/index.html": source}),
+        )
 
-    def test_structural_01_generic_bank_transfer_fails(self):
+    def test_structural_01_approved_bank_transfer_passes(self):
         source = insert_in_session_article(
             self.canonical["services.html"],
             "<p>The RM350 session accepts bank transfer.</p>",
         )
-        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"services.html": source}))
 
     def test_structural_02_paypal_supported_fails(self):
         source = insert_in_session_article(
@@ -923,10 +929,17 @@ class AuthorityValidatorTests(unittest.TestCase):
         home = AUTHORITY["offers"]["home_support"]
         self.assertEqual(350, session["price"]["value"])
         self.assertEqual(45, session["duration_minutes"])
+        self.assertEqual("One repeated concern. One clear next step.", session["promise"])
+        self.assertEqual(5, len(session["deliverables"]))
         self.assertEqual(["Google Meet"], session["delivery_platforms"])
-        self.assertEqual(["Maybank bank transfer", "DuitNow QR"], session["payment_methods"])
+        self.assertEqual(["Bank transfer", "DuitNow QR"], session["payment_methods"])
         self.assertEqual(1800, home["price"]["value"])
         self.assertEqual([6, 8], home["window_weeks"])
+        self.assertEqual(6, len(home["deliverables"]))
+        self.assertFalse(AUTHORITY["first_step_call"]["compulsory_before_rm350"])
+        self.assertEqual("NON_AUTHORITATIVE_DERIVED_MIRROR", AUTHORITY["authority_role"])
+        self.assertEqual("autismpathwaysconsulting/APC-AI-OS", AUTHORITY["provenance"]["source_repository"])
+        self.assertRegex(AUTHORITY["provenance"]["source_candidate_commit"], r"^[0-9a-f]{40}$")
         self.assertEqual(
             {"services.html", "terms.html", "pay/index.html"},
             set(session["bindings"]),
@@ -1126,7 +1139,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
-    def test_nested_home_support_wise_remains_accepted(self):
+    def test_nested_home_support_wise_is_rejected(self):
         source = append_script(
             self.canonical["pay/index.html"],
             '{"name":"One-Concern Parent Session","related":{"name":"APC Home Support Programme",'
@@ -1140,7 +1153,10 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"paymentMethod":"Wise","authorization":"already authorized only"}}}',
             "application/json",
         )
-        self.assertEqual([], self.findings_for({"pay/index.html": source}))
+        self.assert_finding(
+            "payment.unsupported_home_method",
+            self.findings_for({"pay/index.html": source}),
+        )
 
     def test_scalar_array_jsonld_conflicting_price_fails(self):
         findings = self.findings_from_script(
@@ -1376,7 +1392,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
-    def test_scalar_array_home_support_wise_remains_accepted(self):
+    def test_scalar_array_home_support_wise_is_rejected(self):
         source = append_script(
             self.canonical["pay/index.html"],
             '{"name":"APC Home Support Programme","overseas":'
@@ -1389,7 +1405,10 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"paymentMethods":["Wise"],"authorization":"already authorized only"}}',
             "application/json",
         )
-        self.assertEqual([], self.findings_for({"pay/index.html": source}))
+        self.assert_finding(
+            "payment.unsupported_home_method",
+            self.findings_for({"pay/index.html": source}),
+        )
 
     def test_scalar_array_all_five_conflicts_fail_together(self):
         expected = {
@@ -2012,6 +2031,50 @@ class AuthorityValidatorTests(unittest.TestCase):
         for primitive in ("eval(", "Function(", "vm.run", "vm.Script", "execjs"):
             with self.subTest(primitive=primitive):
                 self.assertNotIn(primitive, validator)
+
+    def test_manifest_provenance_regressions_fail(self):
+        cases = {
+            "altered mirror hash": lambda value: value["provenance"].__setitem__(
+                "governed_projection_sha256", "sha256:" + "0" * 64
+            ),
+            "stale authority version": lambda value: value["provenance"].__setitem__(
+                "source_authority_version", "1.1"
+            ),
+            "missing canonical source identity": lambda value: value["provenance"].pop(
+                "source_repository"
+            ),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label=label):
+                value = copy.deepcopy(AUTHORITY)
+                mutate(value)
+                with self.assertRaises(ValueError):
+                    validate_authority_manifest(value)
+
+    def test_public_candidate_contains_no_wise_route(self):
+        for path in ROOT.rglob("*.html"):
+            with self.subTest(path=path.relative_to(ROOT)):
+                self.assertIsNone(re.search(r"\bwise\b", path.read_text(encoding="utf-8"), re.I))
+
+    def test_terms_uses_interim_first_step_call_wording(self):
+        terms = (ROOT / "terms.html").read_text(encoding="utf-8")
+        self.assertIn("a fit-and-routing conversation", terms)
+        self.assertNotIn("free consultation slots", terms)
+        self.assertNotIn("limit repeated use of free First Step Call slots", terms)
+        self.assertNotRegex(terms, r"(?i)no-?show.{0,80}(?:restrict|penalt|forfeit)")
+
+    def test_booking_confirmation_heading_hierarchy(self):
+        source = (ROOT / "booking-confirmed-call.html").read_text(encoding="utf-8")
+        headings = [int(level) for level in re.findall(r"<h([1-6])\b", source, re.I)]
+        self.assertTrue(headings)
+        self.assertEqual(1, headings[0])
+        for previous, current in zip(headings, headings[1:]):
+            self.assertLessEqual(current - previous, 1)
+
+    def test_booking_confirmation_nav_and_footer_targets_meet_24px_rule(self):
+        source = (ROOT / "booking-confirmed-call.html").read_text(encoding="utf-8")
+        self.assertRegex(source, r"\.nav-links a\{[^}]*min-height:24px")
+        self.assertRegex(source, r"\.apc-footer-column a \{[^}]*min-height: 24px !important;")
 
 
 if __name__ == "__main__":

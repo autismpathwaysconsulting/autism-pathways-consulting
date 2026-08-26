@@ -667,6 +667,25 @@ a {
   }
 }
 
+/* Interim containment accessibility: preserve a 24px minimum rendered target. */
+.site-links a,
+.nav-links a,
+.apc-footer-column a,
+.legal-card a,
+.contact-box a,
+.trust-grid a {
+  display: inline-flex !important;
+  min-height: 24px !important;
+  align-items: center !important;
+}
+
+@media (max-width: 760px) {
+  .nav-links a:not(.call-link):not(.nav-cta),
+  .site-links a:not(.nav-cta) {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
