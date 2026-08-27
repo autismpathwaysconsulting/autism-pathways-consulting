@@ -608,19 +608,23 @@ body.apc-v2 {
 
 .apc-services-page-v2 .services-hero {
   max-width: 1040px !important;
-  padding: clamp(58px, 7vw, 88px) 0 clamp(42px, 6vw, 68px) !important;
+  padding: clamp(42px, 5vw, 64px) 0 clamp(32px, 4vw, 46px) !important;
 }
 
 .apc-services-page-v2 .services-hero h1 {
-  max-width: 18ch !important;
+  max-width: 21ch !important;
   font-size: clamp(3rem, 5.2vw, 4.7rem) !important;
   line-height: 0.98 !important;
 }
 
+.apc-services-page-v2 .services-hero .lead {
+  max-width: 760px !important;
+}
+
 .apc-services-page-v2 .services-hero .condition {
   max-width: 760px;
-  margin-top: 28px !important;
-  padding: 18px 20px !important;
+  margin-top: 22px !important;
+  padding: 16px 18px !important;
   background: var(--apc-cream) !important;
   border: 0 !important;
   border-left: 4px solid var(--apc-coral) !important;
@@ -632,7 +636,7 @@ body.apc-v2 {
 }
 
 .apc-services-page-v2 .offer-card {
-  padding: clamp(26px, 3vw, 36px) !important;
+  padding: clamp(24px, 2.5vw, 32px) !important;
 }
 
 .apc-services-page-v2 .offer-card .condition {
@@ -641,6 +645,7 @@ body.apc-v2 {
   border-left: 3px solid var(--apc-primary-teal) !important;
   border-radius: 0 10px 10px 0 !important;
   font-weight: 600 !important;
+  line-height: 1.5 !important;
 }
 
 .apc-services-page-v2 .offer-more {
@@ -1522,6 +1527,10 @@ body.apc-v2 {
     padding: 24px !important;
   }
 
+  .apc-services-page-v2 .offer-card {
+    padding: 22px !important;
+  }
+
   .apc-home-page .apc-process-five {
     grid-template-columns: 1fr !important;
   }
@@ -1537,7 +1546,7 @@ body.apc-v2 {
   }
 
   .apc-services-page-v2 .services-hero {
-    padding-top: 52px !important;
+    padding: 36px 0 34px !important;
   }
 
   .apc-services-page-v2 .offer-grid,
