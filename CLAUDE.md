@@ -73,7 +73,7 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
   Founder only after permission.
 - Brevo email capture: free parent guide (on `resources.html` + homepage card) and the course waitlist
   (`course-waitlist.html`) are separate Brevo forms. The course sales page is `/connect`.
-- Booking is embedded inline via the Cal.com embed on `index.html`.
+- Booking uses links to the public Free 15-Min First Step Call Cal.com event. The homepage does not contain an inline Cal.com calendar embed. Do not introduce or change booking implementation without separate Founder authorisation.
 - The Services page uses direct CTA links:
   - Unsure parents: Free 15-Min First Step Call.
   - One focused parent concern: RM350 One-Concern Parent Session booking request, subject to Founder suitability and availability confirmation before payment.
