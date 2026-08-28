@@ -156,7 +156,7 @@ PAGE_REQUIREMENTS: Mapping[str, tuple[Requirement, ...]] = {
         Requirement("home_sessions", r"\bfour 60-minute sessions\b"),
         Requirement("home_window", r"\bapproximately 6\s*[–-]\s*8 weeks\b"),
         Requirement("home_no_checkin", r"\bno additional post-programme check-in\b"),
-        Requirement("positioning", r"\byou already know the advice\. the hard part is knowing what to do when it happens at home\b"),
+        Requirement("positioning", r"\bchoose the level of support that fits what you need right now\b"),
         Requirement("first_step_boundary", r"\bnot a consultation, assessment, diagnostic service, or advice session\b"),
         Requirement("rm350_promise", r"\bone repeated concern\. one clear next step\b"),
         Requirement("rm350_working_understanding", r"\bworking understanding of the pattern\b"),
