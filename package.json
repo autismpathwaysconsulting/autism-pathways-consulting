@@ -1,0 +1,8 @@
+{
+  "name": "autism-pathways-consulting-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:content-os": "node --test tests/content-os-sync.test.mjs"
+  }
+}

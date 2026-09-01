@@ -375,15 +375,18 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         r"\b(?:fetch\s*\(|xmlhttprequest|localstorage|sessionstorage|document\.cookie|gtag\s*\(|google-analytics|plausible\.io)",
         re.IGNORECASE,
     )
+    # This one internal utility is protected by Pages middleware and is not a
+    # public website surface. All other HTML remains fail-closed below.
+    private_internal_surfaces = frozenset({"content-os/index.html"})
     for path, source in sorted(sources.items()):
         if not path.endswith(".html"):
             continue
         surface = parse_surface(source)
         if surface.forms:
             form_counts[path] = len(surface.forms)
-        if integration_signals.search(source):
+        if path not in private_internal_surfaces and integration_signals.search(source):
             findings.append(f"containment.new_integration_surface:{path}")
-        if any(control.get("type", "").lower() == "file" for control in surface.inputs):
+        if path not in private_internal_surfaces and any(control.get("type", "").lower() == "file" for control in surface.inputs):
             findings.append(f"containment.public_file_input:{path}")
         for image in surface.images:
             if "alt" not in image:

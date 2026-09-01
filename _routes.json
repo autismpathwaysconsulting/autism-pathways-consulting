@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "include": [
+    "/content-os",
+    "/content-os/*",
+    "/api/content-os/*"
+  ],
+  "exclude": []
+}
