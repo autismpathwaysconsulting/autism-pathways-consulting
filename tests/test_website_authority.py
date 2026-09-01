@@ -199,6 +199,13 @@ class AuthorityValidatorTests(unittest.TestCase):
     def test_unchanged_canonical_pages_pass(self):
         self.assertEqual([], self.findings_for())
 
+    def test_protected_content_os_is_outside_the_public_authority_surface(self):
+        source = append_script(
+            self.canonical["content-os/index.html"],
+            'const offerName="One-Concern Parent Session";',
+        )
+        self.assertEqual([], self.findings_for({"content-os/index.html": source}))
+
     def test_required_contradictions_fail_separately(self):
         cases = {
             "scope.repeated_concern": ("services.html", "The current RM350 wording covers one repeated concern."),

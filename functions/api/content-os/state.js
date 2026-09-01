@@ -1,4 +1,3 @@
-const STATE_KEY = "apc-content-os:v2.1:state";
 const SCHEMA_VERSION = "2.1";
 const MAX_BODY_BYTES = 256 * 1024;
 
@@ -7,10 +6,6 @@ function json(body, status = 200) {
     status,
     headers: { "Cache-Control": "private, no-store" },
   });
-}
-
-function emptyRecord() {
-  return { schemaVersion: SCHEMA_VERSION, revision: 0, updatedAt: null, state: null };
 }
 
 function validState(state) {
@@ -26,15 +21,38 @@ function validState(state) {
   );
 }
 
+function recordFromRow(row) {
+  if (!row) return null;
+  return {
+    schemaVersion: row.schema_version,
+    revision: row.revision,
+    updatedAt: row.updated_at,
+    state: row.state_json ? JSON.parse(row.state_json) : null,
+  };
+}
+
 async function readRecord(env) {
-  return (await env.APC_CONTENT_OS_STATE.get(STATE_KEY, "json")) || emptyRecord();
+  const row = await env.APC_CONTENT_OS_DB
+    .prepare("SELECT schema_version, revision, updated_at, state_json FROM content_os_state WHERE id = ?")
+    .bind(1)
+    .first();
+  const record = recordFromRow(row);
+  if (!record) throw new Error("Canonical Content OS row is not initialized.");
+  return record;
 }
 
 export async function onRequestGet({ env }) {
-  return json(await readRecord(env));
+  if (!env.APC_CONTENT_OS_DB) return json({ error: "Canonical database is not configured." }, 503);
+  try {
+    return json(await readRecord(env));
+  } catch (error) {
+    console.error(JSON.stringify({ message: "Content OS read failed", error: String(error?.message || error) }));
+    return json({ error: "Canonical state is unavailable." }, 503);
+  }
 }
 
 export async function onRequestPut({ request, env }) {
+  if (!env.APC_CONTENT_OS_DB) return json({ error: "Canonical database is not configured." }, 503);
   if (request.headers.get("X-APC-Content-OS") !== "1") {
     return json({ error: "Missing sync request header." }, 400);
   }
@@ -66,15 +84,25 @@ export async function onRequestPut({ request, env }) {
   }
   if (!validState(payload.state)) return json({ error: "State does not match APC Content OS schema 2.1." }, 400);
 
-  const current = await readRecord(env);
-  if (payload.expectedRevision !== current.revision) return json(current, 409);
+  const updatedAt = new Date().toISOString();
+  try {
+    const result = await env.APC_CONTENT_OS_DB
+      .prepare(`UPDATE content_os_state
+        SET schema_version = ?, revision = revision + 1, updated_at = ?, state_json = ?
+        WHERE id = ? AND revision = ?`)
+      .bind(SCHEMA_VERSION, updatedAt, JSON.stringify(payload.state), 1, payload.expectedRevision)
+      .run();
 
-  const next = {
-    schemaVersion: SCHEMA_VERSION,
-    revision: current.revision + 1,
-    updatedAt: new Date().toISOString(),
-    state: payload.state,
-  };
-  await env.APC_CONTENT_OS_STATE.put(STATE_KEY, JSON.stringify(next));
-  return json(next);
+    if (result.meta.changes === 0) return json(await readRecord(env), 409);
+
+    return json({
+      schemaVersion: SCHEMA_VERSION,
+      revision: payload.expectedRevision + 1,
+      updatedAt,
+      state: payload.state,
+    });
+  } catch (error) {
+    console.error(JSON.stringify({ message: "Content OS write failed", error: String(error?.message || error) }));
+    return json({ error: "Canonical state is unavailable." }, 503);
+  }
 }

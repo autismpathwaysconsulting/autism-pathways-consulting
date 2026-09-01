@@ -28,41 +28,49 @@ async function sameCredential(actual, expected) {
   return difference === 0;
 }
 
-function authResponse(status, message, configuration = "unknown") {
+function authResponse(status, message) {
   const response = Response.json({ error: message }, { status });
   if (status === 401) response.headers.set("WWW-Authenticate", `Basic realm="${realm}", charset="UTF-8"`);
-  response.headers.set("X-APC-Auth-Configuration", configuration);
   return securityHeaders(response);
+}
+
+function isExplicitPreview(context) {
+  const branch = context.env.CF_PAGES_BRANCH || "";
+  return context.env.APC_CONTENT_OS_PREVIEW_AUTH_ENABLED === "true" &&
+    context.env.CF_PAGES === "1" &&
+    Boolean(branch) &&
+    branch !== "main";
+}
+
+async function previewCredentialIsValid(context, supplied) {
+  const verifier = context.env.APC_CONTENT_OS_PREVIEW_AUTH;
+  if (!verifier) return false;
+  const storedHash = await verifier.get(authHashKey);
+  if (!storedHash) return false;
+  try {
+    const decoded = supplied.startsWith("Basic ") ? atob(supplied.slice(6)) : "";
+    const separator = decoded.indexOf(":");
+    const username = separator >= 0 ? decoded.slice(0, separator) : "";
+    const password = separator >= 0 ? decoded.slice(separator + 1) : "";
+    const passwordHash = toHex(await sha256(password));
+    return username === "apc" && await sameCredential(passwordHash, storedHash);
+  } catch { return false; }
 }
 
 export async function onRequest(context) {
   const secret = context.env.APC_CONTENT_OS_AUTH;
   const supplied = context.request.headers.get("Authorization") || "";
-  let authorized = false;
-  const configuration = [supplied ? "header" : "no-header", secret ? "secret" : "no-secret"];
 
   if (secret) {
-    authorized = await sameCredential(supplied, `Basic ${btoa(`apc:${secret}`)}`);
-  }
-  if (!authorized && context.env.APC_CONTENT_OS_STATE) {
-    configuration.push("kv");
-    const storedHash = await context.env.APC_CONTENT_OS_STATE.get(authHashKey);
-    configuration.push(storedHash ? "hash" : "no-hash");
-    try {
-      const decoded = supplied.startsWith("Basic ") ? atob(supplied.slice(6)) : "";
-      const separator = decoded.indexOf(":");
-      const username = separator >= 0 ? decoded.slice(0, separator) : "";
-      const password = separator >= 0 ? decoded.slice(separator + 1) : "";
-      const passwordHash = toHex(await sha256(password));
-      authorized = username === "apc" && Boolean(storedHash) && await sameCredential(passwordHash, storedHash);
-    } catch { authorized = false; }
-  } else if (!secret) {
-    return authResponse(503, "APC Content OS authentication is not configured.");
+    const valid = await sameCredential(supplied, `Basic ${btoa(`apc:${secret}`)}`);
+    if (!valid) return authResponse(401, "Authentication required.");
+    return securityHeaders(await context.next());
   }
 
-  if (!authorized) {
-    return authResponse(401, "Authentication required.", configuration.join(","));
+  if (!isExplicitPreview(context) || !context.env.APC_CONTENT_OS_PREVIEW_AUTH) {
+    return authResponse(503, "APC Content OS authentication is not configured.");
   }
+  if (!(await previewCredentialIsValid(context, supplied))) return authResponse(401, "Authentication required.");
 
   return securityHeaders(await context.next());
 }

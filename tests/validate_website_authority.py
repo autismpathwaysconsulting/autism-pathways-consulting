@@ -84,6 +84,7 @@ GOVERNED_PAGES = frozenset(
     for offer in AUTHORITY["offers"].values()
     for path in offer["bindings"]
 )
+PROTECTED_APPLICATION_PAGES = frozenset({"content-os/index.html"})
 
 
 @dataclass(frozen=True)
@@ -1496,6 +1497,8 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
             findings.add(Finding("mutator.website_writer", path, "python"))
 
     for path, source in documents.items():
+        if path in PROTECTED_APPLICATION_PAGES:
+            continue
         if path.endswith((".js", ".mjs", ".cjs")) and _executable_javascript_contains_authority(source):
             findings.add(
                 Finding(
@@ -1508,6 +1511,8 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
     all_surfaces: list[Surface] = []
     surfaces_by_page: dict[str, list[Surface]] = {}
     for path, source in documents.items():
+        if path in PROTECTED_APPLICATION_PAGES:
+            continue
         if not path.endswith(".html"):
             continue
         page_surfaces = extract_surfaces(path, source)

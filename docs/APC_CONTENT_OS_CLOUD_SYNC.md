@@ -9,12 +9,13 @@ The private app is served at `/content-os/`. Its API is `/api/content-os/state`.
 ## Architecture
 
 - Cloudflare Pages serves the existing static site and the private Content OS route.
-- Pages middleware protects only `/content-os*` and `/api/content-os/*` with HTTP Basic authentication. Username: `apc`. Production uses the `APC_CONTENT_OS_AUTH` Pages secret; preview deployments verify the same high-entropy password against a one-way SHA-256 verifier stored in the dedicated KV namespace.
-- Workers KV binding `APC_CONTENT_OS_STATE` holds one canonical JSON record at `apc-content-os:v2.1:state`.
+- Pages middleware protects only `/content-os*` and `/api/content-os/*` with HTTP Basic authentication. Username: `apc`. When `APC_CONTENT_OS_AUTH` is configured it is the only accepted credential; a failed production credential never falls back to another verifier. Only an explicit non-production Pages preview with no production secret may use the one-way SHA-256 verifier in the preview-auth KV namespace.
+- Cloudflare D1 database `apc-content-os`, bound as `APC_CONTENT_OS_DB`, is the only canonical application-state store. Its single `content_os_state` row starts at revision 0 with a null state.
+- The KV binding `APC_CONTENT_OS_PREVIEW_AUTH` is limited to the preview password verifier. It never contains canonical Content OS state.
 - The browser's existing localStorage and IndexedDB data remain a fast cache, offline fallback, and migration source.
 - GET returns the current state, revision, schema version, and cloud timestamp.
-- PUT requires `expectedRevision`. A mismatch returns HTTP 409 and the current cloud record; the client preserves the local version and asks before loading cloud state.
-- Saves are debounced to respect KV's write rate for a single key.
+- PUT performs one conditional D1 update using `WHERE id = 1 AND revision = expectedRevision`. Exactly one writer can advance a revision. If no row changes, the API reads and returns the current canonical record with HTTP 409; the client preserves the local version and asks before loading cloud state.
+- Saves remain debounced to avoid unnecessary network and database operations.
 
 ## Migration and recovery
 
@@ -29,7 +30,18 @@ Recovery copies are stored in localStorage under `apcContentOSv21Recovery`. Norm
 
 Browser same-origin rules prevent a Pages URL from reading localStorage created by a downloaded `file://` copy or another domain. For that case, export JSON from the old v2.1 copy and import it once through the v2.2 backup panel; import preserves a recovery copy and queues the data for cloud sync.
 
-After deployment QA, the canonical state key is intentionally left empty so the first real migration starts from revision 0.
+After deployment QA, the canonical D1 row is intentionally restored to revision 0 with a null state so the first real migration starts cleanly.
+
+## Cloudflare setup
+
+Apply the checked-in migration to local and remote D1 before serving or deploying:
+
+```sh
+npx wrangler d1 migrations apply apc-content-os --local
+npx wrangler d1 migrations apply apc-content-os --remote
+```
+
+The deployment remains within Cloudflare's Free plan: one small D1 database, one canonical row, the existing Pages project, and the existing preview-auth KV namespace. No external state service is required.
 
 ## Local verification
 
@@ -49,14 +61,12 @@ Log in with username `apc` and the local secret.
 
 ## Limitations
 
-- Workers KV is eventually consistent and does not offer an atomic compare-and-swap operation. Revision checks prevent ordinary sequential stale overwrites, but two truly simultaneous writes can both pass the read check. The intended single-operator workflow, visible conflict handling, and save debounce reduce that risk.
 - Basic authentication is the smallest secure route-scoped fallback available from the authenticated CLI. Cloudflare Access should replace it when dashboard Access administration is available.
 - A recovery copy is per browser profile. Keep periodic JSON exports for independent recovery.
 
 ## Future work
 
 - Move `/content-os/*` and `/api/content-os/*` behind a Cloudflare Access application and remove Basic authentication after validating iPhone and Mac sign-in.
-- If the tool becomes multi-user or concurrent editing is expected, move canonical state to a Durable Object or another transactional store.
 - Add automated full-browser regression coverage to the website CI once this private route is merged.
 
 ## Provenance
