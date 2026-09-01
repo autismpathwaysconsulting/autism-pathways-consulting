@@ -29,6 +29,8 @@ Recovery copies are stored in localStorage under `apcContentOSv21Recovery`. Norm
 
 Browser same-origin rules prevent a Pages URL from reading localStorage created by a downloaded `file://` copy or another domain. For that case, export JSON from the old v2.1 copy and import it once through the v2.2 backup panel; import preserves a recovery copy and queues the data for cloud sync.
 
+After deployment QA, the canonical state key is intentionally left empty so the first real migration starts from revision 0.
+
 ## Local verification
 
 Run the unit suite:
