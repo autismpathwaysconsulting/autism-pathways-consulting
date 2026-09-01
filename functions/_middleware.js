@@ -41,7 +41,8 @@ export async function onRequest(context) {
 
   if (secret) {
     authorized = await sameCredential(supplied, `Basic ${btoa(`apc:${secret}`)}`);
-  } else if (context.env.APC_CONTENT_OS_STATE) {
+  }
+  if (!authorized && context.env.APC_CONTENT_OS_STATE) {
     const storedHash = await context.env.APC_CONTENT_OS_STATE.get(authHashKey);
     try {
       const decoded = supplied.startsWith("Basic ") ? atob(supplied.slice(6)) : "";
@@ -51,7 +52,7 @@ export async function onRequest(context) {
       const passwordHash = toHex(await sha256(password));
       authorized = username === "apc" && Boolean(storedHash) && await sameCredential(passwordHash, storedHash);
     } catch { authorized = false; }
-  } else {
+  } else if (!secret) {
     return authResponse(503, "APC Content OS authentication is not configured.");
   }
 

@@ -82,6 +82,19 @@ test("preview routes can verify the high-entropy password hash from KV", async (
   assert.equal(response.status, 200);
 });
 
+test("KV verifier remains valid when preview and production secrets differ", async () => {
+  const kv = new MemoryKV();
+  await kv.put("apc-content-os:auth:sha256", "9caf06bb4436cdbfa20af9121a626bc1093c4f54b31c0fa937957856135345b6");
+  const response = await authorize({
+    env: { APC_CONTENT_OS_AUTH: "different-environment-secret", APC_CONTENT_OS_STATE: kv },
+    request: new Request("https://preview.example/content-os/", {
+      headers: { Authorization: `Basic ${btoa("apc:test-secret")}` },
+    }),
+    next: () => new Response("private"),
+  });
+  assert.equal(response.status, 200);
+});
+
 test("GET returns an empty canonical record before first migration", async () => {
   const env = { APC_CONTENT_OS_STATE: new MemoryKV() };
   const response = await onRequestGet({ env });
