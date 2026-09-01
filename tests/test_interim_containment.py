@@ -198,6 +198,23 @@ class InterimContainmentTests(unittest.TestCase):
             ),
         )
 
+    def test_protected_content_os_is_not_treated_as_a_public_surface(self):
+        findings = self.findings_with_html(
+            "content-os/index.html",
+            '<h1>Private tool</h1><input type="file"><script>fetch("/api/content-os/state")</script>',
+        )
+        self.assertNotIn("containment.new_integration_surface:content-os/index.html", findings)
+        self.assertNotIn("containment.public_file_input:content-os/index.html", findings)
+
+    def test_content_os_exception_is_bound_to_protected_routes(self):
+        routes = json.loads((ROOT / "_routes.json").read_text(encoding="utf-8"))
+        self.assertIn("/content-os/*", routes["include"])
+        self.assertIn("/api/content-os/*", routes["include"])
+        self.assertEqual([], routes["exclude"])
+        middleware = (ROOT / "functions" / "_middleware.js").read_text(encoding="utf-8")
+        self.assertIn("APC_CONTENT_OS_AUTH", middleware)
+        self.assertIn("WWW-Authenticate", middleware)
+
     def test_broken_internal_link_fails(self):
         self.assertIn(
             "containment.broken_internal_link:index.html:/missing-containment-page",

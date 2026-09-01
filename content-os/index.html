@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>APC Content OS v2.2 CLOUD SYNC</title>
+<style>
+:root{
+  --navy:#082E34; --navy2:#0E3B41; --teal:#31AAA8; --teal2:#1F7E80;
+  --cream:#F7F1E7; --white:#FFFFFF; --ink:#16363A; --muted:#667C7E;
+  --coral:#DE7C68; --pale:#DDF1EF; --gold:#D5B56B; --line:#D6E2DF;
+  --green:#2F8F73; --red:#B9574A; --shadow:0 10px 28px rgba(8,46,52,.09);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#EEF4F2;color:var(--ink);line-height:1.5
+}
+header{background:linear-gradient(140deg,var(--navy),var(--navy2));color:#fff;padding:30px 20px 24px}
+.wrap{max-width:1240px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.18em;font-weight:900;color:#9FE0DD;text-transform:uppercase}
+h1{font-size:clamp(32px,5vw,54px);line-height:1.04;margin:8px 0 10px}
+header p{max-width:820px;color:#CFE0DE;margin:0}
+nav{
+  position:sticky;top:0;z-index:30;background:rgba(255,255,255,.97);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(12px)
+}
+.navrow{max-width:1240px;margin:0 auto;padding:8px 12px;display:flex;gap:6px;overflow-x:auto}
+.navrow a{
+  text-decoration:none;color:var(--ink);font-weight:850;font-size:13px;padding:8px 11px;border-radius:9px;white-space:nowrap
+}
+.navrow a:hover{background:var(--pale)}
+main{max-width:1240px;margin:0 auto;padding:20px 16px 70px}
+section{scroll-margin-top:70px;margin-bottom:24px}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);
+  padding:20px;margin-bottom:16px
+}
+h2{font-size:28px;color:var(--navy);margin:0 0 6px}
+h3{font-size:19px;color:var(--navy);margin:18px 0 8px}
+h4{font-size:15px;color:var(--teal2);margin:12px 0 6px}
+.sub{color:var(--muted);margin-top:0}
+.grid{display:grid;gap:14px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:950px){.grid.three,.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.grid.two,.grid.three,.grid.four{grid-template-columns:1fr}}
+.metric,.mini{
+  background:#F8FBFA;border:1px solid var(--line);border-radius:13px;padding:14px
+}
+.metric .num{font-size:28px;font-weight:950;color:var(--navy)}
+.pill{
+  display:inline-block;padding:4px 9px;border-radius:999px;background:var(--pale);color:var(--teal2);
+  font-size:11px;font-weight:850;margin:2px 4px 2px 0
+}
+.pill.coral{background:#F7E5E0;color:#A95749}.pill.gold{background:#F5EFD9;color:#8E7330}
+.pill.green{background:#E4F4EE;color:#2B705C}
+blockquote{
+  margin:10px 0;padding:15px 17px;border-left:5px solid var(--teal);background:#F7FBFA;
+  border-radius:10px;font-size:17px;font-weight:800;color:var(--navy)
+}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+th{background:var(--navy);color:#fff;text-align:left;padding:10px;vertical-align:top}
+td{border-bottom:1px solid var(--line);padding:10px;vertical-align:top}
+tr:nth-child(even) td{background:#FBFCFC}
+button,.btn{
+  border:0;border-radius:9px;padding:9px 11px;background:var(--teal);color:var(--navy);
+  font-weight:900;cursor:pointer;text-decoration:none;display:inline-block
+}
+button.secondary,.btn.secondary{background:#EAF4F2;color:var(--ink)}
+button.dark,.btn.dark{background:var(--navy);color:#fff}
+button.coral{background:var(--coral);color:#fff}
+button.small{padding:6px 8px;font-size:12px}
+button:hover,.btn:hover{filter:brightness(1.03)}
+input,select,textarea{
+  width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;
+  color:var(--ink);font:inherit
+}
+textarea{min-height:90px;resize:vertical}
+label{font-size:12px;font-weight:800;color:var(--muted);display:block;margin-bottom:4px}
+.formrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+@media(max-width:900px){.formrow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.formrow{grid-template-columns:1fr}}
+.callout{padding:14px 16px;background:var(--navy);color:#fff;border-radius:13px}
+.callout strong{color:#9FE0DD}
+.warning{padding:13px 15px;background:#FFF3EF;border:1px solid #F1C4B9;border-radius:12px;color:#7E4036}
+.success{padding:13px 15px;background:#EFF9F6;border:1px solid #BDE5D9;border-radius:12px;color:#245C50}
+.promptbox{background:#0B252A;color:#E9F4F2;border-radius:14px;padding:16px;position:relative;margin-top:10px}
+.promptbox pre{white-space:pre-wrap;word-break:break-word;margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.55}
+.copybtn{position:absolute;right:10px;top:10px}
+.search{font-size:15px}
+.topic{
+  border:1px solid var(--line);border-radius:13px;padding:14px;background:#fff
+}
+.topic.hidden{display:none}
+.topic-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.status{
+  font-size:11px;font-weight:900;padding:4px 7px;border-radius:999px;display:inline-block
+}
+.status.idea{background:#EEF2F1;color:#617071}
+.status.ready{background:#E6F4F1;color:#2A6B5E}
+.status.posted{background:#E3F0FA;color:#2E5E7D}
+.status.winner,.status.replicate{background:#F7EFD4;color:#826B23}
+.status.validated{background:#E1F3E8;color:#276447}
+.status.stop{background:#F9E7E3;color:#98483D}
+.calendar-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.calendar-card .hook{font-weight:900;font-size:16px;color:var(--navy);margin:5px 0}
+.calendar-card .meta{font-size:12px;color:var(--muted)}
+.calendar-card .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.progress{height:10px;background:#E8EFED;border-radius:999px;overflow:hidden}
+.progress > div{height:100%;background:var(--teal);width:0%}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+details{border:1px solid var(--line);border-radius:12px;padding:0 14px;background:#fff;margin:9px 0}
+summary{cursor:pointer;font-weight:900;color:var(--navy);padding:12px 0}
+.smalltxt{font-size:12px;color:var(--muted)}
+.sticky-actions{
+  position:fixed;right:16px;bottom:16px;z-index:40;display:flex;flex-direction:column;gap:7px
+}
+@media(max-width:720px){.sticky-actions{right:10px;bottom:10px}.sticky-actions button{font-size:11px;padding:7px 9px}}
+.score-good{color:var(--green);font-weight:900}
+.score-mid{color:#9A7B25;font-weight:900}
+.score-low{color:var(--red);font-weight:900}
+
+.protocol-lock{border:2px solid var(--teal);background:#F1FAF8;border-radius:14px;padding:15px;margin-top:16px}
+.protocol-lock .lock-title{font-weight:950;color:var(--navy);font-size:16px}
+.axis{border-left:5px solid var(--teal);padding:10px 12px;background:#F8FBFA;border-radius:9px;margin:7px 0}
+.axis.coral{border-left-color:var(--coral)}
+.axis.gold{border-left-color:var(--gold)}
+.baseline-note{font-size:11px;color:var(--muted);margin-top:5px}
+.gate{display:flex;gap:8px;align-items:flex-start;margin:5px 0;font-size:13px}
+.gate .dot{width:10px;height:10px;border-radius:50%;background:#CBD7D5;margin-top:5px;flex:0 0 auto}
+.gate.pass .dot{background:var(--green)}
+.gate.wait .dot{background:var(--gold)}
+.gate.stop .dot{background:var(--red)}
+.compact-table{overflow-x:auto}
+.backup-alert{margin-top:10px;font-size:12px;font-weight:800}
+.syncbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;padding:10px 12px;border:1px solid rgba(159,224,221,.45);border-radius:12px;background:rgba(255,255,255,.08)}
+.syncbar button{min-height:36px}
+.sync-status{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:#fff}
+.sync-status::before{content:"";width:9px;height:9px;border-radius:50%;background:#9FE0DD;box-shadow:0 0 0 3px rgba(159,224,221,.16)}
+.sync-status.saving::before{background:var(--gold)}
+.sync-status.offline::before,.sync-status.error::before{background:var(--coral)}
+.sync-status.conflict::before{background:#FFD166}
+.sync-detail{font-size:11px;color:#CFE0DE}
+.sync-actions{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.sync-actions[hidden]{display:none}
+@media(max-width:580px){.syncbar{align-items:flex-start}.sync-actions{width:100%;margin-left:0}.sync-actions button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Autism Pathways Consulting</div>
+    <h1>APC Content OS <span style="color:#9FE0DD">v2.2 CLOUD SYNC</span></h1>
+    <p>September protocol is frozen for clean testing: choose the next problem, generate content, publish, capture the same 72-hour and 7-day snapshots, then decide whether to replicate, validate, monetise, or stop.</p>
+    <div class="syncbar" role="status" aria-live="polite">
+      <div>
+        <div id="syncStatus" class="sync-status">Checking cloud sync…</div>
+        <div id="syncDetail" class="sync-detail">Local cache is available while the cloud state loads.</div>
+      </div>
+      <div id="syncActions" class="sync-actions" hidden>
+        <button class="secondary small" type="button" onclick="retrySync()">Retry sync</button>
+        <button class="coral small" type="button" onclick="reviewCloudConflict()">Review conflict</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="navrow">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#month">This Month</a>
+    <a href="#topics">Topics</a>
+    <a href="#results">Results</a>
+    <a href="#products">Products</a>
+    <a href="#book">Book</a>
+    <a href="#prompts">Prompt Builder</a>
+    <a href="#reference">Reference</a>
+  </div>
+</nav>
+
+<main>
+
+<section id="dashboard">
+  <div class="card">
+    <h2>1. Daily dashboard</h2>
+    <p class="sub">Open here first. The goal is to reduce decisions and manual work.</p>
+
+    <div class="grid four">
+      <div class="metric"><div class="num" id="postsDone">0</div><b>Posts completed</b><div class="smalltxt">September test</div></div>
+      <div class="metric"><div class="num" id="topicsTested">0</div><b>Problem areas tested</b><div class="smalltxt">Distinct markets</div></div>
+      <div class="metric"><div class="num" id="replicatedCount">0</div><b>Replicated problem areas</b><div class="smalltxt">2+ independent 72h angles</div></div>
+      <div class="metric"><div class="num" id="paidValidated">0</div><b>Paid-validated areas</b><div class="smalltxt">Unique problems with paid workshop proof</div></div>
+    </div>
+
+    <h3>What should I do next?</h3>
+    <div class="callout" id="nextAction">Complete the first September test post, then log its results after enough data has accumulated.</div>
+
+    <h3>Fast workflow</h3>
+    <div class="grid three">
+      <div class="mini"><b>1. Choose</b><br>Use the monthly plan or topic bank. Do not invent a new category every time.</div>
+      <div class="mini"><b>2. Generate</b><br>Use the prompt builder. Create content HTML first, then carousel/YouTube only after approval.</div>
+      <div class="mini"><b>3. Learn</b><br>Log saves, shares, comments, DMs and commercial signals. Let data decide what gets built.</div>
+    </div>
+
+    <h3>September progress</h3>
+    <div class="progress"><div id="monthProgress"></div></div>
+
+    <div class="protocol-lock">
+      <div class="lock-title">🔒 September Test Protocol v2.1 is LOCKED</div>
+      <div class="smalltxt" style="margin-top:6px">
+        Primary comparison = <b>72 hours</b>. Secondary snapshot = <b>7 days</b>. Compare only within the same platform, format and measurement window. Require <b>2 independent angles</b> before explicit product validation. A course still requires a paid workshop test. Do not change these rules during September except for a factual error, software bug, or platform change.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="month">
+  <div class="card">
+    <h2>2. September 2026 test plan</h2>
+    <p class="sub">Change status as you go. Progress is saved in this browser automatically.</p>
+    <div id="calendarGrid" class="grid two"></div>
+  </div>
+</section>
+
+<section id="topics">
+  <div class="card">
+    <h2>3. Topic bank</h2>
+    <p class="sub">Search, filter, then click “Use topic” to load it into the prompt builder.</p>
+    <div class="formrow">
+      <div><label>Search</label><input id="topicSearch" class="search" placeholder="puberty, homework, sleep..."></div>
+      <div><label>Product family</label><select id="familyFilter"><option value="">All</option></select></div>
+      <div><label>Life stage</label><select id="stageFilter"><option value="">All</option></select></div>
+      <div><label>Best use</label><select id="useFilter"><option value="">All</option><option>Reach</option><option>Workshop</option><option>Flagship</option><option>Authority</option><option>Collaboration</option></select></div>
+    </div>
+  </div>
+  <div id="topicGrid" class="grid two"></div>
+</section>
+
+<section id="results">
+  <div class="card">
+    <h2>4. Results log and decision support</h2>
+    <p class="sub">Use the same measurement windows for every post. The OS keeps distribution, problem resonance and commercial intent separate instead of forcing them into one arbitrary score.</p>
+
+    <div class="formrow">
+      <div><label>Post / hook</label><input id="rTopic" placeholder="e.g. Homework takes 20 minutes..."></div>
+      <div><label>Problem area</label><input id="rArea" placeholder="e.g. Task initiation / executive functioning"></div>
+      <div><label>Product family</label><select id="rFamily"></select></div>
+      <div><label>Platform</label><select id="rPlatform"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>YouTube</option></select></div>
+    </div>
+
+    <div class="formrow" style="margin-top:9px">
+      <div><label>Date posted</label><input id="rDate" type="date"></div>
+      <div><label>Measurement snapshot</label><select id="rSnapshot"><option value="72h">72 hours · PRIMARY</option><option value="7d">7 days · SECONDARY</option></select></div>
+      <div><label>Experiment type</label><select id="rExperiment"><option>Discovery post</option><option>Replication post</option><option>Waitlist / interest test</option><option>Paid workshop</option></select></div>
+      <div><label>Post URL / unique ID</label><input id="rPostId" placeholder="Paste URL or stable post ID"></div>
+    </div>
+
+    <div class="formrow" style="margin-top:9px">
+      <div><label>Format</label><select id="rFormat"><option>Carousel</option><option>Photo Mode</option><option>Reel</option><option>Short</option><option>Long-form</option><option>Story</option></select></div>
+      <div><label>Hook type</label><select id="rHookType"><option>Contradiction</option><option>Frustration</option><option>Uncomfortable recognition</option><option>Wait, what?</option><option>Taboo / rarely discussed</option><option>Future fear</option><option>Other</option></select></div>
+      <div><label>Slides / duration</label><input id="rLength" placeholder="6 slides or 42 sec"></div>
+      <div><label>Creative version</label><input id="rVersion" placeholder="A1, B1, EP05-v2..."></div>
+    </div>
+
+    <div class="formrow" style="margin-top:9px">
+      <div><label>Reach / views</label><input id="rReach" type="number" min="0"></div>
+      <div><label>Saves</label><input id="rSaves" type="number" min="0"></div>
+      <div><label>Shares</label><input id="rShares" type="number" min="0"></div>
+      <div><label>Substantive comments / parent stories</label><input id="rComments" type="number" min="0"></div>
+    </div>
+    <div class="formrow" style="margin-top:9px">
+      <div><label>DMs describing problem / asking help</label><input id="rDMs" type="number" min="0"></div>
+      <div><label>Explicit “make more / help me” requests</label><input id="rRequests" type="number" min="0"></div>
+      <div><label>Waitlist / workshop interest</label><input id="rInterest" type="number" min="0"></div>
+      <div><label>Paid registrations</label><input id="rPaid" type="number" min="0"></div>
+    </div>
+
+    <div class="formrow" style="margin-top:9px">
+      <div><label>CTA used</label><input id="rCTA" placeholder="Comment question / Story poll / waitlist"></div>
+      <div style="grid-column:span 3"><label>Parent language / notes</label><textarea id="rNotes" placeholder="Paste recurring words parents used, useful DMs, questions, or context. These are future hooks, modules and book language."></textarea></div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button onclick="saveResult()">Save snapshot</button>
+      <button class="secondary" onclick="clearResultForm()">Clear</button>
+    </div>
+
+    <div id="resultSummary" style="margin-top:18px"></div>
+
+    <h3>How this is interpreted</h3>
+    <div class="grid three">
+      <div class="axis"><b>Distribution</b><br><span class="smalltxt">Save/share rates versus the median of comparable APC posts on the same platform + format + snapshot.</span></div>
+      <div class="axis coral"><b>Problem resonance</b><br><span class="smalltxt">Parent stories, substantive comments and DMs. Sensitive topics may show up privately.</span></div>
+      <div class="axis gold"><b>Commercial intent</b><br><span class="smalltxt">Explicit requests, waitlist/workshop interest and actual paid registrations.</span></div>
+    </div>
+
+    <h3>Saved snapshots</h3>
+    <div id="resultsTable" class="compact-table"></div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="card">
+    <h2>5. Product validation board</h2>
+    <p class="sub">This board groups evidence by specific problem area, not broad product family, and requires replication before product validation.</p>
+    <div id="productBoard" class="grid two"></div>
+  </div>
+</section>
+
+<section id="book">
+  <div class="card">
+    <h2>6. Future book builder</h2>
+    <p class="sub">Save strong post ideas as future chapters. This keeps social content from becoming disposable.</p>
+    <div class="formrow">
+      <div><label>Working chapter title</label><input id="bTitle" placeholder="e.g. The homework takes 20 minutes..."></div>
+      <div><label>Book section</label><select id="bSection"></select></div>
+      <div><label>Life stage</label><select id="bStage"></select></div>
+      <div><label>Product family</label><select id="bFamily"></select></div>
+    </div>
+    <div style="margin-top:9px">
+      <label>Core lesson / notes</label>
+      <textarea id="bNotes" placeholder="What should this chapter eventually teach?"></textarea>
+    </div>
+    <button style="margin-top:9px" onclick="saveBookItem()">Save to book</button>
+
+    <h3>Saved book material</h3>
+    <div id="bookList"></div>
+  </div>
+</section>
+
+<section id="prompts">
+  <div class="card">
+    <h2>7. Prompt builder</h2>
+    <p class="sub">Choose the topic and output. The prompt automatically carries the locked September testing rules so the creative process does not quietly change the experiment.</p>
+
+    <div class="formrow">
+      <div><label>Topic / hook</label><input id="pTopic" placeholder="Select from topic bank or type here"></div>
+      <div><label>Problem area</label><input id="pArea" placeholder="e.g. Task initiation / executive functioning"></div>
+      <div><label>Life stage</label><select id="pStage"></select></div>
+      <div><label>Product family</label><select id="pFamily"></select></div>
+    </div>
+
+    <div class="formrow" style="margin-top:9px">
+      <div><label>Output</label><select id="pOutput"><option value="content">Content development HTML</option><option value="carousel">Complete carousel package</option><option value="youtube">YouTube long-form package</option><option value="validation">Product-validation follow-up</option></select></div>
+      <div><label>Primary goal</label><select id="pGoal"><option>Audience discovery</option><option>Reach/shares</option><option>Course interest</option><option>Workshop validation</option><option>Book development</option></select></div>
+      <div><label>Platform emphasis</label><select id="pPlatform"><option>Instagram + TikTok</option><option>Instagram</option><option>TikTok</option><option>YouTube</option></select></div>
+      <div><label>Use approved wording?</label><select id="pLocked"><option>Yes, do not change core wording</option><option>No, improve wording first</option></select></div>
+    </div>
+
+    <div style="margin-top:9px;max-width:420px"><label>Research freshness</label><select id="pResearch"><option>Use current evidence where needed</option><option>Use existing APC evidence only</option></select></div>
+
+    <button style="margin-top:10px" onclick="buildPrompt()">Build prompt</button>
+    <div id="builtPrompt" class="promptbox" style="display:none"><button class="copybtn small" onclick="copyBuiltPrompt()">Copy</button><pre id="promptText"></pre></div>
+  </div>
+</section>
+
+<section id="reference">
+  <div class="card">
+    <h2>8. Quick reference</h2>
+
+    <details open>
+      <summary>September experiment protocol · DO NOT CHANGE MID-TEST</summary>
+      <div>
+        <ul>
+          <li><b>Primary snapshot:</b> 72 hours after posting.</li>
+          <li><b>Secondary snapshot:</b> 7 days after posting.</li>
+          <li><b>Compare only like with like:</b> same platform, same format, same snapshot window.</li>
+          <li><b>Baseline:</b> rolling median of comparable APC posts. The OS waits for at least 3 comparable prior records before labelling a post above/below baseline.</li>
+          <li><b>Replication:</b> at least 2 independent hooks/angles in the same problem area before moving to explicit product validation.</li>
+          <li><b>Course gate:</b> a paid workshop test must succeed before a full evergreen course is built.</li>
+          <li><b>Allowed mid-month changes:</b> factual correction, software bug, cropping/readability issue, or genuine platform change only.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Locked content formula</summary>
+      <div>
+        <blockquote>Real parent moment → recognition → careful reframe → what to notice → practical next step → useful question.</blockquote>
+        <p>Broaden the problem APC talks about, not the expertise APC claims.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Carousel default</summary>
+      <div>
+        <ol>
+          <li><b>Slide 1:</b> parent moment / stop-scroll hook</li>
+          <li><b>Slide 2:</b> intensify the contradiction</li>
+          <li><b>Slide 3:</b> reframe without overclaiming</li>
+          <li><b>Slide 4:</b> 3–5 possibilities to check</li>
+          <li><b>Slide 5:</b> practical observation/tool</li>
+          <li><b>Slide 6:</b> save/share takeaway</li>
+        </ol>
+        <p><b>IG/FB:</b> 1080 × 1350 (4:5). <b>TikTok:</b> 1080 × 1920 (9:16). Keep large safe margins.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Evidence and safety boundaries</summary>
+      <div>
+        <ul>
+          <li>Do not treat one behaviour as proof of one cause.</li>
+          <li>Do not infer masking solely from school-home differences.</li>
+          <li>Medication stays with prescribers. APC can help parents observe and communicate.</li>
+          <li>Persistent sleep problems, nutritional concerns, pain, constipation, urinary symptoms, developmental regression or mental-health concerns may need professional assessment.</li>
+          <li>Use clinician/allied-health collaboration where the content crosses APC scope.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>When a topic earns a course</summary>
+      <div>
+        <p>Do not build a course until enough gates are passed:</p>
+        <ul>
+          <li>more than one post performs above baseline</li>
+          <li>parents describe the same problem repeatedly</li>
+          <li>parents explicitly ask for structured help</li>
+          <li>poll/waitlist confirms interest</li>
+          <li>paid workshop proves willingness to pay</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="card">
+    <h2>9. Backup and portability</h2>
+    <p class="sub">Cloud state is canonical. This browser keeps a local cache for fast loading and offline work, plus an exportable JSON backup.</p>
+    <p class="smalltxt"><b>Moving from a downloaded v2.1 file or another domain?</b> Browser security keeps that storage separate. Export JSON from the old copy, then import it here once; the imported data will be queued for cloud sync.</p>
+    <div id="backupStatus" class="backup-alert"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="dark" onclick="exportData()">Export APC OS v2.2 backup</button>
+      <label class="btn secondary" style="margin:0;cursor:pointer">Import backup<input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+      <button class="coral" onclick="resetAll()">Reset all synced data</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="sticky-actions">
+  <button onclick="document.getElementById('prompts').scrollIntoView()">Build prompt</button>
+  <button class="secondary" onclick="document.getElementById('results').scrollIntoView()">Log results</button>
+</div>
+
+<script>
+const DATA = {
+  families:[
+    "Understand the Behaviour","Make Communication Easier","Build Independence",
+    "Make School & Learning Work","Growing Up Autistic","Everyday Life","Life After School","Authority / Evidence"
+  ],
+  stages:[
+    "Early development","Preschool","Starting school","Growing independence",
+    "Puberty / early adolescence","Teen years","Preparing to leave school","Young adulthood","Long-term adulthood"
+  ],
+  bookSections:[
+    "Why is this happening?","Why can’t we understand each other?","They know how. Why can’t they do it?",
+    "How much should I help?","School is becoming hard","Ordinary things that aren’t so ordinary",
+    "Their body is changing","Friends, boundaries and relationships","My child isn’t little anymore",
+    "What happens after school?","Everyone tells me something different","What about the future?"
+  ],
+  calendar:[
+    ["2026-09-01","The homework takes 20 minutes. Starting it takes 90.","Make School & Learning Work","Growing independence","Task initiation / executive functioning"],
+    ["2026-09-03","They can tell me everything about Roblox. Then “How was school?” gets “I don’t know.”","Make Communication Easier","Starting school","Communication breakdowns"],
+    ["2026-09-05","I stayed calm. I warned them. I gave extra time. They STILL melted down.","Understand the Behaviour","Starting school","Behaviour, meltdowns & overwhelm"],
+    ["2026-09-08","I know they can dress themselves. But if I wait, we’ll be late. So I do it for them. Again.","Build Independence","Starting school","Independence / prompting"],
+    ["2026-09-10","Teacher: “They were fine today.” Me after the worst evening all week: “Fine?”","Make School & Learning Work","Starting school","School-home gap"],
+    ["2026-09-12","They eat chicken nuggets. Just not THAT chicken nugget.","Everyday Life","Preschool","Selective eating"],
+    ["2026-09-15","They blast YouTube. Then the hand dryer makes them cover their ears.","Everyday Life","Starting school","Sensory contradictions"],
+    ["2026-09-17","My child keeps touching themselves in the living room. Saying STOP isn’t enough.","Growing Up Autistic","Puberty / early adolescence","Puberty / privacy"],
+    ["2026-09-19","They’re exhausted all morning. Then 10pm comes and suddenly they’re wide awake.","Everyday Life","Starting school","Sleep"],
+    ["2026-09-22","“You already asked me that six times.” What if they aren’t actually asking for the answer?","Make Communication Easier","Growing independence","Repetitive questioning / uncertainty"],
+    ["2026-09-24","I corrected ONE small thing. Suddenly it’s: “I’m stupid. I can’t do anything.”","Understand the Behaviour","Growing independence","Emotional development"],
+    ["2026-09-26","At what age should I stop doing all of this for my child?","Build Independence","Teen years","Adolescent independence"],
+    ["2026-09-29","Winner follow-up based on September data","Authority / Evidence","Teen years","Winning problem validation"]
+  ],
+  topics:[
+    {name:"Behaviour, meltdowns & overwhelm",hook:"I stayed calm. I warned them. I gave extra time. They STILL melted down.",family:"Understand the Behaviour",stage:"Starting school",use:"Flagship",keywords:"meltdown behaviour overwhelm regulation escalation"},
+    {name:"Communication breakdowns",hook:"They can talk for 20 minutes about Roblox. Then “How was school?” gets “I don’t know.”",family:"Make Communication Easier",stage:"Starting school",use:"Flagship",keywords:"communication language questions i don't know instructions"},
+    {name:"Task initiation / executive functioning",hook:"The homework takes 20 minutes. Starting it takes 90.",family:"Make School & Learning Work",stage:"Growing independence",use:"Workshop",keywords:"homework executive function starting task initiation"},
+    {name:"Independence / prompting",hook:"I know they can dress themselves. But if I wait, we’ll be late. So I do it for them. Again.",family:"Build Independence",stage:"Starting school",use:"Flagship",keywords:"independence dressing prompting hygiene daily living"},
+    {name:"School-home gap",hook:"Teacher: “They were fine today.” Me after the worst evening all week: “Fine?”",family:"Make School & Learning Work",stage:"Starting school",use:"Workshop",keywords:"school home masking stress crash"},
+    {name:"Routines / transitions",hook:"The iPad turns off. Suddenly the whole evening falls apart.",family:"Everyday Life",stage:"Starting school",use:"Workshop",keywords:"transition routine ipad screen stopping"},
+    {name:"Sensory contradictions",hook:"They blast YouTube. Then the hand dryer makes them cover their ears.",family:"Everyday Life",stage:"Starting school",use:"Reach",keywords:"sensory sound hand dryer noise"},
+    {name:"Selective eating",hook:"They eat chicken nuggets. Just not THAT brand of chicken nuggets.",family:"Everyday Life",stage:"Preschool",use:"Workshop",keywords:"feeding eating food picky selective"},
+    {name:"Sleep",hook:"They’re exhausted all morning. Then 10pm comes and suddenly they’re wide awake.",family:"Everyday Life",stage:"Starting school",use:"Workshop",keywords:"sleep bedtime tired waking"},
+    {name:"Body awareness",hook:"They say they’re not hungry. Ten minutes later they’re STARVING and everything is wrong.",family:"Everyday Life",stage:"Growing independence",use:"Workshop",keywords:"interoception hunger toilet fatigue body"},
+    {name:"Toileting",hook:"They know how to use the toilet. Why do they hold it the entire school day?",family:"Everyday Life",stage:"Preschool",use:"Collaboration",keywords:"toilet toileting diaper constipation"},
+    {name:"Puberty / privacy",hook:"My child keeps touching themselves in the living room. Saying STOP isn’t enough.",family:"Growing Up Autistic",stage:"Puberty / early adolescence",use:"Flagship",keywords:"puberty privacy masturbation touching"},
+    {name:"Consent / boundaries",hook:"We keep saying “That’s private.” But what exactly does PRIVATE mean?",family:"Growing Up Autistic",stage:"Puberty / early adolescence",use:"Flagship",keywords:"consent boundaries private body sexuality"},
+    {name:"Friendship",hook:"They have classmates. Does that mean they actually have friends?",family:"Growing Up Autistic",stage:"Growing independence",use:"Workshop",keywords:"friend friendship social peer"},
+    {name:"Emotional development",hook:"I corrected one tiny thing. Suddenly it’s: “I’m stupid. I can’t do anything.”",family:"Understand the Behaviour",stage:"Growing independence",use:"Workshop",keywords:"emotion correction confidence perfectionism"},
+    {name:"Medication literacy",hook:"My child started medication. Everyone asks, “Is it working?” What exactly am I supposed to watch?",family:"Authority / Evidence",stage:"Starting school",use:"Collaboration",keywords:"medication medicine clinician appetite sleep"},
+    {name:"Diet myths",hook:"Should I remove gluten because my child is autistic?",family:"Authority / Evidence",stage:"Starting school",use:"Authority",keywords:"diet gluten sugar supplements dairy evidence"},
+    {name:"Early development",hook:"Everyone keeps saying, “They’ll talk when they’re ready.” When should you actually ask for help?",family:"Make Communication Easier",stage:"Early development",use:"Workshop",keywords:"development speech milestones toddler"},
+    {name:"Motor / coordination",hook:"They know exactly what to write. Their hand can’t keep up.",family:"Make School & Learning Work",stage:"Starting school",use:"Collaboration",keywords:"motor handwriting coordination OT"},
+    {name:"Adolescence",hook:"At what age should I stop reminding them about everything?",family:"Build Independence",stage:"Teen years",use:"Flagship",keywords:"teen adolescence reminders independence"},
+    {name:"Leaving school",hook:"School gave them a timetable for years. Then adulthood says: organise your own life.",family:"Life After School",stage:"Preparing to leave school",use:"Flagship",keywords:"adult transition school work university"},
+    {name:"Future planning",hook:"The question parents hate thinking about: Who helps my child when I can’t?",family:"Life After School",stage:"Long-term adulthood",use:"Collaboration",keywords:"future ageing parents siblings housing"},
+    {name:"Autism myths",hook:"They talk, so communication isn’t a problem.",family:"Authority / Evidence",stage:"Starting school",use:"Reach",keywords:"myths eye contact empathy attention"}
+  ]
+};
+
+const storeKey="apcContentOSv21";
+const oldStoreKey="apcContentOSv2";
+const syncMetaKey="apcContentOSv22CloudMeta";
+const recoveryKey="apcContentOSv21Recovery";
+const protocolVersion="2.2 CLOUD SYNC · September protocol 2.1 FINAL TEST LOCK";
+const schemaVersion="2.1";
+const stateEndpoint=new URL("/api/content-os/state",window.location.origin).href;
+const hadLocalState=(()=>{try{return Boolean(localStorage.getItem(storeKey)||localStorage.getItem(oldStoreKey))}catch(e){return false}})();
+
+function defaultState(){
+  return {version:"2.1",calendar:{},results:[],products:{},book:[],lastBackupAt:null,lastBackupResultCount:0,updatedAt:null};
+}
+function migrateState(raw){
+  const base=defaultState();
+  if(!raw)return base;
+  const x=Object.assign(base,raw);
+  x.version="2.1";
+  x.calendar=x.calendar||{};x.results=x.results||[];x.book=x.book||[];
+  x.results=x.results.map(r=>Object.assign({
+    area:r.area||r.topic||"Unclassified problem",snapshot:r.snapshot||"72h",experiment:r.experiment||"Discovery post",
+    postId:r.postId||"",format:r.format||((r.platform==="TikTok")?"Photo Mode":"Carousel"),hookType:r.hookType||"Other",
+    length:r.length||"",version:r.version||"legacy",cta:r.cta||""
+  },r));
+  return x;
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(storeKey) || localStorage.getItem(oldStoreKey);
+    return migrateState(raw?JSON.parse(raw):null);
+  }catch(e){return defaultState()}
+}
+let state=loadState();
+let syncMeta=loadSyncMeta();
+let pendingCloudRecord=null;
+let saveTimer=null;
+let syncInFlight=false;
+
+function loadSyncMeta(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(syncMetaKey)||"null");
+    return Object.assign({revision:0,cloudUpdatedAt:null,dirty:false,cloudInitialized:false,lastError:null},raw||{});
+  }catch(e){return {revision:0,cloudUpdatedAt:null,dirty:false,cloudInitialized:false,lastError:null}}
+}
+function persistSyncMeta(){try{localStorage.setItem(syncMetaKey,JSON.stringify(syncMeta))}catch(e){}}
+function hasMeaningfulState(value=state){
+  return Boolean(Object.keys(value.calendar||{}).length||(value.results||[]).length||(value.book||[]).length||Object.keys(value.products||{}).length);
+}
+function saveRecoveryCopy(reason){
+  try{localStorage.setItem(recoveryKey,JSON.stringify({savedAt:new Date().toISOString(),reason,state,syncMeta}))}catch(e){}
+}
+function setSyncStatus(label,kind="",detail="",showActions=false){
+  const status=document.getElementById("syncStatus"),info=document.getElementById("syncDetail"),actions=document.getElementById("syncActions");
+  if(!status)return;
+  status.textContent=label;status.className=`sync-status ${kind}`.trim();
+  info.textContent=detail;actions.hidden=!showActions;
+}
+
+function idbSave(payload){
+  try{
+    const req=indexedDB.open("APCContentOS",1);
+    req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains("state"))db.createObjectStore("state")};
+    req.onsuccess=()=>{const db=req.result;const tx=db.transaction("state","readwrite");tx.objectStore("state").put(payload,"main")};
+  }catch(e){}
+}
+function idbRecoverIfNeeded(){
+  return new Promise(resolve=>{
+    try{if(localStorage.getItem(storeKey)||localStorage.getItem(oldStoreKey)){resolve();return}}catch(e){}
+    try{
+      const req=indexedDB.open("APCContentOS",1);
+      req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains("state"))db.createObjectStore("state")};
+      req.onerror=()=>resolve();
+      req.onsuccess=()=>{
+        const db=req.result;const tx=db.transaction("state","readonly");const get=tx.objectStore("state").get("main");
+        get.onerror=()=>resolve();
+        get.onsuccess=()=>{if(get.result){state=migrateState(get.result);persistState(true);renderAll()}resolve()};
+      };
+    }catch(e){resolve()}
+  });
+}
+function persistState(markDirty=true){
+  if(markDirty){state.updatedAt=new Date().toISOString();syncMeta.dirty=true;syncMeta.lastError=null;persistSyncMeta()}
+  try{localStorage.setItem(storeKey,JSON.stringify(state));}catch(e){}
+  idbSave(state);
+  if(markDirty)scheduleCloudSave();
+}
+function saveState(){persistState(true);refreshDashboard()}
+
+function scheduleCloudSave(delay=1250){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(pushStateToCloud,delay);
+  if(navigator.onLine)setSyncStatus("Saving…","saving","Changes are safe in this browser and queued for cloud sync.");
+  else setSyncStatus("Offline / not yet synced","offline","Changes are cached here and will retry when this device is online.");
+}
+async function apiRequest(options={}){
+  const response=await fetch(stateEndpoint,Object.assign({cache:"no-store",headers:{"X-APC-Content-OS":"1"}},options));
+  let body=null;try{body=await response.json()}catch(e){}
+  if(response.status===401)throw new Error("Authentication is required for APC Content OS.");
+  return {response,body};
+}
+function acceptCloudRecord(record){
+  state=migrateState(record.state);
+  syncMeta=Object.assign(syncMeta,{revision:record.revision,cloudUpdatedAt:record.updatedAt,dirty:false,cloudInitialized:true,lastError:null});
+  persistSyncMeta();persistState(false);pendingCloudRecord=null;renderAll();
+  setSyncStatus("Synced","",`Cloud revision ${record.revision} · ${new Date(record.updatedAt).toLocaleString()}`);
+}
+function showConflict(record){
+  saveRecoveryCopy("Cloud conflict");pendingCloudRecord=record;
+  syncMeta.lastError="conflict";persistSyncMeta();
+  setSyncStatus("Conflict detected","conflict",`Cloud revision ${record.revision} changed since this device last synced. Your local version has not been overwritten.`,true);
+}
+async function syncFromCloud(){
+  if(!navigator.onLine){setSyncStatus("Offline / not yet synced","offline","Using this device's local cache. Sync will retry automatically.");return}
+  if(syncInFlight)return;
+  syncInFlight=true;setSyncStatus("Checking cloud…","saving","Comparing this device with the canonical cloud copy.");
+  try{
+    const {response,body}=await apiRequest();
+    if(!response.ok)throw new Error(body?.error||`Cloud request failed (${response.status}).`);
+    const record=body;
+    if(record.state){
+      const firstCloudLink=!syncMeta.cloudInitialized&&hadLocalState&&hasMeaningfulState();
+      if((syncMeta.dirty&&record.revision!==syncMeta.revision)||firstCloudLink){showConflict(record);return}
+      if(syncMeta.dirty){syncMeta.cloudInitialized=true;persistSyncMeta();scheduleCloudSave(50);return}
+      acceptCloudRecord(record);return;
+    }
+    syncMeta.cloudInitialized=true;syncMeta.revision=record.revision||0;persistSyncMeta();
+    syncMeta.dirty=true;persistSyncMeta();saveRecoveryCopy("One-time migration to cloud");scheduleCloudSave(50);
+  }catch(error){
+    syncMeta.lastError=String(error.message||error);persistSyncMeta();
+    setSyncStatus("Sync error","error",`${syncMeta.lastError} Local data remains available.`,true);
+  }finally{syncInFlight=false}
+}
+async function pushStateToCloud(){
+  if(!syncMeta.dirty||syncInFlight)return;
+  if(!navigator.onLine){setSyncStatus("Offline / not yet synced","offline","Changes are cached here and will retry automatically.");return}
+  syncInFlight=true;setSyncStatus("Saving…","saving","Writing the latest local changes to the canonical cloud copy.");
+  const snapshot=JSON.stringify(state),expectedRevision=syncMeta.revision;
+  try{
+    const {response,body}=await apiRequest({method:"PUT",headers:{"Content-Type":"application/json","X-APC-Content-OS":"1"},body:JSON.stringify({expectedRevision,state})});
+    if(response.status===409){showConflict(body);return}
+    if(!response.ok)throw new Error(body?.error||`Cloud save failed (${response.status}).`);
+    const unchanged=JSON.stringify(state)===snapshot;
+    syncMeta=Object.assign(syncMeta,{revision:body.revision,cloudUpdatedAt:body.updatedAt,dirty:!unchanged,cloudInitialized:true,lastError:null});
+    persistSyncMeta();
+    if(unchanged)setSyncStatus("Synced","",`Cloud revision ${body.revision} · ${new Date(body.updatedAt).toLocaleString()}`);
+    else scheduleCloudSave();
+  }catch(error){
+    syncMeta.lastError=String(error.message||error);persistSyncMeta();
+    setSyncStatus("Sync error","error",`${syncMeta.lastError} Changes remain cached locally.`,true);
+  }finally{syncInFlight=false}
+}
+function retrySync(){pendingCloudRecord=null;syncFromCloud()}
+function reviewCloudConflict(){
+  if(!pendingCloudRecord){syncFromCloud();return}
+  if(!confirm("Load the cloud version on this device? A recovery copy of your current local data is already saved in this browser."))return;
+  acceptCloudRecord(pendingCloudRecord);
+}
+function initializeCloudSync(){
+  window.addEventListener("online",()=>syncFromCloud());
+  window.addEventListener("offline",()=>setSyncStatus("Offline / not yet synced","offline","Using this device's local cache. Sync will retry automatically."));
+  syncFromCloud();
+}
+
+function el(id){return document.getElementById(id)}
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]))}
+function optFill(id,arr,includeBlank=false){
+  const node=el(id); if(!node)return; const current=node.value;
+  node.innerHTML=includeBlank?'<option value="">All</option>':'';
+  arr.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;node.appendChild(o)});
+  if(current&&arr.includes(current))node.value=current;
+}
+["familyFilter"].forEach(id=>optFill(id,DATA.families,true));
+["stageFilter"].forEach(id=>optFill(id,DATA.stages,true));
+["rFamily","pFamily","bFamily"].forEach(id=>optFill(id,DATA.families,false));
+["pStage","bStage"].forEach(id=>optFill(id,DATA.stages,false));
+optFill("bSection",DATA.bookSections,false);
+
+function renderCalendar(){
+  const grid=el("calendarGrid");grid.innerHTML="";
+  DATA.calendar.forEach(row=>{
+    const [date,hook,family,stage,area]=row;
+    const st=state.calendar[date]||{status:"idea"};
+    const div=document.createElement("div");div.className="calendar-card";
+    const safeHook=JSON.stringify(hook),safeStage=JSON.stringify(stage),safeFamily=JSON.stringify(family),safeArea=JSON.stringify(area),safeDate=JSON.stringify(date);
+    div.innerHTML=`<div class="meta">${date} · ${stage}</div><div class="hook">${hook}</div>
+      <div><span class="pill">${family}</span> <span class="pill gold">${area}</span> <span class="status ${st.status}">${st.status.toUpperCase()}</span></div>
+      <div class="actions"><select data-date="${date}" class="calstatus" style="width:auto">
+      ${["idea","ready","posted","replicate","validated","stop"].map(s=>`<option ${st.status===s?"selected":""}>${s}</option>`).join("")}</select>
+      <button class="small" onclick='useTopic(${safeHook},${safeStage},${safeFamily},${safeArea})'>Use topic</button>
+      <button class="small secondary" onclick='logTopic(${safeHook},${safeArea},${safeFamily},${safeDate})'>Log result</button></div>`;
+    grid.appendChild(div);
+  });
+  document.querySelectorAll(".calstatus").forEach(node=>node.onchange=()=>{state.calendar[node.dataset.date]={status:node.value};saveState();renderCalendar()});
+}
+
+function renderTopics(){
+  const q=(el("topicSearch").value||"").toLowerCase();const fam=el("familyFilter").value;const stage=el("stageFilter").value;const use=el("useFilter").value;
+  const grid=el("topicGrid");grid.innerHTML="";
+  DATA.topics.filter(t=>{const hay=(t.name+" "+t.hook+" "+t.keywords+" "+t.family+" "+t.stage).toLowerCase();return(!q||hay.includes(q))&&(!fam||t.family===fam)&&(!stage||t.stage===stage)&&(!use||t.use===use)}).forEach(t=>{
+    const div=document.createElement("div");div.className="topic";
+    const h=JSON.stringify(t.hook),st=JSON.stringify(t.stage),f=JSON.stringify(t.family),a=JSON.stringify(t.name);
+    div.innerHTML=`<h3>${t.name}</h3><blockquote>${t.hook}</blockquote><div><span class="pill">${t.family}</span><span class="pill gold">${t.stage}</span><span class="pill coral">${t.use}</span></div>
+      <div class="topic-actions"><button class="small" onclick='useTopic(${h},${st},${f},${a})'>Use topic</button><button class="small secondary" onclick='logTopic(${h},${a},${f},"")'>Log result</button><button class="small secondary" onclick='sendToBook(${a},${st},${f},${h})'>Save to book</button></div>`;
+    grid.appendChild(div);
+  });
+}
+["topicSearch","familyFilter","stageFilter","useFilter"].forEach(id=>el(id).addEventListener("input",renderTopics));
+
+function useTopic(hook,stage,family,area){
+  el("pTopic").value=hook;el("pArea").value=area||"";el("pStage").value=stage;el("pFamily").value=family;el("prompts").scrollIntoView();
+}
+function logTopic(hook,area,family,date){
+  el("rTopic").value=hook;el("rArea").value=area||"";el("rFamily").value=family;if(date)el("rDate").value=date;el("results").scrollIntoView();
+}
+
+function median(arr){if(!arr.length)return null;const a=[...arr].sort((x,y)=>x-y);const m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2}
+function rate(v,reach){return reach>0?(v/reach*1000):0}
+function fmt(n,d=1){return Number.isFinite(n)?n.toFixed(d):"–"}
+function comparableRecords(r,excludeId=true){
+  return state.results.filter(x=>{
+    const earlier=(x.date&&r.date)?(x.date<r.date || (x.date===r.date&&x.id<r.id)):(x.id<r.id);
+    return (!excludeId||x.id!==r.id)&&earlier&&x.platform===r.platform&&x.format===r.format&&x.snapshot===r.snapshot&&(+x.reach||0)>0;
+  });
+}
+function baselineFor(r){
+  const comp=comparableRecords(r,true);if(comp.length<3)return {ready:false,n:comp.length};
+  return {ready:true,n:comp.length,
+    saveRate:median(comp.map(x=>rate(+x.saves||0,+x.reach||0))),shareRate:median(comp.map(x=>rate(+x.shares||0,+x.reach||0))),
+    commentRate:median(comp.map(x=>rate(+x.comments||0,+x.reach||0))),dmRate:median(comp.map(x=>rate(+x.dms||0,+x.reach||0))),
+    reach:median(comp.map(x=>+x.reach||0))};
+}
+function distributionSummary(r){
+  const b=baselineFor(r);const sr=rate(r.saves,r.reach),shr=rate(r.shares,r.reach);
+  if(!b.ready)return {label:`Baseline building (${b.n}/3 prior comparable posts)`,detail:`Save ${fmt(sr)}/1k · Share ${fmt(shr)}/1k`,kind:"wait"};
+  const s=sr>b.saveRate,sh=shr>b.shareRate;let label=s&&sh?"Above comparable median on saves + shares":(s||sh?"Mixed versus comparable median":"Below comparable median on saves + shares");
+  const caution=(+r.reach||0)<b.reach*.5?" · CAUTION: reach is <50% of comparable median; rates are less stable.":"";
+  return {label,detail:`Save ${fmt(sr)}/1k vs ${fmt(b.saveRate)} · Share ${fmt(shr)}/1k vs ${fmt(b.shareRate)}${caution}`,kind:s&&sh?"pass":(s||sh?"wait":"stop")};
+}
+function resonanceSummary(r){
+  return {label:`${+r.comments||0} substantive comments · ${+r.dms||0} DMs`,detail:`Comment ${fmt(rate(r.comments,r.reach))}/1k · DM ${fmt(rate(r.dms,r.reach))}/1k`};
+}
+function intentSummary(r){
+  if(r.experiment==="Paid workshop"&&(+r.paid||0)>0)return {label:`PAID PROOF: ${r.paid} registration(s)`,kind:"pass"};
+  if((+r.interest||0)>0)return {label:`Explicit interest: ${r.interest} waitlist/workshop signal(s)`,kind:"pass"};
+  if((+r.requests||0)>0)return {label:`Explicit requests: ${r.requests}`,kind:"wait"};
+  return {label:"No explicit commercial intent captured yet",kind:"wait"};
+}
+function primaryAreaRecords(area,platform=null){
+  return state.results.filter(r=>r.area===area&&r.snapshot==="72h"&&["Discovery post","Replication post"].includes(r.experiment)&&(!platform||r.platform===platform));
+}
+function independentAngles(records){
+  return new Set(records.map(r=>(r.topic||"").trim()).filter(Boolean)).size;
+}
+function areaGate(area){
+  const rs=state.results.filter(r=>r.area===area);const primary=primaryAreaRecords(area);const angles=independentAngles(primary);
+  const explicit=rs.reduce((a,r)=>a+(+r.dms||0)+(+r.requests||0)+(+r.interest||0),0);
+  const interestTests=rs.filter(r=>r.experiment==="Waitlist / interest test"&&(+r.interest||0)>0).length;
+  const paidTests=rs.filter(r=>r.experiment==="Paid workshop"&&(+r.paid||0)>0);
+  if(paidTests.length)return {stage:"PAID VALIDATED",action:"Improve the workshop/product using feedback. Only now consider evergreen expansion.",angles,explicit,paid:paidTests.reduce((a,r)=>a+(+r.paid||0),0)};
+  if(interestTests)return {stage:"READY FOR PAID WORKSHOP",action:"Run a paid 60–90 minute workshop before building a course.",angles,explicit,paid:0};
+  if(angles>=2&&explicit>0)return {stage:"READY FOR INTEREST TEST",action:"Run a Story poll / waitlist using the exact parent problem before any course build.",angles,explicit,paid:0};
+  if(angles>=2)return {stage:"REPLICATION COMPLETE",action:"Review distribution/resonance, then run explicit interest validation only if the problem is genuinely resonating.",angles,explicit,paid:0};
+  if(angles===1)return {stage:"NEEDS SECOND ANGLE",action:"Test one independent hook/angle in the same problem area under the same measurement protocol.",angles,explicit,paid:0};
+  return {stage:"DISCOVERY",action:"Publish the first clean test for this problem area.",angles,explicit,paid:0};
+}
+function postDecision(r){
+  if(r.experiment==="Paid workshop")return (+r.paid||0)>0?"Paid workshop proof captured. Improve before scaling.":"No paid proof yet. Do not build a course.";
+  if(r.experiment==="Waitlist / interest test")return (+r.interest||0)>0?"Interest signal captured. Next gate is a paid workshop.":"Interest not yet demonstrated. Reframe or stop before building.";
+  const gate=areaGate(r.area);return gate.action;
+}
+
+function saveResult(){
+  const r={id:Date.now(),topic:el("rTopic").value.trim(),area:el("rArea").value.trim(),family:el("rFamily").value,platform:el("rPlatform").value,date:el("rDate").value,
+    snapshot:el("rSnapshot").value,experiment:el("rExperiment").value,postId:el("rPostId").value.trim(),format:el("rFormat").value,hookType:el("rHookType").value,
+    length:el("rLength").value.trim(),version:el("rVersion").value.trim(),reach:+el("rReach").value||0,saves:+el("rSaves").value||0,shares:+el("rShares").value||0,
+    comments:+el("rComments").value||0,dms:+el("rDMs").value||0,requests:+el("rRequests").value||0,interest:+el("rInterest").value||0,paid:+el("rPaid").value||0,
+    cta:el("rCTA").value.trim(),notes:el("rNotes").value.trim()};
+  if(!r.topic||!r.area){alert("Add both the post/hook and the problem area.");return}
+  if(!r.postId){if(!confirm("No post URL/ID entered. Save anyway? Traceability will be weaker."))return}
+  if(r.postId&&state.results.some(x=>x.postId===r.postId&&x.platform===r.platform&&x.snapshot===r.snapshot)){alert("A snapshot for this post, platform and measurement window already exists. Use a different snapshot or delete the duplicate first.");return}
+  state.results.push(r);saveState();renderResults();clearResultForm();
+}
+function clearResultForm(){
+  ["rTopic","rArea","rDate","rPostId","rLength","rVersion","rReach","rSaves","rShares","rComments","rDMs","rRequests","rInterest","rPaid","rCTA","rNotes"].forEach(id=>{if(el(id))el(id).value=""});
+  el("rSnapshot").value="72h";el("rExperiment").value="Discovery post";
+}
+function deleteResult(id){state.results=state.results.filter(r=>r.id!==id);saveState();renderResults()}
+function renderResults(){
+  const wrap=el("resultsTable");
+  if(!state.results.length){wrap.innerHTML='<div class="smalltxt">No snapshots logged yet. Start with the first 72-hour snapshot.</div>';el("resultSummary").innerHTML="";return}
+  wrap.innerHTML=`<table><tr><th>Post / area</th><th>Snapshot</th><th>Distribution</th><th>Resonance</th><th>Commercial</th><th>Next gate</th><th></th></tr>${[...state.results].reverse().map(r=>{
+    const dist=distributionSummary(r),res=resonanceSummary(r),intent=intentSummary(r),id=Number.isSafeInteger(Number(r.id))?Number(r.id):0;
+    const postId=String(r.postId||""),linked=/^https?:\/\//i.test(postId);
+    return `<tr><td><b>${escapeHtml(r.topic)}</b><br><span class="smalltxt">${escapeHtml(r.area)} · ${escapeHtml(r.platform)} · ${escapeHtml(r.format)} · ${escapeHtml(r.experiment)}<br>${postId?`<a href="${linked?escapeHtml(postId):'#'}" ${linked?'target="_blank" rel="noopener noreferrer"':''}>${escapeHtml(postId)}</a>`:'No post ID'}</span></td><td><b>${escapeHtml(r.snapshot)}</b><br><span class="smalltxt">${escapeHtml(r.date||'')}<br>${escapeHtml(r.hookType)} · ${escapeHtml(r.version||'no version')}</span></td><td><b>${escapeHtml(dist.label)}</b><br><span class="smalltxt">${escapeHtml(dist.detail)}</span></td><td><b>${escapeHtml(res.label)}</b><br><span class="smalltxt">${escapeHtml(res.detail)}</span></td><td>${escapeHtml(intent.label)}</td><td>${escapeHtml(postDecision(r))}</td><td><button class="small coral" onclick="deleteResult(${id})">Delete</button></td></tr>`}).join("")}</table>`;
+  const last=state.results[state.results.length-1],dist=distributionSummary(last),res=resonanceSummary(last),intent=intentSummary(last),gate=areaGate(last.area);
+  el("resultSummary").innerHTML=`<div class="success"><b>Latest snapshot: ${escapeHtml(last.area)}</b><div class="gate ${dist.kind}"><span class="dot"></span><div><b>Distribution:</b> ${escapeHtml(dist.label)}<br><span class="smalltxt">${escapeHtml(dist.detail)}</span></div></div><div class="gate"><span class="dot"></span><div><b>Resonance:</b> ${escapeHtml(res.label)}</div></div><div class="gate ${intent.kind}"><span class="dot"></span><div><b>Commercial:</b> ${escapeHtml(intent.label)}</div></div><div class="gate ${gate.stage.includes('PAID')?'pass':'wait'}"><span class="dot"></span><div><b>Problem-area gate:</b> ${escapeHtml(gate.stage)}<br>${escapeHtml(gate.action)}</div></div></div>`;
+}
+
+function renderProducts(){
+  const board=el("productBoard");board.innerHTML="";
+  const areas=[...new Set(state.results.map(r=>r.area).filter(Boolean))];
+  if(!areas.length){board.innerHTML='<div class="smalltxt">No problem-area evidence yet. Product decisions will appear after results are logged.</div>';return}
+  areas.sort().forEach(area=>{
+    const rs=state.results.filter(r=>r.area===area);const g=areaGate(area);const family=rs[0]?.family||"";
+    const platforms=[...new Set(rs.map(r=>r.platform))].join(", ");
+    const div=document.createElement("div");div.className="mini";
+    div.innerHTML=`<h3>${escapeHtml(area)}</h3><div><span class="pill">${escapeHtml(family)}</span><span class="pill gold">${escapeHtml(g.stage)}</span></div><p><b>Primary independent angles:</b> ${g.angles}</p><p><b>Explicit pain/intent signals:</b> ${g.explicit}</p><p><b>Paid registrations from workshop tests:</b> ${g.paid}</p><p><b>Platforms logged:</b> ${escapeHtml(platforms)}</p><div class="callout"><strong>Next:</strong> ${escapeHtml(g.action)}</div>`;
+    board.appendChild(div);
+  });
+}
+
+function saveBookItem(){state.book.push({id:Date.now(),title:el("bTitle").value,section:el("bSection").value,stage:el("bStage").value,family:el("bFamily").value,notes:el("bNotes").value});el("bTitle").value="";el("bNotes").value="";saveState();renderBook()}
+function sendToBook(title,stage,family,notes){el("bTitle").value=title;el("bStage").value=stage;el("bFamily").value=family;el("bNotes").value=notes;el("book").scrollIntoView()}
+function deleteBook(id){state.book=state.book.filter(x=>x.id!==id);saveState();renderBook()}
+function renderBook(){const node=el("bookList");if(!state.book.length){node.innerHTML='<div class="smalltxt">No book items saved yet.</div>';return}node.innerHTML=state.book.map(x=>{const id=Number.isSafeInteger(Number(x.id))?Number(x.id):0;return `<div class="mini" style="margin-bottom:8px"><b>${escapeHtml(x.title)}</b><br><span class="pill">${escapeHtml(x.section)}</span><span class="pill gold">${escapeHtml(x.stage)}</span><p>${escapeHtml(x.notes||"")}</p><button class="small coral" onclick="deleteBook(${id})">Delete</button></div>`}).join("")}
+
+function buildPrompt(){
+  const topic=el("pTopic").value.trim();if(!topic){alert("Choose or type a topic first.");return}
+  const area=el("pArea").value.trim()||"Unclassified problem",stage=el("pStage").value,family=el("pFamily").value,output=el("pOutput").value,goal=el("pGoal").value,platform=el("pPlatform").value,locked=el("pLocked").value,research=el("pResearch").value;
+  const protocol=`\nSEPTEMBER TEST PROTOCOL · LOCKED\n- Primary analytics snapshot: 72 hours. Secondary: 7 days.\n- Keep platform, format and measurement window separate when comparing performance.\n- Do not declare a product winner from one post. Require a second independent angle in the same problem area.\n- Do not build an evergreen course until explicit interest is tested and a paid workshop demonstrates willingness to pay.\n- Do not change taxonomy, measurement rules or winner criteria mid-month except for factual errors, bugs or platform changes.\n`;
+  let text="";
+  if(output==="content")text=`CREATE THE FINAL APC CONTENT DEVELOPMENT HTML.\n\nTOPIC / HOOK:\n${topic}\n\nPROBLEM AREA:\n${area}\n\nLIFE STAGE:\n${stage}\n\nPRODUCT FAMILY:\n${family}\n\nPRIMARY GOAL:\n${goal}\n\nPLATFORM EMPHASIS:\n${platform}\n\nWORDING:\n${locked}\n\nRESEARCH:\n${research}\n${protocol}\nOBJECTIVE\nDevelop this into the strongest publishable APC concept. It must sound like a real parent moment, not an autism textbook.\n\nREQUIREMENTS\n- Create and audit multiple hook options only if wording is not locked.\n- Keep one clear teaching mechanism.\n- Separate observation from interpretation.\n- Use autism-specific nuance without assuming one cause.\n- Give one practical thing to notice or try.\n- Add one comment or Story question that produces useful product research.\n- Identify workshop/course/book opportunity and any clinician/allied-health boundary.\n- Fact-check material claims.\n- Do not use em dashes.\n- Do not return a rough draft.\n\nOUTPUT\nOne polished mobile-friendly HTML containing final hook, content, caption, evidence boundaries, CTA, product hypothesis, book classification, sources, production notes and QA checklist.`;
+  else if(output==="carousel")text=`CREATE THE COMPLETE READY-TO-POST APC CAROUSEL PACKAGE.\n\nAPPROVED TOPIC / HOOK:\n${topic}\n\nPROBLEM AREA:\n${area}\n\nLIFE STAGE:\n${stage}\n\nPRODUCT FAMILY:\n${family}\n\nGOAL:\n${goal}\n\nWORDING:\n${locked}\n${protocol}\nOBJECTIVE\nCreate a relatable, shareable and saveable APC carousel with no manual design work required. Preserve the approved APC visual system so topic performance is not confounded by unnecessary template changes.\n\nDEFAULT 6-SLIDE STRUCTURE\n1. Parent moment / stop-scroll hook\n2. Intensify contradiction\n3. Careful reframe\n4. 3–5 possibilities to check\n5. Practical observation/tool\n6. Save/share takeaway\n\nEXPORT\n- Instagram/Facebook: 1080×1350, 4:5\n- TikTok Photo Mode: 1080×1920, 9:16\n- Large internal safe margins\n- Conventional rendering only; no generative AI imagery in final publishing assets\n\nPACKAGE\nIG/FB slides + caption + preview; TikTok slides + caption + preview; sources_and_notes.txt; manifest recording problem area, hook type, slide count and creative version; ZIP.\n\nQA\nNo cropped text, frame overflow, spelling errors, unsupported causal claims or locked-wording changes. Inspect at phone scale before return.`;
+  else if(output==="youtube")text=`CREATE THE FINAL APC YOUTUBE LONG-FORM PACKAGE.\n\nTOPIC:\n${topic}\n\nPROBLEM AREA:\n${area}\n\nLIFE STAGE:\n${stage}\n\nPRODUCT FAMILY:\n${family}\n\nGOAL:\n${goal}\n${protocol}\nTARGET\n8–15 minutes, natural spoken language, evidence-informed, useful to autistic families and understandable to the general public.\n\nSTRUCTURE\nCold open with real parent problem; real-life examples; common assumption; 3–5 possible mechanisms; what to notice; what to try; when to get help; final reframe; natural CTA/research question.\n\nPACKAGE\n10 titles, 5 thumbnail concepts, final script, chapters, B-roll/visual list, evidence notes, description, pinned comment, 3 short-form hooks, 1 carousel concept, 3 Shorts ideas, 1 Story poll, book angle, workshop/course opportunity and QA. Do not use em dashes. Do not return only an outline.`;
+  else text=`RUN AN APC PRODUCT-VALIDATION FOLLOW-UP.\n\nTOPIC:\n${topic}\n\nPROBLEM AREA:\n${area}\n\nLIFE STAGE:\n${stage}\n\nPRODUCT FAMILY:\n${family}\n${protocol}\nOBJECTIVE\nDetermine whether this problem is ready for a second angle, explicit interest test, paid workshop, evergreen build, or stop/reframe.\n\nREQUIREMENTS\n- Use 72h primary and 7d secondary snapshots only.\n- Separate distribution, resonance and commercial intent.\n- Require two independent angles before explicit validation.\n- Create one follow-up post and one Story/waitlist test.\n- Define the exact evidence needed before a paid workshop and before a course.\n- Recommend: REPLICATE / INTEREST TEST / PAID WORKSHOP / BUILD AFTER PAID PROOF / STOP.\n- Do not exaggerate demand.`;
+  el("promptText").textContent=text;el("builtPrompt").style.display="block";
+}
+function copyBuiltPrompt(){navigator.clipboard.writeText(el("promptText").textContent)}
+
+function refreshDashboard(){
+  const statuses=Object.values(state.calendar);const done=statuses.filter(x=>["posted","replicate","validated","stop"].includes(x.status)).length;
+  const primary=state.results.filter(r=>r.snapshot==="72h"&&["Discovery post","Replication post"].includes(r.experiment));
+  const areas=[...new Set(primary.map(r=>r.area).filter(Boolean))];const replicated=areas.filter(a=>independentAngles(primary.filter(r=>r.area===a))>=2);
+  const paidAreas=[...new Set(state.results.filter(r=>r.experiment==="Paid workshop"&&(+r.paid||0)>0).map(r=>r.area))];
+  el("postsDone").textContent=done;el("topicsTested").textContent=areas.length;el("replicatedCount").textContent=replicated.length;el("paidValidated").textContent=paidAreas.length;
+  el("monthProgress").style.width=Math.min(100,Math.round(done/DATA.calendar.length*100))+"%";
+  let action="Complete the next scheduled test post. Capture its PRIMARY 72-hour snapshot before drawing conclusions.";
+  if(paidAreas.length)action="Paid validation exists. Improve the validated workshop/product before expanding into an evergreen course.";
+  else {
+    const gates=areas.map(area=>({area,...areaGate(area)}));
+    if(gates.some(g=>g.stage==="READY FOR PAID WORKSHOP"))action="An interest test has passed. Run the paid workshop next. Do not build the full course yet.";
+    else if(gates.some(g=>g.stage==="READY FOR INTEREST TEST"))action="A replicated problem area has explicit pain/intent. Run a Story poll, waitlist or interest test next.";
+    else if(gates.some(g=>g.stage==="NEEDS SECOND ANGLE"))action="A problem area has one clean primary test. Run a second independent angle before product validation.";
+  }
+  el("nextAction").textContent=action;renderProducts();renderBackupStatus();
+}
+
+function renderBackupStatus(){
+  const node=el("backupStatus");if(!node)return;const since=(state.results.length-(state.lastBackupResultCount||0));
+  if(!state.lastBackupAt)node.innerHTML='<span style="color:var(--red)">Backup not exported yet.</span> Export once before the test starts, then after meaningful new results.';
+  else if(since>=3)node.innerHTML=`<span style="color:var(--red)">Backup due.</span> ${since} result snapshots have been added since the last export.`;
+  else node.innerHTML=`<span style="color:var(--green)">Backup current.</span> Last export: ${new Date(state.lastBackupAt).toLocaleString()}.`;
+}
+function exportData(){
+  state.lastBackupAt=new Date().toISOString();state.lastBackupResultCount=state.results.length;persistState(true);
+  const payload={protocol:protocolVersion,schemaVersion,cloudRevision:syncMeta.revision,cloudUpdatedAt:syncMeta.cloudUpdatedAt,exportedAt:state.lastBackupAt,state};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`APC_Content_OS_v2.2_CLOUD_SYNC_Backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);renderBackupStatus();
+}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(reader.result);const candidate=parsed.state||parsed;if(!candidate||typeof candidate!=="object"||Array.isArray(candidate))throw new Error("Invalid backup");saveRecoveryCopy("Before backup import");state=migrateState(candidate);persistState(true);renderAll();alert("Backup imported locally and queued for cloud sync.")}catch(err){alert("Could not import this backup.")}finally{e.target.value=""}};reader.readAsText(file);
+}
+function resetAll(){if(confirm("Reset the APC Content OS data on this device and in the cloud? This does not change the locked September protocol.")){saveRecoveryCopy("Before reset");state=defaultState();persistState(true);renderAll()}}
+
+function renderAll(){renderCalendar();renderTopics();renderResults();renderBook();refreshDashboard()}
+renderAll();idbRecoverIfNeeded().then(initializeCloudSync);</script>
+</body>
+</html>
