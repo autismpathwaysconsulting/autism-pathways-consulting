@@ -28,9 +28,10 @@ async function sameCredential(actual, expected) {
   return difference === 0;
 }
 
-function authResponse(status, message) {
+function authResponse(status, message, configuration = "unknown") {
   const response = Response.json({ error: message }, { status });
   if (status === 401) response.headers.set("WWW-Authenticate", `Basic realm="${realm}", charset="UTF-8"`);
+  response.headers.set("X-APC-Auth-Configuration", configuration);
   return securityHeaders(response);
 }
 
@@ -38,12 +39,15 @@ export async function onRequest(context) {
   const secret = context.env.APC_CONTENT_OS_AUTH;
   const supplied = context.request.headers.get("Authorization") || "";
   let authorized = false;
+  const configuration = [supplied ? "header" : "no-header", secret ? "secret" : "no-secret"];
 
   if (secret) {
     authorized = await sameCredential(supplied, `Basic ${btoa(`apc:${secret}`)}`);
   }
   if (!authorized && context.env.APC_CONTENT_OS_STATE) {
+    configuration.push("kv");
     const storedHash = await context.env.APC_CONTENT_OS_STATE.get(authHashKey);
+    configuration.push(storedHash ? "hash" : "no-hash");
     try {
       const decoded = supplied.startsWith("Basic ") ? atob(supplied.slice(6)) : "";
       const separator = decoded.indexOf(":");
@@ -57,7 +61,7 @@ export async function onRequest(context) {
   }
 
   if (!authorized) {
-    return authResponse(401, "Authentication required.");
+    return authResponse(401, "Authentication required.", configuration.join(","));
   }
 
   return securityHeaders(await context.next());
