@@ -27,6 +27,8 @@ On first authenticated load:
 
 Recovery copies are stored in localStorage under `apcContentOSv21Recovery`. Normal cache data remains under `apcContentOSv21`. JSON exports include `schemaVersion`, `cloudRevision`, `cloudUpdatedAt`, and `exportedAt`.
 
+Browser same-origin rules prevent a Pages URL from reading localStorage created by a downloaded `file://` copy or another domain. For that case, export JSON from the old v2.1 copy and import it once through the v2.2 backup panel; import preserves a recovery copy and queues the data for cloud sync.
+
 ## Local verification
 
 Run the unit suite:
