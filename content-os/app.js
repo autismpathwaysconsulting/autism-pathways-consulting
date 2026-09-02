@@ -205,6 +205,46 @@ function scrollToNode(node, block) {
   node.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: block || "start" });
 }
 
+function initialiseSectionNavigation() {
+  const nav = document.querySelector(".nav-scroll");
+  if (!nav) return;
+  const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
+  const sections = links.map(function (link) {
+    return document.getElementById(link.getAttribute("href").slice(1));
+  }).filter(Boolean);
+
+  function showCurrentSection(sectionId) {
+    links.forEach(function (link) {
+      if (link.getAttribute("href") === "#" + sectionId) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+    const current = links.find(function (link) {
+      return link.getAttribute("href") === "#" + sectionId;
+    });
+    if (current) current.scrollIntoView({ block: "nearest", inline: "center" });
+  }
+
+  links.forEach(function (link) {
+    link.addEventListener("click", function () {
+      showCurrentSection(link.getAttribute("href").slice(1));
+    });
+  });
+
+  if ("IntersectionObserver" in globalThis) {
+    const observer = new IntersectionObserver(function (entries) {
+      const visible = entries.filter(function (entry) { return entry.isIntersecting; })
+        .sort(function (left, right) { return right.intersectionRatio - left.intersectionRatio; });
+      if (visible[0]) showCurrentSection(visible[0].target.id);
+    }, { rootMargin: "-15% 0px -70% 0px", threshold: [0, 0.01, 0.25] });
+    sections.forEach(function (section) { observer.observe(section); });
+  }
+
+  const initialId = location.hash && document.getElementById(location.hash.slice(1))
+    ? location.hash.slice(1)
+    : sections[0]?.id;
+  if (initialId) showCurrentSection(initialId);
+}
+
 function starterPlanningState() {
   const candidate = defaultContentOsState();
   candidate.calendar = Object.fromEntries(Object.entries(LEGACY_STARTER_CALENDAR).map(function (pair) {
@@ -3438,6 +3478,7 @@ async function recoverLocalCaches() {
 
 async function initialise() {
   initialiseFormOptions();
+  initialiseSectionNavigation();
   document.addEventListener("click", handleClick);
   document.addEventListener("change", handleChange);
   element("topicSearch").addEventListener("input", renderTopics);

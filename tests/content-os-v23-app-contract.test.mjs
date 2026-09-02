@@ -85,3 +85,17 @@ test("current cloud state enforces restore provenance semantics", async () => {
   );
   assert.match(app, /lastAction: lastAction/);
 });
+
+test("section navigation stays compact and identifies the current section", async () => {
+  const html = await source("content-os/index.html");
+  const css = await source("content-os/app.css");
+  const app = await source("content-os/app.js");
+
+  assert.match(html, /href="#dashboard" aria-current="location"/);
+  assert.match(css, /scroll-snap-type: x proximity/);
+  assert.match(css, /scroll-snap-stop: always/);
+  assert.match(css, /\.page-section \+ \.page-section/);
+  assert.match(app, /function initialiseSectionNavigation\(\)/);
+  assert.match(app, /new IntersectionObserver/);
+  assert.match(app, /setAttribute\("aria-current", "location"\)/);
+});
