@@ -1889,6 +1889,35 @@ class AuthorityValidatorTests(unittest.TestCase):
             subprocess.run(["git", "add", "authority.cjs"], cwd=root, check=True)
             self.assertIn("authority.cjs", load_tracked_documents(root))
 
+    def test_private_content_os_executable_module_is_exempt(self):
+        findings = self.findings_for(
+            additions={
+                "functions/api/content-os/private-authority.js":
+                    'export const offerName="One-Concern Parent Session";'
+            }
+        )
+        self.assertEqual([], findings)
+
+    def test_non_public_build_module_is_exempt_but_lookalikes_are_not(self):
+        build_source = self.canonical["scripts/build-site.mjs"]
+        self.assertEqual([], self.findings_for())
+        findings = self.findings_for(
+            additions={
+                "scripts/build-site-copy.mjs":
+                    'export const offerName="One-Concern Parent Session";'
+            }
+        )
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
+
+    def test_adjacent_public_javascript_authority_claim_still_fails(self):
+        findings = self.findings_for(
+            additions={
+                "functions/api/content-os-public.js":
+                    'export const offerName="One-Concern Parent Session";'
+            }
+        )
+        self.assert_finding("authority.executable_javascript_forbidden", findings)
+
     def test_all_standard_javascript_mime_types_are_rejected(self):
         expected = {
             "application/ecmascript",
