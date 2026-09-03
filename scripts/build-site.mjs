@@ -21,6 +21,7 @@ export const PUBLIC_FILES = Object.freeze([
   "disclaimer.html",
   "echolalia.html",
   "free-tool.html",
+  "homepage.js",
   "index.html",
   "mealtimes.html",
   "meltdowns.html",

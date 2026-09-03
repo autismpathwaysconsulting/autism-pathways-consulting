@@ -602,76 +602,6 @@ body.apc-v2 {
   box-shadow: none !important;
 }
 
-/* Homepage density tuning */
-.apc-tier-a.apc-home-page main > .hero {
-  min-height: 0;
-  padding-block: clamp(48px, 5vw, 64px) !important;
-}
-
-.apc-home-page .hero-approach h2 {
-  font-size: clamp(2rem, 3.2vw, 2.65rem) !important;
-}
-
-.apc-tier-a.apc-home-page main > #support-options,
-.apc-tier-a.apc-home-page main > #start {
-  padding-block: clamp(56px, 6vw, 76px) !important;
-}
-
-.apc-home-page #support-options .section-head {
-  max-width: 780px !important;
-  margin-bottom: clamp(24px, 3vw, 34px) !important;
-}
-
-.apc-home-page #support-options .section-head h2 {
-  max-width: 22ch;
-  font-size: clamp(2.25rem, 3.4vw, 3rem) !important;
-}
-
-.apc-home-page #support-options .card {
-  padding: clamp(20px, 2vw, 24px) !important;
-}
-
-.apc-home-page #support-options .card h3 {
-  margin-bottom: 16px;
-  font-size: clamp(1.35rem, 1.8vw, 1.55rem) !important;
-  line-height: 1.14;
-}
-
-.apc-home-page #support-options .card :where(p, li) {
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
-
-.apc-home-page #support-options .card p {
-  margin-bottom: 14px;
-}
-
-.apc-home-page #support-options .card ul {
-  margin-bottom: 16px;
-}
-
-.apc-home-page #start .route-card {
-  gap: clamp(28px, 4vw, 44px) !important;
-  padding: clamp(32px, 4vw, 44px) !important;
-}
-
-.apc-home-page #start .route-card h2 {
-  font-size: clamp(2rem, 3.2vw, 2.55rem) !important;
-}
-
-.apc-home-page #start .route-card :where(h2, p) {
-  color: #fff !important;
-}
-
-.apc-home-page #start .route-card .eyebrow {
-  color: var(--apc-bright-teal) !important;
-}
-
-.apc-home-page #start .route-card .button.secondary {
-  border-color: rgba(255, 255, 255, 0.72) !important;
-  color: #fff !important;
-}
-
 .apc-services-page-v2 .services-main {
   width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide)) !important;
 }
@@ -1654,7 +1584,501 @@ body.apc-v2 {
   }
 }
 
+/* Homepage viewport experience */
+html.apc-home-snap {
+  scroll-behavior: smooth;
+  scroll-padding-top: 77px;
+  scroll-snap-type: y mandatory;
+}
+
+.apc-home-page {
+  --apc-home-header: 77px;
+}
+
+.apc-home-page main > section {
+  position: relative;
+  display: grid;
+  min-height: calc(100svh - var(--apc-home-header));
+  align-items: center;
+  scroll-margin-top: 0 !important;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.apc-home-page main > section > .wrap {
+  min-width: 0;
+}
+
+.apc-home-page > footer {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.apc-tier-a.apc-home-page main > .hero {
+  height: calc(100svh - var(--apc-home-header));
+  min-height: 560px;
+  padding-block: clamp(26px, 4.5vh, 42px) !important;
+}
+
+.apc-home-page .hero-grid {
+  align-items: center;
+  gap: clamp(34px, 5vw, 70px) !important;
+}
+
+.apc-home-page .hero-copy h1 {
+  max-width: 19ch !important;
+  margin-bottom: 18px !important;
+  font-size: clamp(2.8rem, min(4vw, 7.2vh), 3.75rem) !important;
+  line-height: .98 !important;
+}
+
+.apc-home-page .hero-copy .lead {
+  max-width: 58ch;
+  font-size: clamp(1rem, min(1.35vw, 2.6vh), 1.14rem) !important;
+  line-height: 1.55 !important;
+}
+
+.apc-home-page .hero-actions {
+  gap: 14px !important;
+  margin-top: 22px !important;
+}
+
+.apc-home-page .hero-approach {
+  padding: clamp(26px, 3vw, 34px) !important;
+}
+
+.apc-home-page .hero-approach h2 {
+  font-size: clamp(1.9rem, min(2.8vw, 5.2vh), 2.55rem) !important;
+  line-height: 1.04 !important;
+}
+
+.apc-tier-a.apc-home-page main > .section {
+  padding-block: clamp(28px, 4.5vh, 48px) !important;
+}
+
+.apc-home-page main > .section .section-head {
+  max-width: 900px !important;
+  margin-bottom: clamp(18px, 3vh, 28px) !important;
+}
+
+.apc-home-page main > .section .section-head h2 {
+  max-width: 22ch;
+  font-size: clamp(2rem, min(3vw, 5.5vh), 2.75rem) !important;
+}
+
+.apc-home-page .editorial-grid .card {
+  padding-block: 18px !important;
+}
+
+.apc-home-page .apc-process-five {
+  gap: 14px !important;
+}
+
+.apc-home-page .quote blockquote {
+  font-size: clamp(1.45rem, min(2.4vw, 4.8vh), 2.2rem) !important;
+  line-height: 1.32 !important;
+}
+
+.apc-home-page #support-options .section-head {
+  max-width: 920px !important;
+}
+
+.apc-home-page #support-options .section-head h2 {
+  max-width: none;
+}
+
+.apc-home-page #support-options .section-head > p:last-child {
+  max-width: 900px;
+  font-size: .94rem;
+  line-height: 1.55;
+}
+
+.apc-home-page .offer-switcher {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.apc-home-page .offer-tabs {
+  display: none;
+}
+
+.apc-home-page .offer-switcher[data-enhanced="true"] .offer-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.apc-home-page .offer-tab {
+  min-height: 54px;
+  padding: 11px 15px;
+  border: 1px solid var(--apc-border-strong);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .68);
+  color: var(--apc-dark-teal);
+  font-family: var(--apc-font-body);
+  font-size: .84rem;
+  font-weight: 800;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.apc-home-page .offer-tab:hover {
+  transform: translateY(-2px);
+  border-color: var(--apc-teal-deep);
+}
+
+.apc-home-page .offer-tab[aria-selected="true"] {
+  border-color: var(--apc-dark-teal);
+  background: var(--apc-dark-teal);
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(7, 55, 52, .16);
+}
+
+.apc-home-page .offer-tab:focus-visible {
+  outline: 3px solid var(--apc-teal);
+  outline-offset: 3px;
+}
+
+.apc-home-page .offer-switcher[data-enhanced="true"] .offer-panels {
+  display: block !important;
+}
+
+.apc-home-page .offer-switcher[data-enhanced="true"] .offer-panel[hidden] {
+  display: none !important;
+}
+
+.apc-home-page .offer-switcher[data-enhanced="true"] .offer-panel:not([hidden]) {
+  display: grid !important;
+  grid-template-columns: minmax(220px, .65fr) minmax(0, 1.35fr);
+  gap: clamp(24px, 4vw, 48px) !important;
+  padding: clamp(22px, 3vw, 30px) !important;
+  animation: apc-offer-enter 260ms ease both;
+}
+
+@keyframes apc-offer-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.apc-home-page .offer-heading h3 {
+  margin-bottom: 8px;
+}
+
+.apc-home-page .offer-heading .price {
+  margin-bottom: 0;
+}
+
+.apc-home-page .offer-detail p,
+.apc-home-page .offer-detail li {
+  font-size: .94rem;
+  line-height: 1.5;
+}
+
+.apc-home-page .offer-detail p {
+  margin-bottom: 12px;
+}
+
+.apc-home-page .offer-detail ul {
+  margin: 0 0 14px;
+  padding-left: 20px;
+}
+
+.apc-home-page .offer-detail .button {
+  width: fit-content;
+  margin-top: 6px;
+}
+
+.apc-home-page #start .route-card {
+  gap: clamp(28px, 5vw, 56px) !important;
+  padding: clamp(30px, 4vw, 42px) !important;
+}
+
+.apc-home-page #start .route-card h2 {
+  font-size: clamp(2rem, min(3vw, 5.3vh), 2.5rem) !important;
+}
+
+.apc-home-page #start .route-card h2,
+.apc-home-page #start .route-card p {
+  color: #fff !important;
+}
+
+.apc-home-page #start .route-card .eyebrow {
+  color: #8fe8dc !important;
+}
+
+.apc-home-page #start .route-card .button.secondary {
+  border-color: #fff !important;
+  color: #fff !important;
+}
+
+.apc-v2 > .section-rail {
+  position: fixed;
+  top: 50%;
+  right: 18px;
+  z-index: 150;
+  display: grid;
+  width: auto;
+  gap: 8px;
+  padding: 10px 8px;
+  border: 1px solid rgba(7, 55, 52, .14);
+  border-radius: 999px;
+  background: rgba(255, 253, 249, .76);
+  box-shadow: 0 16px 40px rgba(7, 55, 52, .12);
+  backdrop-filter: blur(14px);
+  transform: translateY(-50%);
+}
+
+.apc-v2 > .section-rail {
+  position: fixed !important;
+  top: 50% !important;
+  width: auto !important;
+  padding: 10px 8px !important;
+  border: 1px solid rgba(7, 55, 52, .14) !important;
+  background: rgba(255, 253, 249, .76) !important;
+  box-shadow: 0 16px 40px rgba(7, 55, 52, .12) !important;
+}
+
+.section-rail a {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(7, 55, 52, .52);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .88);
+  transition: height 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.section-rail a::before {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: var(--apc-dark-teal);
+  color: #fff;
+  content: attr(data-label);
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(6px, -50%);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.section-rail a:hover::before,
+.section-rail a:focus-visible::before {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.section-rail a[aria-current="location"] {
+  height: 26px;
+  border-color: var(--apc-teal-deep);
+  background: var(--apc-teal-deep);
+}
+
+.section-rail a:focus-visible {
+  outline: 3px solid var(--apc-teal);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1180px) {
+  .apc-v2 > .section-rail {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html.apc-home-snap {
+    scroll-padding-top: 67px;
+    scroll-snap-type: y proximity;
+  }
+
+  .apc-home-page {
+    --apc-home-header: 67px;
+  }
+
+  .apc-tier-a.apc-home-page main > .hero {
+    height: auto;
+    min-height: calc(100svh - var(--apc-home-header));
+    padding-block: 30px !important;
+  }
+
+  .apc-home-page .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    max-width: 16ch !important;
+    font-size: clamp(2.65rem, min(7vw, 6.4vh), 3.5rem) !important;
+  }
+
+  .apc-home-page .hero-approach {
+    display: none;
+  }
+
+  .apc-home-page .offer-switcher[data-enhanced="true"] .offer-panel:not([hidden]) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .apc-tier-a.apc-home-page main > .hero,
+  .apc-tier-a.apc-home-page main > .section {
+    padding-block: 22px !important;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    max-width: 15ch !important;
+    margin-bottom: 14px !important;
+    font-size: clamp(2.2rem, 10.5vw, 2.75rem) !important;
+    line-height: 1 !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    font-size: .98rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .apc-home-page .hero-actions {
+    margin-top: 18px !important;
+  }
+
+  .apc-home-page main > .section .section-head {
+    margin-bottom: 16px !important;
+  }
+
+  .apc-home-page main > .section .section-head h2 {
+    font-size: clamp(1.85rem, 8.5vw, 2.25rem) !important;
+  }
+
+  .apc-home-page .quote blockquote {
+    font-size: 1.3rem !important;
+    line-height: 1.32 !important;
+  }
+
+  .apc-home-page .apc-process-five {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .apc-home-page #how-apc-helps .section-head {
+    margin-bottom: 10px !important;
+  }
+
+  .apc-home-page #how-apc-helps .section-head h2 {
+    font-size: 1.75rem !important;
+  }
+
+  .apc-home-page #how-apc-helps .section-head p:last-child {
+    font-size: .9rem;
+    line-height: 1.4;
+  }
+
+  .apc-home-page .apc-process-five .card {
+    padding: 10px 6px !important;
+  }
+
+  .apc-home-page .apc-process-five .number {
+    margin-bottom: 6px;
+  }
+
+  .apc-home-page .apc-process-five h3 {
+    margin-bottom: 4px;
+    font-size: 1rem;
+  }
+
+  .apc-home-page .apc-process-five p {
+    font-size: .84rem;
+    line-height: 1.35;
+  }
+
+  .apc-home-page .apc-process-five .card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .apc-home-page .editorial-grid .card {
+    padding-block: 12px !important;
+  }
+
+  .apc-home-page .offer-switcher[data-enhanced="true"] .offer-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .apc-home-page .offer-tab {
+    min-height: 68px;
+    padding: 8px 6px;
+    font-size: .7rem;
+  }
+
+  .apc-home-page .offer-switcher[data-enhanced="true"] .offer-panel:not([hidden]) {
+    padding: 20px !important;
+  }
+
+  .apc-home-page .offer-heading h3 {
+    font-size: 1.35rem;
+  }
+
+  .apc-home-page #support-options .section-head > p:last-child,
+  .apc-home-page .offer-detail p,
+  .apc-home-page .offer-detail li {
+    font-size: .88rem;
+    line-height: 1.45;
+  }
+
+  .apc-home-page #start .route-card {
+    grid-template-columns: 1fr;
+    padding: 26px 22px !important;
+  }
+
+  .apc-home-page #start .route-card h2 {
+    font-size: 1.9rem !important;
+  }
+
+  .apc-home-page #start .route-actions {
+    gap: 10px;
+  }
+
+  .apc-home-page #start .route-actions .button {
+    width: 100%;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 901px) {
+  .apc-tier-a.apc-home-page main > .hero {
+    padding-block: 20px !important;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    font-size: clamp(2.65rem, min(3.6vw, 6.5vh), 3.45rem) !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    line-height: 1.45 !important;
+  }
+
+  .apc-home-page .hero-actions {
+    margin-top: 16px !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html.apc-home-snap {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
   .apc-v2 *,
   .apc-v2 *::before,
   .apc-v2 *::after {
