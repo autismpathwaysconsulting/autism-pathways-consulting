@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#073734" />
+
+  <title>Fine at School, Falls Apart at Home | Autism Pathways Consulting</title>
+  <link rel="canonical" href="https://autismpathwaysconsulting.com/school-collapse"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Autism Pathways Consulting"/>
+  <meta property="og:url" content="https://autismpathwaysconsulting.com/school-collapse"/>
+  <meta property="og:title" content="Fine at School, Falls Apart at Home | Autism Pathways Consulting"/>
+  <meta property="og:description" content="Why many autistic children hold it together at school and fall apart the moment they get home. A practical guide for Malaysian parents on after-school collapse and what helps. Free from Autism Pathways Consulting."/>
+  <meta property="og:image" content="https://autismpathwaysconsulting.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Fine at School, Falls Apart at Home | Autism Pathways Consulting"/>
+  <meta name="twitter:description" content="Why many autistic children hold it together at school and fall apart the moment they get home. A practical guide for Malaysian parents on after-school collapse and what helps. Free from Autism Pathways Consulting."/>
+  <meta name="twitter:image" content="https://autismpathwaysconsulting.com/og-image.png"/>
+  <meta name="description" content="Why many autistic children hold it together at school, then collapse at home. A free practical guide for Malaysian parents on what helps." />
+
+  <style>
+    :root {
+      --cream: #fff9f1;
+      --deep: #073734;
+      --teal: #0f766e;
+      --sage: #6b9e7a;
+      --coral: #e8997a;
+      --text: #314846;
+      --muted: #526966;
+      --border: rgba(7, 55, 52, 0.14);
+      --shadow: 0 22px 55px rgba(7, 55, 52, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--cream) 0%, #ffffff 55%, var(--cream) 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      background: rgba(255, 249, 241, 0.96);
+      border-bottom: 1px solid rgba(7, 55, 52, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    nav {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand { font-weight: 900; color: var(--deep); letter-spacing: -0.03em; }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-weight: 800;
+      color: #314241;
+    }
+
+    .links a:hover { color: var(--teal); }
+
+    .cta {
+      background: var(--teal);
+      color: white !important;
+      padding: 13px 22px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.22);
+    }
+
+    main {
+      width: min(760px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 40px 0 88px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 26px;
+      color: var(--deep);
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    p { margin: 0 0 20px; font-size: 1.12rem; color: var(--text); }
+
+    h2 {
+      margin: 46px 0 18px;
+      color: var(--deep);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .callout {
+      margin: 30px 0;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: rgba(232, 153, 122, 0.12);
+      border: 1px solid rgba(232, 153, 122, 0.28);
+      font-size: 1.12rem;
+      color: var(--deep);
+    }
+
+    .callout strong { color: var(--deep); }
+
+    .step {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+      margin: 26px 0;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-of-type { border-bottom: none; }
+
+    .step-num {
+      flex: 0 0 auto;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.3rem;
+    }
+
+    .step-body h3 {
+      margin: 6px 0 8px;
+      color: var(--deep);
+      font-size: 1.22rem;
+      letter-spacing: -0.02em;
+    }
+
+    .step-body p { margin: 0; font-size: 1.08rem; color: var(--muted); }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .col {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .col h3 {
+      margin: 0 0 14px;
+      color: var(--deep);
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .col ul { margin: 0; padding-left: 20px; color: var(--muted); }
+    .col li { margin: 9px 0; font-size: 1.04rem; }
+
+    .week {
+      margin: 30px 0;
+      padding: 28px 30px;
+      border-radius: 24px;
+      background: rgba(107, 158, 122, 0.12);
+      border: 1px solid rgba(107, 158, 122, 0.28);
+    }
+
+    .week h2 { margin-top: 0; }
+
+    .credential {
+      margin: 40px 0;
+      padding: 28px 30px;
+      border-left: 4px solid var(--sage);
+      background: rgba(7, 55, 52, 0.03);
+      border-radius: 0 18px 18px 0;
+      font-size: 1.14rem;
+      color: var(--deep);
+    }
+
+    .cta-banner {
+      margin: 50px 0 0;
+      background: var(--deep);
+      color: var(--cream);
+      border-radius: 30px;
+      padding: 44px;
+      text-align: center;
+      box-shadow: 0 28px 65px rgba(7, 55, 52, 0.20);
+    }
+
+    .cta-banner h2 { color: var(--cream); margin: 0 0 14px; }
+    .cta-banner p { color: rgba(255,249,241,0.86); margin: 0 0 26px; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: var(--cream);
+      color: var(--deep);
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .button:hover { background: #f0e9df; }
+
+    footer {
+      border-top: 1px solid rgba(7, 55, 52, 0.10);
+      padding: 30px 0;
+      color: #52615f;
+    }
+
+    .footer-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      nav { align-items: flex-start; flex-direction: column; padding: 18px 0; }
+      .links { width: 100%; flex-wrap: wrap; gap: 14px 18px; }
+      .cta { padding: 10px 16px; }
+      .cols { grid-template-columns: 1fr; }
+      .cta-banner { padding: 32px 24px; }
+    }
+  </style>
+<style id="apc-a11y">
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{
+  outline:3px solid #0f766e;
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,249,241,.9);
+  border-radius:4px;
+}
+.apc-skip-link{
+  position:absolute;left:8px;top:-48px;z-index:1000;
+  padding:10px 16px;border-radius:999px;
+  background:#073734;color:#fff9f1;font-weight:800;text-decoration:none;
+  transition:top .15s ease;
+}
+.apc-skip-link:focus{top:8px;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
+<link rel="stylesheet" href="/apc-design-system.css?v=20260903-9">
+</head>
+
+<body class="apc-v2 apc-guide-page">
+<a class="apc-skip-link" href="#main-content">Skip to main content</a>
+  <header class="apc-site-header">
+  <div class="apc-shell-inner">
+    <a class="apc-shell-logo" href="/" aria-label="Autism Pathways Consulting home"><img src="/apc-option-d-primary-logo.webp" width="445" height="250" alt="Autism Pathways Consulting"></a>
+    <nav class="apc-shell-nav" aria-label="Primary navigation"><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a></nav>
+    <a class="apc-shell-start" href="https://autismpathwaysconsulting.com/start">Start Here</a>
+  </div>
+</header>
+
+  <main id="main-content">
+    <a class="back-link" href="resources.html">&larr; Back to Resources</a>
+
+    <div class="eyebrow">Free parent guide</div>
+    <h1>Fine at school, falls apart at home</h1>
+
+    <p>You pick up your child from school. The teacher says it was a good day. Your child was calm, cooperative, got through everything. Then you get home. Within twenty minutes, they are in meltdown, refusing everything, or completely shut down. You were not there for the good day. You only see this.</p>
+
+    <p>Many parents carry a quiet guilt about this. They wonder if they are doing something wrong at home, or if they are somehow the trigger. Most of the time, that is not what is happening. What you are seeing is not a problem with your home. It is the cost of the school day finally being paid.</p>
+
+    <div class="callout">
+      <strong>A small shift in how you see it:</strong> School is where your child holds everything together. Home is where they finally let it go. The collapse at home is not bad behaviour. For many autistic children, it is the safest thing they do all day.
+    </div>
+
+    <h2>Why school takes more than it looks like</h2>
+
+    <p>A school day asks an autistic child to manage a great deal simultaneously: sensory input from noise, lights, crowds, and proximity to others; social demands from teachers, classmates, and transitions; unexpected changes to routine; the effort of processing and following instructions; and often the work of keeping responses and reactions contained so they fit in or stay out of trouble.</p>
+
+    <p>Much of this effort is invisible. A child who looks fine at school may be spending enormous energy holding themselves together, managing sensory overload quietly, suppressing responses that feel too big for the room, and working out how to move through a day that does not always make sense. By the time they reach home, that energy is gone. The safety of home, and of you, is exactly what allows the release.</p>
+
+    <p>This is sometimes called the "after-school restraint collapse." The name is not perfect, but the idea is real: the controlled version of your child at school and the version you see at home are both genuine. The school version takes enormous effort. The home version is what happens when that effort stops being necessary.</p>
+
+    <h2>The After-School Landing Routine</h2>
+
+    <p>The goal is to make the transition from school to home as low-demand as possible, so the nervous system has time to settle before anything else is asked of it.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Create a quiet arrival window</h3>
+        <p>For at least fifteen to twenty minutes after arrival, keep demands to a minimum. No questions about the school day, no homework requests, no snack negotiations that require decisions. Just arrival. Some children need to go straight to their room, their corner, their screen, or their preferred activity. Let them. This is not avoidance. It is recovery.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Lower your voice and your questions</h3>
+        <p>"How was school?" is a hard question after a long day of managing everything. It asks for recall, evaluation, and social performance all at once. A calm presence, a snack ready, and a quiet space communicate safety more than any question does. Connection happens when the nervous system has settled, not while it is still in recovery.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Offer one preferred activity with no strings attached</h3>
+        <p>Something your child finds regulating: a show, a toy, time outside, music, drawing. Not as a reward for behaviour. Not conditional on homework first. Just available, because the nervous system needs something familiar and low-pressure to land in.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Hold homework until after the window</h3>
+        <p>Starting homework the moment a child gets home is one of the most common triggers for after-school conflict. Most children, autistic or not, do better with a gap between school and the next demand. For autistic children who have spent the day managing, that gap is not laziness. It is what makes the homework possible later.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Keep the after-school window consistent, even on days that seemed easy.</strong> You cannot always tell from the outside how much the day cost. A consistent low-demand landing routine protects your child on the hard days and costs very little on the easy ones.
+    </div>
+
+    <h2>What to say to the school</h2>
+
+    <p>Many parents feel reluctant to raise this with teachers, especially when the school day looks fine. But this information is useful to the school too. A child who collapses at home after a "good day" may be masking, suppressing, or over-controlling themselves in ways that are sustainable for a while but not indefinitely. Sharing what you see at home gives teachers a fuller picture.</p>
+
+    <div class="cols">
+      <div class="col">
+        <h3>What helps at home</h3>
+        <ul>
+          <li>Quiet arrival window with no demands</li>
+          <li>Preferred regulating activity available immediately</li>
+          <li>No homework until after the landing window</li>
+          <li>Low-question, low-pressure presence</li>
+          <li>Same routine every day, even on good days</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>What to share with school</h3>
+        <ul>
+          <li>What the after-school collapse looks like</li>
+          <li>That the child may be managing more than it appears</li>
+          <li>Any patterns you notice across the week</li>
+          <li>What the child finds regulating at home</li>
+          <li>That after-school behaviour is connected to the school day</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week">
+      <h2>Try this for one week</h2>
+      <p>Pick one change only: protect the first twenty minutes after arrival as a no-demand window. Keep it consistent across the week regardless of how the day seemed to go.</p>
+      <p>At the end of the week, notice whether the intensity of the after-school period shifted at all. You are not looking for no meltdowns. You are looking for whether a quieter landing made any difference to how the rest of the evening went.</p>
+      <p>Also notice the pattern across the week. Is Monday harder than Friday? Is it worse after certain lessons, certain days, or after social events? The pattern around the collapse often tells you more than the collapse itself.</p>
+    </div>
+
+    <p>Some days the collapse will still come, no matter how careful the landing is. A very hard school day, a change to routine, a social difficulty, or just accumulated tiredness across the week can overwhelm even a good after-school routine. On those days, the goal is to keep your child safe, stay as calm as you can, and not add more to what is already full.</p>
+
+    <div class="credential">
+      In ten years working with autistic children and families in Malaysia, the after-school collapse was one of the most misread patterns I came across. Parents assumed something was wrong at home. Schools assumed the child was fine because the school day looked fine. Once both sides understood that the collapse was connected to the cost of the day, the response from everyone around the child shifted, and that shift made a real difference.
+    </div>
+
+    <div class="cta-banner">
+      <h2>Want to look at this for your own child?</h2>
+      <p>Every child's after-school pattern is slightly different. A short conversation can help you see what is building across your child's day and find one practical next step.</p>
+      <a class="button" href="https://cal.com/autismpathwaysconsulting/first-step-call">Book a free 15-min First Step Call</a>
+    </div>
+  </main>
+
+  <footer class="apc-footer apc-footer-minimal">
+  <div class="apc-footer-minimal-inner">
+    <a href="/" class="apc-footer-logo">Autism Pathways Consulting</a>
+    <nav class="apc-footer-minimal-links" aria-label="Footer navigation"><a href="/">Home</a><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a><a href="https://autismpathwaysconsulting.com/start">Start Here</a></nav>
+    <p>Parent education and guidance, not therapy or diagnosis. APC works with you, not instead of the therapists your child is already seeing.</p>
+    <p>CJ Special and Inclusive Consultancy (003030209-T) · Reg. 201903282307</p>
+  </div>
+</footer>
+</body>
+</html>
