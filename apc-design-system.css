@@ -2791,3 +2791,741 @@ html.apc-home-snap {
     transform: none;
   }
 }
+
+/* Site-wide premium cohesion */
+.apc-v2:not(.apc-home-page) {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(107, 158, 122, .12), transparent 24rem),
+    linear-gradient(180deg, #fbf8f2 0%, #fffdf9 46%, #f2f6f2 100%) !important;
+}
+
+.apc-v2:not(.apc-home-page) .site-nav,
+.apc-v2:not(.apc-home-page) > nav,
+.apc-v2:not(.apc-home-page) > header:has(> nav) {
+  background: rgba(255, 252, 247, .88) !important;
+  border-bottom-color: rgba(7, 55, 52, .1) !important;
+  box-shadow: 0 12px 34px rgba(7, 55, 52, .055) !important;
+}
+
+.apc-v2:not(.apc-home-page) :where(.card, .offer-card, .route-card, .credential, details, .module, .fit, .obj, .about, .guarantee, .scope) {
+  transition: transform 220ms cubic-bezier(.22, 1, .36, 1), box-shadow 220ms ease, border-color 220ms ease, background-color 220ms ease !important;
+}
+
+/* Editorial openings shared by the main parent routes */
+.apc-services-page-v2 .services-hero,
+.apc-start-page-v2 .start-hero {
+  position: relative;
+  isolation: isolate;
+  max-width: none !important;
+  margin: clamp(24px, 4vw, 48px) 0 clamp(38px, 5vw, 62px) !important;
+  padding: clamp(42px, 7vw, 82px) clamp(24px, 6vw, 72px) !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 22%, rgba(232, 153, 122, .34), transparent 20rem),
+    linear-gradient(135deg, #fff9f1 0%, #eef4ed 100%) !important;
+  border: 1px solid rgba(7, 55, 52, .09);
+  border-radius: clamp(24px, 4vw, 38px);
+  box-shadow: 0 28px 70px rgba(7, 55, 52, .08);
+}
+
+.apc-services-page-v2 .services-hero::after,
+.apc-start-page-v2 .start-hero::after,
+.apc-resources-page .resource-hero::after,
+.apc-about-page .hero::after,
+.apc-schools-page .page-header::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: clamp(-68px, -4vw, -30px);
+  bottom: clamp(-100px, -7vw, -54px);
+  width: clamp(190px, 26vw, 360px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(15, 118, 110, .2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 34px rgba(15, 118, 110, .04), 0 0 0 68px rgba(15, 118, 110, .025);
+  pointer-events: none;
+}
+
+.apc-services-page-v2 .services-hero > *,
+.apc-start-page-v2 .start-hero > *,
+.apc-resources-page .resource-hero .wrap,
+.apc-about-page .hero .wrap,
+.apc-schools-page .page-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+.apc-services-page-v2 .services-hero h1,
+.apc-start-page-v2 .start-hero h1,
+.apc-resources-page .resource-hero h1,
+.apc-about-page .hero h1,
+.apc-schools-page .page-header h1 {
+  letter-spacing: -.035em !important;
+}
+
+/* About */
+.apc-about-page .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 88%, rgba(232, 153, 122, .2), transparent 22rem),
+    linear-gradient(135deg, #fffaf3 0%, #edf4ed 100%) !important;
+}
+
+.apc-about-page .about-minimal-hero,
+.apc-about-page .hero-grid {
+  min-height: min(710px, calc(100svh - 77px));
+  padding-block: clamp(48px, 7vw, 82px) !important;
+}
+
+.apc-about-page .portrait,
+.apc-about-page .hero-photo-card {
+  position: relative;
+  overflow: visible !important;
+  background: var(--apc-surface);
+  border: 6px solid rgba(255, 255, 255, .92) !important;
+  border-radius: 28px 28px 96px 28px !important;
+  box-shadow: 0 32px 70px rgba(7, 55, 52, .17) !important;
+}
+
+.apc-about-page .portrait::before,
+.apc-about-page .hero-photo-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -18px 18px 18px -18px;
+  background: var(--apc-coral);
+  border-radius: 34px 34px 102px 34px;
+}
+
+.apc-about-page .portrait img,
+.apc-about-page .hero-photo-card img {
+  border-radius: 22px 22px 88px 22px !important;
+}
+
+.apc-about-page .portrait figcaption {
+  padding: 16px 18px 18px !important;
+}
+
+.apc-about-page #story {
+  background: linear-gradient(110deg, rgba(232, 153, 122, .13), rgba(255, 249, 241, .82)) !important;
+}
+
+.apc-about-page .credentials {
+  gap: 14px !important;
+}
+
+.apc-about-page .credential {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 24px 22px 30px !important;
+  background: rgba(255, 255, 255, .86) !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 14px 34px rgba(7, 55, 52, .055) !important;
+}
+
+.apc-about-page .credential::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--apc-primary-teal);
+}
+
+.apc-about-page .credential:nth-child(2)::before { background: var(--apc-coral); }
+.apc-about-page .credential:nth-child(3)::before { background: var(--apc-sage); }
+.apc-about-page .credential:nth-child(4)::before { background: var(--apc-bright-teal); }
+
+.apc-about-page .work-panel,
+.apc-about-page .final-card {
+  padding: clamp(32px, 6vw, 64px) !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(45, 212, 191, .18), transparent 20rem),
+    var(--apc-dark-teal) !important;
+  border: 1px solid rgba(255, 255, 255, .1) !important;
+  border-radius: clamp(24px, 4vw, 36px) !important;
+  box-shadow: 0 34px 72px rgba(7, 55, 52, .2) !important;
+}
+
+.apc-about-page :where(.work-panel, .final-card) :where(h2, p, strong) {
+  color: #fff !important;
+}
+
+.apc-about-page .work-step {
+  padding: 18px 20px !important;
+  background: rgba(255, 255, 255, .07);
+  border: 1px solid rgba(255, 255, 255, .12) !important;
+  border-radius: 16px;
+}
+
+.apc-about-page .scope {
+  padding: clamp(28px, 5vw, 48px) !important;
+  background: rgba(255, 255, 255, .82);
+  border: 1px solid rgba(7, 55, 52, .1);
+  border-left: 7px solid var(--apc-coral) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 20px 46px rgba(7, 55, 52, .07);
+}
+
+.apc-about-page .training details {
+  margin-bottom: 12px !important;
+  padding-inline: 20px !important;
+  background: rgba(255, 255, 255, .82) !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 30px rgba(7, 55, 52, .045);
+}
+
+/* Services */
+.apc-services-page-v2 .services-hero .condition {
+  background: rgba(255, 255, 255, .7) !important;
+  backdrop-filter: blur(8px);
+}
+
+.apc-services-page-v2 .offer-grid {
+  gap: clamp(16px, 2vw, 24px) !important;
+}
+
+.apc-services-page-v2 .offer-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .9) !important;
+  border: 1px solid rgba(7, 55, 52, .11) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 52px rgba(7, 55, 52, .075) !important;
+}
+
+.apc-services-page-v2 .offer-card::before,
+.apc-start-page-v2 .route-card::before,
+.apc-resources-page :where(#quick-routes .route-card, #featured .card)::before,
+.apc-payment-page .choice-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 6px;
+  background: var(--apc-primary-teal);
+}
+
+.apc-services-page-v2 .offer-card:nth-child(2)::before,
+.apc-start-page-v2 .route-card:nth-child(2)::before,
+.apc-resources-page #quick-routes .route-card:nth-child(2)::before,
+.apc-resources-page #featured .card:nth-child(2)::before,
+.apc-payment-page .choice-card:nth-child(2)::before {
+  background: var(--apc-coral);
+}
+
+.apc-services-page-v2 .offer-card:nth-child(3)::before,
+.apc-start-page-v2 .route-card:nth-child(3)::before,
+.apc-resources-page #quick-routes .route-card:nth-child(3)::before,
+.apc-resources-page #featured .card:nth-child(3)::before {
+  background: var(--apc-sage);
+}
+
+.apc-services-page-v2 .process {
+  margin-block: clamp(10px, 2vw, 28px) !important;
+  padding: clamp(36px, 6vw, 64px) !important;
+  background:
+    radial-gradient(circle at 94% 6%, rgba(45, 212, 191, .17), transparent 20rem),
+    var(--apc-dark-teal) !important;
+  border-radius: clamp(24px, 4vw, 36px);
+  box-shadow: 0 30px 68px rgba(7, 55, 52, .18);
+}
+
+.apc-services-page-v2 .process :where(h2, li strong, li p) {
+  color: #fff !important;
+}
+
+.apc-services-page-v2 .process .eyebrow {
+  color: var(--apc-bright-teal) !important;
+}
+
+.apc-services-page-v2 .process-list li {
+  padding: 20px !important;
+  background: rgba(255, 255, 255, .065);
+  border: 1px solid rgba(255, 255, 255, .12) !important;
+  border-top: 4px solid var(--apc-bright-teal) !important;
+  border-radius: 16px;
+}
+
+.apc-services-page-v2 .service-proof {
+  margin-block: clamp(48px, 7vw, 82px);
+  background:
+    radial-gradient(circle at 86% 10%, rgba(232, 153, 122, .2), transparent 18rem),
+    var(--apc-cream) !important;
+  border-block: 1px solid rgba(7, 55, 52, .07);
+}
+
+.apc-services-page-v2 .service-proof blockquote::before {
+  content: "“";
+  position: absolute;
+  top: -.45em;
+  left: -.32em;
+  color: rgba(232, 153, 122, .35);
+  font-size: 4.5em;
+  line-height: 1;
+}
+
+.apc-services-page-v2 .faq details {
+  margin-bottom: 12px !important;
+  padding: 0 20px !important;
+  background: rgba(255, 255, 255, .86) !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 28px rgba(7, 55, 52, .04);
+}
+
+.apc-services-page-v2 .final-route {
+  padding: clamp(32px, 6vw, 56px) !important;
+  background: linear-gradient(135deg, #073734 0%, #0b4b46 100%) !important;
+  border-radius: clamp(24px, 4vw, 34px) !important;
+  box-shadow: 0 28px 64px rgba(7, 55, 52, .2) !important;
+}
+
+.apc-services-page-v2 .final-route h2 { color: #fff !important; }
+
+/* Start and resources */
+.apc-start-page-v2 .start-main {
+  width: min(calc(100% - (var(--apc-gutter) * 2)), 1080px) !important;
+}
+
+.apc-start-page-v2 .route-grid {
+  align-items: stretch;
+}
+
+.apc-start-page-v2 .route-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px !important;
+  box-shadow: 0 18px 46px rgba(7, 55, 52, .075) !important;
+}
+
+.apc-start-page-v2 .route-card:nth-child(1) {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(45, 212, 191, .18), transparent 15rem),
+    var(--apc-dark-teal) !important;
+}
+
+.apc-start-page-v2 .route-card:nth-child(1)::before {
+  background: var(--apc-bright-teal);
+}
+
+.apc-start-page-v2 .start-reassurance,
+.apc-start-page-v2 .reassurance:last-child {
+  margin-block: clamp(34px, 6vw, 64px) !important;
+  padding: 24px 28px !important;
+  background: var(--apc-cream) !important;
+  border-left: 6px solid var(--apc-coral) !important;
+  border-radius: 0 18px 18px 0 !important;
+}
+
+.apc-resources-page .resource-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 24%, rgba(232, 153, 122, .28), transparent 21rem),
+    linear-gradient(135deg, #fff9f1 0%, #edf4ed 100%) !important;
+  border-bottom: 1px solid rgba(7, 55, 52, .08);
+}
+
+.apc-resources-page #quick-routes {
+  background: rgba(238, 244, 237, .7) !important;
+}
+
+.apc-resources-page :where(#quick-routes .route-card, #featured .card) {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .9) !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-top: 0 !important;
+  border-radius: 22px !important;
+  box-shadow: 0 18px 44px rgba(7, 55, 52, .065) !important;
+}
+
+.apc-resources-page #featured .card:nth-child(4)::before {
+  background: var(--apc-bright-teal);
+}
+
+.apc-resources-page .browse {
+  display: grid;
+  gap: 12px;
+}
+
+.apc-resources-page .browse details {
+  overflow: hidden;
+  background: rgba(255, 255, 255, .84) !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 28px rgba(7, 55, 52, .035);
+}
+
+.apc-resources-page .browse details:last-child {
+  border-bottom: 1px solid rgba(7, 55, 52, .1) !important;
+}
+
+.apc-resources-page .browse summary {
+  padding-inline: 20px !important;
+}
+
+.apc-resources-page .browse .link-list {
+  padding: 4px 20px 22px !important;
+}
+
+.apc-resources-page .support-note {
+  margin-top: clamp(38px, 6vw, 64px) !important;
+  padding: clamp(30px, 5vw, 50px) !important;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(45, 212, 191, .16), transparent 17rem),
+    var(--apc-dark-teal) !important;
+  border-radius: clamp(22px, 4vw, 32px) !important;
+  box-shadow: 0 28px 62px rgba(7, 55, 52, .18) !important;
+}
+
+.apc-resources-page .support-note :where(h3, p) { color: #fff !important; }
+
+/* Schools */
+.apc-schools-page .page-header {
+  position: relative;
+  isolation: isolate;
+  max-width: none !important;
+  margin: clamp(24px, 4vw, 48px) auto clamp(36px, 5vw, 62px) !important;
+  padding-inline: clamp(24px, 6vw, 72px) !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(232, 153, 122, .3), transparent 20rem),
+    linear-gradient(135deg, #fff9f1, #edf4ed) !important;
+  border: 1px solid rgba(7, 55, 52, .09);
+  border-radius: clamp(24px, 4vw, 38px);
+  box-shadow: 0 28px 70px rgba(7, 55, 52, .08);
+}
+
+.apc-schools-page main,
+.apc-schools-page .container,
+.apc-schools-page .page-header {
+  width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide)) !important;
+}
+
+.apc-schools-page .service-section {
+  position: relative;
+  margin-bottom: 20px !important;
+  padding: clamp(30px, 5vw, 52px) !important;
+  background: rgba(255, 255, 255, .84) !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 16px 42px rgba(7, 55, 52, .055) !important;
+}
+
+.apc-schools-page .support-list li,
+.apc-schools-page .step {
+  border-bottom-color: rgba(7, 55, 52, .1) !important;
+}
+
+.apc-schools-page form {
+  border-top: 6px solid var(--apc-coral) !important;
+  box-shadow: 0 24px 56px rgba(7, 55, 52, .09) !important;
+}
+
+.apc-schools-page .unsure {
+  background:
+    radial-gradient(circle at 94% 8%, rgba(45, 212, 191, .18), transparent 18rem),
+    var(--apc-dark-teal) !important;
+  box-shadow: 0 28px 64px rgba(7, 55, 52, .18) !important;
+}
+
+/* Parent guides */
+.apc-guide-page > main,
+.apc-guide-page > main.body,
+.apc-guide-page > header.hero {
+  position: relative;
+}
+
+.apc-guide-page > main > h1,
+.apc-guide-page > header.hero h1 {
+  letter-spacing: -.035em !important;
+}
+
+.apc-guide-page .callout,
+.apc-guide-page .medical-note,
+.apc-guide-page .try-box,
+.apc-guide-page .reframe {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fff9f1 0%, #f8efe5 100%) !important;
+  border-left-width: 6px !important;
+  border-radius: 0 20px 20px 0 !important;
+  box-shadow: 0 15px 36px rgba(7, 55, 52, .055) !important;
+}
+
+.apc-guide-page .try-box,
+.apc-guide-page .reframe {
+  border-left-color: var(--apc-sage) !important;
+}
+
+.apc-guide-page .step {
+  margin: 14px 0 !important;
+  padding: 24px !important;
+  background: rgba(255, 255, 255, .88) !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 14px 34px rgba(7, 55, 52, .045) !important;
+}
+
+.apc-guide-page .step:last-of-type {
+  border-bottom: 1px solid rgba(7, 55, 52, .1) !important;
+}
+
+.apc-guide-page .step:nth-of-type(even) .step-num {
+  background: var(--apc-primary-teal) !important;
+}
+
+.apc-guide-page :where(.col, .col-home, .col-school, .signal-card) {
+  box-shadow: 0 14px 34px rgba(7, 55, 52, .05) !important;
+}
+
+.apc-guide-page .week,
+.apc-guide-page .credential {
+  background: rgba(238, 244, 237, .82) !important;
+}
+
+.apc-guide-page .cta-banner,
+.apc-guide-page main > .cta {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(45, 212, 191, .17), transparent 16rem),
+    var(--apc-dark-teal) !important;
+  box-shadow: 0 28px 62px rgba(7, 55, 52, .18) !important;
+}
+
+/* Legal, confirmation, download and payment routes */
+.apc-legal-page .legal-hero {
+  position: relative;
+  margin-top: clamp(24px, 4vw, 46px);
+  padding-inline: clamp(24px, 6vw, 64px) !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(232, 153, 122, .28), transparent 18rem),
+    linear-gradient(135deg, #fff9f1, #edf4ed) !important;
+  border: 1px solid rgba(7, 55, 52, .09);
+  border-radius: clamp(22px, 4vw, 34px);
+  box-shadow: 0 24px 58px rgba(7, 55, 52, .07);
+}
+
+.apc-legal-page .legal-section {
+  padding-top: clamp(36px, 6vw, 64px) !important;
+}
+
+.apc-legal-page .legal-grid {
+  display: grid !important;
+  gap: 14px;
+}
+
+.apc-legal-page .legal-card {
+  position: relative;
+  padding: 28px 30px 28px 36px !important;
+  background: rgba(255, 255, 255, .86) !important;
+  border: 1px solid rgba(7, 55, 52, .095) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 32px rgba(7, 55, 52, .045) !important;
+}
+
+.apc-legal-page .legal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--apc-primary-teal);
+  border-radius: 18px 0 0 18px;
+}
+
+.apc-legal-page .legal-card:nth-child(even)::before {
+  background: var(--apc-coral);
+}
+
+.apc-404-page > main,
+.apc-thank-you-page > main,
+.apc-waitlist-page > main,
+.apc-confirmation-page .confirm-wrap,
+.apc-free-tool-page .free-container,
+.apc-payment-page .pay-main {
+  position: relative;
+}
+
+.apc-404-page > main::before,
+.apc-thank-you-page > main::before,
+.apc-waitlist-page > main::before,
+.apc-confirmation-page .confirm-wrap::before,
+.apc-free-tool-page .free-container::before,
+.apc-payment-page .pay-main::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: clamp(24px, 4vw, 44px);
+  right: 0;
+  width: clamp(160px, 24vw, 280px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, rgba(232, 153, 122, .18), transparent 68%);
+  pointer-events: none;
+}
+
+.apc-utility-page :where(.card, .confirm-card, .confirm-info-item, .free-preview-card, .free-list-card, .choice-card, .form-wrap) {
+  border-color: rgba(7, 55, 52, .1) !important;
+  box-shadow: 0 18px 46px rgba(7, 55, 52, .065) !important;
+}
+
+.apc-thank-you-page .hero .card {
+  background:
+    radial-gradient(circle at 94% 8%, rgba(45, 212, 191, .17), transparent 16rem),
+    var(--apc-dark-teal) !important;
+  border-color: rgba(255, 255, 255, .1) !important;
+  box-shadow: 0 28px 62px rgba(7, 55, 52, .18) !important;
+}
+
+.apc-thank-you-page .hero .card :where(h2, p, .step) {
+  color: #fff !important;
+}
+
+.apc-thank-you-page .hero .card .step {
+  background: rgba(255, 255, 255, .075) !important;
+  border-color: rgba(255, 255, 255, .13) !important;
+}
+
+.apc-thank-you-page .hero .card .button {
+  background: var(--apc-bright-teal) !important;
+  border-color: var(--apc-bright-teal) !important;
+  color: var(--apc-dark-teal) !important;
+}
+
+.apc-payment-page .pay-hero,
+.apc-confirmation-page .confirm-card {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(232, 153, 122, .2), transparent 16rem),
+    rgba(255, 255, 255, .9) !important;
+  box-shadow: 0 24px 58px rgba(7, 55, 52, .08) !important;
+}
+
+.apc-connect-page .hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(45, 212, 191, .2), transparent 24rem),
+    linear-gradient(135deg, #073734, #0b4b46) !important;
+}
+
+.apc-connect-page :where(.module, .fit, .obj, .about, .guarantee, .scope) {
+  box-shadow: 0 14px 36px rgba(7, 55, 52, .05) !important;
+}
+
+.apc-connect-page .price {
+  background: linear-gradient(135deg, #fff9f1, #f4ebe0) !important;
+  box-shadow: 0 20px 50px rgba(7, 55, 52, .07) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .apc-v2:not(.apc-home-page) :where(.offer-card, .route-card, #featured .card, #quick-routes .card, .credential, .step, .choice-card):hover {
+    transform: translateY(-5px);
+    border-color: rgba(15, 118, 110, .24) !important;
+    box-shadow: 0 26px 58px rgba(7, 55, 52, .105) !important;
+  }
+
+  .apc-v2:not(.apc-home-page) details:hover {
+    border-color: rgba(15, 118, 110, .25) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .apc-about-page .about-minimal-hero,
+  .apc-about-page .hero-grid {
+    min-height: 0;
+  }
+
+  .apc-services-page-v2 .services-hero,
+  .apc-start-page-v2 .start-hero,
+  .apc-schools-page .page-header {
+    margin-top: 18px !important;
+  }
+
+  .apc-about-page .portrait,
+  .apc-about-page .hero-photo-card {
+    max-width: 360px;
+  }
+
+  .apc-schools-page .service-section {
+    padding: 30px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .apc-services-page-v2 .services-hero,
+  .apc-start-page-v2 .start-hero,
+  .apc-schools-page .page-header {
+    padding: 34px 22px 38px !important;
+    border-radius: 22px;
+  }
+
+  .apc-about-page .hero-grid {
+    padding-block: 42px 54px !important;
+  }
+
+  .apc-about-page .hero-copy {
+    order: -1;
+  }
+
+  .apc-about-page .hero-copy h1 {
+    font-size: clamp(2.65rem, 12vw, 3.15rem) !important;
+  }
+
+  .apc-about-page .portrait,
+  .apc-about-page .hero-photo-card {
+    display: grid !important;
+    width: 100%;
+    max-width: none;
+    margin: 12px 0 0 !important;
+    grid-template-columns: 112px minmax(0, 1fr);
+    align-items: center;
+    border-radius: 20px 20px 48px 20px !important;
+  }
+
+  .apc-about-page .portrait::before,
+  .apc-about-page .hero-photo-card::before {
+    inset: -9px 9px 9px -9px;
+    border-radius: 24px 24px 52px 24px;
+  }
+
+  .apc-about-page .portrait img,
+  .apc-about-page .hero-photo-card img {
+    width: 112px !important;
+    height: 142px !important;
+    object-fit: cover;
+    border-radius: 14px 14px 36px 14px !important;
+  }
+
+  .apc-about-page .portrait figcaption {
+    padding: 14px 16px !important;
+  }
+
+  .apc-about-page .work-panel,
+  .apc-about-page .final-card,
+  .apc-services-page-v2 .process,
+  .apc-resources-page .support-note,
+  .apc-schools-page .service-section,
+  .apc-schools-page .unsure {
+    padding: 26px 22px !important;
+    border-radius: 22px !important;
+  }
+
+  .apc-guide-page .step {
+    padding: 20px 18px !important;
+  }
+
+  .apc-legal-page .legal-hero {
+    margin-top: 16px;
+    padding: 38px 22px !important;
+    border-radius: 22px;
+  }
+
+  .apc-legal-page .legal-card {
+    padding: 24px 22px 24px 28px !important;
+  }
+}
