@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#073734" />
+
+  <title>When Bedtime Takes Two Hours | Autism Pathways Consulting</title>
+  <link rel="canonical" href="https://autismpathwaysconsulting.com/bedtime"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Autism Pathways Consulting"/>
+  <meta property="og:url" content="https://autismpathwaysconsulting.com/bedtime"/>
+  <meta property="og:title" content="When Bedtime Takes Two Hours | Autism Pathways Consulting"/>
+  <meta property="og:description" content="Why bedtime is so hard for many autistic children and a simple wind-down routine that helps. Free practical guide for Malaysian parents from Autism Pathways Consulting."/>
+  <meta property="og:image" content="https://autismpathwaysconsulting.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="When Bedtime Takes Two Hours | Autism Pathways Consulting"/>
+  <meta name="twitter:description" content="Why bedtime is so hard for many autistic children and a simple wind-down routine that helps. Free practical guide for Malaysian parents from Autism Pathways Consulting."/>
+  <meta name="twitter:image" content="https://autismpathwaysconsulting.com/og-image.png"/>
+  <meta name="description" content="Why bedtime is so hard for many autistic children, and a simple wind-down routine that helps. Free guide for Malaysian parents." />
+
+  <style>
+    :root {
+      --cream: #fff9f1;
+      --deep: #073734;
+      --teal: #0f766e;
+      --sage: #6b9e7a;
+      --coral: #e8997a;
+      --text: #314846;
+      --muted: #526966;
+      --border: rgba(7, 55, 52, 0.14);
+      --shadow: 0 22px 55px rgba(7, 55, 52, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--cream) 0%, #ffffff 55%, var(--cream) 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      background: rgba(255, 249, 241, 0.96);
+      border-bottom: 1px solid rgba(7, 55, 52, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    nav {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand { font-weight: 900; color: var(--deep); letter-spacing: -0.03em; }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-weight: 800;
+      color: #314241;
+    }
+
+    .links a:hover { color: var(--teal); }
+
+    .cta {
+      background: var(--teal);
+      color: white !important;
+      padding: 13px 22px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.22);
+    }
+
+    main {
+      width: min(760px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 40px 0 88px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 26px;
+      color: var(--deep);
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    p { margin: 0 0 20px; font-size: 1.12rem; color: var(--text); }
+
+    h2 {
+      margin: 46px 0 18px;
+      color: var(--deep);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .callout {
+      margin: 30px 0;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: rgba(232, 153, 122, 0.12);
+      border: 1px solid rgba(232, 153, 122, 0.28);
+      font-size: 1.12rem;
+      color: var(--deep);
+    }
+
+    .callout strong { color: var(--deep); }
+
+    .step {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+      margin: 26px 0;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-of-type { border-bottom: none; }
+
+    .step-num {
+      flex: 0 0 auto;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.3rem;
+    }
+
+    .step-body h3 {
+      margin: 6px 0 8px;
+      color: var(--deep);
+      font-size: 1.22rem;
+      letter-spacing: -0.02em;
+    }
+
+    .step-body p { margin: 0; font-size: 1.08rem; color: var(--muted); }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .col {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .col h3 {
+      margin: 0 0 14px;
+      color: var(--deep);
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .col ul { margin: 0; padding-left: 20px; color: var(--muted); }
+    .col li { margin: 9px 0; font-size: 1.04rem; }
+
+    .week {
+      margin: 30px 0;
+      padding: 28px 30px;
+      border-radius: 24px;
+      background: rgba(107, 158, 122, 0.12);
+      border: 1px solid rgba(107, 158, 122, 0.28);
+    }
+
+    .week h2 { margin-top: 0; }
+
+    .credential {
+      margin: 40px 0;
+      padding: 28px 30px;
+      border-left: 4px solid var(--sage);
+      background: rgba(7, 55, 52, 0.03);
+      border-radius: 0 18px 18px 0;
+      font-size: 1.14rem;
+      color: var(--deep);
+    }
+
+    .cta-banner {
+      margin: 50px 0 0;
+      background: var(--deep);
+      color: var(--cream);
+      border-radius: 30px;
+      padding: 44px;
+      text-align: center;
+      box-shadow: 0 28px 65px rgba(7, 55, 52, 0.20);
+    }
+
+    .cta-banner h2 { color: var(--cream); margin: 0 0 14px; }
+    .cta-banner p { color: rgba(255,249,241,0.86); margin: 0 0 26px; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: var(--cream);
+      color: var(--deep);
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .button:hover { background: #f0e9df; }
+
+    footer {
+      border-top: 1px solid rgba(7, 55, 52, 0.10);
+      padding: 30px 0;
+      color: #52615f;
+    }
+
+    .footer-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      nav { align-items: flex-start; flex-direction: column; padding: 18px 0; }
+      .links { width: 100%; flex-wrap: wrap; gap: 14px 18px; }
+      .cta { padding: 10px 16px; }
+      .cols { grid-template-columns: 1fr; }
+      .cta-banner { padding: 32px 24px; }
+    }
+  </style>
+<style id="apc-a11y">
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{
+  outline:3px solid #0f766e;
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,249,241,.9);
+  border-radius:4px;
+}
+.apc-skip-link{
+  position:absolute;left:8px;top:-48px;z-index:1000;
+  padding:10px 16px;border-radius:999px;
+  background:#073734;color:#fff9f1;font-weight:800;text-decoration:none;
+  transition:top .15s ease;
+}
+.apc-skip-link:focus{top:8px;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
+<link rel="stylesheet" href="/apc-design-system.css?v=20260903-8">
+</head>
+
+<body class="apc-v2 apc-guide-page">
+<a class="apc-skip-link" href="#main-content">Skip to main content</a>
+  <header class="apc-site-header">
+  <div class="apc-shell-inner">
+    <a class="apc-shell-logo" href="/" aria-label="Autism Pathways Consulting home"><img src="/apc-option-d-primary-logo.webp" width="445" height="250" alt="Autism Pathways Consulting"></a>
+    <nav class="apc-shell-nav" aria-label="Primary navigation"><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a></nav>
+    <a class="apc-shell-start" href="https://autismpathwaysconsulting.com/start">Start Here</a>
+  </div>
+</header>
+
+  <main id="main-content">
+    <a class="back-link" href="resources.html">&larr; Back to Resources</a>
+
+    <div class="eyebrow">Free parent guide</div>
+    <h1>When bedtime takes two hours</h1>
+
+    <p>It is 9pm. You started bedtime at 7. You have done the shower, the teeth, the pajamas. You have given the warnings, turned off the lights, and said goodnight three times. Your child is still awake, still asking for things, still getting up. You are exhausted. They seem fine.</p>
+
+    <p>For many parents of autistic children, bedtime is the hardest part of the day. Not because the child is being difficult on purpose, but because sleep itself is genuinely harder to reach. The transition from awake to asleep requires a nervous system that has wound down, and for many autistic children, that wind-down does not happen automatically. It needs help.</p>
+
+    <div class="callout">
+      <strong>A small shift in how you see it:</strong> Your child is probably not avoiding sleep because they do not want it. For many autistic children, the body and brain simply have not received the signal that it is time to slow down. The routine is the signal. Without it, the nervous system stays alert, waiting for something it cannot name.
+    </div>
+
+    <h2>Why adding more pressure rarely helps</h2>
+
+    <p>When bedtime drags, it is natural to add urgency. More reminders, a firmer voice, consequences for getting up again. The trouble is that urgency and pressure are activating, not calming. A nervous system that is already struggling to wind down does not wind down faster when it is stressed. It winds down slower.</p>
+
+    <p>What tends to help is the opposite: predictability, repetition, and a gradual lowering of stimulation well before the moment of lights out. The goal is not to command sleep. It is to make sleep more reachable by creating the conditions it needs.</p>
+
+    <h2>The Wind-Down Routine</h2>
+
+    <p>Start the routine at the same time every night, including weekends. Consistency is doing most of the work. Each step signals to the nervous system that sleep is coming, so by the time your child reaches bed, the transition is smaller.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Begin winding down 45 to 60 minutes before sleep</h3>
+        <p>This is earlier than most families start. Screens off, lights lowered, noise reduced. High-energy play, rough-and-tumble, and anything activating ends here. The nervous system needs a runway, not a cliff edge. Moving straight from a screen or active play to bed is one of the most common reasons bedtime is long.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Use the same steps in the same order every night</h3>
+        <p>Shower or bath, teeth, pajamas, one calm activity, lights out. The steps matter less than the order. When the sequence is the same every night, each step becomes a cue for the next. Your child's nervous system begins learning: after pajamas comes the calm activity, and after the calm activity comes sleep. Predictability is regulating.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Choose one calm anchor activity</h3>
+        <p>One thing your child finds settling: a short audiobook, quiet music, a few pages of a familiar book, or gentle conversation about something low-stakes. Not a screen. Not a new story with an exciting plot. Something familiar and low-stimulation that the brain does not need to work hard to follow. This is the bridge between awake and asleep.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Keep the sleep environment consistent</h3>
+        <p>Same room, same temperature, same level of light or darkness, same sounds or silence. Some autistic children sleep better with low background sound, a fan, or white noise. Some need total quiet. Some need a specific blanket or weight. Notice what your child reaches for and make it reliably available every night rather than something they have to ask for or wait for.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Give one clear, calm goodnight and hold it</h3>
+        <p>After the anchor activity, a short and consistent goodnight. The same words, the same brief physical connection if that is welcome, then out. Re-entering for every request teaches the nervous system that the boundary is negotiable, which keeps it alert. If requests come, respond minimally and calmly from outside the door rather than returning fully into the room.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Run the same routine even when it has been a short day, a good day, or a special occasion.</strong> The routine works because it is predictable. One inconsistent night can reset the nervous system's expectations and make the next few nights harder. Consistency on easy nights protects the hard ones.
+    </div>
+
+    <h2>At home and what to share with others</h2>
+
+    <div class="cols">
+      <div class="col">
+        <h3>What tends to help</h3>
+        <ul>
+          <li>Wind-down starting 45 to 60 minutes before sleep</li>
+          <li>Screens off well before bed</li>
+          <li>Same steps in the same order every night</li>
+          <li>One calm anchor activity before lights out</li>
+          <li>Consistent sleep environment</li>
+          <li>Minimal re-entry after goodnight</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>What tends to make it harder</h3>
+        <ul>
+          <li>Screens right up until bedtime</li>
+          <li>High-energy activity close to sleep</li>
+          <li>Changing the order or skipping steps</li>
+          <li>Different routines on weekends</li>
+          <li>Responding fully to every request after goodnight</li>
+          <li>Rushing through steps when running late</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week">
+      <h2>Try this for one week</h2>
+      <p>Choose one change only: move the start of the wind-down routine 30 minutes earlier than you currently begin it. Keep everything else the same.</p>
+      <p>Notice what happens in that extra 30 minutes. Does lowering stimulation earlier change how your child arrives at the bed step? You are not aiming to fix bedtime in a week. You are looking for one signal that earlier preparation makes any difference to how long it takes.</p>
+      <p>Also notice what your child requests after goodnight. Requests for water, another hug, one more question, or "I can't sleep" are often the nervous system looking for one more regulating input before it can let go. Noticing the pattern tells you what the routine might still be missing.</p>
+    </div>
+
+    <p>Some nights will still be long, even with a solid routine in place. Illness, a change to the day, anxiety about something coming tomorrow, or a difficult week can all make sleep harder to reach. On those nights, the goal is not a fast bedtime. It is a calm enough one. The routine still helps, even when it does not produce the result you hoped for.</p>
+
+    <p>If your child regularly takes more than an hour to fall asleep, wakes frequently through the night, or seems genuinely distressed around sleep most nights, it is worth mentioning to your child's doctor. Sleep difficulties in autistic children are common and sometimes have additional factors worth looking at with medical support alongside a home routine.</p>
+
+    <div class="credential">
+      In ten years working with autistic children and families in Malaysia, bedtime was the concern that came up most often in passing, almost as an afterthought, as if parents had accepted it as just how things were. In most cases, the routine itself was not the problem. The wind-down was starting too late, or the steps were changing too much night to night. Small adjustments to consistency made a bigger difference than most families expected.
+    </div>
+
+    <div class="cta-banner">
+      <h2>Want to look at this for your own child?</h2>
+      <p>Bedtime difficulties often connect to other patterns across the day. A short conversation can help you see what your child's nervous system might need and find one practical next step.</p>
+      <a class="button" href="https://cal.com/autismpathwaysconsulting/first-step-call">Book a free 15-min First Step Call</a>
+    </div>
+  </main>
+
+  <footer class="apc-footer apc-footer-minimal">
+  <div class="apc-footer-minimal-inner">
+    <a href="/" class="apc-footer-logo">Autism Pathways Consulting</a>
+    <nav class="apc-footer-minimal-links" aria-label="Footer navigation"><a href="/">Home</a><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a><a href="https://autismpathwaysconsulting.com/start">Start Here</a></nav>
+    <p>Parent education and guidance, not therapy or diagnosis. APC works with you, not instead of the therapists your child is already seeing.</p>
+    <p>CJ Special and Inclusive Consultancy (003030209-T) · Reg. 201903282307</p>
+  </div>
+</footer>
+</body>
+</html>

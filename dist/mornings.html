@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#073734" />
+
+  <title>When Mornings Are Chaos | Autism Pathways Consulting</title>
+  <link rel="canonical" href="https://autismpathwaysconsulting.com/mornings"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Autism Pathways Consulting"/>
+  <meta property="og:url" content="https://autismpathwaysconsulting.com/mornings"/>
+  <meta property="og:title" content="When Mornings Are Chaos | Autism Pathways Consulting"/>
+  <meta property="og:description" content="Why mornings are so hard for autistic children and a practical routine that actually helps. Free guide for Malaysian parents from Autism Pathways Consulting."/>
+  <meta property="og:image" content="https://autismpathwaysconsulting.com/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="When Mornings Are Chaos | Autism Pathways Consulting"/>
+  <meta name="twitter:description" content="Why mornings are so hard for autistic children and a practical routine that actually helps. Free guide for Malaysian parents from Autism Pathways Consulting."/>
+  <meta name="twitter:image" content="https://autismpathwaysconsulting.com/og-image.png"/>
+  <meta name="description" content="Why mornings are so hard for autistic children and a practical routine that actually helps. Free guide for Malaysian parents from Autism Pathways Consulting." />
+
+  <style>
+    :root {
+      --cream: #fff9f1;
+      --deep: #073734;
+      --teal: #0f766e;
+      --sage: #6b9e7a;
+      --coral: #e8997a;
+      --text: #314846;
+      --muted: #526966;
+      --border: rgba(7, 55, 52, 0.14);
+      --shadow: 0 22px 55px rgba(7, 55, 52, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--cream) 0%, #ffffff 55%, var(--cream) 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      background: rgba(255, 249, 241, 0.96);
+      border-bottom: 1px solid rgba(7, 55, 52, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    nav {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand { font-weight: 900; color: var(--deep); letter-spacing: -0.03em; }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-weight: 800;
+      color: #314241;
+    }
+
+    .links a:hover { color: var(--teal); }
+
+    .cta {
+      background: var(--teal);
+      color: white !important;
+      padding: 13px 22px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.22);
+    }
+
+    main {
+      width: min(760px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 40px 0 88px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 26px;
+      color: var(--deep);
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    p { margin: 0 0 20px; font-size: 1.12rem; color: var(--text); }
+
+    h2 {
+      margin: 46px 0 18px;
+      color: var(--deep);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .callout {
+      margin: 30px 0;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: rgba(232, 153, 122, 0.12);
+      border: 1px solid rgba(232, 153, 122, 0.28);
+      font-size: 1.12rem;
+      color: var(--deep);
+    }
+
+    .callout strong { color: var(--deep); }
+
+    .step {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+      margin: 26px 0;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-of-type { border-bottom: none; }
+
+    .step-num {
+      flex: 0 0 auto;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.3rem;
+    }
+
+    .step-body h3 {
+      margin: 6px 0 8px;
+      color: var(--deep);
+      font-size: 1.22rem;
+      letter-spacing: -0.02em;
+    }
+
+    .step-body p { margin: 0; font-size: 1.08rem; color: var(--muted); }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .col {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .col h3 {
+      margin: 0 0 14px;
+      color: var(--deep);
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .col ul { margin: 0; padding-left: 20px; color: var(--muted); }
+    .col li { margin: 9px 0; font-size: 1.04rem; }
+
+    .week {
+      margin: 30px 0;
+      padding: 28px 30px;
+      border-radius: 24px;
+      background: rgba(107, 158, 122, 0.12);
+      border: 1px solid rgba(107, 158, 122, 0.28);
+    }
+
+    .week h2 { margin-top: 0; }
+
+    .credential {
+      margin: 40px 0;
+      padding: 28px 30px;
+      border-left: 4px solid var(--sage);
+      background: rgba(7, 55, 52, 0.03);
+      border-radius: 0 18px 18px 0;
+      font-size: 1.14rem;
+      color: var(--deep);
+    }
+
+    .cta-banner {
+      margin: 50px 0 0;
+      background: var(--deep);
+      color: var(--cream);
+      border-radius: 30px;
+      padding: 44px;
+      text-align: center;
+      box-shadow: 0 28px 65px rgba(7, 55, 52, 0.20);
+    }
+
+    .cta-banner h2 { color: var(--cream); margin: 0 0 14px; }
+    .cta-banner p { color: rgba(255,249,241,0.86); margin: 0 0 26px; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: var(--cream);
+      color: var(--deep);
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .button:hover { background: #f0e9df; }
+
+    footer {
+      border-top: 1px solid rgba(7, 55, 52, 0.10);
+      padding: 30px 0;
+      color: #52615f;
+    }
+
+    .footer-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      nav { align-items: flex-start; flex-direction: column; padding: 18px 0; }
+      .links { width: 100%; flex-wrap: wrap; gap: 14px 18px; }
+      .cta { padding: 10px 16px; }
+      .cols { grid-template-columns: 1fr; }
+      .cta-banner { padding: 32px 24px; }
+    }
+  </style>
+<style id="apc-a11y">
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{
+  outline:3px solid #0f766e;
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,249,241,.9);
+  border-radius:4px;
+}
+.apc-skip-link{
+  position:absolute;left:8px;top:-48px;z-index:1000;
+  padding:10px 16px;border-radius:999px;
+  background:#073734;color:#fff9f1;font-weight:800;text-decoration:none;
+  transition:top .15s ease;
+}
+.apc-skip-link:focus{top:8px;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
+<link rel="stylesheet" href="/apc-design-system.css?v=20260903-8">
+</head>
+
+<body class="apc-v2 apc-guide-page">
+<a class="apc-skip-link" href="#main-content">Skip to main content</a>
+  <header class="apc-site-header">
+  <div class="apc-shell-inner">
+    <a class="apc-shell-logo" href="/" aria-label="Autism Pathways Consulting home"><img src="/apc-option-d-primary-logo.webp" width="445" height="250" alt="Autism Pathways Consulting"></a>
+    <nav class="apc-shell-nav" aria-label="Primary navigation"><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a></nav>
+    <a class="apc-shell-start" href="https://autismpathwaysconsulting.com/start">Start Here</a>
+  </div>
+</header>
+
+  <main id="main-content">
+    <a class="back-link" href="resources.html">&larr; Back to Resources</a>
+
+    <div class="eyebrow">Free parent guide</div>
+    <h1>When mornings are chaos</h1>
+
+    <p>You have already reminded him three times to put his plate in the sink. His shoes are somewhere. His bag is open and half the things that were in it last night are now on the floor. You are watching the clock. He is not. You leave in twelve minutes and he is still in yesterday's mindset, moving at a pace that has nothing to do with the urgency of the situation.</p>
+
+    <p>This is not defiance. He is not doing this to you. But that does not make it easier to be standing in the kitchen at 7:15am, already tired, already repeating yourself, already dreading the rest of the day.</p>
+
+    <p>What I see in families who have mornings like this is almost never a child who does not care. It is a child whose brain genuinely struggles with two things that mornings demand more than almost anything else: remembering what comes next without being told, and switching between tasks smoothly and quickly. For many autistic children, both of those are hard even when everything else in the day is going fine.</p>
+
+    <div class="callout">
+      <strong>A small shift in how you see it:</strong> When your child forgets the plate, leaves the mess, or needs the fourth reminder, he is not ignoring you. His brain is not holding the sequence of the morning the way yours is. Your reminders are doing the work his working memory cannot do yet on its own. The goal is to put that sequence somewhere he can see it, so the reminder comes from the wall instead of from you.
+    </div>
+
+    <h2>Why repeating yourself is not working</h2>
+
+    <p>It is not that he is not hearing you. It is that each reminder arrives as a new piece of information his brain has to process mid-task, alongside whatever else he is already managing. By the fourth reminder, you are frustrated and he is overloaded, and neither of you is in a good state to get out the door.</p>
+
+    <p>The parents I have worked with who made the biggest difference to their mornings did not find a better way to remind their child. They found a way to make the reminders unnecessary. The morning routine became something the child could follow without needing a parent to narrate it. That shift changed everything, including the relationship at 7am.</p>
+
+    <h2>The Visual Morning Routine</h2>
+
+    <p>The idea is simple: put the sequence somewhere your child can see it, in a format that makes sense to him, so the next step is never a surprise and never has to come from you.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Write down every single step, including the ones that seem obvious</h3>
+        <p>Wake up. Go to the bathroom. Wash face. Get dressed. Put on socks. Put on shoes. Eat breakfast. Put plate in the sink. Pack bag. Check bag. Put shoes on at the door. What feels obvious to you is not obvious to a brain that is not automatically sequencing. Write it all down. Leave nothing out.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Make it visual and put it where he actually is</h3>
+        <p>A list on paper, a printed card, a whiteboard, pictures if words are harder to process quickly in the morning. Put it in the bathroom, in the kitchen, near the door. Not in his room if the kitchen is where things fall apart. The chart needs to be where the forgetting happens, not somewhere general.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Let him check it off or tick it himself</h3>
+        <p>This matters more than it sounds. When he is the one checking, he is the one in charge of the sequence. You are not chasing him through it. The chart is. That small shift in who is driving takes a surprising amount of tension out of the morning, for both of you.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Replace reminders with one question</h3>
+        <p>Instead of "have you brushed your teeth, packed your bag, where are your shoes," try one question: "what's next on your chart?" You are redirecting him to the system rather than carrying the system yourself. It takes practice to hold back the reminders, especially when you are running late. But the more you redirect to the chart, the more the chart does the work.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Build in a buffer for the things that go missing</h3>
+        <p>Shoes. Bag. Water bottle. The things that disappear overnight. Instead of finding them in the morning, make returning them to a fixed spot part of the after-school routine, the moment he walks in the door. Shoes go here. Bag goes here. Every time, same spot. The morning problem is often actually an afternoon problem in disguise.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Run the same routine in the same order every single morning.</strong> On weekends too, at least in the early weeks. The routine works because it becomes automatic over time. Inconsistency resets that process. Once the sequence is genuinely internalized, weekends can flex a little. But get there first.
+    </div>
+
+    <h2>What to expect in the first two weeks</h2>
+
+    <div class="cols">
+      <div class="col">
+        <h3>What tends to get easier</h3>
+        <ul>
+          <li>Fewer reminders from you</li>
+          <li>Less conflict over individual steps</li>
+          <li>Your child knowing what is coming next</li>
+          <li>The morning feeling less like a negotiation</li>
+          <li>Leaving on time more often</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>What still takes time</h3>
+        <ul>
+          <li>Automatic checking of the chart without prompting</li>
+          <li>Speed through each step</li>
+          <li>Mornings after late nights or disrupted sleep</li>
+          <li>Days with schedule changes or new clothing</li>
+          <li>Fully internalizing the sequence without the chart</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week">
+      <h2>Try this for one week</h2>
+      <p>Make the chart this weekend. Sit with your child and build it together if he is willing. Ask him what he thinks should be on it. Let him draw or decorate it if that helps. A chart he helped make is one he is more likely to use.</p>
+      <p>Then for one week, every time you feel the urge to remind him of a specific step, pause and ask "what's next on your chart?" instead. Count how many times the chart answered the question you were about to answer for him. That number tells you how much cognitive load you have been carrying every morning on his behalf.</p>
+    </div>
+
+    <p>There will still be mornings where nothing works. He woke up wrong, something changed, he cannot find one shoe and that one shoe has derailed everything. On those mornings, getting out the door is the only goal. The chart waits for tomorrow. You are not failing the system. You are just having a hard morning, and those happen to every family.</p>
+
+    <div class="credential">
+      In ten years working with autistic children and families in Malaysia, the morning chart was the single most commonly underestimated tool I came across. Parents tried it half-heartedly, or made it and then kept giving reminders anyway, which taught their child to wait for the reminder instead of using the chart. The families who committed to it, who genuinely redirected to the chart every time for two solid weeks, almost always came back and said the same thing: I wish we had done this years ago.
+    </div>
+
+    <div class="cta-banner">
+      <h2>Want to look at this for your own child?</h2>
+      <p>Morning struggles often connect to patterns across the whole day. A short conversation can help you see what your child's routine actually needs, and where one change would make the most difference.</p>
+      <a class="button" href="https://cal.com/autismpathwaysconsulting/first-step-call">Book a free 15-min First Step Call</a>
+    </div>
+  </main>
+
+  <footer class="apc-footer apc-footer-minimal">
+  <div class="apc-footer-minimal-inner">
+    <a href="/" class="apc-footer-logo">Autism Pathways Consulting</a>
+    <nav class="apc-footer-minimal-links" aria-label="Footer navigation"><a href="/">Home</a><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a><a href="https://autismpathwaysconsulting.com/start">Start Here</a></nav>
+    <p>Parent education and guidance, not therapy or diagnosis. APC works with you, not instead of the therapists your child is already seeing.</p>
+    <p>CJ Special and Inclusive Consultancy (003030209-T) · Reg. 201903282307</p>
+  </div>
+</footer>
+</body>
+</html>
