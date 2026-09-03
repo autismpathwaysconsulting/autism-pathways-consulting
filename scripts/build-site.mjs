@@ -45,6 +45,8 @@ export const PUBLIC_FILES = Object.freeze([
   "cj-photo.JPG",
   "cj-photo.webp",
   "favicon-32x32.png",
+  "hero-clarity-path-v1.png",
+  "hero-clarity-path-v1.webp",
   "icon-192.png",
   "icon-512.png",
   "og-image.png",

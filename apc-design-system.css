@@ -2073,6 +2073,80 @@ html.apc-home-snap {
   }
 }
 
+@media (max-width: 640px) and (max-height: 700px) {
+  .apc-tier-a.apc-home-page main > .hero,
+  .apc-tier-a.apc-home-page main > #how-apc-helps {
+    padding-block: 12px !important;
+  }
+
+  .apc-home-page .hero-copy .eyebrow {
+    margin-bottom: 7px;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    margin-bottom: 10px !important;
+    font-size: 1.88rem !important;
+    line-height: .98 !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    font-size: .88rem !important;
+    line-height: 1.34 !important;
+  }
+
+  .apc-home-page .hero-actions {
+    margin-top: 10px !important;
+  }
+
+  .apc-home-page .hero-visual {
+    height: 82px;
+    min-height: 82px;
+  }
+
+  .apc-home-page #how-apc-helps .section-head {
+    margin-bottom: 7px !important;
+  }
+
+  .apc-home-page #how-apc-helps .section-head .eyebrow {
+    margin-bottom: 5px;
+  }
+
+  .apc-home-page #how-apc-helps .section-head h2 {
+    margin-bottom: 6px;
+    font-size: 1.48rem !important;
+    line-height: 1.02;
+  }
+
+  .apc-home-page #how-apc-helps .section-head p:last-child {
+    font-size: .78rem;
+    line-height: 1.25;
+  }
+
+  .apc-home-page #how-apc-helps .apc-process-five {
+    gap: 5px !important;
+  }
+
+  .apc-home-page #how-apc-helps .apc-process-five .card {
+    padding: 7px !important;
+  }
+
+  .apc-home-page #how-apc-helps .apc-process-five .number {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+  }
+
+  .apc-home-page #how-apc-helps .apc-process-five h3 {
+    margin-bottom: 2px;
+    font-size: .9rem !important;
+  }
+
+  .apc-home-page #how-apc-helps .apc-process-five p {
+    font-size: .76rem;
+    line-height: 1.22;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.apc-home-snap {
     scroll-behavior: auto;
@@ -2085,5 +2159,635 @@ html.apc-home-snap {
     animation: none !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Homepage premium visual layer */
+.apc-home-page .site-nav {
+  background: rgba(251, 248, 242, .9) !important;
+  box-shadow: 0 8px 34px rgba(7, 55, 52, .04);
+  backdrop-filter: blur(18px) saturate(135%);
+}
+
+.apc-home-page .call-link,
+.apc-home-page .button,
+.apc-home-page .text-action {
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.apc-home-page .call-link,
+.apc-home-page .button.primary {
+  box-shadow: 0 12px 28px rgba(7, 55, 52, .14);
+}
+
+.apc-home-page .hero {
+  background: var(--apc-cream) !important;
+}
+
+.apc-home-page .hero::after {
+  display: none;
+}
+
+.apc-home-page .hero-grid {
+  grid-template-columns: minmax(0, 1.04fr) minmax(410px, .96fr) !important;
+  gap: clamp(26px, 3.8vw, 54px) !important;
+}
+
+.apc-home-page .hero-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.apc-home-page .hero-copy h1 {
+  max-width: 17ch !important;
+  letter-spacing: -.035em !important;
+}
+
+.apc-home-page .hero-visual {
+  position: relative;
+  min-width: 0;
+  isolation: isolate;
+}
+
+.apc-home-page .hero-visual picture {
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(7, 55, 52, .08);
+  border-radius: 34px;
+  background: #fff8ef;
+  box-shadow: 0 32px 80px rgba(7, 55, 52, .12);
+}
+
+.apc-home-page .hero-visual img {
+  display: block;
+  width: 112%;
+  max-width: none;
+  height: auto;
+  margin-left: -6%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(.94) contrast(.99);
+}
+
+.apc-home-page .hero-visual .hero-approach {
+  position: absolute;
+  top: clamp(18px, 3vw, 34px);
+  right: clamp(14px, 2vw, 24px);
+  z-index: 2;
+  width: min(68%, 300px);
+  padding: clamp(20px, 2.6vw, 28px) !important;
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 24px;
+  box-shadow: 0 24px 54px rgba(7, 55, 52, .2);
+}
+
+.apc-home-page .hero-visual .hero-approach .eyebrow {
+  margin-bottom: 12px !important;
+}
+
+.apc-home-page .hero-visual .hero-approach h2 {
+  margin-bottom: 0;
+  font-size: clamp(1.45rem, min(2.2vw, 3.6vh), 1.9rem) !important;
+  line-height: 1.08 !important;
+}
+
+.apc-home-page #situations {
+  overflow: hidden;
+  background: linear-gradient(135deg, #edf5ef 0 60%, #f7eee9 100%) !important;
+}
+
+.apc-home-page #situations .card {
+  min-height: 178px;
+  padding: 26px !important;
+  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border-top: 4px solid var(--apc-primary-teal) !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, .78) !important;
+  box-shadow: 0 18px 44px rgba(7, 55, 52, .06) !important;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.apc-home-page #situations .card:nth-child(2) {
+  border-top-color: var(--apc-coral) !important;
+}
+
+.apc-home-page #situations .card:nth-child(3) {
+  border-top-color: var(--apc-sage) !important;
+}
+
+.apc-home-page #situations .card h3 {
+  font-family: var(--apc-font-heading) !important;
+  font-size: clamp(1.3rem, 2vw, 1.65rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.16;
+}
+
+.apc-home-page #how-apc-helps {
+  overflow: hidden;
+  background: linear-gradient(145deg, #073734 0 62%, #0a4742 100%) !important;
+}
+
+.apc-home-page .apc-process-five .card {
+  min-height: 168px;
+  padding: 20px 16px !important;
+  border: 1px solid rgba(255, 255, 255, .13) !important;
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, .055) !important;
+  transition: transform 220ms ease, background-color 220ms ease, border-color 220ms ease;
+}
+
+.apc-home-page .apc-process-five .number {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 16px;
+  place-items: center;
+  border: 1px solid rgba(45, 212, 191, .38);
+  border-radius: 50%;
+  background: rgba(45, 212, 191, .12);
+  color: #7ce7d9 !important;
+  letter-spacing: 0;
+}
+
+.apc-home-page .apc-process-five .card:nth-child(2) .number,
+.apc-home-page .apc-process-five .card:nth-child(5) .number {
+  border-color: rgba(232, 153, 122, .42);
+  background: rgba(232, 153, 122, .12);
+  color: #f4bda7 !important;
+}
+
+.apc-home-page .apc-process-five .card:nth-child(4) .number {
+  border-color: rgba(107, 158, 122, .52);
+  background: rgba(107, 158, 122, .14);
+  color: #abd1b5 !important;
+}
+
+.apc-home-page .apc-process-five h3 {
+  margin-bottom: 8px;
+  font-size: 1.28rem !important;
+}
+
+.apc-home-page .apc-process-five p {
+  font-size: .9rem;
+  line-height: 1.45;
+}
+
+.apc-home-page #parent-story {
+  background: linear-gradient(115deg, #fff9f1 0 68%, #f5e7df 100%) !important;
+}
+
+.apc-home-page .quote {
+  position: relative;
+  max-width: 980px !important;
+  padding: clamp(38px, 5vw, 62px);
+  overflow: hidden;
+  border: 1px solid rgba(7, 55, 52, .1);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, .66);
+  box-shadow: 0 28px 72px rgba(7, 55, 52, .08);
+}
+
+.apc-home-page .quote::after {
+  position: absolute;
+  right: -50px;
+  bottom: -76px;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: rgba(107, 158, 122, .12);
+  content: "";
+  pointer-events: none;
+}
+
+.apc-home-page .quote blockquote::before {
+  color: rgba(232, 153, 122, .5);
+}
+
+.apc-home-page .quote cite {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.apc-home-page .quote cite::before {
+  width: 30px;
+  height: 2px;
+  background: var(--apc-coral);
+  content: "";
+}
+
+.apc-home-page #support-options {
+  background: #fffdf9;
+}
+
+.apc-home-page #support-options .section-head {
+  margin-bottom: clamp(14px, 2.4vh, 22px) !important;
+}
+
+.apc-home-page .availability-note {
+  max-width: 900px;
+  margin-top: 16px;
+  border: 1px solid rgba(232, 153, 122, .34);
+  border-radius: 16px;
+  background: rgba(232, 153, 122, .1);
+}
+
+.apc-home-page .availability-note summary {
+  position: relative;
+  padding: 12px 46px 12px 16px;
+  color: var(--apc-dark-teal);
+  font-size: .88rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.apc-home-page .availability-note summary::-webkit-details-marker {
+  display: none;
+}
+
+.apc-home-page .availability-note summary::after {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  content: "+";
+  color: var(--apc-primary-teal);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+  transform: translateY(-52%);
+}
+
+.apc-home-page .availability-note[open] summary::after {
+  content: "−";
+}
+
+.apc-home-page .availability-note p {
+  margin: 0;
+  padding: 0 16px 14px;
+  font-size: .86rem;
+  line-height: 1.5;
+}
+
+.apc-home-page .offer-tab {
+  border-color: rgba(7, 55, 52, .12);
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(7, 55, 52, .045);
+}
+
+.apc-home-page .offer-switcher[data-enhanced="true"] .offer-panel:not([hidden]) {
+  border-color: rgba(7, 55, 52, .1) !important;
+  box-shadow: 0 26px 70px rgba(7, 55, 52, .08) !important;
+}
+
+.apc-home-page #about-cj {
+  background: linear-gradient(135deg, #e9f1eb 0 58%, #f8efe9 100%) !important;
+}
+
+.apc-home-page #about-cj .trust-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  gap: clamp(38px, 6vw, 72px);
+}
+
+.apc-home-page .home-cj-intro {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+}
+
+.apc-home-page .home-cj-portrait {
+  position: relative;
+}
+
+.apc-home-page .home-cj-portrait::before {
+  position: absolute;
+  inset: -12px 12px 12px -12px;
+  z-index: 0;
+  border-radius: 30px 30px 72px 30px;
+  background: var(--apc-coral);
+  content: "";
+  opacity: .72;
+}
+
+.apc-home-page .home-cj-photo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 190px;
+  height: 230px;
+  border: 7px solid rgba(255, 249, 241, .92);
+  border-radius: 28px 28px 68px 28px;
+  object-fit: cover;
+  box-shadow: 0 24px 58px rgba(7, 55, 52, .13);
+}
+
+.apc-home-page .home-cj-copy h2 {
+  margin-bottom: 18px;
+}
+
+.apc-home-page .home-cj-copy a {
+  color: var(--apc-primary-teal);
+  font-weight: 700;
+  text-underline-offset: 5px;
+}
+
+.apc-home-page .trust-points {
+  gap: 12px;
+}
+
+.apc-home-page .trust-point {
+  padding: 16px 18px !important;
+  border: 1px solid rgba(7, 55, 52, .09) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, .62) !important;
+  box-shadow: 0 12px 28px rgba(7, 55, 52, .04) !important;
+}
+
+.apc-home-page #start {
+  background: var(--apc-cream);
+}
+
+.apc-home-page #start .route-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #073734 0 70%, #0c4b45 100%) !important;
+  box-shadow: 0 30px 76px rgba(7, 55, 52, .14) !important;
+}
+
+.apc-home-page #start .route-card::after {
+  position: absolute;
+  right: -100px;
+  bottom: -145px;
+  width: 320px;
+  height: 320px;
+  border: 1px solid rgba(45, 212, 191, .24);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.apc-home-page #start .route-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.apc-motion-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 620ms cubic-bezier(.22, 1, .36, 1), transform 620ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.apc-motion-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .apc-home-page .call-link:hover,
+  .apc-home-page .button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(7, 55, 52, .18);
+  }
+
+  .apc-home-page .text-action:hover {
+    color: var(--apc-dark-teal);
+  }
+
+  .apc-home-page #situations .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 26px 58px rgba(7, 55, 52, .1) !important;
+  }
+
+  .apc-home-page .apc-process-five .card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, .28) !important;
+    background: rgba(255, 255, 255, .09) !important;
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .apc-home-page .hero-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr) !important;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    font-size: clamp(2.65rem, min(4.4vw, 6.7vh), 3.35rem) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .apc-home-page .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .apc-home-page .hero-visual {
+    height: 270px;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 34px;
+  }
+
+  .apc-home-page .hero-visual picture {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .apc-home-page .hero-visual img {
+    width: 100%;
+    height: 100%;
+    margin-left: 0;
+    object-position: center 66%;
+  }
+
+  .apc-home-page .hero-visual .hero-approach {
+    display: block;
+    top: 18px;
+    right: 18px;
+    width: min(54%, 280px);
+  }
+
+  .apc-home-page #about-cj .trust-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .apc-home-page .hero-grid {
+    gap: 10px !important;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    max-width: 16ch !important;
+    font-size: clamp(2.05rem, 9.8vw, 2.55rem) !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    line-height: 1.42 !important;
+  }
+
+  .apc-home-page .hero-actions {
+    flex-direction: row;
+    align-items: center;
+    gap: 14px !important;
+    margin-top: 14px !important;
+  }
+
+  .apc-home-page .hero-actions .button {
+    width: auto !important;
+    padding: 10px 14px;
+    font-size: .78rem;
+  }
+
+  .apc-home-page .hero-actions .text-action {
+    font-size: .82rem;
+  }
+
+  .apc-home-page .hero-visual {
+    height: 210px;
+    min-height: 0;
+  }
+
+  .apc-home-page .hero-visual picture {
+    border-radius: 22px;
+  }
+
+  .apc-home-page .hero-visual .hero-approach {
+    display: none;
+  }
+
+  .apc-home-page #situations .card {
+    min-height: 0;
+    padding: 14px 16px !important;
+    border-radius: 17px !important;
+  }
+
+  .apc-home-page #situations .card h3 {
+    margin-bottom: 5px;
+    font-size: 1.12rem !important;
+  }
+
+  .apc-home-page #situations .card p {
+    margin-bottom: 0;
+    font-size: .84rem;
+    line-height: 1.38;
+  }
+
+  .apc-home-page .apc-process-five .card {
+    min-height: 0;
+    padding: 11px 9px !important;
+    border-radius: 15px !important;
+  }
+
+  .apc-home-page .apc-process-five .number {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 7px;
+    font-size: .7rem;
+  }
+
+  .apc-home-page .quote {
+    padding: 28px 24px;
+    border-radius: 22px;
+  }
+
+  .apc-home-page .quote blockquote::before {
+    top: -.34em;
+    left: -.2em;
+  }
+
+  .apc-home-page .availability-note {
+    margin-top: 12px;
+  }
+
+  .apc-home-page .availability-note summary {
+    padding-block: 10px;
+    font-size: .82rem;
+  }
+
+  .apc-home-page .availability-note p {
+    font-size: .8rem;
+  }
+
+  .apc-home-page .home-cj-intro {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .apc-home-page .home-cj-photo {
+    width: 112px;
+    height: 142px;
+    border-width: 5px;
+    border-radius: 20px 20px 46px 20px;
+  }
+
+  .apc-home-page .home-cj-portrait::before {
+    inset: -8px 8px 8px -8px;
+    border-radius: 22px 22px 50px 22px;
+  }
+
+  .apc-home-page .home-cj-copy h2 {
+    margin-bottom: 10px;
+    font-size: 1.65rem !important;
+  }
+
+  .apc-home-page .home-cj-copy a {
+    font-size: .84rem;
+  }
+
+  .apc-home-page .trust-points {
+    gap: 8px;
+  }
+
+  .apc-home-page .trust-point {
+    padding: 11px 13px !important;
+    font-size: .82rem;
+    line-height: 1.35;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 901px) {
+  .apc-home-page .hero-visual .hero-approach {
+    top: 16px;
+    right: 16px;
+    padding: 20px !important;
+  }
+
+  .apc-home-page #situations .card,
+  .apc-home-page .apc-process-five .card {
+    min-height: 150px;
+  }
+
+  .apc-home-page .quote {
+    padding-block: 34px;
+  }
+
+  .apc-home-page .home-cj-photo {
+    height: 210px;
+  }
+}
+
+@media (max-width: 640px) and (max-height: 700px) {
+  .apc-home-page .hero-copy h1 {
+    margin-bottom: 10px !important;
+    font-size: 1.88rem !important;
+    line-height: .98 !important;
+  }
+
+  .apc-home-page .hero-visual {
+    height: 135px;
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apc-motion-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
   }
 }
