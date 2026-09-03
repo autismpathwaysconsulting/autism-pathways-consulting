@@ -4672,7 +4672,9 @@ html {
   }
 
   .section-rail a:focus-visible {
-    outline: 3px solid var(--apc-teal-deep) !important;
+    outline-color: var(--apc-teal-deep) !important;
+    outline-style: solid !important;
+    outline-width: 3px !important;
     outline-offset: -4px !important;
     box-shadow: none !important;
   }
