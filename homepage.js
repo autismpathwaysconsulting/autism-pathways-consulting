@@ -158,6 +158,7 @@ function sectionLabel(target, index) {
     || targetHeading
     || target.querySelector?.(".eyebrow")?.textContent
     || target.querySelector?.("h1, h2, h3")?.textContent
+    || target.querySelector?.("p")?.textContent
     || target.getAttribute("aria-label")
     || (target.tagName === "FOOTER" ? "More from APC" : `Section ${index + 1}`);
   const clean = source.replace(/\s+/g, " ").trim();
