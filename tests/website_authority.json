@@ -10,8 +10,8 @@
     "source_authority_version": "1.2",
     "source_candidate_commit": "b7206744965929ce1469295129661a863bbdf733",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:ebc93120addfedecd17b16ea99d21474a34782aef32b9cecbb25dc709d212f29",
-    "generation_method": "node tools/outcome-offer/generate-website-authority.js"
+    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
+    "generation_method": "Founder-approved website projection update from canonical mirror"
   },
   "offers": {
     "one_concern": {
@@ -35,11 +35,12 @@
       "duration_minutes": 45,
       "scope": "one focused parent concern",
       "delivery_platforms": [
-        "Google Meet"
+        "Online"
       ],
       "payment_methods": [
         "Bank transfer",
-        "DuitNow QR"
+        "DuitNow QR",
+        "Wise bank transfer"
       ],
       "booking_sequence": [
         "request",
@@ -59,7 +60,7 @@
             "One-Concern Parent Session",
             "RM350",
             "45 minutes",
-            "Google Meet"
+            "Online"
           ]
         },
         "terms.html": {
@@ -68,7 +69,7 @@
             "One-Concern Parent Session",
             "RM350",
             "45-minute",
-            "Google Meet"
+            "online"
           ]
         },
         "pay/index.html": {
@@ -77,22 +78,23 @@
             "One-Concern Parent Session",
             "RM350",
             "45-minute",
-            "Google Meet"
+            "online"
           ]
         }
       }
     },
     "home_support": {
-      "canonical_name": "Home Support Programme",
+      "canonical_name": "APC Home Support Programme",
       "promise": "Turn autism advice into a practical home plan you can actually use.",
       "intended_parent_outcome": "Build, test, review, and adjust a practical home-support plan",
       "deliverables": [
         "Prioritise the most important concern",
-        "Practical home-support plan",
+        "Personalised Home Support Plan",
         "Implementation guidance",
         "Review what happened",
         "Adjust the plan based on the family's experience",
-        "Final written plan or summary"
+        "WhatsApp clarification throughout the active programme",
+        "One check-in about a month after the final session"
       ],
       "price": {
         "currency": [
@@ -104,15 +106,17 @@
       "session_count": 4,
       "session_duration_minutes": 60,
       "delivery_period": "APPROXIMATELY_6_TO_8_WEEKS",
+      "session_frequency": "ONCE_EVERY_TWO_WEEKS",
       "window_weeks": [
         6,
         8
       ],
-      "additional_post_programme_checkin": false,
+      "additional_post_programme_checkin": true,
       "fit_call_required": true,
       "payment_methods": [
         "Bank transfer",
-        "DuitNow QR"
+        "DuitNow QR",
+        "Wise bank transfer"
       ],
       "bindings": {
         "services.html": {
@@ -120,7 +124,7 @@
           "signals": [
             "APC Home Support Programme",
             "RM1,800",
-            "Four 60-minute sessions"
+            "Four sessions"
           ]
         },
         "terms.html": {
@@ -128,7 +132,7 @@
           "signals": [
             "APC Home Support Programme",
             "RM1,800",
-            "four 60-minute sessions"
+            "four sessions"
           ]
         },
         "pay/index.html": {
@@ -136,14 +140,14 @@
           "signals": [
             "APC Home Support Programme",
             "RM1,800",
-            "Four 60-minute sessions"
+            "Four sessions"
           ]
         }
       }
     }
   },
   "first_step_call": {
-    "canonical_name": "Free 15-Minute First Step Call",
+    "canonical_name": "Free 15-Min First Step Call",
     "price": 0,
     "duration_minutes": 15,
     "promise": "Find the right next step.",
@@ -154,19 +158,31 @@
   "payment_controls": {
     "approved_methods": [
       "BANK_TRANSFER",
-      "DUITNOW_QR"
+      "DUITNOW_QR",
+      "WISE_BANK_TRANSFER"
     ],
     "sequence": [
       "REQUEST",
       "FOUNDER_SUITABILITY_AND_AVAILABILITY_REVIEW",
       "PERMISSION_TO_PAY",
-      "BANK_TRANSFER_OR_DUITNOW_QR",
+      "BANK_TRANSFER_DUITNOW_QR_OR_WISE",
       "PROOF_RECEIVED",
       "PAYMENT_VERIFIED",
       "BOOKING_CONFIRMED"
     ],
     "automatic_confirmation": false,
     "request_payment_attempt_or_screenshot_confirms_booking": false
+  },
+  "founder_override": {
+    "approved_date": "2026-09-03",
+    "international_clients": true,
+    "local_payment_methods": [
+      "Maybank business-account transfer",
+      "DuitNow QR"
+    ],
+    "international_payment_method": "Wise bank transfer",
+    "home_support_clarification": "WhatsApp clarification throughout the active programme",
+    "post_programme_checkin": "One check-in about a month after the final session"
   },
   "claim_boundaries": {
     "excludes": [

@@ -4137,6 +4137,8 @@ html {
   }
 
   .apc-v2 .apc-shell-logo {
+    min-width: 44px;
+    min-height: 44px;
     grid-column: 1;
     grid-row: 1;
   }
@@ -4161,7 +4163,7 @@ html {
   }
 
   .apc-v2 .apc-shell-nav a {
-    min-height: 38px;
+    min-height: 44px;
     justify-content: center;
     padding-inline: 6px;
     border-radius: 10px;
@@ -4595,8 +4597,9 @@ html {
 
 /* Cross-site density and deliberate section stops */
 html {
+  overflow-x: clip;
   scroll-padding-top: 84px;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
 }
 
 .apc-v2:not(.apc-home-page) {
@@ -4611,14 +4614,55 @@ html {
 
 .apc-v2 main > :where(section, header, article),
 .apc-v2 > footer,
+.apc-v2.apc-utility-page > main,
 .apc-start-page-v2 main > .reassurance,
 .apc-schools-page main > .page-header,
 .apc-schools-page main > .container > :where(.service-section, .unsure),
 .apc-guide-page > main,
 .apc-guide-page main > :where(h2, .week, .cta-banner) {
-  scroll-margin-top: 84px;
+  scroll-margin-top: 0;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+.apc-home-page main > section,
+.apc-home-page > footer {
+  scroll-snap-stop: always;
+}
+
+.apc-inline-booking {
+  width: 100%;
+  padding-block: var(--apc-section-v2, var(--apc-section-space));
+}
+
+.apc-inline-booking .apc-booking-intro {
+  max-width: 680px;
+  margin-bottom: 24px;
+}
+
+.apc-inline-booking [data-cal-inline] {
+  width: 100%;
+  min-height: 680px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid var(--apc-border);
+  border-radius: 24px;
+  box-shadow: var(--apc-shadow-soft);
+}
+
+.section-rail a {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  border-color: transparent;
+  background: radial-gradient(circle, #fff 0 3px, rgba(7, 55, 52, .55) 3px 4px, transparent 4px);
+}
+
+.section-rail a[aria-current="location"] {
+  width: 28px;
+  height: 36px;
+  background: radial-gradient(circle, var(--apc-teal-deep) 0 5px, transparent 5px);
 }
 
 .apc-tier-a:not(.apc-home-page) main > :where(.section, section.section) {

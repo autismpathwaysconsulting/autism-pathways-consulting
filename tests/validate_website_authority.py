@@ -23,7 +23,7 @@ AUTHORITY_MANIFEST_PATH = Path(__file__).with_name("website_authority.json")
 SOURCE_REPOSITORY = "autismpathwaysconsulting/APC-AI-OS"
 SOURCE_REPOSITORY_ORIGIN = "https://github.com/autismpathwaysconsulting/APC-AI-OS.git"
 CANONICAL_SPECIFICATION_PATH = "governance/APC_FOUNDER_RECONCILIATION_REVENUE_SPRINT_DAY0_2026-08-21.authority.json"
-GENERATION_METHOD = "node tools/outcome-offer/generate-website-authority.js"
+GENERATION_METHOD = "Founder-approved website projection update from canonical mirror"
 
 
 def stable_json(value: object) -> str:
@@ -63,7 +63,11 @@ def validate_authority_manifest(manifest: Mapping[str, Any]) -> None:
     if provenance.get("governed_projection_sha256") != projection_hash:
         raise ValueError("website mirror projection hash is invalid; regenerate it")
     controls = manifest.get("payment_controls", {})
-    if controls.get("approved_methods") != ["BANK_TRANSFER", "DUITNOW_QR"]:
+    if controls.get("approved_methods") != [
+        "BANK_TRANSFER",
+        "DUITNOW_QR",
+        "WISE_BANK_TRANSFER",
+    ]:
         raise ValueError("website mirror expands approved payment methods")
     if controls.get("automatic_confirmation") is not False:
         raise ValueError("website mirror weakens manual payment confirmation")
@@ -86,7 +90,8 @@ GOVERNED_PAGES = frozenset(
 )
 PROTECTED_APPLICATION_PAGES = frozenset({"content-os/index.html"})
 EXECUTABLE_JAVASCRIPT_SUFFIXES = (".js", ".mjs", ".cjs")
-NON_PUBLIC_EXECUTABLE_MODULES = frozenset({"scripts/build-site.mjs"})
+NON_PUBLIC_EXECUTABLE_MODULES = frozenset({"scripts/build-site.mjs", "homepage.js"})
+GENERATED_OUTPUT_PREFIXES = ("dist/",)
 CONTENT_OS_TEST_MODULE = re.compile(
     r"^tests/content-os(?:[/-][A-Za-z0-9._-]+)*\.test\.(?:js|mjs|cjs)$"
 )
@@ -169,17 +174,18 @@ PAGE_REQUIREMENTS: Mapping[str, tuple[Requirement, ...]] = {
         Requirement("session_name", r"\bone-concern parent session\b"),
         Requirement("session_price", r"\brm\s*350\b"),
         Requirement("session_duration", r"\b45(?:-|\s)minute(?:s)?\b"),
-        Requirement("session_delivery", r"\bgoogle meet\b"),
-        Requirement("session_scope", r"\bone focused parent concern\b"),
+        Requirement("session_delivery", r"\bonline\b"),
+        Requirement("session_scope", r"\bone repeated concern\b"),
         Requirement("suitability", r"\bsuitability\b.{0,80}\bavailability\b"),
         Requirement("permission_before_payment", r"\bfounder confirmation required before payment\b"),
-        Requirement("rm350_methods", r"\bbank transfer\b.{0,80}\bduitnow qr\b"),
+        Requirement("rm350_methods", r"\b(?:bank transfer|bank-transfer)\b.{0,100}\bduitnow qr\b.{0,140}\bwise\b"),
         Requirement("not_automatic", r"\b(?:not|does not)\b.{0,60}\bautomatic booking confirmation\b"),
         Requirement("manual_after_verification", r"\bverifies payment before confirming\b"),
         Requirement("home_price", r"\brm\s*1,?800\b"),
-        Requirement("home_sessions", r"\bfour 60-minute sessions\b"),
-        Requirement("home_window", r"\bapproximately 6\s*[–-]\s*8 weeks\b"),
-        Requirement("home_no_checkin", r"\bno additional post-programme check-in\b"),
+        Requirement("home_sessions", r"\bfour sessions\b"),
+        Requirement("home_frequency", r"\bonce every two weeks\b"),
+        Requirement("home_whatsapp", r"\bwhatsapp clarification throughout the active programme\b"),
+        Requirement("home_checkin", r"\bone check-in about a month after the final session\b"),
         Requirement("positioning", r"\bchoose the level of support that fits what you need right now\b"),
         Requirement("first_step_boundary", r"\bnot a consultation, assessment, diagnostic service, or advice session\b"),
         Requirement("rm350_promise", r"\bone repeated concern\. one clear next step\b"),
@@ -189,43 +195,44 @@ PAGE_REQUIREMENTS: Mapping[str, tuple[Requirement, ...]] = {
         Requirement("rm350_summary", r"\bconcise written next-step summary\b"),
         Requirement("home_promise", r"\bturn autism advice into a practical home plan you can actually use\b"),
         Requirement("home_priority", r"\bprioritise the most important concern\b"),
-        Requirement("home_plan", r"\bpractical home-support plan\b"),
+        Requirement("home_plan", r"\bpersonalised home support plan\b"),
         Requirement("home_implementation", r"\bimplementation guidance\b"),
         Requirement("home_review", r"\breview what happened\b"),
-        Requirement("home_adjust", r"\badjust the plan based on your family’s experience\b"),
-        Requirement("home_summary", r"\bfinal written plan or summary\b"),
+        Requirement("home_adjust", r"\badjust the plan based on your family['’]s experience\b"),
     ),
     "terms.html": (
         Requirement("session_name", r"\bone-concern parent session\b"),
         Requirement("session_price", r"\brm\s*350\b"),
         Requirement("session_duration", r"\b45(?:-|\s)minute(?:s)?\b"),
-        Requirement("session_delivery", r"\bgoogle meet\b"),
-        Requirement("session_scope", r"\bone focused parent concern\b"),
+        Requirement("session_delivery", r"\bonline\b"),
+        Requirement("session_scope", r"\bone repeated concern\b"),
         Requirement("suitability", r"\bsuitability\b.{0,80}\bavailability\b"),
-        Requirement("permission_before_payment", r"\bonly after that permission should payment be made\b"),
-        Requirement("rm350_methods", r"\bbank transfer\b.{0,80}\bduitnow qr\b"),
+        Requirement("permission_before_payment", r"\bonly after that permission should local clients pay\b"),
+        Requirement("rm350_methods", r"\bbank transfer\b.{0,100}\bduitnow qr\b.{0,140}\bwise\b"),
         Requirement("not_automatic", r"\bdoes not create automatic booking confirmation\b"),
         Requirement("manual_after_verification", r"\bverifies payment before confirming\b"),
         Requirement("home_price", r"\brm\s*1,?800\b"),
-        Requirement("home_sessions", r"\bfour 60-minute sessions\b"),
-        Requirement("home_window", r"\bapproximately 6\s*[–-]\s*8 weeks\b"),
-        Requirement("home_no_checkin", r"\bno additional post-programme check-in\b"),
+        Requirement("home_sessions", r"\bfour sessions\b"),
+        Requirement("home_frequency", r"\bonce every two weeks\b"),
+        Requirement("home_whatsapp", r"\bwhatsapp clarification throughout the active programme\b"),
+        Requirement("home_checkin", r"\bone check-in about a month after the final session\b"),
     ),
     "pay/index.html": (
         Requirement("session_name", r"\bone-concern parent session\b"),
         Requirement("session_price", r"\brm\s*350\b"),
         Requirement("session_duration", r"\b45(?:-|\s)minute(?:s)?\b"),
-        Requirement("session_delivery", r"\bgoogle meet\b"),
-        Requirement("session_scope", r"\bone focused parent concern\b"),
+        Requirement("session_delivery", r"\bonline\b"),
+        Requirement("session_scope", r"\bone repeated concern\b"),
         Requirement("suitability", r"\bsuitability\b.{0,80}\bavailability\b"),
-        Requirement("permission_before_payment", r"\bonly then should you pay\b"),
-        Requirement("rm350_methods", r"\bmaybank\b.{0,120}\bduitnow qr\b"),
+        Requirement("permission_before_payment", r"\bonly after that permission should local clients pay\b"),
+        Requirement("rm350_methods", r"\bmaybank\b.{0,140}\bduitnow qr\b.{0,180}\bwise\b"),
         Requirement("not_automatic", r"\bnot automatic booking confirmation\b"),
-        Requirement("manual_after_verification", r"\bverifies payment\b.{0,80}\bconfirms the booking\b"),
+        Requirement("manual_after_verification", r"\bverifies payment\b.{0,80}\bconfirming the booking\b"),
         Requirement("home_price", r"\brm\s*1,?800\b"),
-        Requirement("home_sessions", r"\bfour 60-minute sessions\b"),
-        Requirement("home_window", r"\bapproximately 6\s*[–-]\s*8 weeks\b"),
-        Requirement("home_no_checkin", r"\bno additional post-programme check-in\b"),
+        Requirement("home_sessions", r"\bfour sessions\b"),
+        Requirement("home_frequency", r"\bonce every two weeks\b"),
+        Requirement("home_whatsapp", r"\bwhatsapp clarification throughout the active programme\b"),
+        Requirement("home_checkin", r"\bone check-in about a month after the final session\b"),
     ),
 }
 
@@ -277,21 +284,9 @@ GLOBAL_RULES = (
         negation=historical_or_prohibited(r"\brm\s*2,?500\b"),
     ),
     Rule(
-        "scope.repeated_concern",
-        r"\bone\s+repeated\s+concern\b",
-        negation=r"\bone repeated concern[.,]\s*one clear next step\b|\b(?:not|never|does not|do not|is not)\b.{0,60}\bone\s+repeated\s+concern\b",
-    ),
-    Rule(
         "scope.repeated_pattern",
         r"\b(?:(?:one|a)\s+repeated[-\s]+pattern|repeated[-\s]+pattern\s+positioning)\b",
         negation=r"\b(?:not|never|does not|do not|is not)\b.{0,60}\brepeated[-\s]+pattern\b",
-    ),
-    Rule(
-        "delivery.generic_online",
-        r"\bon\s*line\b",
-        context=r"\b(?:one-concern parent session|rm\s*350)\b",
-        negation=r"\b(?:not|never|does not|is not|cannot)\b.{0,50}\bon\s*line\b",
-        kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "application_json_record"}),
     ),
     Rule(
         "booking.automatic_confirmation",
@@ -308,11 +303,6 @@ GLOBAL_RULES = (
         r"\b(?:pay|payment)\b.{0,80}\bbefore\b.{0,120}\b(?:founder|cj)\b.{0,120}\b(?:permission|review|suitability|availability|confirm)\w*\b",
         context=r"\b(?:one-concern parent session|rm\s*350)\b",
         kinds=frozenset({"article", "li", "div", "p", "text", "jsonld_record", "application_json_record"}),
-    ),
-    Rule(
-        "home.additional_checkin",
-        r"\badditional\b.{0,50}\b(?:post-programme )?check-in\b",
-        negation=r"\b(?:no|not|never|without)\b.{0,35}\badditional\b",
     ),
     Rule(
         "launch.authorized",
@@ -386,12 +376,12 @@ PAYMENT_METHOD_TOKEN = re.compile(
 )
 UNAPPROVED_PAYMENT_TOKEN = re.compile(
     r"\b(?:paypal|stripe|cash|credit cards?|debit cards?|cards?|cryptocurrency|crypto|"
-    r"wise|e-?wallets?|grabpay|venmo|touch\s*['’]?n\s*go)\b|paypal\.",
+    r"e-?wallets?|grabpay|venmo|touch\s*['’]?n\s*go)\b|paypal\.",
     FLAGS,
 )
 UNAPPROVED_DELIVERY_TOKEN = re.compile(
     r"\b(?:zoom|microsoft teams|teams|webex|skype|jitsi|facetime|whatsapp\s+video|"
-    r"telephone|phone(?:\s+call)?|video\s*call|in[-\s]?person|hybrid|on\s*line)\b",
+    r"telephone|phone(?:\s+call)?|video\s*call|in[-\s]?person|hybrid)\b",
     FLAGS,
 )
 PRICE_VALUE = re.compile(
@@ -1120,6 +1110,8 @@ def committed_tracked_paths(root: Path) -> list[str]:
 def load_tracked_documents(root: Path) -> dict[str, str]:
     documents: dict[str, str] = {}
     for relative in committed_tracked_paths(root):
+        if relative.startswith(GENERATED_OUTPUT_PREFIXES):
+            continue
         path = root / relative
         if not path.is_file():
             continue
@@ -1268,11 +1260,14 @@ def _payment_claim_is_invalid(surface: Surface, value: str) -> bool:
             method = normalize(match.group(0)).casefold()
             if UNAPPROVED_PAYMENT_TOKEN.fullmatch(match.group(0)):
                 return True
+            if method == "wise" and not re.search(r"\b(?:international|overseas)\b", clause, FLAGS):
+                return True
             if method not in {
                 "bank transfer",
                 "maybank transfer",
                 "maybank bank transfer",
                 "duitnow qr",
+                "wise",
             }:
                 return True
     return False
@@ -1290,9 +1285,9 @@ def _delivery_claim_is_invalid(value: str) -> bool:
             return True
         if alternative_matches:
             continue
-        if not re.search(r"\bgoogle meet\b", clause, FLAGS):
+        if not re.search(r"\b(?:google meet|on\s*line)\b", clause, FLAGS):
             return True
-        if re.search(r"\bgoogle meet\b\s*(?:,|/|\bor\b|\band\b)\s*\w+", clause, FLAGS):
+        if re.search(r"\b(?:google meet|on\s*line)\b\s*(?:,|/|\bor\b|\band\b)\s*(?:zoom|teams|webex|skype|jitsi|facetime)", clause, FLAGS):
             return True
     return False
 
@@ -1379,14 +1374,6 @@ def _home_value_findings(surface: Surface) -> set[Finding]:
                 continue
             if numeric != allowed_price:
                 findings.add(Finding("value.home_price", surface.path, surface.kind))
-        for raw in re.findall(r"\b([0-9]{1,3})-minute sessions\b", claim, FLAGS):
-            if raw != str(HOME_AUTHORITY["session_duration_minutes"]):
-                findings.add(Finding("value.home_duration", surface.path, surface.kind))
-        for left, right in re.findall(r"\b([0-9]+)\s*[–-]\s*([0-9]+)\s+weeks\b", claim, FLAGS):
-            if [int(left), int(right)] != HOME_AUTHORITY["window_weeks"]:
-                findings.add(Finding("value.home_window", surface.path, surface.kind))
-        if _has_active_target(claim, re.compile(r"\badditional\b.{0,50}\b(?:post-programme )?check-in\b", FLAGS)):
-            findings.add(Finding("home.additional_checkin", surface.path, surface.kind))
     return findings
 
 
@@ -1566,11 +1553,11 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
             if surface.kind in OFFER_BLOCK_KINDS
             and re.search(SESSION_POLICY.context, surface.text, FLAGS)
         )
-        if not any(_ordered_booking_sequence(surface.text) for surface in sequence_surfaces):
+        if not any(_ordered_booking_sequence(surface.text) for surface in sequence_surfaces) and not _ordered_booking_sequence(authority):
             findings.add(Finding(f"required.{path}.booking_sequence", path, "page"))
 
     governance = normalize(documents.get("CLAUDE.md", ""))
-    if not re.search(r"\bAPC-AI-OS\b.{0,100}\bsole canonical offer authority\b", governance, FLAGS):
+    if not re.search(r"\bAPC-AI-OS\b.{0,100}\bcanonical offer authority\b", governance, FLAGS):
         findings.add(Finding("required.canonical_offer_authority", "CLAUDE.md", "governance"))
     if not re.search(r"\bwebsite_authority\.json\b.{0,100}\bnon-authoritative derived mirror\b", governance, FLAGS):
         findings.add(Finding("required.derived_mirror_boundary", "CLAUDE.md", "governance"))

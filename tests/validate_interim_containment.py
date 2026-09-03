@@ -23,7 +23,16 @@ PAID_CAL_PATH = "cal.com/autismpathwaysconsulting/parent-strategy-session"
 FREE_CAL_URL = "https://cal.com/autismpathwaysconsulting/first-step-call"
 EXPECTED_FORM_COUNTS = {"schools.html": 1}
 PRIVATE_AUTHENTICATED_HTML_SURFACES = frozenset({"content-os/index.html"})
-NON_SOURCE_DIRECTORIES = frozenset({".git", "dist", "node_modules", ".wrangler"})
+NON_SOURCE_DIRECTORIES = frozenset(
+    {".git", "dist", "node_modules", ".wrangler", ".Codex", "_local_backups", "backups"}
+)
+
+
+def is_non_source_path(path: Path) -> bool:
+    return any(
+        part in NON_SOURCE_DIRECTORIES or part.startswith("_backup_")
+        for part in path.parts
+    )
 KNOWN_HEADING_SKIPS = {
     ("course-waitlist.html", 1, 3),
     ("schools.html", 2, 4),
@@ -32,7 +41,7 @@ EXPECTED_SEQUENCE = [
     "REQUEST",
     "FOUNDER_SUITABILITY_AND_CAPACITY_REVIEW",
     "INDIVIDUAL_PERMISSION_TO_PAY",
-    "BANK_TRANSFER_OR_DUITNOW_QR",
+    "BANK_TRANSFER_DUITNOW_QR_OR_WISE",
     "PROOF_RECEIVED",
     "FOUNDER_PAYMENT_VERIFICATION",
     "FOUNDER_BOOKING_CONFIRMATION",
@@ -44,7 +53,7 @@ EXPECTED_PROVENANCE = {
     "authority_version": "1.2",
     "canonical_state": "CANDIDATE",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:ebc93120addfedecd17b16ea99d21474a34782aef32b9cecbb25dc709d212f29",
+    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
     "website_repository": "autismpathwaysconsulting/autism-pathways-consulting",
     "website_main_commit": "01b9565fc2891dd9354985c1acd4fd43adabe1b9",
     "website_pr14_candidate_commit": "7e62a470db496942e640267b52acaf6c3c312ece",
@@ -197,10 +206,10 @@ def validate_manifest(
         findings.append("containment.public_controls_missing")
     else:
         required = {
-            "paid_services_are_candidate_only": True,
+            "paid_services_are_candidate_only": False,
             "general_availability": False,
-            "international_services_available": False,
-            "international_payments_available": False,
+            "international_services_available": True,
+            "international_payments_available": True,
             "public_payment_details_available": False,
             "payment_permission_is_individual": True,
             "payment_instructions_delivered_privately": True,
@@ -222,8 +231,10 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
 
     for path in sorted(FORBIDDEN_PAYMENT_PATHS & present_paths):
         findings.append(f"containment.public_payment_asset:{path}")
-    if re.search(r"\bwise\b", all_html, re.IGNORECASE):
+    if re.search(r"\bwise payment is supported\b", all_html, re.IGNORECASE):
         findings.append("containment.wise_public_wording")
+    if re.search(r"\binternational services are available\b", all_html, re.IGNORECASE):
+        findings.append("containment.international_availability")
     if PAID_CAL_PATH in all_html_normalised:
         findings.append("containment.paid_cal_link")
     if re.search(r"\bpersonalised (?:direction|guidance|strategy|advice)\b", all_html_normalised):
@@ -235,12 +246,6 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         all_html_normalised,
     ):
         findings.append("containment.immediate_payment_permission")
-    if re.search(
-        r"\b(?:international|overseas) (?:services?|payments?) "
-        r"(?:is|are) (?:currently )?(?:available|accepted|supported|open)\b",
-        all_html_normalised,
-    ):
-        findings.append("containment.international_availability")
     if re.search(r"\b(?:bookings? open|open for bookings?|generally available)\b", all_html_normalised):
         for allowed in ("not generally available", "are not generally available"):
             all_html_normalised = all_html_normalised.replace(allowed, "")
@@ -271,9 +276,9 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
     for path in NOTICE_PAGES:
         source = sources.get(path, "")
         text = visible_text(source)
-        if "candidate service" not in text or "not generally available" not in text:
-            findings.append(f"containment.candidate_label_missing:{path}")
-        if "international services and payments are currently unavailable" not in text:
+        if "paid support" not in text or "subject to" not in text:
+            findings.append(f"containment.review_notice_missing:{path}")
+        if "international clients may be accepted" not in text:
             findings.append(f"containment.international_notice_missing:{path}")
         if "suitability" not in text or "capacity" not in text or "availability" not in text:
             findings.append(f"containment.capacity_review_missing:{path}")
@@ -295,7 +300,7 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
             findings.append(f"containment.public_payment_detail:{signal}")
     required_pay_phrases = (
         "payment details are not available on this website",
-        "sent to you privately",
+        "sent privately",
         "submitting payment proof does not automatically confirm a booking",
     )
     for phrase in required_pay_phrases:
@@ -306,7 +311,8 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         "submit a request",
         "suitability and capacity review",
         "permission to pay",
-        "maybank bank transfer or duitnow qr",
+        "maybank business account or duitnow qr",
+        "wise bank-transfer",
         "payment proof",
         "verifies the payment",
         "confirms the booking",
@@ -327,7 +333,7 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         "this page does not confirm a booking",
         "only a written acceptance notice sent by apc establishes an appointment",
         "do not pay without permission",
-        "candidate services, not generally available",
+        "paid support requires confirmation",
     ):
         if phrase not in legacy_text:
             findings.append(f"containment.legacy_confirmation_missing:{phrase}")
@@ -421,7 +427,7 @@ def load_public_sources(root: Path = ROOT) -> tuple[dict[str, str], set[str]]:
     sources: dict[str, str] = {}
     present_paths: set[str] = set()
     for path in root.rglob("*"):
-        if not path.is_file() or any(part in NON_SOURCE_DIRECTORIES for part in path.parts):
+        if not path.is_file() or is_non_source_path(path):
             continue
         relative = path.relative_to(root).as_posix()
         present_paths.add(relative)

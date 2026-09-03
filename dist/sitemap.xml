@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://autismpathwaysconsulting.com/</loc><lastmod>2026-08-22</lastmod><priority>1.0</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/services</loc><lastmod>2026-08-22</lastmod><priority>0.9</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/start</loc><lastmod>2026-08-22</lastmod><priority>0.9</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/about</loc><lastmod>2026-06-16</lastmod><priority>0.8</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/resources</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/connect</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/</loc><lastmod>2026-09-03</lastmod><priority>1.0</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/services</loc><lastmod>2026-09-03</lastmod><priority>0.9</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/start</loc><lastmod>2026-09-03</lastmod><priority>0.9</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/about</loc><lastmod>2026-09-03</lastmod><priority>0.8</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/resources</loc><lastmod>2026-09-03</lastmod><priority>0.8</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/connect</loc><lastmod>2026-09-03</lastmod><priority>0.8</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/course-waitlist</loc><lastmod>2026-09-03</lastmod><priority>0.7</priority></url>
   <url><loc>https://autismpathwaysconsulting.com/free-tool</loc><lastmod>2026-06-16</lastmod><priority>0.7</priority></url>
   <url><loc>https://autismpathwaysconsulting.com/meltdowns</loc><lastmod>2026-06-16</lastmod><priority>0.7</priority></url>
   <url><loc>https://autismpathwaysconsulting.com/mornings</loc><lastmod>2026-06-16</lastmod><priority>0.7</priority></url>
@@ -17,9 +18,9 @@
   <url><loc>https://autismpathwaysconsulting.com/screens</loc><lastmod>2026-06-16</lastmod><priority>0.7</priority></url>
   <url><loc>https://autismpathwaysconsulting.com/sensory-public</loc><lastmod>2026-06-16</lastmod><priority>0.7</priority></url>
   <url><loc>https://autismpathwaysconsulting.com/school-collapse</loc><lastmod>2026-06-16</lastmod><priority>0.7</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/schools</loc><lastmod>2026-06-16</lastmod><priority>0.7</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/privacy</loc><lastmod>2026-06-16</lastmod><priority>0.3</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/terms</loc><lastmod>2026-08-22</lastmod><priority>0.3</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/cancellation-policy</loc><lastmod>2026-08-22</lastmod><priority>0.3</priority></url>
-  <url><loc>https://autismpathwaysconsulting.com/disclaimer</loc><lastmod>2026-06-16</lastmod><priority>0.3</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/schools</loc><lastmod>2026-09-03</lastmod><priority>0.7</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/privacy</loc><lastmod>2026-09-03</lastmod><priority>0.3</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/terms</loc><lastmod>2026-09-03</lastmod><priority>0.3</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/cancellation-policy</loc><lastmod>2026-09-03</lastmod><priority>0.3</priority></url>
+  <url><loc>https://autismpathwaysconsulting.com/disclaimer</loc><lastmod>2026-09-03</lastmod><priority>0.3</priority></url>
 </urlset>

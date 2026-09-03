@@ -4,13 +4,17 @@ if (offerSwitcher) {
   const tabs = [...offerSwitcher.querySelectorAll("[data-offer-tab]")];
   const panels = tabs.map(tab => document.getElementById(tab.getAttribute("aria-controls")));
 
-  function activateOffer(nextTab, moveFocus = false) {
+  function activateOffer(nextTab, moveFocus = false, updateUrl = true) {
     tabs.forEach((tab, index) => {
       const isActive = tab === nextTab;
       tab.setAttribute("aria-selected", String(isActive));
       tab.tabIndex = isActive ? 0 : -1;
       panels[index].hidden = !isActive;
     });
+    const panelId = nextTab.getAttribute("aria-controls");
+    if (updateUrl && panelId && window.location.hash !== `#${panelId}`) {
+      window.history.pushState(null, "", `#${panelId}`);
+    }
     if (moveFocus) nextTab.focus();
   }
 
@@ -28,7 +32,14 @@ if (offerSwitcher) {
     });
   });
 
-  activateOffer(tabs.find(tab => tab.getAttribute("aria-selected") === "true") || tabs[0]);
+  const initialTab = tabs.find(tab => `#${tab.getAttribute("aria-controls")}` === window.location.hash)
+    || tabs.find(tab => tab.getAttribute("aria-selected") === "true")
+    || tabs[0];
+  activateOffer(initialTab, false, false);
+  window.addEventListener("hashchange", () => {
+    const hashTab = tabs.find(tab => `#${tab.getAttribute("aria-controls")}` === window.location.hash);
+    if (hashTab) activateOffer(hashTab, false, false);
+  });
   offerSwitcher.dataset.enhanced = "true";
 }
 
@@ -43,7 +54,7 @@ document.querySelectorAll("[data-apc-carousel]").forEach(carousel => {
   const track = carousel.querySelector("[data-carousel-track]");
   let activeIndex = Math.max(0, slides.findIndex(slide => `#${slide.id}` === window.location.hash));
 
-  function activateChoice(nextIndex, moveFocus = false) {
+  function activateChoice(nextIndex, moveFocus = false, updateUrl = true) {
     activeIndex = (nextIndex + slides.length) % slides.length;
     tabs.forEach((tab, index) => {
       const isActive = index === activeIndex;
@@ -53,6 +64,9 @@ document.querySelectorAll("[data-apc-carousel]").forEach(carousel => {
       slides[index].classList.toggle("is-active", isActive);
     });
     if (status) status.textContent = `${activeIndex + 1} / ${slides.length}`;
+    if (updateUrl && window.location.hash !== `#${slides[activeIndex].id}`) {
+      window.history.pushState(null, "", `#${slides[activeIndex].id}`);
+    }
     if (moveFocus) tabs[activeIndex].focus();
   }
 
@@ -86,8 +100,57 @@ document.querySelectorAll("[data-apc-carousel]").forEach(carousel => {
   });
 
   carousel.classList.add("is-enhanced");
-  activateChoice(activeIndex);
+  activateChoice(activeIndex, false, false);
+  window.addEventListener("hashchange", () => {
+    const hashIndex = slides.findIndex(slide => `#${slide.id}` === window.location.hash);
+    if (hashIndex >= 0) activateChoice(hashIndex, false, false);
+  });
 });
+
+const calInline = document.querySelector("[data-cal-inline]");
+
+if (calInline) {
+  ((root, source, namespace) => {
+    const enqueue = (api, args) => api.q.push(args);
+    const documentRef = root.document;
+    root.Cal = root.Cal || function (...args) {
+      const api = root.Cal;
+      if (!api.loaded) {
+        api.ns = {};
+        api.q = api.q || [];
+        const script = documentRef.createElement("script");
+        script.src = source;
+        documentRef.head.appendChild(script);
+        api.loaded = true;
+      }
+      if (args[0] === namespace) {
+        const scoped = function (...scopedArgs) { enqueue(scoped, scopedArgs); };
+        const namespaceName = args[1];
+        scoped.q = scoped.q || [];
+        if (typeof namespaceName === "string") {
+          api.ns[namespaceName] = api.ns[namespaceName] || scoped;
+          enqueue(api.ns[namespaceName], args);
+          enqueue(api, ["initNamespace", namespaceName]);
+        } else {
+          enqueue(api, args);
+        }
+        return;
+      }
+      enqueue(api, args);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+
+  window.Cal("init", "first-step-call", { origin: "https://cal.com" });
+  window.Cal.ns["first-step-call"]("inline", {
+    elementOrSelector: calInline,
+    config: { layout: "month_view" },
+    calLink: "autismpathwaysconsulting/first-step-call",
+  });
+  window.Cal.ns["first-step-call"]("ui", {
+    hideEventTypeDetails: false,
+    layout: "month_view",
+  });
+}
 
 function sectionLabel(target, index) {
   const source = target.dataset.sectionLabel

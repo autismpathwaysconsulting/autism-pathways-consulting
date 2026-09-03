@@ -59,6 +59,7 @@ test("site build emits exactly the public allowlist", async () => {
     assert.deepEqual((await walk(result.output)).sort(), [...PUBLIC_FILES].sort());
     for (const required of [
       "index.html",
+      "_headers",
       "_routes.json",
       "connect/index.html",
       "pay/index.html",

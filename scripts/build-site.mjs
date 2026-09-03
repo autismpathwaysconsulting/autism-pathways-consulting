@@ -55,6 +55,7 @@ export const PUBLIC_FILES = Object.freeze([
   "sitemap.xml",
   "robots.txt",
   "_redirects",
+  "_headers",
   "_routes.json",
   "connect/index.html",
   "pay/index.html",
@@ -176,7 +177,10 @@ export async function buildSite(projectRoot = resolve(dirname(fileURLToPath(impo
     throw new Error("Project root must be a real directory.");
   }
   const root = await realpath(requestedRoot);
-  if (root !== requestedRoot) throw new Error("Project root must not resolve through symlinks.");
+  const platformCanonicalRoot = process.platform === "darwin" && requestedRoot.startsWith("/var/")
+    ? `/private${requestedRoot}`
+    : requestedRoot;
+  if (root !== platformCanonicalRoot) throw new Error("Project root must not resolve through symlinks.");
 
   const sources = new Map();
   for (const relativePath of PUBLIC_FILES) {
