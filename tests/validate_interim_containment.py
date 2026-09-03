@@ -22,6 +22,8 @@ FORBIDDEN_PAYMENT_PATHS = frozenset({"QR_Payment.JPG", "pay.html.backup-payment-
 PAID_CAL_PATH = "cal.com/autismpathwaysconsulting/parent-strategy-session"
 FREE_CAL_URL = "https://cal.com/autismpathwaysconsulting/first-step-call"
 EXPECTED_FORM_COUNTS = {"schools.html": 1}
+PRIVATE_AUTHENTICATED_HTML_SURFACES = frozenset({"content-os/index.html"})
+NON_SOURCE_DIRECTORIES = frozenset({".git", "dist", "node_modules", ".wrangler"})
 KNOWN_HEADING_SKIPS = {
     ("course-waitlist.html", 1, 3),
     ("schools.html", 2, 4),
@@ -375,18 +377,15 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         r"\b(?:fetch\s*\(|xmlhttprequest|localstorage|sessionstorage|document\.cookie|gtag\s*\(|google-analytics|plausible\.io)",
         re.IGNORECASE,
     )
-    # This one internal utility is protected by Pages middleware and is not a
-    # public website surface. All other HTML remains fail-closed below.
-    private_internal_surfaces = frozenset({"content-os/index.html"})
     for path, source in sorted(sources.items()):
         if not path.endswith(".html"):
             continue
         surface = parse_surface(source)
-        if surface.forms:
+        if path not in PRIVATE_AUTHENTICATED_HTML_SURFACES and surface.forms:
             form_counts[path] = len(surface.forms)
-        if path not in private_internal_surfaces and integration_signals.search(source):
+        if path not in PRIVATE_AUTHENTICATED_HTML_SURFACES and integration_signals.search(source):
             findings.append(f"containment.new_integration_surface:{path}")
-        if path not in private_internal_surfaces and any(control.get("type", "").lower() == "file" for control in surface.inputs):
+        if path not in PRIVATE_AUTHENTICATED_HTML_SURFACES and any(control.get("type", "").lower() == "file" for control in surface.inputs):
             findings.append(f"containment.public_file_input:{path}")
         for image in surface.images:
             if "alt" not in image:
@@ -422,7 +421,7 @@ def load_public_sources(root: Path = ROOT) -> tuple[dict[str, str], set[str]]:
     sources: dict[str, str] = {}
     present_paths: set[str] = set()
     for path in root.rglob("*"):
-        if not path.is_file() or ".git" in path.parts:
+        if not path.is_file() or any(part in NON_SOURCE_DIRECTORIES for part in path.parts):
             continue
         relative = path.relative_to(root).as_posix()
         present_paths.add(relative)

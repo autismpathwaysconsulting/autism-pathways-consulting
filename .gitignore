@@ -6,4 +6,5 @@ _local_backups/
 .dev.vars
 .dev.vars.*
 .wrangler/
+dist/
 __pycache__/

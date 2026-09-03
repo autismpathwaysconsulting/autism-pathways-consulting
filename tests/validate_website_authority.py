@@ -85,6 +85,29 @@ GOVERNED_PAGES = frozenset(
     for path in offer["bindings"]
 )
 PROTECTED_APPLICATION_PAGES = frozenset({"content-os/index.html"})
+EXECUTABLE_JAVASCRIPT_SUFFIXES = (".js", ".mjs", ".cjs")
+NON_PUBLIC_EXECUTABLE_MODULES = frozenset({"scripts/build-site.mjs"})
+CONTENT_OS_TEST_MODULE = re.compile(
+    r"^tests/content-os(?:[/-][A-Za-z0-9._-]+)*\.test\.(?:js|mjs|cjs)$"
+)
+
+
+def _is_content_os_executable_authority_exempt(path: str) -> bool:
+    """Limit authority exemptions to private Content OS code and its tests."""
+    if not path.endswith(EXECUTABLE_JAVASCRIPT_SUFFIXES):
+        return False
+    if path.startswith("/") or "\\" in path:
+        return False
+    parts = path.split("/")
+    if any(part in {"", ".", ".."} for part in parts):
+        return False
+    return (
+        path in NON_PUBLIC_EXECUTABLE_MODULES
+        or path.startswith("content-os/")
+        or path.startswith("functions/api/content-os/")
+        or path == "functions/_middleware.js"
+        or CONTENT_OS_TEST_MODULE.fullmatch(path) is not None
+    )
 
 
 @dataclass(frozen=True)
@@ -1499,7 +1522,9 @@ def validate_documents(documents: Mapping[str, str]) -> list[Finding]:
     for path, source in documents.items():
         if path in PROTECTED_APPLICATION_PAGES:
             continue
-        if path.endswith((".js", ".mjs", ".cjs")) and _executable_javascript_contains_authority(source):
+        if _is_content_os_executable_authority_exempt(path):
+            continue
+        if path.endswith(EXECUTABLE_JAVASCRIPT_SUFFIXES) and _executable_javascript_contains_authority(source):
             findings.add(
                 Finding(
                     "authority.executable_javascript_forbidden",

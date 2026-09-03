@@ -201,10 +201,19 @@ class InterimContainmentTests(unittest.TestCase):
     def test_protected_content_os_is_not_treated_as_a_public_surface(self):
         findings = self.findings_with_html(
             "content-os/index.html",
-            '<h1>Private tool</h1><input type="file"><script>fetch("/api/content-os/state")</script>',
+            '<h1>Private tool</h1><form><input type="file"></form>'
+            '<script>fetch("/api/content-os/state")</script>',
         )
+        self.assertNotIn("containment.form_inventory_changed", findings)
         self.assertNotIn("containment.new_integration_surface:content-os/index.html", findings)
         self.assertNotIn("containment.public_file_input:content-os/index.html", findings)
+
+    def test_content_os_lookalike_form_remains_public_fail_closed(self):
+        sources = dict(self.sources)
+        lookalike_path = "content-os-preview/index.html"
+        sources[lookalike_path] = "<html><body><h1>Lookalike</h1><form></form></body></html>"
+        findings = validate_surfaces(sources, set(self.paths) | {lookalike_path})
+        self.assertIn("containment.form_inventory_changed", findings)
 
     def test_content_os_exception_is_bound_to_protected_routes(self):
         routes = json.loads((ROOT / "_routes.json").read_text(encoding="utf-8"))

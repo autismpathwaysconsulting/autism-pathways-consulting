@@ -1,7 +1,7 @@
 # APC website: working rules for this repo
 
 Static HTML site for Autism Pathways Consulting (APC), founded by CJ Lim (MA Special and
-Inclusive Education). No build step: edit HTML/CSS in place. The public-launch state is
+Inclusive Education). Edit HTML/CSS in place, then run the allowlisted `npm run build` release step. The public-launch state is
 `PREPARATION_NOT_LAUNCHED / NOT_AUTHORISED`. Production deployment, launch, merge, and marking
 a draft PR ready for review require separate Founder authorization.
 

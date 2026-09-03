@@ -1,30 +1,22 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "autism-pathways-consulting",
-  "pages_build_output_dir": ".",
+  "pages_build_output_dir": "dist",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
-    "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "false"
+    "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "false",
+    "APC_CONTENT_OS_ENVIRONMENT": "local",
+    "APC_CONTENT_OS_AUTOMATION_ENABLED": "false"
   },
-  "kv_namespaces": [
-    {
-      "binding": "APC_CONTENT_OS_PREVIEW_AUTH",
-      "id": "7c40085410544e2a93ce557dfe4d208f"
-    }
-  ],
-  "d1_databases": [
-    {
-      "binding": "APC_CONTENT_OS_DB",
-      "database_name": "apc-content-os",
-      "database_id": "7a642992-b0a8-4806-9ab9-517b2b0142fa",
-      "migrations_dir": "migrations"
-    }
-  ],
+  "kv_namespaces": [],
+  "d1_databases": [],
   "env": {
     "preview": {
       "vars": {
-        "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "true"
+        "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "true",
+        "APC_CONTENT_OS_ENVIRONMENT": "preview",
+        "APC_CONTENT_OS_AUTOMATION_ENABLED": "false"
       },
       "kv_namespaces": [
         {
@@ -32,19 +24,19 @@
           "id": "7c40085410544e2a93ce557dfe4d208f"
         }
       ],
-      "d1_databases": [
-        {
-          "binding": "APC_CONTENT_OS_DB",
-          "database_name": "apc-content-os",
-          "database_id": "7a642992-b0a8-4806-9ab9-517b2b0142fa",
-          "migrations_dir": "migrations"
-        }
-      ]
+      "d1_databases": []
     },
     "production": {
       "vars": {
-        "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "false"
+        "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "false",
+        "APC_CONTENT_OS_ENVIRONMENT": "production",
+        "APC_CONTENT_OS_AUTOMATION_ENABLED": "true",
+        "APC_CONTENT_OS_GITHUB_REPOSITORY_ID": "1327407191",
+        "APC_CONTENT_OS_GITHUB_REPOSITORY": "autismpathwaysconsulting/APC-AI-OS",
+        "APC_CONTENT_OS_GITHUB_ISSUE_LABEL": "apc-dashboard-feed",
+        "APC_CONTENT_OS_GITHUB_ALLOWED_SENDER": "autismpathwaysconsulting"
       },
+      "kv_namespaces": [],
       "d1_databases": [
         {
           "binding": "APC_CONTENT_OS_DB",

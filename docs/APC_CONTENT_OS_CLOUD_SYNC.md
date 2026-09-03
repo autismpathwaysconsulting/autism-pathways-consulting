@@ -1,76 +1,106 @@
-# APC Content OS v2.2 cloud sync
+# APC Content OS v2.3
 
-## Purpose
+## Outcome
 
-This adds private cross-device persistence to the locked APC Content OS. The September v2.1 methodology, taxonomy, prompts, measurement windows, product gates, and winner criteria remain unchanged.
+The private APC dashboard keeps the useful v2.2 features and adds three separate, governed data layers:
 
-The private app is served at `/content-os/`. Its API is `/api/content-os/state`.
+- Planning state: calendar, Topic Bank, Prompt Builder, Product Board, and Book Builder.
+- Analytics: manual aggregate platform snapshots with separate views and reach, real null values, and 24-hour, 7-day, and 28-day checkpoints.
+- Research: a bounded weekly inbox of sourced findings and topic candidates. Research never becomes an APC rule or publishes automatically.
 
-## Architecture
+The private app is served at `/content-os/`.
 
-- Cloudflare Pages serves the existing static site and the private Content OS route.
-- Pages middleware protects only `/content-os*` and `/api/content-os/*` with HTTP Basic authentication. Username: `apc`. When `APC_CONTENT_OS_AUTH` is configured it is the only accepted credential; a failed production credential never falls back to another verifier. Only an explicit non-production Pages preview with no production secret may use the one-way SHA-256 verifier in the preview-auth KV namespace.
-- Cloudflare D1 database `apc-content-os`, bound as `APC_CONTENT_OS_DB`, is the only canonical application-state store. Its single `content_os_state` row starts at revision 0 with a null state.
-- The KV binding `APC_CONTENT_OS_PREVIEW_AUTH` is limited to the preview password verifier. It never contains canonical Content OS state.
-- The browser's existing localStorage and IndexedDB data remain a fast cache, offline fallback, and migration source.
-- GET returns the current state, revision, schema version, and cloud timestamp.
-- PUT performs one conditional D1 update using `WHERE id = 1 AND revision = expectedRevision`. Exactly one writer can advance a revision. If no row changes, the API reads and returns the current canonical record with HTTP 409; the client preserves the local version and asks before loading cloud state.
-- Saves remain debounced to avoid unnecessary network and database operations.
+## Security model
 
-## Migration and recovery
+- Pages middleware protects the dashboard and authenticated APIs with private, no-store responses.
+- The exact GitHub webhook route is the only Basic Auth bypass. It accepts POST only and independently requires an enabled production flag, raw-body HMAC SHA-256, a private pinned repository, approved sender and author, one label, one title pattern, a fresh weekly run ID, and a strict schema.
+- Content Security Policy permits self-hosted CSS, JavaScript, images, and same-origin API calls only. Inline scripts, inline styles, event attributes, objects, frames, and form submissions are blocked.
+- D1 is the sole canonical server store.
+- Production D1 is not bound to local or preview environments. Preview can load the authenticated interface, but it remains local-only.
+- State, analytics, research, deliveries, and decisions use strict allowlisted schemas. Unknown fields, prototype-shaped objects, and oversized planning states are rejected.
+- The dashboard stores aggregate counts and short deidentified patterns only. Contact-like data is rejected in persisted free text. Do not enter names, handles, contact details, screenshots, or message text.
 
-On first authenticated load:
+Basic Auth remains a temporary single-user control. Cloudflare Access with MFA and per-user audit logs is the recommended later replacement.
 
-1. The local v2.1 state renders immediately.
-2. The client fetches cloud state.
-3. If cloud is empty, it stores a local recovery copy and uploads the local v2.1 state as revision 1.
-4. If both local and cloud contain data on first link, it stops with a visible conflict instead of choosing a winner.
+## Data and recovery
 
-Recovery copies are stored in localStorage under `apcContentOSv21Recovery`. Normal cache data remains under `apcContentOSv21`. JSON exports include `schemaVersion`, `cloudRevision`, `cloudUpdatedAt`, and `exportedAt`.
+### Planning state
 
-Browser same-origin rules prevent a Pages URL from reading localStorage created by a downloaded `file://` copy or another domain. For that case, export JSON from the old v2.1 copy and import it once through the v2.2 backup panel; import preserves a recovery copy and queues the data for cloud sync.
+`content_os_state` stores the current v2.3 planning state with optimistic concurrency. Every accepted update also creates an immutable row in `content_os_revisions`. Lost-response retries are idempotent. Import, reset, and restore are server-first operations.
 
-After deployment QA, the canonical D1 row is intentionally restored to revision 0 with a null state so the first real migration starts cleanly.
+### Analytics
 
-## Cloudflare setup
+Publications and snapshots are separate from planning state. A snapshot preserves:
 
-Apply the checked-in migration to local and remote D1 before serving or deploying:
+- views and reach as different metrics;
+- total and average watch time;
+- likes, raw comment count, saves, and shares;
+- substantive-comment, problem-DM, request, interest, and paid counts;
+- a short deidentified theme summary;
+- the platform source, metric version, checkpoint, capture time, and correction revision.
 
-```sh
-npx wrangler d1 migrations apply apc-content-os --local
-npx wrangler d1 migrations apply apc-content-os --remote
-```
+A blank metric is stored as null with a reason. It is never converted to zero. Corrections append a new revision. Deidentified aggregate analytics are retained indefinitely so APC can compare old and new content without pulling the same data from Meta again. API reads are bounded and cursor-paginated, and the browser loads validated pages up to its documented safety cap.
 
-The deployment remains within Cloudflare's Free plan: one small D1 database, one canonical row, the existing Pages project, and the existing preview-auth KV namespace. No external state service is required.
+The standard comparison checkpoints are 24 hours, 7 days, and 28 days. A publication time is required for manual and Meta snapshots. The API accepts a 24-hour capture from 18 to 36 hours after publication, a 7-day capture from 6 to 9 days, and a 28-day capture from 25 to 35 days. Old 72-hour entries remain labelled `72h_legacy` and are visible as history but never mixed into recommendations, baselines, or product gates.
+
+### Research
+
+The weekly automation creates at most five findings and three topic candidates. The secure GitHub webhook writes only validated research rows and delivery audit records. Research reads are bounded and cursor-paginated. The Founder can keep useful findings, archive noise, add a candidate to the planner, or attach exact governed research context to Prompt Builder. Prompt Builder also includes a concise deidentified analytics learning summary for the selected problem area. Automation cannot edit planning state, change governance, create permanent rules, or publish content.
+
+### Ongoing planner
+
+The calendar is not tied to a campaign month. It stores up to 500 canonical plan entries by ISO date, subject to the stricter 220 KiB state limit, supports month navigation, and lets the Founder add, edit, delete, or complete an entry. Topic Bank and Research can add entries to the same planner. The existing September starter plan appears only for a genuinely new, empty dashboard and does not overwrite imported, local, or cloud state.
+
+### Browser cache
+
+LocalStorage and IndexedDB support fast loading and offline planning. Manual analytics can queue offline and retry after reconnection. The queue rejects new entries at its safety limit instead of silently deleting old work. The JSON reference archive includes the planning state plus the complete validated analytics and research data loaded by the browser. Its import action restores planning state and merges the offline analytics queue only. Analytics and research inside the archive are reference copies and are not re-uploaded. Canonical analytics and research disaster recovery uses a tested D1 backup and restore. Local recovery lists validated planning checkpoints and restores server-first as a new revision so recovery never silently replaces the canonical state.
+
+## Production activation order
+
+Do not merge or deploy without separate Founder approval.
+
+1. Back up the current production D1 database and verify the backup can be restored into a disposable D1 database.
+2. Run `npm run build` and inspect the generated `dist` allowlist. Configure the Cloudflare Pages project build command as `npm run build` and its output directory as `dist`.
+3. Apply `migrations/0002_content_os_v23_hardening.sql` to production D1.
+4. Create the private APC-AI-OS label `apc-dashboard-feed`.
+5. Create an Issues-only GitHub webhook pointing to:
+   `https://autismpathwaysconsulting.com/api/content-os/ingest/research-github`
+6. Use `application/json` and one new high-entropy webhook secret.
+7. Store the same secret as the encrypted Cloudflare secret `APC_CONTENT_OS_GITHUB_WEBHOOK_SECRET`.
+8. Confirm production alone has `APC_CONTENT_OS_AUTOMATION_ENABLED=true`.
+9. Deploy the reviewed website commit.
+10. Confirm `/CLAUDE.md`, `/wrangler.jsonc`, `/docs/`, `/tests/`, `/migrations/`, and `/package.json` return 404 in the deployed environment. Confirm `/content-os/` and its private APIs return 401 without credentials.
+11. Before production activation, test one signed, schema-valid synthetic weekly issue against a disposable D1 environment. Confirm one accepted run and an idempotent replay, then discard the disposable database. Do not write synthetic rows to the immutable production log.
+12. On the first real scheduled production run, confirm the genuine weekly bundle is accepted once and its replay is idempotent.
+13. Verify the dashboard, APIs, privacy headers, manual analytics, paginated history, recovery restore, offline queue, conflict behavior, and 390 by 844 mobile layout.
+14. Keep the public website unchanged.
+
+The automation must use:
+
+- Issue title: `APC Research Bundle: apc-weekly-topic-review:YYYY-Www`
+- Label: `apc-dashboard-feed`
+- Body: raw `apc.research_bundle.v1` JSON without Markdown fences
 
 ## Local verification
 
-Run the unit suite:
+Run:
 
 ```sh
+npm run build
+npm run test:site-build
 npm run test:content-os
+python3 tests/run_authority_tests.py
 ```
 
-For a local Pages session, create an ignored `.dev.vars` containing `APC_CONTENT_OS_AUTH`, then run:
+The generated `dist` directory is ignored by Git and must be rebuilt for every release. The two D1 migrations can also be applied to a clean local database to verify schema, legacy-client compatibility, and immutable-history triggers.
 
-```sh
-npx wrangler pages dev .
-```
+## Rollback
 
-Log in with username `apc` and the local secret.
+The database migration is additive. Do not roll back to the v2.2 application after a v2.3 state save because v2.2 does not understand the v2.3 schema. If application rollback is required, keep the v2.3 database intact, disable automation, and restore service with a forward-fix branch. D1 backup and immutable revision history are the canonical recovery sources. The JSON archive remains an independent planning recovery and analytics/research reference copy.
 
-## Limitations
+## Residual limitations
 
-- Basic authentication is the smallest secure route-scoped fallback available from the authenticated CLI. Cloudflare Access should replace it when dashboard Access administration is available.
-- A recovery copy is per browser profile. Keep periodic JSON exports for independent recovery.
-
-## Future work
-
-- Move `/content-os/*` and `/api/content-os/*` behind a Cloudflare Access application and remove Basic authentication after validating iPhone and Mac sign-in.
-- Add automated full-browser regression coverage to the website CI once this private route is merged.
-
-## Provenance
-
-- Source artifact: `APC_Content_OS_v2.1_FINAL_TEST_LOCK.html`, recovered unchanged before cloud-sync edits.
-- Implementation branch: `codex/content-os-cloud-sync`.
-- Cloudflare project: `autism-pathways-consulting`.
+- An open session sees another device's changes after reload or the next sync event. There is no live push.
+- First-ever offline launch still requires a previously cached page.
+- Scheduled research cannot see D1 directly. It feeds sourced weekly research to the dashboard, while the dashboard combines selected research with its own deidentified analytics when generating a prompt.
+- The webhook, encrypted secret, D1 migration, and branch protection require production administration outside the repository.
