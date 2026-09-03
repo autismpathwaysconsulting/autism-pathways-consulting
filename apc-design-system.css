@@ -3875,3 +3875,269 @@ html.apc-home-snap {
     font-size: 2.25rem !important;
   }
 }
+
+/* Synchronized public site shell */
+.apc-v2 .apc-site-header {
+  position: sticky !important;
+  top: 0;
+  z-index: 200;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: rgba(255, 252, 247, .94) !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(7, 55, 52, .1) !important;
+  box-shadow: 0 12px 34px rgba(7, 55, 52, .045) !important;
+  backdrop-filter: blur(16px);
+}
+
+.apc-v2 .apc-shell-inner {
+  display: flex;
+  width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide));
+  min-height: 76px;
+  margin: 0 auto;
+  align-items: center;
+  gap: clamp(18px, 2.5vw, 34px);
+}
+
+.apc-v2 .apc-shell-logo {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.apc-v2 .apc-shell-logo img {
+  display: block;
+  width: auto;
+  height: 48px;
+  max-width: 170px;
+  object-fit: contain;
+}
+
+.apc-v2 .apc-shell-nav {
+  display: flex;
+  position: static !important;
+  width: auto !important;
+  min-height: 0 !important;
+  margin-left: auto;
+  padding: 0 !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: clamp(14px, 2vw, 26px);
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.apc-v2 .apc-shell-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--apc-dark-teal) !important;
+  font-size: .9rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+.apc-v2 .apc-shell-nav a[aria-current="page"] {
+  box-shadow: inset 0 -2px 0 var(--apc-primary-teal);
+}
+
+.apc-v2 .apc-shell-start {
+  display: inline-flex;
+  min-height: 48px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px;
+  background: var(--apc-primary-teal) !important;
+  border: 1px solid var(--apc-primary-teal);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(15, 118, 110, .16);
+  color: #fff !important;
+  font-size: .92rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2;
+  text-decoration: none !important;
+  transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.apc-v2 .apc-shell-start:hover {
+  transform: translateY(-2px);
+  background: var(--apc-dark-teal) !important;
+  box-shadow: 0 14px 28px rgba(7, 55, 52, .18);
+}
+
+.apc-v2 .apc-footer-inner {
+  width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide)) !important;
+}
+
+.apc-v2 .apc-footer-bottom p + p {
+  margin-top: 4px !important;
+}
+
+.apc-v2 .apc-footer-minimal {
+  padding-block: 38px 28px !important;
+}
+
+.apc-v2 .apc-footer-minimal-inner {
+  position: relative;
+  display: grid;
+  width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide));
+  margin: 0 auto;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px 32px;
+  align-items: center;
+}
+
+.apc-v2 .apc-footer-minimal-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.apc-v2 .apc-footer-minimal-links a {
+  display: inline-flex;
+  min-height: 40px !important;
+  align-items: center;
+}
+
+.apc-v2 .apc-footer-minimal-inner p {
+  grid-column: 1 / -1;
+  margin: 0 !important;
+  color: rgba(255, 255, 255, .68) !important;
+  font-size: .8rem !important;
+  line-height: 1.65 !important;
+}
+
+/* Start Here follows the homepage width and card rhythm */
+@media (min-width: 961px) {
+  .apc-start-page-v2 .start-main {
+    width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide)) !important;
+  }
+
+  .apc-start-page-v2 .start-hero {
+    display: grid !important;
+    grid-template-columns: minmax(0, .82fr) minmax(360px, 1.18fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: clamp(48px, 7vw, 92px);
+    min-height: 0 !important;
+    margin-block: 24px 38px !important;
+    padding: clamp(42px, 5vw, 62px) clamp(34px, 6vw, 70px) !important;
+  }
+
+  .apc-start-page-v2 .start-hero > .eyebrow,
+  .apc-start-page-v2 .start-hero > h1,
+  .apc-start-page-v2 .start-hero > p {
+    grid-column: 1;
+  }
+
+  .apc-start-page-v2 .start-hero .reassurance {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    align-self: center;
+    margin: 0 !important;
+    padding: 26px 28px !important;
+  }
+
+  .apc-start-page-v2 .start-hero h1 {
+    font-size: clamp(3.2rem, 5vw, 4.45rem) !important;
+  }
+
+  .apc-start-page-v2 .route-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 960px) and (min-width: 641px) {
+  .apc-start-page-v2 .route-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .apc-v2 .apc-shell-inner {
+    display: grid;
+    min-height: 0;
+    padding: 9px 0 8px;
+    grid-template-columns: auto 1fr;
+    gap: 6px 14px;
+  }
+
+  .apc-v2 .apc-shell-logo img {
+    height: 40px;
+    max-width: 142px;
+  }
+
+  .apc-v2 .apc-shell-logo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .apc-v2 .apc-shell-start {
+    min-height: 44px;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    padding: 10px 16px;
+    font-size: .8rem !important;
+  }
+
+  .apc-v2 .apc-shell-nav {
+    display: grid;
+    width: 100% !important;
+    margin: 0;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .apc-v2 .apc-shell-nav a {
+    min-height: 38px;
+    justify-content: center;
+    padding-inline: 6px;
+    border-radius: 10px;
+    font-size: .78rem !important;
+  }
+
+  .apc-v2 .apc-shell-nav a[aria-current="page"] {
+    background: rgba(15, 118, 110, .08);
+    box-shadow: none;
+  }
+
+  html:has(.apc-home-page) {
+    scroll-padding-top: 108px;
+  }
+
+  .apc-home-page {
+    --apc-home-header: 108px;
+  }
+
+  .apc-footer-minimal .apc-footer-minimal-inner {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .apc-v2 .apc-footer-minimal-links {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+  }
+
+  .apc-v2 .apc-footer-minimal-inner p {
+    grid-column: auto;
+  }
+
+  .apc-start-page-v2 .start-hero {
+    display: block !important;
+    min-height: 0 !important;
+    margin-block: 14px 30px !important;
+    padding: 28px 20px 32px !important;
+  }
+
+  .apc-start-page-v2 .start-hero .reassurance {
+    margin-top: 24px !important;
+  }
+}

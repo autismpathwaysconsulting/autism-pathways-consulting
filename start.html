@@ -18,14 +18,17 @@
     @media(max-width:520px){.site-nav-inner,.start-main,.apc-footer-inner{width:min(calc(100% - 32px),var(--apc-content))}.site-logo img{width:88px}.start-hero{padding-top:44px}.route-card{padding:22px}.reassurance{align-items:flex-start;flex-direction:column;gap:8px}.apc-footer-inner{grid-template-columns:1fr}.apc-footer-brand{grid-column:auto}}
   </style>
   <style id="apc-a11y">:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{outline:3px solid #0f766e;outline-offset:3px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}</style>
-<link rel="stylesheet" href="/apc-design-system.css?v=20260903-6">
+<link rel="stylesheet" href="/apc-design-system.css?v=20260903-7">
 </head>
 <body class="apc-v2 apc-tier-a apc-start-page-v2">
   <a class="apc-skip-link" href="#main-content">Skip to main content</a>
-  <nav class="site-nav" aria-label="Main navigation"><div class="site-nav-inner">
-    <a class="site-logo" href="/" aria-label="Autism Pathways Consulting home"><img src="/apc-option-d-primary-logo.webp" width="445" height="250" alt="Autism Pathways Consulting"></a>
-    <div class="site-links"><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a><a class="nav-cta" href="https://cal.com/autismpathwaysconsulting/first-step-call">Free 15-Min First Step Call</a></div>
-  </div></nav>
+  <header class="apc-site-header">
+  <div class="apc-shell-inner">
+    <a class="apc-shell-logo" href="/" aria-label="Autism Pathways Consulting home"><img src="/apc-option-d-primary-logo.webp" width="445" height="250" alt="Autism Pathways Consulting"></a>
+    <nav class="apc-shell-nav" aria-label="Primary navigation"><a href="/about">About CJ</a><a href="/services">Services</a><a href="/resources">Resources</a></nav>
+    <a class="apc-shell-start" href="https://autismpathwaysconsulting.com/start" aria-current="page">Start Here</a>
+  </div>
+</header>
   <main id="main-content" class="start-main">
     <header class="start-hero"><p class="eyebrow">Start here</p><h1>What do you need today?</h1><p>Choose the option that best matches where you are right now.</p><div class="reassurance"><p><strong>Interim availability notice:</strong> Paid options are candidate services, not generally available. Founder suitability, capacity, and availability review is required. International services and payments are currently unavailable.</p></div></header>
     <section class="route-grid" aria-label="Choose your next step">
@@ -35,11 +38,14 @@
     </section>
     <div class="reassurance"><p>Need something useful right now? <a href="https://calm.autismpathwaysconsulting.com/">Open APC Calm</a> for simple prompts in a difficult moment. Still unsure which support fits? The free call is the simplest place to begin.</p><a class="btn-text" href="https://cal.com/autismpathwaysconsulting/first-step-call">Book the free call</a></div>
   </main>
-  <footer class="apc-footer"><div class="apc-footer-inner">
-    <div class="apc-footer-brand"><a href="/" class="apc-footer-logo">Autism Pathways Consulting</a><p>Evidence-informed parent support for families who want to reduce guesswork and choose practical next steps at home.</p><p>APC works with you, not instead of the therapists your child is already seeing.</p><p class="apc-footer-small">CJ Special and Inclusive Consultancy (003030209-T)<br>Reg. 201903282307 · Petaling Jaya and KL</p></div>
-    <nav class="apc-footer-column" aria-label="Explore"><h3>Explore</h3><a href="/">Home</a><a href="/about">About CJ</a><a href="/services">Services</a><a href="/start">Start Here</a><a href="/resources">Resources</a></nav>
-    <nav class="apc-footer-column" aria-label="Support"><h3>Support</h3><a href="https://cal.com/autismpathwaysconsulting/first-step-call">Free 15-Min First Step Call</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cancellation-policy">Cancellation Policy</a></nav>
-    <div class="apc-footer-column"><h3>Contact</h3><a href="https://wa.me/601172998168">WhatsApp: 011-7299 8168</a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a><a href="https://www.instagram.com/autismpathwaysconsulting/">Instagram</a></div>
-  </div><div class="apc-footer-bottom"><p>© 2026 Autism Pathways Consulting. Parent education and guidance, not therapy or diagnosis.</p></div></footer>
+  <footer class="apc-footer">
+  <div class="apc-footer-inner">
+    <div class="apc-footer-brand"><a href="/" class="apc-footer-logo">Autism Pathways Consulting</a><p>Evidence-informed parent support for practical next steps at home.</p><p class="apc-footer-small">CJ Special and Inclusive Consultancy (003030209-T) · Reg. 201903282307<br>Petaling Jaya and KL</p></div>
+    <nav class="apc-footer-column" aria-label="Explore"><h3>Explore</h3><a href="/">Home</a><a href="/about">About CJ</a><a href="/services">Services</a><a href="https://autismpathwaysconsulting.com/start">Start Here</a><a href="/resources">Resources</a><a href="/schools">School &amp; Educator Support</a></nav>
+    <nav class="apc-footer-column" aria-label="Support"><h3>Support</h3><a href="/services">Parent Support Options</a><a href="https://cal.com/autismpathwaysconsulting/first-step-call">Free 15-Min First Step Call</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cancellation-policy">Cancellation Policy</a><a href="/disclaimer">Disclaimer</a></nav>
+    <div class="apc-footer-column"><h3>Contact</h3><a href="https://wa.me/601172998168" target="_blank" rel="noopener">WhatsApp: 011-7299 8168</a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a><a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a></div>
+  </div>
+  <div class="apc-footer-bottom"><p>© 2026 Autism Pathways Consulting. Parent education and guidance, not therapy or diagnosis.</p><p>APC works with you, not instead of the therapists your child is already seeing.</p></div>
+</footer>
 </body>
 </html>
