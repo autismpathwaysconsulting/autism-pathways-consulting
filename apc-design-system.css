@@ -602,6 +602,76 @@ body.apc-v2 {
   box-shadow: none !important;
 }
 
+/* Homepage density tuning */
+.apc-tier-a.apc-home-page main > .hero {
+  min-height: 0;
+  padding-block: clamp(48px, 5vw, 64px) !important;
+}
+
+.apc-home-page .hero-approach h2 {
+  font-size: clamp(2rem, 3.2vw, 2.65rem) !important;
+}
+
+.apc-tier-a.apc-home-page main > #support-options,
+.apc-tier-a.apc-home-page main > #start {
+  padding-block: clamp(56px, 6vw, 76px) !important;
+}
+
+.apc-home-page #support-options .section-head {
+  max-width: 780px !important;
+  margin-bottom: clamp(24px, 3vw, 34px) !important;
+}
+
+.apc-home-page #support-options .section-head h2 {
+  max-width: 22ch;
+  font-size: clamp(2.25rem, 3.4vw, 3rem) !important;
+}
+
+.apc-home-page #support-options .card {
+  padding: clamp(20px, 2vw, 24px) !important;
+}
+
+.apc-home-page #support-options .card h3 {
+  margin-bottom: 16px;
+  font-size: clamp(1.35rem, 1.8vw, 1.55rem) !important;
+  line-height: 1.14;
+}
+
+.apc-home-page #support-options .card :where(p, li) {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.apc-home-page #support-options .card p {
+  margin-bottom: 14px;
+}
+
+.apc-home-page #support-options .card ul {
+  margin-bottom: 16px;
+}
+
+.apc-home-page #start .route-card {
+  gap: clamp(28px, 4vw, 44px) !important;
+  padding: clamp(32px, 4vw, 44px) !important;
+}
+
+.apc-home-page #start .route-card h2 {
+  font-size: clamp(2rem, 3.2vw, 2.55rem) !important;
+}
+
+.apc-home-page #start .route-card :where(h2, p) {
+  color: #fff !important;
+}
+
+.apc-home-page #start .route-card .eyebrow {
+  color: var(--apc-bright-teal) !important;
+}
+
+.apc-home-page #start .route-card .button.secondary {
+  border-color: rgba(255, 255, 255, 0.72) !important;
+  color: #fff !important;
+}
+
 .apc-services-page-v2 .services-main {
   width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide)) !important;
 }
