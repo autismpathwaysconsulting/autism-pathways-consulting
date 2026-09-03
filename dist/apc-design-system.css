@@ -4651,17 +4651,17 @@ html {
 }
 
 .section-rail a {
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  min-height: 28px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
   border-color: transparent;
   background: radial-gradient(circle, #fff 0 3px, rgba(7, 55, 52, .55) 3px 4px, transparent 4px);
 }
 
 .section-rail a[aria-current="location"] {
-  width: 28px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   background: radial-gradient(circle, var(--apc-teal-deep) 0 5px, transparent 5px);
 }
 
