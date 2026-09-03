@@ -4213,3 +4213,243 @@ html {
     scroll-snap-type: none !important;
   }
 }
+
+/* Cross-site density and deliberate section stops */
+html {
+  scroll-padding-top: 84px;
+  scroll-snap-type: y mandatory;
+}
+
+.apc-v2:not(.apc-home-page) {
+  --apc-section-space: clamp(44px, 5vw, 64px);
+  --apc-section-v2: clamp(44px, 5vw, 64px);
+}
+
+.apc-v2 main > * {
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
+}
+
+.apc-v2 main > :where(section, header, article),
+.apc-v2 > footer,
+.apc-start-page-v2 main > .reassurance,
+.apc-schools-page main > .page-header,
+.apc-schools-page main > .container > :where(.service-section, .unsure),
+.apc-guide-page > main,
+.apc-guide-page main > :where(h2, .week, .cta-banner) {
+  scroll-margin-top: 84px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.apc-tier-a:not(.apc-home-page) main > :where(.section, section.section) {
+  padding-block: var(--apc-section-v2) !important;
+}
+
+.apc-services-page-v2 .services-hero,
+.apc-start-page-v2 .start-hero,
+.apc-schools-page .page-header {
+  margin-block: 16px 28px !important;
+  padding: clamp(34px, 4.5vw, 52px) clamp(28px, 5vw, 56px) !important;
+}
+
+.apc-services-page-v2 .services-hero h1,
+.apc-start-page-v2 .start-hero h1,
+.apc-schools-page .page-header h1 {
+  font-size: clamp(2.9rem, 4.35vw, 3.9rem) !important;
+  line-height: 1.02 !important;
+}
+
+.apc-start-page-v2 .start-hero {
+  column-gap: clamp(36px, 5vw, 64px) !important;
+}
+
+.apc-start-page-v2 .start-hero .reassurance {
+  padding: 0 !important;
+}
+
+.apc-start-page-v2 .route-grid,
+.apc-services-page-v2 .offer-grid {
+  align-items: start !important;
+  gap: clamp(16px, 2vw, 20px) !important;
+}
+
+.apc-start-page-v2 .route-grid {
+  padding-bottom: var(--apc-section-v2) !important;
+}
+
+.apc-start-page-v2 .route-card,
+.apc-services-page-v2 .offer-card {
+  min-height: 0 !important;
+  padding: clamp(24px, 2.7vw, 30px) !important;
+}
+
+.apc-start-page-v2 .route-card h2,
+.apc-services-page-v2 .offer-card h2 {
+  max-width: 15ch !important;
+  margin-bottom: 16px !important;
+  font-size: clamp(1.8rem, 2.25vw, 2.2rem) !important;
+  line-height: 1.08 !important;
+}
+
+.apc-start-page-v2 .route-card :where(p, li),
+.apc-services-page-v2 .offer-card :where(p, li) {
+  font-size: clamp(.94rem, .9rem + .12vw, 1rem) !important;
+  line-height: 1.58 !important;
+}
+
+.apc-start-page-v2 .route-card p:not(.route-number) {
+  margin-bottom: 16px !important;
+}
+
+.apc-start-page-v2 .route-card .btn {
+  margin-top: 8px !important;
+}
+
+.apc-services-page-v2 .offer-section,
+.apc-services-page-v2 :where(.process, .service-proof, .faq, .final-route) {
+  margin-bottom: var(--apc-section-v2) !important;
+}
+
+.apc-services-page-v2 .offer-card :where(.condition, .offer-more) {
+  margin-top: 18px !important;
+}
+
+.apc-about-page .about-minimal-hero,
+.apc-about-page .hero-grid {
+  padding-block: clamp(36px, 4.5vw, 54px) !important;
+  gap: clamp(32px, 5vw, 60px) !important;
+}
+
+.apc-about-page .portrait,
+.apc-about-page .hero-photo-card {
+  width: min(100%, 330px) !important;
+}
+
+.apc-about-page .hero-copy h1,
+.apc-resources-page .resource-hero h1,
+.apc-guide-page > main > h1,
+.apc-guide-page > header.hero h1 {
+  font-size: clamp(2.9rem, 4.6vw, 4rem) !important;
+  line-height: 1.02 !important;
+}
+
+.apc-resources-page .resource-hero {
+  padding-block: clamp(42px, 5vw, 58px) !important;
+}
+
+.apc-schools-page main {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.apc-schools-page :where(.page-header, .container) {
+  width: min(calc(100% - (var(--apc-gutter) * 2)), var(--apc-content-wide)) !important;
+  max-width: var(--apc-content-wide) !important;
+  margin-inline: auto !important;
+}
+
+.apc-schools-page .service-section {
+  margin-bottom: 18px !important;
+  padding: clamp(26px, 3.5vw, 38px) !important;
+}
+
+.apc-guide-page > main {
+  padding-block: clamp(34px, 4vw, 48px) clamp(52px, 6vw, 70px) !important;
+}
+
+.apc-guide-page > main > h2 {
+  margin-top: clamp(38px, 4vw, 50px) !important;
+  font-size: clamp(1.9rem, 3vw, 2.55rem) !important;
+}
+
+.apc-legal-page .legal-hero {
+  margin-top: 16px !important;
+  padding: clamp(32px, 4vw, 46px) clamp(24px, 5vw, 48px) !important;
+}
+
+.apc-legal-page .legal-section {
+  padding-top: clamp(26px, 3vw, 38px) !important;
+  padding-bottom: var(--apc-section-v2) !important;
+}
+
+.apc-v2 .apc-footer {
+  padding-top: 48px !important;
+}
+
+.apc-v2 .apc-footer-inner {
+  gap: clamp(22px, 3vw, 32px) !important;
+}
+
+.apc-v2 .apc-footer-bottom {
+  margin-top: 32px !important;
+}
+
+@media (max-width: 900px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  .apc-v2:not(.apc-home-page) {
+    --apc-section-space: clamp(38px, 6vw, 52px);
+    --apc-section-v2: clamp(38px, 6vw, 52px);
+  }
+
+  .apc-start-page-v2 .route-card h2,
+  .apc-services-page-v2 .offer-card h2 {
+    max-width: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 112px;
+  }
+
+  .apc-v2:not(.apc-home-page) {
+    --apc-section-space: 42px;
+    --apc-section-v2: 42px;
+  }
+
+  .apc-services-page-v2 .services-hero,
+  .apc-start-page-v2 .start-hero,
+  .apc-schools-page .page-header {
+    margin-block: 12px 24px !important;
+    padding: 26px 20px 30px !important;
+  }
+
+  .apc-start-page-v2 .route-card,
+  .apc-services-page-v2 .offer-card,
+  .apc-schools-page .service-section {
+    padding: 22px !important;
+  }
+
+  .apc-start-page-v2 .route-card h2,
+  .apc-services-page-v2 .offer-card h2 {
+    font-size: clamp(1.72rem, 8vw, 2rem) !important;
+  }
+
+  .apc-about-page .about-minimal-hero,
+  .apc-about-page .hero-grid {
+    padding-block: 28px 34px !important;
+  }
+
+  .apc-about-page .portrait,
+  .apc-about-page .hero-photo-card {
+    width: 100% !important;
+  }
+
+  .apc-guide-page > main {
+    padding-block: 28px 52px !important;
+  }
+
+  .apc-v2 .apc-footer {
+    padding-top: 40px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none !important;
+  }
+}
