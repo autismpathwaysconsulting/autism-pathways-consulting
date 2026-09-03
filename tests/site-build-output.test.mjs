@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import {
   lstat,
   mkdir,
@@ -15,6 +16,10 @@ import { tmpdir } from "node:os";
 import { dirname, join, relative, sep } from "node:path";
 
 import { buildSite, PUBLIC_FILES } from "../scripts/build-site.mjs";
+
+function assetVersion(content) {
+  return createHash("sha256").update(content).digest("hex").slice(0, 12);
+}
 
 async function fixture() {
   const root = await mkdtemp(join(tmpdir(), "apc-site-build-"));
@@ -129,4 +134,33 @@ test("Cloudflare Pages uses the allowlisted build output", async () => {
   const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
   assert.equal(config.pages_build_output_dir, "dist");
   assert.equal(packageJson.scripts.build, "node scripts/build-site.mjs");
+});
+
+test("shared asset query versions match their content hashes", async () => {
+  const projectRoot = new URL("../", import.meta.url);
+  const expectedVersions = new Map([
+    ["apc-design-system.css", assetVersion(await readFile(new URL("../apc-design-system.css", import.meta.url)))],
+    ["homepage.js", assetVersion(await readFile(new URL("../homepage.js", import.meta.url)))],
+  ]);
+  const referenceCounts = new Map([...expectedVersions.keys()].map(asset => [asset, 0]));
+
+  for (const relativePath of PUBLIC_FILES.filter(path => path.endsWith(".html"))) {
+    const html = await readFile(new URL(relativePath, projectRoot), "utf8");
+    for (const [asset, expectedVersion] of expectedVersions) {
+      const escapedAsset = asset.replaceAll(".", "\\.");
+      const references = [...html.matchAll(new RegExp(`${escapedAsset}(?:\\?v=([^\\s\"'>]+))?`, "g"))];
+      referenceCounts.set(asset, referenceCounts.get(asset) + references.length);
+      for (const reference of references) {
+        assert.equal(
+          reference[1],
+          expectedVersion,
+          `${relativePath} must version ${asset} with its current content hash`,
+        );
+      }
+    }
+  }
+
+  for (const [asset, count] of referenceCounts) {
+    assert.ok(count >= 25, `Expected shared ${asset} references across public pages`);
+  }
 });

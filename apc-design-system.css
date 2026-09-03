@@ -4665,6 +4665,17 @@ html {
   background: radial-gradient(circle, var(--apc-teal-deep) 0 5px, transparent 5px);
 }
 
+@media (min-width: 1181px) and (max-width: 1320px) {
+  .apc-v2 > .section-rail {
+    right: 0 !important;
+    padding-inline: 0 !important;
+  }
+
+  .section-rail a:focus-visible {
+    outline-offset: -4px;
+  }
+}
+
 .apc-tier-a:not(.apc-home-page) main > :where(.section, section.section) {
   padding-block: var(--apc-section-v2) !important;
 }
