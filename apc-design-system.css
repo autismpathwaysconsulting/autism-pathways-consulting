@@ -3877,6 +3877,68 @@ html.apc-home-snap {
 }
 
 /* Synchronized public site shell */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+  scroll-snap-type: y proximity;
+}
+
+.apc-v2 main > *,
+.apc-v2 > footer {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.apc-services-page-v2 .services-hero .payment-availability,
+.apc-start-page-v2 .start-hero .payment-availability {
+  display: block !important;
+  max-width: 760px;
+  margin-top: 22px !important;
+  padding: 0 !important;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .72) !important;
+  border: 1px solid rgba(232, 153, 122, .35) !important;
+  border-left: 4px solid var(--apc-coral) !important;
+  border-radius: 0 16px 16px 0 !important;
+}
+
+.apc-v2 .payment-availability summary {
+  position: relative;
+  padding: 14px 48px 14px 18px;
+  color: var(--apc-dark-teal);
+  cursor: pointer;
+  list-style: none;
+}
+
+.apc-v2 .payment-availability summary::-webkit-details-marker {
+  display: none;
+}
+
+.apc-v2 .payment-availability summary::after {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  content: "+";
+  color: var(--apc-primary-teal);
+  font-size: 1.25rem;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.apc-v2 .payment-availability[open] summary::after {
+  content: "−";
+}
+
+.apc-services-page-v2 .services-hero .payment-availability p,
+.apc-start-page-v2 .start-hero .payment-availability p {
+  margin: 0 !important;
+  padding: 0 18px 16px !important;
+  color: var(--apc-muted) !important;
+  font-size: .9rem !important;
+  font-weight: 600 !important;
+  line-height: 1.6 !important;
+}
+
 .apc-v2 .apc-site-header {
   position: sticky !important;
   top: 0;
@@ -4057,6 +4119,10 @@ html.apc-home-snap {
 }
 
 @media (max-width: 760px) {
+  html {
+    scroll-padding-top: 112px;
+  }
+
   .apc-v2 .apc-shell-inner {
     display: grid;
     min-height: 0;
@@ -4139,5 +4205,11 @@ html.apc-home-snap {
 
   .apc-start-page-v2 .start-hero .reassurance {
     margin-top: 24px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none !important;
   }
 }
