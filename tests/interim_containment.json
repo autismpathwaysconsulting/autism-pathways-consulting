@@ -8,7 +8,7 @@
     "authority_version": "1.2",
     "canonical_state": "CANDIDATE",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:ebc93120addfedecd17b16ea99d21474a34782aef32b9cecbb25dc709d212f29",
+    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
     "website_repository": "autismpathwaysconsulting/autism-pathways-consulting",
     "website_main_commit": "01b9565fc2891dd9354985c1acd4fd43adabe1b9",
     "website_pr14_candidate_commit": "7e62a470db496942e640267b52acaf6c3c312ece"
@@ -30,10 +30,10 @@
     "OPS-HOLD-006": "OPEN"
   },
   "public_controls": {
-    "paid_services_are_candidate_only": true,
+    "paid_services_are_candidate_only": false,
     "general_availability": false,
-    "international_services_available": false,
-    "international_payments_available": false,
+    "international_services_available": true,
+    "international_payments_available": true,
     "public_payment_details_available": false,
     "payment_permission_is_individual": true,
     "payment_instructions_delivered_privately": true,
@@ -42,7 +42,7 @@
       "REQUEST",
       "FOUNDER_SUITABILITY_AND_CAPACITY_REVIEW",
       "INDIVIDUAL_PERMISSION_TO_PAY",
-      "BANK_TRANSFER_OR_DUITNOW_QR",
+      "BANK_TRANSFER_DUITNOW_QR_OR_WISE",
       "PROOF_RECEIVED",
       "FOUNDER_PAYMENT_VERIFICATION",
       "FOUNDER_BOOKING_CONFIRMATION"

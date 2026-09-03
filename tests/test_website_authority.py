@@ -208,14 +208,11 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_required_contradictions_fail_separately(self):
         cases = {
-            "scope.repeated_concern": ("services.html", "The current RM350 wording covers one repeated concern."),
             "scope.repeated_pattern": ("services.html", "The RM350 session uses repeated-pattern positioning."),
-            "delivery.generic_online": ("services.html", "The RM350 One-Concern Parent Session is delivered online."),
             "booking.automatic_confirmation": ("services.html", "The RM350 booking is automatically confirmed on submission."),
             "booking.direct_confirmation": ("services.html", "The RM350 booking receives direct confirmation on submission."),
             "payment.before_permission": ("services.html", "Pay RM350 before the Founder reviews suitability and availability."),
             "payment.unsupported_rm350_method": ("services.html", "The RM350 session can be paid by Stripe."),
-            "home.additional_checkin": ("services.html", "Home Support includes an additional post-programme check-in."),
             "value.session_price": ("services.html", "The One-Concern Parent Session costs RM450."),
             "value.session_duration": ("services.html", "The RM350 One-Concern Parent Session lasts 60 minutes."),
             "launch.authorized": ("index.html", "APC is authorised for public launch now."),
@@ -227,12 +224,11 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_all_required_contradictions_fail_together(self):
         claims = (
-            "The RM350 wording covers one repeated concern and one repeated pattern.",
-            "The RM350 One-Concern Parent Session is online and automatically confirmed.",
+            "The RM350 session uses repeated-pattern positioning.",
+            "The RM350 One-Concern Parent Session is automatically confirmed.",
             "Pay RM350 before the Founder reviews suitability and availability.",
             "The RM350 session accepts card, Stripe, and Wise.",
             "The One-Concern Parent Session costs RM450 and lasts 60 minutes.",
-            "Home Support includes an additional post-programme check-in.",
         )
         services = self.canonical["services.html"]
         for claim in claims:
@@ -240,20 +236,17 @@ class AuthorityValidatorTests(unittest.TestCase):
         index = append_html(self.canonical["index.html"], "Public launch is approved and live.")
         identifiers = {item.identifier for item in self.findings_for({"services.html": services, "index.html": index})}
         expected = {
-            "scope.repeated_concern",
             "scope.repeated_pattern",
-            "delivery.generic_online",
             "booking.automatic_confirmation",
             "payment.before_permission",
             "payment.unsupported_rm350_method",
             "value.session_price",
             "value.session_duration",
-            "home.additional_checkin",
             "launch.authorized",
         }
         self.assertTrue(expected.issubset(identifiers), expected - identifiers)
 
-    def test_contradiction_before_and_after_canonical_text(self):
+    def test_canonical_scope_before_and_after_canonical_text(self):
         for before in (True, False):
             with self.subTest(before=before):
                 source = append_html(
@@ -261,7 +254,7 @@ class AuthorityValidatorTests(unittest.TestCase):
                     "The current RM350 wording covers one repeated concern.",
                     before=before,
                 )
-                self.assert_finding("scope.repeated_concern", self.findings_for({"services.html": source}))
+                self.assertEqual([], self.findings_for({"services.html": source}))
 
     def test_case_and_whitespace_variations_fail(self):
         source = append_html(
@@ -269,7 +262,6 @@ class AuthorityValidatorTests(unittest.TestCase):
             "The RM350 wording covers ONE   REPEATED\nCONCERN and the booking is AUTOMATICALLY   CONFIRMED.",
         )
         findings = self.findings_for({"services.html": source})
-        self.assert_finding("scope.repeated_concern", findings)
         self.assert_finding("booking.automatic_confirmation", findings)
 
     def test_html_and_jsonld_contradictions_fail(self):
@@ -281,7 +273,6 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         source = self.canonical["services.html"].replace("</body>", jsonld + "\n</body>", 1)
         findings = self.findings_for({"services.html": source})
-        self.assert_finding("scope.repeated_concern", findings)
         self.assert_finding("value.session_price", findings)
 
     def test_embedded_javascript_data_contradiction_fails(self):
@@ -408,12 +399,12 @@ class AuthorityValidatorTests(unittest.TestCase):
             subprocess.run(["git", "add", "tracked.txt"], cwd=root, check=True)
             self.assertEqual(["tracked.txt"], committed_tracked_paths(root))
 
-    def test_secondwave_nested_inline_online_fails(self):
+    def test_secondwave_nested_inline_online_passes(self):
         source = insert_in_session_article(
             self.canonical["services.html"],
             "<p>The RM350 delivery platform is <span>on<strong>line</strong></span>.</p>",
         )
-        self.assert_finding("delivery.generic_online", self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"services.html": source}))
 
     def test_secondwave_paypal_for_rm350_fails(self):
         source = insert_in_session_article(
@@ -489,7 +480,6 @@ class AuthorityValidatorTests(unittest.TestCase):
             for finding in self.findings_for({"services.html": services, "index.html": index})
         }
         expected = {
-            "delivery.generic_online",
             "payment.unsupported_rm350_method",
             "value.session_price",
             "delivery.unapproved_platform",
@@ -498,7 +488,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         }
         self.assertTrue(expected.issubset(identifiers), expected - identifiers)
 
-    def test_nested_inline_and_whitespace_token_splits_fail(self):
+    def test_nested_inline_and_whitespace_online_token_splits_pass(self):
         variants = (
             "<span>on<em>line</em></span>",
             "<span>on\n<strong>line</strong></span>",
@@ -509,10 +499,7 @@ class AuthorityValidatorTests(unittest.TestCase):
                     self.canonical["services.html"],
                     f"<p>The RM350 delivery platform is {variant}.</p>",
                 )
-                self.assert_finding(
-                    "delivery.generic_online",
-                    self.findings_for({"services.html": source}),
-                )
+                self.assertEqual([], self.findings_for({"services.html": source}))
         duration = insert_in_session_article(
             self.canonical["services.html"],
             "<p>Current session duration: <span>6</span><em>0</em> minutes.</p>",
@@ -595,15 +582,12 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
-    def test_home_support_wise_is_rejected(self):
+    def test_home_support_wise_is_allowed_for_international_clients(self):
         source = append_html(
             self.canonical["pay/index.html"],
-            "For the RM1,800 Home Support Programme, Wise is available only after CJ confirms fit.",
+            "For international clients using the RM1,800 Home Support Programme, Wise bank transfer is available only after CJ confirms fit and gives written permission to pay.",
         )
-        self.assert_finding(
-            "payment.unsupported_home_method",
-            self.findings_for({"pay/index.html": source}),
-        )
+        self.assertEqual([], self.findings_for({"pay/index.html": source}))
 
     def test_structural_01_approved_bank_transfer_passes(self):
         source = insert_in_session_article(
@@ -895,7 +879,7 @@ class AuthorityValidatorTests(unittest.TestCase):
     def test_structural_duplicate_governed_block_fails_closed(self):
         duplicate = (
             "<article><h2>One-Concern Parent Session</h2>"
-            "<p>RM350 · 45 minutes · Google Meet</p></article>"
+            "<p>RM350 · 45 minutes · Online</p></article>"
         )
         source = append_html(self.canonical["services.html"], duplicate)
         self.assert_finding("binding.one_concern.duplicate", self.findings_for({"services.html": source}))
@@ -938,11 +922,12 @@ class AuthorityValidatorTests(unittest.TestCase):
         self.assertEqual(45, session["duration_minutes"])
         self.assertEqual("One repeated concern. One clear next step.", session["promise"])
         self.assertEqual(5, len(session["deliverables"]))
-        self.assertEqual(["Google Meet"], session["delivery_platforms"])
-        self.assertEqual(["Bank transfer", "DuitNow QR"], session["payment_methods"])
+        self.assertEqual(["Online"], session["delivery_platforms"])
+        self.assertEqual(["Bank transfer", "DuitNow QR", "Wise bank transfer"], session["payment_methods"])
         self.assertEqual(1800, home["price"]["value"])
         self.assertEqual([6, 8], home["window_weeks"])
-        self.assertEqual(6, len(home["deliverables"]))
+        self.assertEqual(7, len(home["deliverables"]))
+        self.assertTrue(home["additional_post_programme_checkin"])
         self.assertFalse(AUTHORITY["first_step_call"]["compulsory_before_rm350"])
         self.assertEqual("NON_AUTHORITATIVE_DERIVED_MIRROR", AUTHORITY["authority_role"])
         self.assertEqual("autismpathwaysconsulting/APC-AI-OS", AUTHORITY["provenance"]["source_repository"])
@@ -1146,7 +1131,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
-    def test_nested_home_support_wise_is_rejected(self):
+    def test_nested_home_support_wise_is_allowed(self):
         source = append_script(
             self.canonical["pay/index.html"],
             '{"name":"One-Concern Parent Session","related":{"name":"APC Home Support Programme",'
@@ -1160,10 +1145,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"paymentMethod":"Wise","authorization":"already authorized only"}}}',
             "application/json",
         )
-        self.assert_finding(
-            "payment.unsupported_home_method",
-            self.findings_for({"pay/index.html": source}),
-        )
+        self.assertEqual([], self.findings_for({"pay/index.html": source}))
 
     def test_scalar_array_jsonld_conflicting_price_fails(self):
         findings = self.findings_from_script(
@@ -1399,7 +1381,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
-    def test_scalar_array_home_support_wise_is_rejected(self):
+    def test_scalar_array_home_support_wise_is_allowed(self):
         source = append_script(
             self.canonical["pay/index.html"],
             '{"name":"APC Home Support Programme","overseas":'
@@ -1412,10 +1394,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"paymentMethods":["Wise"],"authorization":"already authorized only"}}',
             "application/json",
         )
-        self.assert_finding(
-            "payment.unsupported_home_method",
-            self.findings_for({"pay/index.html": source}),
-        )
+        self.assertEqual([], self.findings_for({"pay/index.html": source}))
 
     def test_scalar_array_all_five_conflicts_fail_together(self):
         expected = {
@@ -2087,10 +2066,12 @@ class AuthorityValidatorTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     validate_authority_manifest(value)
 
-    def test_public_candidate_contains_no_wise_route(self):
-        for path in ROOT.rglob("*.html"):
-            with self.subTest(path=path.relative_to(ROOT)):
-                self.assertIsNone(re.search(r"\bwise\b", path.read_text(encoding="utf-8"), re.I))
+    def test_public_wise_route_is_private_and_international(self):
+        for relative in ("index.html", "services.html", "start.html", "terms.html", "pay/index.html"):
+            with self.subTest(path=relative):
+                source = (ROOT / relative).read_text(encoding="utf-8")
+                self.assertRegex(source, r"(?i)international.{0,160}wise")
+                self.assertRegex(source, r"(?i)(?:sent|details).{0,100}privately")
 
     def test_terms_uses_interim_first_step_call_wording(self):
         terms = (ROOT / "terms.html").read_text(encoding="utf-8")

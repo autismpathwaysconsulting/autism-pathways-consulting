@@ -68,13 +68,13 @@ class InterimContainmentTests(unittest.TestCase):
         )
         self.assertIn("containment.public_payment_detail:account number", findings)
 
-    def test_candidate_label_removal_fails(self):
+    def test_review_notice_removal_fails(self):
         sources = dict(self.sources)
         sources["index.html"] = re.sub(
-            r"candidate services?", "paid option", sources["index.html"], flags=re.IGNORECASE
+            r"Paid support is subject to", "Paid support", sources["index.html"], flags=re.IGNORECASE
         )
         self.assertIn(
-            "containment.candidate_label_missing:index.html",
+            "containment.review_notice_missing:index.html",
             validate_surfaces(sources, set(self.paths)),
         )
 
