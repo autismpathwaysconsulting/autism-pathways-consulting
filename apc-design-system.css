@@ -3545,3 +3545,333 @@ html.apc-home-snap {
     padding: 24px 22px 24px 28px !important;
   }
 }
+
+/* Responsive density correction */
+.apc-v2:not(.apc-home-page) {
+  --apc-section-v2: clamp(52px, 6vw, 80px);
+}
+
+.apc-tier-a:not(.apc-home-page) main > .section,
+.apc-tier-a:not(.apc-home-page) main > section.section {
+  padding-block: clamp(50px, 6vw, 78px) !important;
+}
+
+.apc-about-page .about-minimal-hero,
+.apc-about-page .hero-grid {
+  min-height: 0 !important;
+  padding-block: clamp(38px, 5vw, 64px) !important;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr) !important;
+  gap: clamp(38px, 6vw, 76px) !important;
+}
+
+.apc-tier-a.apc-about-page main > .hero {
+  padding-block: 0 !important;
+}
+
+.apc-about-page .portrait,
+.apc-about-page .hero-photo-card {
+  width: min(100%, 360px) !important;
+  justify-self: start;
+}
+
+.apc-about-page .hero-copy h1 {
+  max-width: 13ch !important;
+  font-size: clamp(3rem, 4.5vw, 4rem) !important;
+  line-height: 1 !important;
+}
+
+.apc-about-page .hero-copy .lead {
+  max-width: 54ch !important;
+  margin-bottom: 0 !important;
+}
+
+.apc-services-page-v2 .services-hero,
+.apc-start-page-v2 .start-hero {
+  margin-block: clamp(20px, 3vw, 34px) clamp(34px, 5vw, 54px) !important;
+  padding: clamp(34px, 5vw, 58px) clamp(24px, 6vw, 68px) !important;
+}
+
+.apc-services-page-v2 .services-hero h1 {
+  font-size: clamp(2.85rem, 4.7vw, 4.25rem) !important;
+}
+
+.apc-start-page-v2 .start-hero h1 {
+  font-size: clamp(2.85rem, 5.4vw, 4.45rem) !important;
+}
+
+.apc-resources-page .resource-hero {
+  padding: clamp(48px, 6vw, 76px) 0 clamp(38px, 5vw, 58px) !important;
+}
+
+.apc-resources-page .resource-hero h1 {
+  font-size: clamp(3.15rem, 6vw, 5rem) !important;
+}
+
+.apc-schools-page .page-header {
+  margin-block: clamp(20px, 3vw, 34px) clamp(34px, 5vw, 54px) !important;
+  padding: clamp(38px, 5vw, 62px) clamp(24px, 6vw, 68px) !important;
+}
+
+.apc-schools-page .page-header h1 {
+  font-size: clamp(3rem, 5.2vw, 4.65rem) !important;
+}
+
+.apc-schools-page .service-section {
+  padding: clamp(30px, 4vw, 48px) !important;
+}
+
+.apc-guide-page > main {
+  padding-block: clamp(40px, 5vw, 58px) clamp(60px, 8vw, 88px) !important;
+}
+
+.apc-guide-page > main.body {
+  padding-block: 22px clamp(60px, 8vw, 88px) !important;
+}
+
+.apc-guide-page > header.hero {
+  padding: clamp(38px, 5vw, 58px) 0 24px !important;
+}
+
+.apc-guide-page > main > h1,
+.apc-guide-page > header.hero h1 {
+  font-size: clamp(2.9rem, 5.5vw, 4.7rem) !important;
+}
+
+.apc-guide-page > main > h2 {
+  margin-top: clamp(44px, 6vw, 62px) !important;
+}
+
+.apc-legal-page .legal-hero {
+  margin-top: clamp(18px, 3vw, 32px) !important;
+  padding: clamp(38px, 5vw, 58px) clamp(24px, 6vw, 58px) !important;
+}
+
+.apc-legal-page .legal-hero h1 {
+  font-size: clamp(2.85rem, 5vw, 4.35rem) !important;
+}
+
+.apc-legal-page .legal-section {
+  padding-top: clamp(30px, 4vw, 48px) !important;
+}
+
+.apc-404-page > main,
+.apc-thank-you-page > main,
+.apc-waitlist-page > main {
+  padding-block: clamp(42px, 6vw, 68px) !important;
+}
+
+.apc-confirmation-page .confirm-wrap,
+.apc-payment-page .pay-main {
+  padding-block: clamp(34px, 5vw, 58px) !important;
+}
+
+.apc-free-tool-page .free-container {
+  padding-block: 0 !important;
+}
+
+.apc-payment-page .pay-hero,
+.apc-confirmation-page .confirm-card {
+  padding: clamp(26px, 4vw, 40px) !important;
+}
+
+.apc-connect-page .hero {
+  padding-block: clamp(54px, 7vw, 82px) !important;
+}
+
+.apc-connect-page section {
+  padding-block: clamp(38px, 5vw, 58px) !important;
+}
+
+@media (max-width: 900px) {
+  .apc-v2:not(.apc-home-page) {
+    --apc-gutter: clamp(18px, 3vw, 28px);
+  }
+
+  .apc-v2:not(.apc-home-page) :where(.nav-in, .nav-inner, .site-nav-inner, > header > nav, > header .nav) {
+    min-height: 66px !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .apc-v2:not(.apc-home-page) :where(.nav-links, .site-links, > header .links) {
+    width: auto !important;
+    margin: 0 0 0 auto !important;
+    flex: 0 1 auto !important;
+    flex-flow: row nowrap !important;
+  }
+
+  .apc-v2:not(.apc-home-page) :where(.nav-cta, .call-link, header .links .cta, .apc-free-call-nav) {
+    width: auto !important;
+    margin: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  .apc-about-page .about-minimal-hero,
+  .apc-about-page .hero-grid {
+    grid-template-columns: minmax(220px, 290px) minmax(0, 1fr) !important;
+    gap: clamp(28px, 5vw, 48px) !important;
+  }
+
+  .apc-about-page .portrait,
+  .apc-about-page .hero-photo-card {
+    width: min(100%, 290px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .apc-v2:not(.apc-home-page) {
+    --apc-gutter: 16px;
+    --apc-section-v2: 52px;
+  }
+
+  .apc-tier-a:not(.apc-home-page) main > .section,
+  .apc-tier-a:not(.apc-home-page) main > section.section {
+    padding-block: 42px !important;
+  }
+
+  .apc-about-page .about-minimal-hero,
+  .apc-about-page .hero-grid {
+    padding-block: 30px 38px !important;
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+  }
+
+  .apc-about-page .hero-copy {
+    order: -1 !important;
+  }
+
+  .apc-about-page .hero-copy h1 {
+    max-width: 13ch !important;
+    font-size: clamp(2.35rem, 10.5vw, 2.75rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .apc-home-page .availability-note summary {
+    min-height: 44px !important;
+  }
+
+  .apc-about-page .hero-copy .lead {
+    font-size: 1rem !important;
+    line-height: 1.58 !important;
+  }
+
+  .apc-about-page .portrait,
+  .apc-about-page .hero-photo-card {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .apc-services-page-v2 .services-hero,
+  .apc-start-page-v2 .start-hero,
+  .apc-schools-page .page-header {
+    margin-block: 14px 34px !important;
+    padding: 28px 20px 32px !important;
+  }
+
+  .apc-services-page-v2 .services-hero h1,
+  .apc-start-page-v2 .start-hero h1,
+  .apc-schools-page .page-header h1,
+  .apc-resources-page .resource-hero h1 {
+    font-size: clamp(2.25rem, 10.4vw, 2.65rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .apc-services-page-v2 .services-hero .lead,
+  .apc-start-page-v2 .start-hero > p,
+  .apc-schools-page .page-header > p,
+  .apc-resources-page .resource-hero p {
+    font-size: 1rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .apc-resources-page .resource-hero {
+    padding-block: 34px 38px !important;
+  }
+
+  .apc-guide-page > main {
+    padding-block: 32px 60px !important;
+  }
+
+  .apc-guide-page > main.body {
+    padding-block: 18px 60px !important;
+  }
+
+  .apc-guide-page > header.hero {
+    padding: 32px 0 18px !important;
+  }
+
+  .apc-guide-page > main > h1,
+  .apc-guide-page > header.hero h1 {
+    font-size: clamp(2.25rem, 10.2vw, 2.7rem) !important;
+    line-height: 1.03 !important;
+  }
+
+  .apc-guide-page > main > .back-link {
+    margin-bottom: 22px !important;
+  }
+
+  .apc-guide-page > main > h2 {
+    margin-top: 44px !important;
+  }
+
+  .apc-guide-page .callout,
+  .apc-guide-page .medical-note,
+  .apc-guide-page .try-box,
+  .apc-guide-page .reframe {
+    margin-block: 28px !important;
+    padding: 20px !important;
+  }
+
+  .apc-legal-page .legal-hero {
+    margin-top: 12px !important;
+    padding: 30px 20px !important;
+  }
+
+  .apc-legal-page .legal-hero h1 {
+    font-size: clamp(2.25rem, 10vw, 2.65rem) !important;
+  }
+
+  .apc-404-page > main,
+  .apc-thank-you-page > main,
+  .apc-waitlist-page > main,
+  .apc-confirmation-page .confirm-wrap,
+  .apc-payment-page .pay-main {
+    padding-block: 30px 48px !important;
+  }
+
+  .apc-payment-page .pay-hero,
+  .apc-confirmation-page .confirm-card {
+    padding: 24px 20px !important;
+  }
+
+  .apc-confirmation-page :where(.confirm-info-item, .confirm-profile) {
+    padding: 18px !important;
+  }
+
+  .apc-connect-page .hero {
+    padding-block: 44px !important;
+  }
+
+  .apc-connect-page section {
+    padding-block: 38px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .apc-v2:not(.apc-home-page) :where(.nav-cta, .call-link, header .links .cta, .apc-free-call-nav) {
+    padding-inline: 11px !important;
+    font-size: .72rem !important;
+  }
+
+  .apc-guide-page > main > h1,
+  .apc-guide-page > header.hero h1,
+  .apc-about-page .hero-copy h1,
+  .apc-services-page-v2 .services-hero h1,
+  .apc-start-page-v2 .start-hero h1,
+  .apc-schools-page .page-header h1,
+  .apc-resources-page .resource-hero h1 {
+    font-size: 2.25rem !important;
+  }
+}
