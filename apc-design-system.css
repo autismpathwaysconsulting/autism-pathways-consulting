@@ -3435,6 +3435,22 @@ html.apc-home-snap {
 }
 
 @media (max-width: 900px) {
+  .apc-utility-page > header > nav {
+    min-height: 66px !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .apc-utility-page > header .links {
+    width: auto !important;
+    margin-left: auto !important;
+    flex: 0 1 auto !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+  }
+
   .apc-about-page .about-minimal-hero,
   .apc-about-page .hero-grid {
     min-height: 0;
