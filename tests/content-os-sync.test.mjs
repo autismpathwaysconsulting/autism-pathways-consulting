@@ -153,6 +153,26 @@ test("production secret accepts only the production credential", async () => {
   assert.equal(accepted.headers.get("X-Frame-Options"), "DENY");
 });
 
+test("browser login accepts a same-site submission without Origin", async () => {
+  const env = { APC_CONTENT_OS_ENVIRONMENT: "production", APC_CONTENT_OS_AUTH: "production-secret" };
+  const loginPage = await authorize({ env, request: new Request("https://example.com/content-os/login/"), next: () => new Response("private") });
+  const html = await loginPage.text();
+  const csrf = /action="\/content-os\/login\/\?csrf=([0-9a-f.-]+)"/.exec(html)?.[1];
+  assert.ok(csrf);
+  const body = new URLSearchParams({ password: "production-secret" });
+  const response = await authorize({
+    env,
+    request: new Request(`https://example.com/content-os/login/?csrf=${csrf}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body,
+    }),
+    next: () => new Response("private"),
+  });
+  assert.equal(response.status, 303);
+  assert.match(response.headers.get("Set-Cookie"), /__Host-apc_content_os_session=/);
+});
+
 test("preview verifier works only for an explicit preview environment", async () => {
   const kv = new MemoryKV();
   await kv.put("apc-content-os:auth:sha256", "9caf06bb4436cdbfa20af9121a626bc1093c4f54b31c0fa937957856135345b6");
