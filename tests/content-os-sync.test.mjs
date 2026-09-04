@@ -138,8 +138,8 @@ test("production secret accepts only the production credential", async () => {
     }),
     next: () => new Response("private"),
   });
-  assert.equal(rejected.status, 401);
-  assert.match(rejected.headers.get("WWW-Authenticate"), /Basic/);
+  assert.equal(rejected.status, 302);
+  assert.equal(rejected.headers.get("Location"), "https://example.com/content-os/login/");
 
   const accepted = await authorize({
     env,
