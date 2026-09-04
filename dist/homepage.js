@@ -165,21 +165,38 @@ function sectionLabel(target, index) {
   return clean.length > 38 ? `${clean.slice(0, 35).trim()}...` : clean;
 }
 
-if (document.body.classList.contains("apc-v2") && !document.body.classList.contains("apc-home-page")) {
+const isApcPage = document.body.classList.contains("apc-v2");
+const isHomePage = document.body.classList.contains("apc-home-page");
+let sitewideTargets = [];
+
+if (isApcPage) {
+  const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+  document.querySelectorAll(".apc-shell-nav a, .apc-shell-start").forEach(link => {
+    const linkPath = new URL(link.href, window.location.href).pathname.replace(/\/$/, "") || "/";
+    if (linkPath === currentPath) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+}
+
+if (isApcPage && !isHomePage) {
   const main = document.querySelector("main");
   const footer = document.querySelector("body > footer");
-  const targets = main ? [...new Set([
+  sitewideTargets = main ? [...new Set([
     ...main.querySelectorAll(":scope > header, :scope > section, :scope > article, :scope > .reassurance"),
     ...main.querySelectorAll(":scope > .container > .service-section, :scope > .container > .unsure"),
+    ...main.querySelectorAll(":scope > .hero, :scope > .wrap > section"),
     ...main.querySelectorAll(":scope > h2, :scope > .week, :scope > .cta-banner"),
     ...(footer ? [footer] : []),
   ])].filter(target => target.getBoundingClientRect().height > 44) : [];
 
-  if (targets.length > 1) {
+  if (sitewideTargets.length > 1) {
+    document.documentElement.classList.add("apc-site-snap");
+    sitewideTargets.forEach(target => target.classList.add("apc-snap-stop"));
+
     const rail = document.createElement("nav");
     rail.className = "section-rail section-rail-sitewide";
     rail.setAttribute("aria-label", "Page sections");
-    targets.slice(0, 10).forEach((target, index) => {
+    sitewideTargets.slice(0, 10).forEach((target, index) => {
       if (!target.id) target.id = `page-section-${index + 1}`;
       const link = document.createElement("a");
       link.href = `#${target.id}`;
@@ -193,7 +210,7 @@ if (document.body.classList.contains("apc-v2") && !document.body.classList.conta
   }
 }
 
-if (document.body.classList.contains("apc-v2")) {
+if (isApcPage) {
   const progress = document.createElement("div");
   progress.className = "apc-scroll-progress";
   progress.setAttribute("aria-hidden", "true");
@@ -214,7 +231,7 @@ if (document.body.classList.contains("apc-v2")) {
 }
 
 if (!reducedMotion) {
-  document.querySelectorAll(".apc-v2:not(.apc-home-page) main > :where(header, section, article), .apc-v2:not(.apc-home-page) main > .container > :where(.service-section, .unsure)")
+  document.querySelectorAll(".apc-v2:not(.apc-home-page) main > :where(header, section, article, .hero), .apc-v2:not(.apc-home-page) main > :where(.container, .wrap) > :where(section, .service-section, .unsure)")
     .forEach(item => item.setAttribute("data-reveal", ""));
 }
 

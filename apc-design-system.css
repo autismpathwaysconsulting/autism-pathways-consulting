@@ -4596,7 +4596,7 @@ html {
 }
 
 /* Cross-site density and deliberate section stops */
-html {
+html.apc-site-snap {
   overflow-x: clip;
   scroll-padding-top: 84px;
   scroll-snap-type: y proximity;
@@ -4623,6 +4623,24 @@ html {
   scroll-margin-top: 0;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+.apc-v2:not(.apc-home-page) .apc-snap-stop {
+  scroll-margin-top: 84px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (min-width: 761px) and (min-height: 640px) {
+  .apc-tier-a:not(.apc-home-page) main > :where(header, section, article).apc-snap-stop,
+  .apc-utility-page main > :where(header, section, article).apc-snap-stop,
+  .apc-connect-page main > :where(header, section, article).apc-snap-stop,
+  .apc-connect-page main > .hero.apc-snap-stop,
+  .apc-connect-page main > .wrap > section.apc-snap-stop,
+  .apc-legal-page main > :where(header, section, article).apc-snap-stop,
+  .apc-schools-page main > .container > :where(.service-section, .unsure).apc-snap-stop {
+    min-height: calc(100svh - 84px);
+  }
 }
 
 .apc-home-page main > section,
@@ -4840,8 +4858,12 @@ html {
 }
 
 @media (max-width: 640px) {
-  html {
+  html.apc-site-snap {
     scroll-padding-top: 112px;
+  }
+
+  .apc-v2:not(.apc-home-page) .apc-snap-stop {
+    scroll-margin-top: 112px;
   }
 
   .apc-v2:not(.apc-home-page) {
