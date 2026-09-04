@@ -22,7 +22,7 @@ FORBIDDEN_PAYMENT_PATHS = frozenset({"QR_Payment.JPG", "pay.html.backup-payment-
 PAID_CAL_PATH = "cal.com/autismpathwaysconsulting/parent-strategy-session"
 FREE_CAL_URL = "https://cal.com/autismpathwaysconsulting/first-step-call"
 EXPECTED_FORM_COUNTS = {"schools.html": 1}
-PRIVATE_AUTHENTICATED_HTML_SURFACES = frozenset({"content-os/index.html"})
+PRIVATE_AUTHENTICATED_HTML_PREFIXES = ("content-os/",)
 NON_SOURCE_DIRECTORIES = frozenset(
     {".git", "dist", "node_modules", ".wrangler", ".Codex", "_local_backups", "backups"}
 )
@@ -33,6 +33,10 @@ def is_non_source_path(path: Path) -> bool:
         part in NON_SOURCE_DIRECTORIES or part.startswith("_backup_")
         for part in path.parts
     )
+
+
+def is_private_authenticated_html_surface(path: str) -> bool:
+    return path.endswith(".html") and path.startswith(PRIVATE_AUTHENTICATED_HTML_PREFIXES)
 KNOWN_HEADING_SKIPS = {
     ("course-waitlist.html", 1, 3),
     ("schools.html", 2, 4),
@@ -387,11 +391,12 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
         if not path.endswith(".html"):
             continue
         surface = parse_surface(source)
-        if path not in PRIVATE_AUTHENTICATED_HTML_SURFACES and surface.forms:
+        is_private_surface = is_private_authenticated_html_surface(path)
+        if not is_private_surface and surface.forms:
             form_counts[path] = len(surface.forms)
-        if path not in PRIVATE_AUTHENTICATED_HTML_SURFACES and integration_signals.search(source):
+        if not is_private_surface and integration_signals.search(source):
             findings.append(f"containment.new_integration_surface:{path}")
-        if path not in PRIVATE_AUTHENTICATED_HTML_SURFACES and any(control.get("type", "").lower() == "file" for control in surface.inputs):
+        if not is_private_surface and any(control.get("type", "").lower() == "file" for control in surface.inputs):
             findings.append(f"containment.public_file_input:{path}")
         for image in surface.images:
             if "alt" not in image:

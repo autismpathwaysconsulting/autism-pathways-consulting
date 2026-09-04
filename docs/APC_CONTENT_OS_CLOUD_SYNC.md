@@ -7,8 +7,10 @@ The private APC dashboard keeps the useful v2.2 features and adds three separate
 - Planning state: calendar, Topic Bank, Prompt Builder, Product Board, and Book Builder.
 - Analytics: manual aggregate platform snapshots with separate views and reach, real null values, and 24-hour, 7-day, and 28-day checkpoints.
 - Research: a bounded weekly inbox of sourced findings and topic candidates. Research never becomes an APC rule or publishes automatically.
+- Episodes: filming-pack prompts, fixed production stages, and hash-based review records.
 
 The private app is served at `/content-os/`.
+The Episode Studio is served at `/content-os/episodes/`.
 
 ## Security model
 
@@ -17,7 +19,7 @@ The private app is served at `/content-os/`.
 - Content Security Policy permits self-hosted CSS, JavaScript, images, and same-origin API calls only. Inline scripts, inline styles, event attributes, objects, frames, and form submissions are blocked.
 - D1 is the sole canonical server store.
 - Production D1 is not bound to local or preview environments. Preview can load the authenticated interface, but it remains local-only.
-- State, analytics, research, deliveries, and decisions use strict allowlisted schemas. Unknown fields, prototype-shaped objects, and oversized planning states are rejected.
+- State, analytics, research, episodes, reviews, deliveries, and decisions use strict allowlisted schemas. Unknown fields, prototype-shaped objects, and oversized planning states are rejected.
 - The dashboard stores aggregate counts and short deidentified patterns only. Contact-like data is rejected in persisted free text. Do not enter names, handles, contact details, screenshots, or message text.
 
 Basic Auth remains a temporary single-user control. Cloudflare Access with MFA and per-user audit logs is the recommended later replacement.
@@ -46,6 +48,14 @@ The standard comparison checkpoints are 24 hours, 7 days, and 28 days. A publica
 ### Research
 
 The weekly automation creates at most five findings and three topic candidates. The secure GitHub webhook writes only validated research rows and delivery audit records. Research reads are bounded and cursor-paginated. The Founder can keep useful findings, archive noise, add a candidate to the planner, or attach exact governed research context to Prompt Builder. Prompt Builder also includes a concise deidentified analytics learning summary for the selected problem area. Automation cannot edit planning state, change governance, create permanent rules, or publish content.
+
+### Episode Studio
+
+Episode Studio uses the same governed research and analytics records instead of copying them into a second system. A topic candidate or manually entered title can become an episode with this fixed lifecycle:
+
+`IDEA -> APPROVED -> SCRIPT_LOCKED -> FILMED -> EDITING -> REVIEW -> READY -> PUBLISHED`
+
+Each episode can store one filming-pack prompt and multiple immutable review manifests. Every review is identified by the exported video's SHA-256 hash and review mode, so a renamed file is not mistaken for a new cut. Publication and analytics entry remain in the main Content OS and connect to an episode through its episode ID.
 
 ### Ongoing planner
 
@@ -89,6 +99,7 @@ Run:
 npm run build
 npm run test:site-build
 npm run test:content-os
+node --test tests/episode-workflow.test.mjs
 python3 tests/run_authority_tests.py
 ```
 
@@ -104,3 +115,4 @@ The database migration is additive. Do not roll back to the v2.2 application aft
 - First-ever offline launch still requires a previously cached page.
 - Scheduled research cannot see D1 directly. It feeds sourced weekly research to the dashboard, while the dashboard combines selected research with its own deidentified analytics when generating a prompt.
 - The webhook, encrypted secret, D1 migration, and branch protection require production administration outside the repository.
+- Add authorised platform analytics APIs when Instagram, TikTok, and YouTube credentials are available. Until then, snapshots can be entered manually without blocking the rest of the workflow.

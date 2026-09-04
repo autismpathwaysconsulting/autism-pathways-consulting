@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>APC Episode Studio</title>
+  <link rel="stylesheet" href="/content-os/app.css">
+  <script type="module" src="/content-os/episodes/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="app-header">
+    <div class="shell header-layout">
+      <div>
+        <p class="eyebrow">Autism Pathways Consulting</p>
+        <h1>Episode Studio</h1>
+        <p class="header-summary">Move one episode from useful idea to filmed, reviewed, published and learned from.</p>
+      </div>
+      <div class="sync-panel" role="status" aria-live="polite" aria-atomic="true">
+        <div id="episodeStatus" class="sync-status">Loading secure workflow</div>
+        <div id="episodeDetail" class="sync-detail">Checking episodes and the governed research feed.</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="section-nav" aria-label="Episode Studio sections">
+    <div class="shell nav-scroll">
+      <a href="/content-os/">Content OS</a>
+      <a href="#overview" aria-current="location">Overview</a>
+      <a href="#ideas">Ideas</a>
+      <a href="#episodes">Episodes</a>
+      <a href="#pack">Filming pack</a>
+      <a href="#results">Results</a>
+    </div>
+  </nav>
+
+  <main id="main-content" class="shell main-content">
+    <section id="overview" class="page-section" aria-labelledby="overview-title">
+      <div class="section-heading"><div><p class="section-kicker">Start here</p><h2 id="overview-title">Episode overview</h2></div></div>
+      <div class="metric-grid" aria-label="Episode progress">
+        <article class="metric-card"><strong id="episodeCount" class="metric-value">0</strong><span>Episodes</span></article>
+        <article class="metric-card"><strong id="filmingCount" class="metric-value">0</strong><span>Ready to film</span></article>
+        <article class="metric-card"><strong id="readyCount" class="metric-value">0</strong><span>Upload ready</span></article>
+        <article class="metric-card"><strong id="publishedCount" class="metric-value">0</strong><span>Published</span></article>
+      </div>
+    </section>
+
+    <section id="ideas" class="page-section" aria-labelledby="ideas-title">
+      <div class="section-heading"><div><p class="section-kicker">Choose</p><h2 id="ideas-title">Research ideas</h2><p class="section-summary">The existing weekly ChatGPT task feeds these governed candidates into Content OS.</p></div><a class="button secondary" href="/content-os/#research">Open full research inbox</a></div>
+      <div id="researchIdeas" class="card-list"><div class="empty-state">No research candidates loaded.</div></div>
+      <div class="card form-card">
+        <h3>Create a manual episode</h3>
+        <form id="episodeForm" class="stack">
+          <div class="field-grid two">
+            <div class="field"><label for="episodeId">Episode ID</label><input id="episodeId" required maxlength="6" placeholder="EP09"></div>
+            <div class="field"><label for="episodeTitle">Topic or parent problem</label><input id="episodeTitle" required maxlength="200"></div>
+          </div>
+          <div class="form-actions"><button class="button" type="submit">Create episode</button></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="episodes" class="page-section" aria-labelledby="episodes-title">
+      <div class="section-heading"><div><p class="section-kicker">Track</p><h2 id="episodes-title">Episodes</h2><p class="section-summary">Lock the script before filming, then use full, delta and final review modes.</p></div></div>
+      <div id="episodeList" class="card-list"><div class="empty-state">No episodes yet.</div></div>
+    </section>
+
+    <section id="pack" class="page-section" aria-labelledby="pack-title">
+      <div class="section-heading"><div><p class="section-kicker">Create</p><h2 id="pack-title">Filming-pack prompt</h2><p class="section-summary">Use this in Codex to generate the aligned script, scenes, captions and HyperFrames instructions.</p></div></div>
+      <div class="card form-card stack">
+        <div class="field-grid two">
+          <div class="field"><label for="packEpisode">Episode</label><select id="packEpisode"></select></div>
+          <div class="field"><label for="packFormat">Format</label><select id="packFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option></select></div>
+        </div>
+        <div class="field"><label for="packNotes">Constraints or notes</label><textarea id="packNotes" maxlength="2000" placeholder="Keep under 75 seconds. Include one practical action."></textarea></div>
+        <div class="button-row"><button id="generatePrompt" class="button" type="button">Generate prompt</button><button id="copyPrompt" class="button secondary" type="button">Copy</button><button id="savePack" class="button dark" type="button">Save to episode</button></div>
+        <pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre>
+      </div>
+    </section>
+
+    <section id="results" class="page-section" aria-labelledby="results-title">
+      <div class="section-heading"><div><p class="section-kicker">Review and learn</p><h2 id="results-title">Reviews and post results</h2><p class="section-summary">Video reviews are hash-based. Publication analytics stay in the main Content OS and use the episode ID.</p></div><a class="button" href="/content-os/#results">Add platform analytics</a></div>
+      <div id="reviewList" class="card-list"><div class="empty-state">No video reviews recorded yet.</div></div>
+      <div id="publicationList" class="card-list"><div class="empty-state">No linked publications yet.</div></div>
+    </section>
+  </main>
+</body>
+</html>
