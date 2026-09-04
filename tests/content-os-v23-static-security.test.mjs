@@ -8,18 +8,22 @@ async function textFile(relativePath) {
 }
 
 test("Content OS HTML uses external CSS and module JavaScript only", async () => {
-  const html = await textFile("content-os/index.html");
-  assert.match(html, /<link\b[^>]*href=["'](?:\/content-os\/|\.\/)?app\.css["'][^>]*>/i);
-  assert.match(html, /<script\b[^>]*type=["']module["'][^>]*src=["'](?:\/content-os\/|\.\/)?app\.js["'][^>]*><\/script>/i);
-  assert.doesNotMatch(html, /<style\b/i);
-  assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc\s*=)[^>]*>/i);
+  for (const path of ["content-os/index.html", "content-os/episodes/index.html"]) {
+    const html = await textFile(path);
+    assert.match(html, /<link\b[^>]*href=["'](?:\/content-os\/|\.\/)?app\.css["'][^>]*>/i);
+    assert.match(html, /<script\b[^>]*type=["']module["'][^>]*src=["'][^"']+\.js["'][^>]*><\/script>/i);
+    assert.doesNotMatch(html, /<style\b/i);
+    assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc\s*=)[^>]*>/i);
+  }
 });
 
 test("Content OS source has no inline event or style attributes", async () => {
-  const html = await textFile("content-os/index.html");
-  assert.doesNotMatch(html, /\son[a-z]+\s*=/i);
-  assert.doesNotMatch(html, /\sstyle\s*=/i);
-  assert.doesNotMatch(html, /javascript\s*:/i);
+  for (const path of ["content-os/index.html", "content-os/episodes/index.html"]) {
+    const html = await textFile(path);
+    assert.doesNotMatch(html, /\son[a-z]+\s*=/i);
+    assert.doesNotMatch(html, /\sstyle\s*=/i);
+    assert.doesNotMatch(html, /javascript\s*:/i);
+  }
 });
 
 test("private-route CSP disallows inline scripts, event handlers, and inline styles", async () => {

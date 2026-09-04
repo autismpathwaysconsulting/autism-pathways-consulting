@@ -208,6 +208,17 @@ class InterimContainmentTests(unittest.TestCase):
         self.assertNotIn("containment.new_integration_surface:content-os/index.html", findings)
         self.assertNotIn("containment.public_file_input:content-os/index.html", findings)
 
+    def test_nested_protected_content_os_is_not_treated_as_a_public_surface(self):
+        path = "content-os/episodes/index.html"
+        findings = self.findings_with_html(
+            path,
+            '<h1>Private episode tool</h1><form><input type="file"></form>'
+            '<script>fetch("/api/content-os/episode-workflow")</script>',
+        )
+        self.assertNotIn("containment.form_inventory_changed", findings)
+        self.assertNotIn(f"containment.new_integration_surface:{path}", findings)
+        self.assertNotIn(f"containment.public_file_input:{path}", findings)
+
     def test_content_os_lookalike_form_remains_public_fail_closed(self):
         sources = dict(self.sources)
         lookalike_path = "content-os-preview/index.html"

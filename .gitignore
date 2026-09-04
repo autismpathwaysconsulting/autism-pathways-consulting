@@ -7,4 +7,5 @@ _local_backups/
 .dev.vars.*
 .wrangler/
 dist/
+node_modules/
 __pycache__/

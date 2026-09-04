@@ -65,6 +65,8 @@ export const PUBLIC_FILES = Object.freeze([
   "content-os/analytics.js",
   "content-os/research-schema.js",
   "content-os/schema.js",
+  "content-os/episodes/index.html",
+  "content-os/episodes/app.js",
 ]);
 
 const DENIED_FIRST_SEGMENTS = new Set([
