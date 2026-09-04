@@ -157,12 +157,12 @@ test("browser login accepts a same-site submission without Origin", async () => 
   const env = { APC_CONTENT_OS_ENVIRONMENT: "production", APC_CONTENT_OS_AUTH: "production-secret" };
   const loginPage = await authorize({ env, request: new Request("https://example.com/content-os/login/"), next: () => new Response("private") });
   const html = await loginPage.text();
-  const csrf = /name="csrf" value="([0-9a-f.-]+)"/.exec(html)?.[1];
+  const csrf = /action="\/content-os\/login\/\?csrf=([0-9a-f.-]+)"/.exec(html)?.[1];
   assert.ok(csrf);
-  const body = new URLSearchParams({ password: "production-secret", csrf });
+  const body = new URLSearchParams({ password: "production-secret" });
   const response = await authorize({
     env,
-    request: new Request("https://example.com/content-os/login/", {
+    request: new Request(`https://example.com/content-os/login/?csrf=${csrf}`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,

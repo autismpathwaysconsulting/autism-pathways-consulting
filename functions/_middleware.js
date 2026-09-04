@@ -59,11 +59,11 @@ async function loginPage(secret, error = false) {
   const csrf = crypto.randomUUID();
   const signedCsrf = await sessionToken(secret, csrf);
   const message = error ? '<p role="alert">The password was not accepted. Please try again.</p>' : "";
-  return securityHeaders(new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in | APC Content OS</title><link rel="stylesheet" href="/content-os/app.css"></head><body><main class="shell"><section class="panel"><p class="eyebrow">AUTISM PATHWAYS CONSULTING</p><h1>Sign in to Content OS</h1>${message}<form method="post" action="/content-os/login/"><label for="password">Content OS password</label><input id="password" name="password" type="password" required autocomplete="current-password"><input type="hidden" name="csrf" value="${signedCsrf}"><input type="hidden" name="next" value="/content-os/episodes/"><button type="submit">Sign in</button></form></section></main></body></html>`, { status: error ? 401 : 200, headers: { "Content-Type": "text/html; charset=utf-8" } }), true);
+  return securityHeaders(new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in | APC Content OS</title><link rel="stylesheet" href="/content-os/app.css"></head><body><main class="shell"><section class="panel"><p class="eyebrow">AUTISM PATHWAYS CONSULTING</p><h1>Sign in to Content OS</h1>${message}<form method="post" action="/content-os/login/?csrf=${signedCsrf}"><label for="password">Content OS password</label><input id="password" name="password" type="password" required autocomplete="current-password"><button type="submit">Sign in</button></form></section></main></body></html>`, { status: error ? 401 : 200, headers: { "Content-Type": "text/html; charset=utf-8" } }), true);
 }
 
-async function validLoginCsrf(secret, form) {
-  const token = String(form.get("csrf") || "");
+async function validLoginCsrf(secret, url) {
+  const token = url.searchParams.get("csrf") || "";
   const csrf = token.split(".", 1)[0];
   return /^[0-9a-f-]{36}\.[a-f0-9]{64}$/.test(token) && await sameCredential(token, await sessionToken(secret, csrf));
 }
@@ -219,7 +219,7 @@ export async function onRequest(context) {
       if (context.request.method !== "POST" || Number(context.request.headers.get("Content-Length") || 0) > 4096) return loginPage(secret, true);
       let form;
       try { form = await context.request.formData(); } catch { return loginPage(secret, true); }
-      if (!await validLoginCsrf(secret, form) || !await sameCredential(String(form.get("password") || ""), secret)) return loginPage(secret, true);
+      if (!await validLoginCsrf(secret, url) || !await sameCredential(String(form.get("password") || ""), secret)) return loginPage(secret, true);
       const expires = Date.now() + SESSION_SECONDS * 1000;
       const response = new Response(null, { status: 303, headers: { Location: new URL("/content-os/episodes/", url).toString() } });
       response.headers.set("Set-Cookie", `${SESSION_COOKIE}=${await sessionToken(secret, expires)}; Path=/; Max-Age=${SESSION_SECONDS}; Secure; HttpOnly; SameSite=Strict`);
