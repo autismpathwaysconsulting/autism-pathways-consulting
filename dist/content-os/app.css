@@ -35,7 +35,7 @@ body {
   font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  padding-bottom: 94px;
+  padding-bottom: 30px;
 }
 
 button,
@@ -976,11 +976,9 @@ button:disabled {
 .reference-item li + li { margin-top: 6px; }
 
 .quick-dock {
-  position: fixed;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
-  z-index: 35;
+  position: static;
+  width: min(100% - 32px, 1180px);
+  margin: 0 auto 18px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
@@ -1001,7 +999,6 @@ button:disabled {
 .score-low { color: var(--ink); font-weight: 900; text-decoration: underline 3px var(--coral); }
 
 @media (min-width: 620px) {
-  body { padding-bottom: 30px; }
   .metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .field-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .field-grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1014,10 +1011,8 @@ button:disabled {
   .product-grid,
   .card-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .quick-dock {
-    right: 18px;
-    bottom: 18px;
-    left: auto;
     display: flex;
+    justify-content: flex-end;
   }
 }
 
