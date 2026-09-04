@@ -118,6 +118,16 @@ function pathIsWithin(pathname, root) {
   return pathname === root || pathname.startsWith(`${root}/`);
 }
 
+function isSameSiteLogin(request, url) {
+  const origin = request.headers.get("Origin");
+  if (origin) return origin === url.origin;
+  const referer = request.headers.get("Referer");
+  if (referer) {
+    try { return new URL(referer).origin === url.origin; } catch { return false; }
+  }
+  return ["same-origin", "same-site", "none"].includes(request.headers.get("Sec-Fetch-Site"));
+}
+
 async function productionCredentialIsValid(secret, supplied) {
   const credential = parseBasicAuthorization(supplied);
   if (!credential) return false;
@@ -208,7 +218,7 @@ export async function onRequest(context) {
   if (typeof secret === "string" && secret.length > 0) {
     if (url.pathname === "/content-os/login/" || url.pathname === "/content-os/login") {
       if (context.request.method === "GET") return loginPage(false);
-      if (context.request.method !== "POST" || context.request.headers.get("Origin") !== url.origin || Number(context.request.headers.get("Content-Length") || 0) > 4096) return loginPage(true);
+      if (context.request.method !== "POST" || !isSameSiteLogin(context.request, url) || Number(context.request.headers.get("Content-Length") || 0) > 4096) return loginPage(true);
       let form;
       try { form = await context.request.formData(); } catch { return loginPage(true); }
       if (!await sameCredential(String(form.get("password") || ""), secret)) return loginPage(true);
