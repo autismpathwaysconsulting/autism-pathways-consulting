@@ -154,12 +154,19 @@ test("production secret accepts only the production credential", async () => {
 });
 
 test("browser login accepts a same-site submission without Origin", async () => {
-  const body = new URLSearchParams({ password: "production-secret" });
+  const env = { APC_CONTENT_OS_ENVIRONMENT: "production", APC_CONTENT_OS_AUTH: "production-secret" };
+  const loginPage = await authorize({ env, request: new Request("https://example.com/content-os/login/"), next: () => new Response("private") });
+  const html = await loginPage.text();
+  const csrf = /name="csrf" value="([0-9a-f-]+)"/.exec(html)?.[1];
+  const cookie = loginPage.headers.get("Set-Cookie")?.split(";", 1)[0];
+  assert.ok(csrf);
+  assert.ok(cookie);
+  const body = new URLSearchParams({ password: "production-secret", csrf });
   const response = await authorize({
-    env: { APC_CONTENT_OS_ENVIRONMENT: "production", APC_CONTENT_OS_AUTH: "production-secret" },
+    env,
     request: new Request("https://example.com/content-os/login/", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded", "Sec-Fetch-Site": "same-origin" },
+      headers: { "Content-Type": "application/x-www-form-urlencoded", Cookie: cookie },
       body,
     }),
     next: () => new Response("private"),
