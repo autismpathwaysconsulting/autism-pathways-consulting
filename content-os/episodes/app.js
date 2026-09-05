@@ -157,7 +157,38 @@ function productionPrompt() {
   const episode = workflow.episodes.find(item => item.id === element("packEpisode").value);
   if (!episode) return "Create an episode first.";
   const notes = element("packNotes").value.trim() || "Keep the language warm, practical and within APC scope.";
-  return `Create a complete, filming-ready APC episode pack for ${episode.id}: ${episode.title}.\n\nFormat: ${element("packFormat").value}\nConstraints: ${notes}\n\nBefore finalising, run the APC pre-film alignment check. Return the locked spoken script, timed scene-by-scene filming board, exact on-screen captions, HyperFrames prompt, visual assets, edit notes, source notes, platform copy, claim cautions, and a final FILM or REVISE decision. Keep the spoken script and every scene perfectly aligned so rerecording is not needed later. Do not create an SRT file.`;
+  return [
+    `Create a complete, filming-ready APC episode pack for ${episode.id}: ${episode.title}.`,
+    "",
+    "Format: " + element("packFormat").value,
+    "Constraints: " + notes,
+    "",
+    "DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION",
+    "Follow this sequence: parent emotion -> specific moment -> contradiction / tension -> curiosity -> reframe -> practical action -> save / share takeaway.",
+    "Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it.",
+    "Do not begin with the mechanism or educational explanation. Create the curiosity gap before resolving it.",
+    "Keep evidence, nuance, and safety boundaries underneath the hook and bring them in after the opening recognition and tension.",
+    "Use genuine parent recognition only. Do not manufacture distress, shame parents, portray autistic children as dangerous or burdensome, exaggerate a crisis, or make unsupported causal claims.",
+    "Preserve one parent problem and payoff, a calibrated corrective turn, emotional recognition with a compassionate reframe, one practical action, one optional low-pressure CTA, observation before interpretation, and no single-cause assumption.",
+    "Measure the replicated recipe at the approved checkpoint. Do not add another creative variable.",
+    "",
+    "PRE-FILM HOOK AUDIT",
+    "- Parent moment:",
+    "- Primary emotion:",
+    "- Contradiction / tension:",
+    "- Why viewer stays:",
+    "- Practical payoff:",
+    "- Save/share reason:",
+    "",
+    "HOOK GATE: PASS / REWORK / FAIL",
+    "PASS only when Recognition, Emotional Pull, and Tension / Gap are all satisfied and at least 4 of the 5 checks are satisfied.",
+    "REWORK when 3 or more checks are satisfied but the PASS requirements are not met.",
+    "FAIL when 0-2 checks are satisfied. Do not recommend filming yet.",
+    "If the result is REWORK or FAIL, rewrite the opening and rerun the audit before returning a filming recommendation.",
+    "",
+    "Return the completed audit first, followed by the locked spoken script, timed scene-by-scene filming board, exact on-screen captions, HyperFrames prompt, visual assets, edit notes, source notes, platform copy, claim cautions, and a final FILM or REVISE decision.",
+    "Keep the spoken script and every scene perfectly aligned so rerecording is not needed later. Do not create an SRT file.",
+  ].join("\n");
 }
 
 element("episodeForm").addEventListener("submit", async event => {

@@ -55,6 +55,8 @@ Prompt Builder includes a non-persistent five-point Winner Hook Check for recogn
 
 The current working hypothesis is that recent APC underperformance may be partly explained by emotionally flat, explanation-first openings compared with winner episodes. This is not an approved permanent rule and cannot become one until multiple recent posts have comparable checkpoint data, relevant winner comparisons are available, and the pattern replicates across more than one topic.
 
+Future episode-development prompts use winner-recipe replication as the default creative mode. They preserve the sequence of parent emotion, specific moment, tension, curiosity, reframe, practical action, and save/share takeaway, and they prohibit an additional creative variable unless the Founder separately approves it. This operational default does not claim that the recipe guarantees virality or prove that any one creative feature caused past performance.
+
 ### Episode Studio
 
 Episode Studio uses the same governed research and analytics records instead of copying them into a second system. A topic candidate or manually entered title can become an episode with this fixed lifecycle:

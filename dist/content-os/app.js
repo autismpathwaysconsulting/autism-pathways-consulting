@@ -2963,6 +2963,7 @@ function analyticsLearningSummary(area) {
 function updateWinnerHookCheck() {
   const checks = Array.from(document.querySelectorAll("[data-hook-check]"));
   const count = checks.filter(function (check) { return check.checked; }).length;
+  const coreChecksPass = checks.slice(0, 3).every(function (check) { return check.checked; });
   const countNode = element("hookCheckCount");
   const gate = element("hookGateResult");
   const detail = element("hookGateDetail");
@@ -2970,16 +2971,18 @@ function updateWinnerHookCheck() {
   if (!countNode || !gate || !detail || !gatePanel || checks.length !== 5) return;
 
   countNode.textContent = count + " / 5 yes";
-  if (count >= 4) {
+  if (count >= 4 && coreChecksPass) {
     countNode.className = "status-badge success";
     gatePanel.className = "hook-gate pass";
     gate.textContent = "STRONG ENOUGH TO DEVELOP";
     detail.textContent = "4–5 yes. Keep the evidence and safety checks underneath the hook.";
-  } else if (count === 3) {
+  } else if (count >= 3) {
     countNode.className = "status-badge warning";
     gatePanel.className = "hook-gate rework";
     gate.textContent = "REWORK OPENING BEFORE FILMING";
-    detail.textContent = "3 yes. Strengthen recognition, tension, or the practical payoff.";
+    detail.textContent = coreChecksPass ?
+      "3 yes. Strengthen the practical payoff or save/share reason." :
+      "Recognition, emotional pull, and tension are all required. Rework the missing core element.";
   } else {
     countNode.className = "status-badge error";
     gatePanel.className = "hook-gate";
@@ -3047,6 +3050,9 @@ function buildPrompt() {
     header.push(
       "",
       "CREATIVE ORDER: WORKING HYPOTHESIS, NOT A PERMANENT RULE",
+      "- DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION.",
+      "- Follow this sequence: parent emotion -> specific moment -> contradiction / tension -> curiosity -> reframe -> practical action -> save / share takeaway.",
+      "- Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it.",
       "- Do not begin with the mechanism or educational explanation. Begin with a recognisable parent moment that carries genuine emotional tension. The viewer should feel the situation before APC explains it.",
       "- Create the curiosity gap before resolving it.",
       "- Keep evidence, nuance and safety boundaries, but move them behind the hook rather than placing them in the first seconds.",
@@ -3063,8 +3069,8 @@ function buildPrompt() {
       "- Save/share reason:",
       "",
       "HOOK GATE: PASS / REWORK / FAIL",
-      "- PASS only when at least 4 of the 5 checks are satisfied.",
-      "- REWORK when exactly 3 checks are satisfied.",
+      "- PASS only when Recognition, Emotional Pull, and Tension / Gap are all satisfied and at least 4 of the 5 checks are satisfied.",
+      "- REWORK when 3 or more checks are satisfied but the PASS requirements are not met.",
       "- FAIL when 0–2 checks are satisfied. Do not recommend filming yet.",
       "- This creative gate must not change analytics scores, replication gates, or product validation."
     );
@@ -3079,7 +3085,7 @@ function buildPrompt() {
       "- short-form script or carousel copy suited to the selected platform",
       "- caption, evidence notes, optional ending, production notes, and QA",
       "- one product hypothesis and one book reuse angle",
-      "- one measurable experiment for the selected checkpoint",
+      "- one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
     ],
     reel: [
       "",
@@ -3089,7 +3095,7 @@ function buildPrompt() {
       "- a natural 45–55 second script that moves from parent emotion and a specific moment into tension, curiosity, reframe, practical action, and an optional save/share takeaway",
       "- timed scenes, filming direction, on-screen overlays, caption, evidence notes, optional low-pressure CTA, production notes, and final QA",
       "- the completed PRE-FILM HOOK AUDIT and HOOK GATE before the script",
-      "- one measurable experiment for the selected checkpoint",
+      "- one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
     ],
     carousel: [
       "",

@@ -21,8 +21,9 @@ test("Winner Hook Check is a five-point non-scoring creative gate", async () => 
   }
   assert.match(html, /Creative QA only/);
   assert.match(html, /This does not change analytics scoring, the September experiment, or product validation/);
-  assert.match(app, /count >= 4[\s\S]*STRONG ENOUGH TO DEVELOP/);
-  assert.match(app, /count === 3[\s\S]*REWORK OPENING BEFORE FILMING/);
+  assert.match(app, /coreChecksPass = checks\.slice\(0, 3\)/);
+  assert.match(app, /count >= 4 && coreChecksPass[\s\S]*STRONG ENOUGH TO DEVELOP/);
+  assert.match(app, /count >= 3[\s\S]*REWORK OPENING BEFORE FILMING/);
   assert.match(app, /DO NOT FILM YET/);
 });
 
@@ -54,7 +55,10 @@ test("creative prompts put recognition before mechanism and require the pre-film
     "Why viewer stays:",
     "Practical payoff:",
     "Save/share reason:",
-    "PASS only when at least 4 of the 5 checks are satisfied",
+    "DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION",
+    "Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it",
+    "PASS only when Recognition, Emotional Pull, and Tension / Gap are all satisfied and at least 4 of the 5 checks are satisfied",
+    "one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
   ]) {
     assert.match(app, new RegExp(instruction.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
@@ -65,6 +69,7 @@ test("creative prompts put recognition before mechanism and require the pre-film
   assert.match(app, /no single-cause assumption/);
   assert.match(app, /optional low-pressure CTA/);
   assert.match(app, /Do not manufacture distress/);
+  assert.doesNotMatch(app, /one measurable experiment for the selected checkpoint/);
 });
 
 test("hook capture expands additively while September analytics and state stay unchanged", async () => {
