@@ -159,7 +159,7 @@
 
     <section id="results" class="page-section" aria-labelledby="analytics-title">
       <div class="section-heading">
-        <div><p class="section-kicker">Manual entry</p><h2 id="analytics-title">Meta and platform analytics</h2><p class="section-summary">Record what the platform shows. A blank stays unknown, never zero.</p></div>
+        <div><p class="section-kicker">Automatic analytics</p><h2 id="analytics-title">Episode performance</h2><p class="section-summary">Connect once. Content OS collects the approved 24-hour, 7-day and 28-day checkpoints for you.</p></div>
       </div>
       <div class="privacy-note strong" role="note" aria-label="Privacy requirement">
         <strong>Do not paste names, handles or message text.</strong> Count responses and write only a short, deidentified pattern summary.
@@ -167,7 +167,7 @@
 
       <section class="card connector-panel" aria-labelledby="connector-title">
         <div class="card-heading">
-          <div><p class="card-label">Automatic collection</p><h3 id="connector-title">Connect platform analytics</h3><p class="subtle">Once a published post is linked, Content OS collects only its 24-hour, 7-day and 28-day checkpoints.</p></div>
+          <div><p class="card-label">Automatic collection</p><h3 id="connector-title">Connect platform analytics</h3><p class="subtle">Meta uses your existing APC automation. TikTok and YouTube start after a one-time account connection.</p></div>
           <span id="connectorStatus" class="status-badge">Checking</span>
         </div>
         <div class="button-row connector-actions" aria-label="Analytics providers">
@@ -177,15 +177,14 @@
         </div>
         <div id="connectionList" class="connection-list" aria-live="polite"></div>
         <form id="automaticAnalyticsForm" class="connector-link-form">
-          <div class="field-grid two">
-            <div class="field"><label for="connectorConnection">Connected account</label><select id="connectorConnection" required><option value="">Connect a matching account first</option></select></div>
-            <div class="field"><label for="connectorMediaId">Platform video or media ID</label><input id="connectorMediaId" autocomplete="off" maxlength="300" placeholder="Use the platform's stable media ID" required><p class="field-help">Fill in “Identify the post” below first. The ID is not the caption or account handle.</p></div>
-          </div>
-          <div class="form-actions"><button class="button" type="submit">Track this post automatically</button><span id="connectorFormStatus" class="subtle" role="status" aria-live="polite"></span></div>
+          <div class="form-actions"><button class="button" type="submit">Refresh automatic analytics</button><span id="connectorFormStatus" class="subtle" role="status" aria-live="polite"></span></div>
         </form>
         <div id="ingestionStatus" class="subtle" aria-live="polite"></div>
       </section>
 
+      <details class="reference-item manual-fallback">
+        <summary>Manual fallback (optional)</summary>
+        <p class="subtle">Use this only if a platform connection is unavailable. Automatic collection is the normal workflow.</p>
       <form id="analyticsForm" class="stack">
         <fieldset class="card form-card">
           <legend><span>1</span> Identify the post</legend>
@@ -277,6 +276,7 @@
           <span id="analyticsFormStatus" class="subtle" role="status" aria-live="polite"></span>
         </div>
       </form>
+      </details>
       <div id="resultSummary" class="summary-panel" aria-live="polite"></div>
       <div class="subsection-heading"><div><h3>Saved snapshots</h3><p class="subtle">Newest captured or queued snapshots appear first.</p></div></div>
       <div class="card filter-card">

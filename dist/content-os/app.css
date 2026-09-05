@@ -979,6 +979,9 @@ button:disabled {
 .connector-panel { margin-bottom: 18px; }
 .connector-actions { margin: 14px 0 10px; }
 .connector-link-form { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.manual-fallback { margin: 0 0 18px; }
+.manual-fallback[open] { padding-bottom: 15px; }
+.manual-fallback > .stack { margin-top: 10px; }
 .connection-list { display: grid; gap: 8px; }
 .connection-row {
   display: flex;

@@ -181,9 +181,11 @@ export async function onRequest(context) {
 
   const isResearchGithubIngest = context.request.method === "POST" &&
     url.pathname === "/api/content-os/ingest/research-github";
+  const isAnalyticsGithubIngest = context.request.method === "POST" &&
+    url.pathname === "/api/content-os/ingest/analytics-github";
   const isAnalyticsOauthCallback = context.request.method === "GET" &&
     /^\/api\/content-os\/connections\/(?:meta|tiktok|youtube)\/callback$/.test(url.pathname);
-  if (isResearchGithubIngest || isAnalyticsOauthCallback) {
+  if (isResearchGithubIngest || isAnalyticsGithubIngest || isAnalyticsOauthCallback) {
     return continueWithSecurityHeaders(context);
   }
 
