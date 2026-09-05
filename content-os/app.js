@@ -812,20 +812,27 @@ function renderConnectorState() {
   const status = element("connectorStatus");
   const list = element("connectionList");
   const select = element("connectorConnection");
-  if (!status || !list || !select) return;
+  if (!status || !list) return;
   const configured = isPlainObject(connectorState.configuredProviders) ? connectorState.configuredProviders : {};
+  const external = isPlainObject(connectorState.externalProviders) ? connectorState.externalProviders : {};
+  const providerLabels = { meta: "Meta", tiktok: "TikTok", youtube: "YouTube" };
   document.querySelectorAll("[data-connector-provider]").forEach(function (button) {
     const provider = button.dataset.connectorProvider;
-    button.disabled = configured[provider] !== true;
-    button.title = button.disabled ? "OAuth credentials still need to be configured." : "";
+    const externallyConnected = external[provider] === true;
+    button.disabled = externallyConnected || configured[provider] !== true;
+    button.textContent = externallyConnected ? providerLabels[provider] + " connected automatically" : "Connect " + providerLabels[provider];
+    button.title = externallyConnected ? "This account is connected through APC's private automation." :
+      (button.disabled ? "One-time provider app setup is still required." : "");
   });
   const active = Array.isArray(connectorState.connections) ? connectorState.connections.filter(function (connection) {
     return isPlainObject(connection) && connection.status === "active";
   }) : [];
-  status.textContent = connectorState.ingestionEnabled ? "Automatic collection on" : "Setup mode";
-  status.className = "status-badge" + (connectorState.ingestionEnabled ? " success" : "");
+  const automaticOn = connectorState.ingestionEnabled || Object.values(external).some(function (value) { return value === true; });
+  status.textContent = automaticOn ? "Automatic collection on" : "Setup mode";
+  status.className = "status-badge" + (automaticOn ? " success" : "");
   clearNode(list);
-  if (!active.length) list.appendChild(makeNode("p", "subtle", "No platform account is connected yet."));
+  if (!active.length && !automaticOn) list.appendChild(makeNode("p", "subtle", "No platform account is connected yet."));
+  if (external.meta === true) list.appendChild(makeNode("p", "subtle", "Meta · existing APC automation connected"));
   active.forEach(function (connection) {
     const row = makeNode("div", "connection-row");
     row.appendChild(makeNode("span", "", connection.accountName + " · " + connection.provider));
@@ -835,12 +842,14 @@ function renderConnectorState() {
     }));
     list.appendChild(row);
   });
-  const platform = element("rPlatform") ? element("rPlatform").value : "Instagram";
-  const previous = select.value;
-  select.replaceChildren(new Option("Choose a connected account", ""));
-  active.filter(function (connection) { return connectorMatchesPlatform(connection.provider, platform); })
-    .forEach(function (connection) { select.appendChild(new Option(connection.accountName + " · " + connection.provider, connection.connectionId)); });
-  if (Array.from(select.options).some(function (option) { return option.value === previous; })) select.value = previous;
+  if (select) {
+    const platform = element("rPlatform") ? element("rPlatform").value : "Instagram";
+    const previous = select.value;
+    select.replaceChildren(new Option("Choose a connected account", ""));
+    active.filter(function (connection) { return connectorMatchesPlatform(connection.provider, platform); })
+      .forEach(function (connection) { select.appendChild(new Option(connection.accountName + " · " + connection.provider, connection.connectionId)); });
+    if (Array.from(select.options).some(function (option) { return option.value === previous; })) select.value = previous;
+  }
 }
 
 async function readConnectorState() {
@@ -1615,23 +1624,12 @@ async function buildTrackingPublication() {
 }
 
 async function trackPublicationAutomatically() {
-  const form = element("automaticAnalyticsForm");
   const status = element("connectorFormStatus");
-  if (!form.checkValidity()) { form.reportValidity(); return; }
-  status.textContent = "Scheduling checkpoints…";
+  status.textContent = "Refreshing automatic analytics…";
   try {
-    const publication = await buildTrackingPublication();
-    const connectionId = element("connectorConnection").value;
-    const remoteMediaId = text(element("connectorMediaId").value).trim();
-    const result = await apiFetch(ENDPOINTS.publications, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ publication: publication, connectionId: connectionId, remoteMediaId: remoteMediaId }),
-    });
-    if (!result.response.ok) throw new Error(text(result.body && result.body.error) || "This post could not be scheduled.");
-    status.textContent = "Tracked. The 24-hour, 7-day and 28-day checkpoints are scheduled.";
-    element("connectorMediaId").value = "";
-    await readConnectorState();
+    await Promise.all([readConnectorState(), readAnalytics()]);
+    renderResults();
+    status.textContent = "Up to date. New Meta checkpoints arrive automatically after the scheduled cloud collection.";
   } catch (error) {
     status.textContent = text(error && error.message);
   }

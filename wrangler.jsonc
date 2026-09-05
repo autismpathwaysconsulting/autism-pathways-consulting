@@ -7,7 +7,8 @@
   "vars": {
     "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "false",
     "APC_CONTENT_OS_ENVIRONMENT": "local",
-    "APC_CONTENT_OS_AUTOMATION_ENABLED": "false"
+    "APC_CONTENT_OS_AUTOMATION_ENABLED": "false",
+    "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false"
   },
   "kv_namespaces": [],
   "d1_databases": [],
@@ -16,7 +17,8 @@
       "vars": {
         "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "true",
         "APC_CONTENT_OS_ENVIRONMENT": "preview",
-        "APC_CONTENT_OS_AUTOMATION_ENABLED": "false"
+        "APC_CONTENT_OS_AUTOMATION_ENABLED": "false",
+        "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false"
       },
       "kv_namespaces": [
         {
@@ -31,6 +33,7 @@
         "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "false",
         "APC_CONTENT_OS_ENVIRONMENT": "production",
         "APC_CONTENT_OS_AUTOMATION_ENABLED": "true",
+        "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "true",
         "APC_CONTENT_OS_GITHUB_REPOSITORY_ID": "1327407191",
         "APC_CONTENT_OS_GITHUB_REPOSITORY": "autismpathwaysconsulting/APC-AI-OS",
         "APC_CONTENT_OS_GITHUB_ISSUE_LABEL": "apc-dashboard-feed",

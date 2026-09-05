@@ -5,6 +5,19 @@ import { readFile } from "node:fs/promises";
 import { onRequest as authorize } from "../functions/_middleware.js";
 import { forwardAnalyticsConnector } from "../functions/lib/content-os/analytics-connector-proxy.js";
 import { assertValidAnalyticsSnapshot } from "../content-os/analytics.js";
+import { onRequestPost as ingestGithubAnalytics } from "../functions/api/content-os/ingest/analytics-github.js";
+
+async function signGithubBody(secret, body) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const bytes = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body)));
+  return `sha256=${[...bytes].map(byte => byte.toString(16).padStart(2, "0")).join("")}`;
+}
 
 test("only exact OAuth callback GETs bypass the dashboard session", async () => {
   const accepted = await authorize({
@@ -21,6 +34,70 @@ test("only exact OAuth callback GETs bypass the dashboard session", async () => 
     next: () => new Response("private"),
   });
   assert.equal(rejected.status, 503);
+});
+
+test("only the exact automatic analytics ingest POST bypasses the dashboard session", async () => {
+  const accepted = await authorize({
+    env: {},
+    request: new Request("https://example.com/api/content-os/ingest/analytics-github", { method: "POST" }),
+    next: () => new Response("automatic analytics"),
+  });
+  assert.equal(accepted.status, 200);
+  assert.equal(await accepted.text(), "automatic analytics");
+
+  const rejected = await authorize({
+    env: {},
+    request: new Request("https://example.com/api/content-os/ingest/analytics-github/extra", { method: "POST" }),
+    next: () => new Response("private"),
+  });
+  assert.equal(rejected.status, 503);
+});
+
+test("automatic analytics ingest fails closed without its private secret", async () => {
+  const response = await ingestGithubAnalytics({
+    env: {
+      APC_CONTENT_OS_AUTOMATION_ENABLED: "true",
+      APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED: "true",
+    },
+    request: new Request("https://example.com/api/content-os/ingest/analytics-github", { method: "POST" }),
+  });
+  assert.equal(response.status, 503);
+  assert.equal((await response.json()).code, "not_configured");
+});
+
+test("automatic analytics ingest authenticates an empty checkpoint heartbeat", async () => {
+  const secret = "test-only-analytics-secret";
+  const body = JSON.stringify({
+    schemaVersion: "apc.analytics-github.v1",
+    deliveryId: crypto.randomUUID(),
+    generatedAt: new Date().toISOString(),
+    records: [],
+  });
+  const response = await ingestGithubAnalytics({
+    env: {
+      APC_CONTENT_OS_AUTOMATION_ENABLED: "true",
+      APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED: "true",
+      APC_CONTENT_OS_ANALYTICS_INGEST_SECRET: secret,
+      APC_CONTENT_OS_DB: {},
+    },
+    request: new Request("https://example.com/api/content-os/ingest/analytics-github", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-APC-Source": "apc-ai-os-meta-insights",
+        "X-Hub-Signature-256": await signGithubBody(secret, body),
+      },
+      body,
+    }),
+  });
+  assert.equal(response.status, 202);
+  assert.deepEqual(await response.json(), {
+    schemaVersion: "apc.analytics-github.v1",
+    status: "accepted",
+    deliveryId: JSON.parse(body).deliveryId,
+    accepted: 0,
+    duplicates: 0,
+  });
 });
 
 test("Pages forwards connector traffic through a service binding and protects writes", async () => {
@@ -75,4 +152,5 @@ test("connector migration and configs define the secure scheduled architecture",
   assert.match(workerConfig, /"APC_CONNECTOR_DATA_KEY_V1"/);
   assert.match(pagesConfig, /"binding": "APC_ANALYTICS_CONNECTOR"/);
   assert.match(pagesConfig, /"service": "apc-content-os-analytics-ingestor"/);
+  assert.match(pagesConfig, /"APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "true"/);
 });
