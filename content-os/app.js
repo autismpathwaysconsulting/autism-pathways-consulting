@@ -2960,6 +2960,37 @@ function analyticsLearningSummary(area) {
     signalCountSummary(knownSignals, notCounted) + ". This is descriptive internal learning, not causal proof.";
 }
 
+function updateWinnerHookCheck() {
+  const checks = Array.from(document.querySelectorAll("[data-hook-check]"));
+  const count = checks.filter(function (check) { return check.checked; }).length;
+  const coreChecksPass = checks.slice(0, 3).every(function (check) { return check.checked; });
+  const countNode = element("hookCheckCount");
+  const gate = element("hookGateResult");
+  const detail = element("hookGateDetail");
+  const gatePanel = gate ? gate.closest(".hook-gate") : null;
+  if (!countNode || !gate || !detail || !gatePanel || checks.length !== 5) return;
+
+  countNode.textContent = count + " / 5 yes";
+  if (count >= 4 && coreChecksPass) {
+    countNode.className = "status-badge success";
+    gatePanel.className = "hook-gate pass";
+    gate.textContent = "STRONG ENOUGH TO DEVELOP";
+    detail.textContent = "4–5 yes. Keep the evidence and safety checks underneath the hook.";
+  } else if (count >= 3) {
+    countNode.className = "status-badge warning";
+    gatePanel.className = "hook-gate rework";
+    gate.textContent = "REWORK OPENING BEFORE FILMING";
+    detail.textContent = coreChecksPass ?
+      "3 yes. Strengthen the practical payoff or save/share reason." :
+      "Recognition, emotional pull, and tension are all required. Rework the missing core element.";
+  } else {
+    countNode.className = "status-badge error";
+    gatePanel.className = "hook-gate";
+    gate.textContent = "DO NOT FILM YET";
+    detail.textContent = "0–2 yes means the opening needs more work.";
+  }
+}
+
 function buildPrompt() {
   const topic = text(element("pTopic").value).trim();
   if (!topic) {
@@ -2976,6 +3007,7 @@ function buildPrompt() {
   const wording = element("pLocked").value;
   const research = element("pResearch").value;
   const ending = endingInstruction(element("pEnding").value);
+  const isEpisodeDevelopment = output !== "validation";
 
   const header = [
     "CREATE A FINAL APC PRODUCTION PACKAGE",
@@ -3014,6 +3046,36 @@ function buildPrompt() {
     "- Do not use em dashes.",
   ];
 
+  if (isEpisodeDevelopment) {
+    header.push(
+      "",
+      "CREATIVE ORDER: WORKING HYPOTHESIS, NOT A PERMANENT RULE",
+      "- DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION.",
+      "- Follow this sequence: parent emotion -> specific moment -> contradiction / tension -> curiosity -> reframe -> practical action -> save / share takeaway.",
+      "- Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it.",
+      "- Do not begin with the mechanism or educational explanation. Begin with a recognisable parent moment that carries genuine emotional tension. The viewer should feel the situation before APC explains it.",
+      "- Create the curiosity gap before resolving it.",
+      "- Keep evidence, nuance and safety boundaries, but move them behind the hook rather than placing them in the first seconds.",
+      "- Use genuine parent recognition only. Do not manufacture distress, shame parents, portray autistic children as dangerous or burdensome, exaggerate a crisis, or make unsupported causal claims.",
+      "- Preserve one parent problem and payoff, a calibrated corrective turn, emotional recognition with a compassionate reframe, one practical action, one optional low-pressure CTA, observation before interpretation, and no single-cause assumption.",
+      "",
+      "PRE-FILM HOOK AUDIT",
+      "Complete these fields before recommending filming:",
+      "- Parent moment:",
+      "- Primary emotion:",
+      "- Contradiction / tension:",
+      "- Why viewer stays:",
+      "- Practical payoff:",
+      "- Save/share reason:",
+      "",
+      "HOOK GATE: PASS / REWORK / FAIL",
+      "- PASS only when Recognition, Emotional Pull, and Tension / Gap are all satisfied and at least 4 of the 5 checks are satisfied.",
+      "- REWORK when 3 or more checks are satisfied but the PASS requirements are not met.",
+      "- FAIL when 0–2 checks are satisfied. Do not recommend filming yet.",
+      "- This creative gate must not change analytics scores, replication gates, or product validation."
+    );
+  }
+
   const packages = {
     content: [
       "",
@@ -3023,7 +3085,17 @@ function buildPrompt() {
       "- short-form script or carousel copy suited to the selected platform",
       "- caption, evidence notes, optional ending, production notes, and QA",
       "- one product hypothesis and one book reuse angle",
-      "- one measurable experiment for the selected checkpoint",
+      "- one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
+    ],
+    reel: [
+      "",
+      "OUTPUT",
+      "Return a filming-ready Reel / short-form episode package with:",
+      "- cover title, opening overlay, first spoken line, and caption opener sharing one promise without repeating one sentence",
+      "- a natural 45–55 second script that moves from parent emotion and a specific moment into tension, curiosity, reframe, practical action, and an optional save/share takeaway",
+      "- timed scenes, filming direction, on-screen overlays, caption, evidence notes, optional low-pressure CTA, production notes, and final QA",
+      "- the completed PRE-FILM HOOK AUDIT and HOOK GATE before the script",
+      "- one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
     ],
     carousel: [
       "",
@@ -3421,6 +3493,7 @@ function renderAll() {
   renderHistory();
   renderRecoveryCopy();
   renderConnectorState();
+  updateWinnerHookCheck();
 }
 
 function handleClick(event) {
@@ -3546,6 +3619,7 @@ function handleChange(event) {
   }
 
   if (["familyFilter", "stageFilter", "useFilter"].includes(control.id)) renderTopics();
+  if (control.matches("[data-hook-check]")) updateWinnerHookCheck();
   if (control.id === "rPlatform") updateSourceForPlatform();
   if (control.id === "calendarMonth" && /^\d{4}-\d{2}$/.test(control.value)) {
     selectedCalendarMonth = control.value;

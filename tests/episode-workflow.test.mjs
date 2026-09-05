@@ -37,3 +37,20 @@ test("Episode Studio assets are in the public allowlist without exposing operati
   assert.ok(!PUBLIC_FILES.includes("migrations/0003_episode_workflow.sql"));
   assert.ok(!PUBLIC_FILES.includes("functions/api/content-os/episode-workflow/index.js"));
 });
+
+test("Episode Studio uses the winner-replication recipe for every filming-pack prompt", async () => {
+  const app = await readFile(new URL("../content-os/episodes/app.js", import.meta.url), "utf8");
+  for (const instruction of [
+    "DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION",
+    "parent emotion -> specific moment -> contradiction / tension -> curiosity -> reframe -> practical action -> save / share takeaway",
+    "Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it",
+    "Do not begin with the mechanism or educational explanation",
+    "PRE-FILM HOOK AUDIT",
+    "Recognition, Emotional Pull, and Tension / Gap are all satisfied",
+    "Do not add another creative variable",
+    "Do not manufacture distress",
+    "Do not create an SRT file",
+  ]) {
+    assert.match(app, new RegExp(instruction.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+});

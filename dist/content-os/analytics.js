@@ -197,7 +197,7 @@ export function assertValidPublication(publication) {
   oneOf(publication.format, ["Carousel", "Photo Mode", "Reel", "Short", "Long-form", "Story"], "publication.format");
   nullableSmallCount(publication.durationSeconds, "publication.durationSeconds");
   nullableSmallCount(publication.slideCount, "publication.slideCount");
-  oneOf(publication.hookType, ["Contradiction", "Frustration", "Uncomfortable recognition", "Wait, what?", "Taboo / rarely discussed", "Future fear", "Other"], "publication.hookType");
+  oneOf(publication.hookType, ["Contradiction", "Frustration", "Uncomfortable recognition", "Wait, what?", "Taboo / rarely discussed", "Future fear", "Confusion", "Guilt / parent conflict", "Future worry", "Surprise", "Relief / reframe", "Other"], "publication.hookType");
   deidentifiedText(publication.creativeVersion, "publication.creativeVersion", 80);
   deidentifiedText(publication.ctaType, "publication.ctaType", 120);
   oneOf(publication.experimentType, ["Discovery post", "Replication post", "Waitlist / interest test", "Paid workshop"], "publication.experimentType");
