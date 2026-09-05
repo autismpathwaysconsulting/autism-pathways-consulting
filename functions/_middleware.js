@@ -181,7 +181,9 @@ export async function onRequest(context) {
 
   const isResearchGithubIngest = context.request.method === "POST" &&
     url.pathname === "/api/content-os/ingest/research-github";
-  if (isResearchGithubIngest) {
+  const isAnalyticsOauthCallback = context.request.method === "GET" &&
+    /^\/api\/content-os\/connections\/(?:meta|tiktok|youtube)\/callback$/.test(url.pathname);
+  if (isResearchGithubIngest || isAnalyticsOauthCallback) {
     return continueWithSecurityHeaders(context);
   }
 

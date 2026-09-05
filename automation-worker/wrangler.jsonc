@@ -1,0 +1,50 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "apc-content-os-analytics-ingestor",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "vars": {
+    "APC_CONTENT_OS_BASE_URL": "https://autismpathwaysconsulting.com",
+    "APC_ANALYTICS_INGESTION_ENABLED": "false",
+    "APC_ANALYTICS_ENABLED_PROVIDERS": "",
+    "APC_ANALYTICS_MAX_JOBS": "8",
+    "META_APP_ID": "",
+    "META_GRAPH_API_VERSION": "v23.0",
+    "TIKTOK_CLIENT_KEY": "",
+    "GOOGLE_CLIENT_ID": ""
+  },
+  "secrets": {
+    "required": [
+      "APC_CONNECTOR_DATA_KEY_V1",
+      "META_APP_SECRET",
+      "TIKTOK_CLIENT_SECRET",
+      "GOOGLE_CLIENT_SECRET"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "APC_CONTENT_OS_DB",
+      "database_name": "apc-content-os",
+      "database_id": "7a642992-b0a8-4806-9ab9-517b2b0142fa",
+      "migrations_dir": "../migrations"
+    }
+  ],
+  "triggers": {
+    "crons": ["*/30 * * * *"]
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.05
+    },
+    "redact_query_string": true
+  }
+}

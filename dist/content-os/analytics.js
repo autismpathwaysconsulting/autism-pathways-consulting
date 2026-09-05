@@ -226,7 +226,7 @@ export function assertValidAnalyticsSnapshot(snapshot) {
   exactKeys(snapshot.signals, signalKeys, "snapshot.signals");
   for (const key of signalKeys) nullableSmallCount(snapshot.signals[key], `snapshot.signals.${key}`);
   deidentifiedText(snapshot.deidentifiedThemeSummary, "snapshot.deidentifiedThemeSummary", 400);
-  oneOf(snapshot.collectionMethod, ["manual", "meta_connector", "legacy_migration"], "snapshot.collectionMethod");
+  oneOf(snapshot.collectionMethod, ["manual", "meta_connector", "tiktok_connector", "youtube_connector", "legacy_migration"], "snapshot.collectionMethod");
   oneOf(snapshot.sourceSystem, ["Meta Business Suite", "Instagram Insights", "TikTok Analytics", "YouTube Studio", "Legacy Content OS"], "snapshot.sourceSystem");
   deidentifiedText(snapshot.sourceMetricVersion, "snapshot.sourceMetricVersion", 80, true);
   return snapshot;

@@ -277,6 +277,12 @@ function validateSourceConsistency(publication, snapshot) {
   if (snapshot.collectionMethod === "meta_connector" && !["Meta Business Suite", "Instagram Insights"].includes(snapshot.sourceSystem)) {
     return "meta_connector may only use an approved Meta source system.";
   }
+  if (snapshot.collectionMethod === "tiktok_connector" && snapshot.sourceSystem !== "TikTok Analytics") {
+    return "tiktok_connector may only use TikTok Analytics.";
+  }
+  if (snapshot.collectionMethod === "youtube_connector" && snapshot.sourceSystem !== "YouTube Studio") {
+    return "youtube_connector may only use YouTube Studio.";
+  }
   return null;
 }
 

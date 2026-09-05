@@ -76,6 +76,9 @@ const STORAGE = Object.freeze({
 const ENDPOINTS = Object.freeze({
   state: "/api/content-os/state",
   analytics: "/api/content-os/analytics",
+  connections: "/api/content-os/connections",
+  publications: "/api/content-os/publications",
+  ingestionStatus: "/api/content-os/ingestion-status",
   research: "/api/content-os/research",
   history: "/api/content-os/history",
 });
@@ -114,6 +117,7 @@ let state = loadLocalState();
 let syncMeta = loadSyncMeta();
 let analyticsRecords = loadAnalyticsCache();
 let analyticsQueue = loadAnalyticsQueue();
+let connectorState = { configuredProviders: {}, connections: [], ingestionEnabled: false, enabledProviders: [] };
 let researchCache = loadResearchCache();
 let pendingCloudRecord = null;
 let historyRecords = [];
@@ -221,7 +225,10 @@ function initialiseSectionNavigation() {
     const current = links.find(function (link) {
       return link.getAttribute("href") === "#" + sectionId;
     });
-    if (current) current.scrollIntoView({ block: "nearest", inline: "center" });
+    if (current) {
+      const targetLeft = current.offsetLeft - (nav.clientWidth - current.offsetWidth) / 2;
+      nav.scrollTo({ left: Math.max(0, targetLeft), behavior: "auto" });
+    }
   }
 
   links.forEach(function (link) {
@@ -794,6 +801,79 @@ function isDatabaseUnavailable(response, body) {
   if (response.status !== 503) return false;
   const message = text(body && body.error).toLowerCase();
   return message.includes("database") || message.includes("not configured") || message.includes("canonical");
+}
+
+function connectorMatchesPlatform(provider, platform) {
+  return provider === "meta" ? ["Instagram", "Facebook"].includes(platform) :
+    provider === "tiktok" ? platform === "TikTok" : platform === "YouTube";
+}
+
+function renderConnectorState() {
+  const status = element("connectorStatus");
+  const list = element("connectionList");
+  const select = element("connectorConnection");
+  if (!status || !list || !select) return;
+  const configured = isPlainObject(connectorState.configuredProviders) ? connectorState.configuredProviders : {};
+  document.querySelectorAll("[data-connector-provider]").forEach(function (button) {
+    const provider = button.dataset.connectorProvider;
+    button.disabled = configured[provider] !== true;
+    button.title = button.disabled ? "OAuth credentials still need to be configured." : "";
+  });
+  const active = Array.isArray(connectorState.connections) ? connectorState.connections.filter(function (connection) {
+    return isPlainObject(connection) && connection.status === "active";
+  }) : [];
+  status.textContent = connectorState.ingestionEnabled ? "Automatic collection on" : "Setup mode";
+  status.className = "status-badge" + (connectorState.ingestionEnabled ? " success" : "");
+  clearNode(list);
+  if (!active.length) list.appendChild(makeNode("p", "subtle", "No platform account is connected yet."));
+  active.forEach(function (connection) {
+    const row = makeNode("div", "connection-row");
+    row.appendChild(makeNode("span", "", connection.accountName + " · " + connection.provider));
+    row.appendChild(makeButton("Disconnect", "disconnect-connector", "button secondary compact", {
+      connectionId: connection.connectionId,
+      provider: connection.provider,
+    }));
+    list.appendChild(row);
+  });
+  const platform = element("rPlatform") ? element("rPlatform").value : "Instagram";
+  const previous = select.value;
+  select.replaceChildren(new Option("Choose a connected account", ""));
+  active.filter(function (connection) { return connectorMatchesPlatform(connection.provider, platform); })
+    .forEach(function (connection) { select.appendChild(new Option(connection.accountName + " · " + connection.provider, connection.connectionId)); });
+  if (Array.from(select.options).some(function (option) { return option.value === previous; })) select.value = previous;
+}
+
+async function readConnectorState() {
+  const status = element("connectorFormStatus");
+  try {
+    const results = await Promise.all([
+      apiFetch(ENDPOINTS.connections, { method: "GET" }),
+      apiFetch(ENDPOINTS.ingestionStatus, { method: "GET" }),
+    ]);
+    if (!results[0].response.ok || !isPlainObject(results[0].body)) throw new Error(text(results[0].body && results[0].body.error) || "Connector status is unavailable.");
+    connectorState = results[0].body;
+    renderConnectorState();
+    const jobs = Array.isArray(results[1].body && results[1].body.jobs) ? results[1].body.jobs : [];
+    const pending = jobs.filter(function (row) { return row.status === "pending" || row.status === "retry"; })
+      .reduce(function (sum, row) { return sum + Number(row.count || 0); }, 0);
+    element("ingestionStatus").textContent = pending ? pending + " scheduled checkpoint(s) are waiting." : "No scheduled checkpoint is waiting.";
+    const callbackResult = new URLSearchParams(location.search).get("connection");
+    if (callbackResult && status) status.textContent = callbackResult.includes("connected") ? "Account connected." : "Connection was not completed.";
+  } catch (error) {
+    if (status) status.textContent = text(error && error.message);
+    renderConnectorState();
+  }
+}
+
+async function disconnectConnector(connectionId, provider) {
+  if (!confirm("Disconnect this analytics account and stop its unfinished checkpoints?")) return;
+  const result = await apiFetch(ENDPOINTS.connections + "/" + encodeURIComponent(provider) + "/disconnect", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ connectionId: connectionId }),
+  });
+  if (!result.response.ok) throw new Error(text(result.body && result.body.error) || "The account could not be disconnected.");
+  await readConnectorState();
 }
 
 function normaliseCloudRecord(record) {
@@ -1496,6 +1576,64 @@ function updateSourceForPlatform() {
   const platform = element("rPlatform").value;
   if (!ensureAnalyticsSource(platform, element("rSource").value)) {
     element("rSource").value = defaults[platform];
+  }
+  renderConnectorState();
+}
+
+async function buildTrackingPublication() {
+  const title = text(element("rTopic").value).trim();
+  const problemArea = text(element("rArea").value).trim();
+  const platform = element("rPlatform").value;
+  const postRef = text(element("rPostId").value).trim();
+  const publishedAt = toUtcIso(element("rDate").value);
+  if (!title || !problemArea || !postRef || !publishedAt) {
+    throw new Error("Fill in the post title, problem area, post URL or ID, and published time below first.");
+  }
+  const existingPublication = matchingPublication(platform, postRef);
+  if (existingPublication) return existingPublication;
+  const publication = {
+    schemaVersion: ANALYTICS_SCHEMA_VERSION,
+    publicationId: await publicationIdFor(platform, postRef),
+    episodeId: text(element("rEpisodeId").value).trim().slice(0, 100),
+    platform: platform,
+    postRef: postRef,
+    publishedAt: publishedAt,
+    title: title.slice(0, 240),
+    topic: title.slice(0, 240),
+    problemArea: problemArea.slice(0, 160),
+    productFamily: element("rFamily").value,
+    format: element("rFormat").value,
+    durationSeconds: numericInput("rDurationSeconds", { integer: true, maximum: 1000000 }),
+    slideCount: numericInput("rSlideCount", { integer: true, maximum: 1000000 }),
+    hookType: element("rHookType").value,
+    creativeVersion: text(element("rVersion").value).trim().slice(0, 80),
+    ctaType: element("rCTA").value,
+    experimentType: element("rExperiment").value,
+  };
+  assertValidPublication(publication);
+  return publication;
+}
+
+async function trackPublicationAutomatically() {
+  const form = element("automaticAnalyticsForm");
+  const status = element("connectorFormStatus");
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  status.textContent = "Scheduling checkpoints…";
+  try {
+    const publication = await buildTrackingPublication();
+    const connectionId = element("connectorConnection").value;
+    const remoteMediaId = text(element("connectorMediaId").value).trim();
+    const result = await apiFetch(ENDPOINTS.publications, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ publication: publication, connectionId: connectionId, remoteMediaId: remoteMediaId }),
+    });
+    if (!result.response.ok) throw new Error(text(result.body && result.body.error) || "This post could not be scheduled.");
+    status.textContent = "Tracked. The 24-hour, 7-day and 28-day checkpoints are scheduled.";
+    element("connectorMediaId").value = "";
+    await readConnectorState();
+  } catch (error) {
+    status.textContent = text(error && error.message);
   }
 }
 
@@ -3284,6 +3422,7 @@ function renderAll() {
   refreshDashboard();
   renderHistory();
   renderRecoveryCopy();
+  renderConnectorState();
 }
 
 function handleClick(event) {
@@ -3295,6 +3434,15 @@ function handleClick(event) {
     scrollToNode(element("prompts"), "start");
   } else if (action === "scroll-results") {
     scrollToNode(element("results"), "start");
+  } else if (action === "connect-provider") {
+    const provider = control.dataset.connectorProvider;
+    if (["meta", "tiktok", "youtube"].includes(provider)) {
+      location.assign(ENDPOINTS.connections + "/" + provider + "/start?returnTo=" + encodeURIComponent("/content-os/#results"));
+    }
+  } else if (action === "disconnect-connector") {
+    disconnectConnector(control.dataset.connectionId, control.dataset.provider).catch(function (error) {
+      element("connectorFormStatus").textContent = text(error && error.message);
+    });
   } else if (action === "previous-month") {
     shiftCalendarMonth(-1);
   } else if (action === "next-month") {
@@ -3490,6 +3638,12 @@ async function initialise() {
     event.preventDefault();
     saveAnalytics().catch(function (error) { setAnalyticsStatus(text(error && error.message), "error"); });
   });
+  element("automaticAnalyticsForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    trackPublicationAutomatically().catch(function (error) {
+      element("connectorFormStatus").textContent = text(error && error.message);
+    });
+  });
   element("planForm").addEventListener("submit", function (event) {
     event.preventDefault();
     savePlanItem().catch(function (error) { alert(text(error && error.message)); });
@@ -3503,7 +3657,7 @@ async function initialise() {
   }
 
   await syncFromCloud();
-  await Promise.all([readAnalytics(), readResearch(), readHistory()]);
+  await Promise.all([readAnalytics(), readResearch(), readHistory(), readConnectorState()]);
   await flushAnalyticsQueue();
   renderAll();
 }

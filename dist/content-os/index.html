@@ -16,6 +16,10 @@
         <p class="eyebrow">Autism Pathways Consulting</p>
         <h1>Content OS <span class="version-mark">v2.3</span></h1>
         <p class="header-summary">Choose a useful problem, make the content, then learn from the same checkpoints.</p>
+        <div class="button-row quick-launch-row" aria-label="Quick launch links">
+          <a class="button compact" href="/content-os/">Content OS</a>
+          <a class="button secondary compact" href="/content-os/episodes/">Episode Studio</a>
+        </div>
       </div>
       <div class="sync-panel" role="status" aria-live="polite" aria-atomic="true">
         <div>
@@ -160,6 +164,27 @@
       <div class="privacy-note strong" role="note" aria-label="Privacy requirement">
         <strong>Do not paste names, handles or message text.</strong> Count responses and write only a short, deidentified pattern summary.
       </div>
+
+      <section class="card connector-panel" aria-labelledby="connector-title">
+        <div class="card-heading">
+          <div><p class="card-label">Automatic collection</p><h3 id="connector-title">Connect platform analytics</h3><p class="subtle">Once a published post is linked, Content OS collects only its 24-hour, 7-day and 28-day checkpoints.</p></div>
+          <span id="connectorStatus" class="status-badge">Checking</span>
+        </div>
+        <div class="button-row connector-actions" aria-label="Analytics providers">
+          <button class="button secondary compact" type="button" data-action="connect-provider" data-connector-provider="meta" disabled>Connect Meta</button>
+          <button class="button secondary compact" type="button" data-action="connect-provider" data-connector-provider="tiktok" disabled>Connect TikTok</button>
+          <button class="button secondary compact" type="button" data-action="connect-provider" data-connector-provider="youtube" disabled>Connect YouTube</button>
+        </div>
+        <div id="connectionList" class="connection-list" aria-live="polite"></div>
+        <form id="automaticAnalyticsForm" class="connector-link-form">
+          <div class="field-grid two">
+            <div class="field"><label for="connectorConnection">Connected account</label><select id="connectorConnection" required><option value="">Connect a matching account first</option></select></div>
+            <div class="field"><label for="connectorMediaId">Platform video or media ID</label><input id="connectorMediaId" autocomplete="off" maxlength="300" placeholder="Use the platform's stable media ID" required><p class="field-help">Fill in “Identify the post” below first. The ID is not the caption or account handle.</p></div>
+          </div>
+          <div class="form-actions"><button class="button" type="submit">Track this post automatically</button><span id="connectorFormStatus" class="subtle" role="status" aria-live="polite"></span></div>
+        </form>
+        <div id="ingestionStatus" class="subtle" aria-live="polite"></div>
+      </section>
 
       <form id="analyticsForm" class="stack">
         <fieldset class="card form-card">

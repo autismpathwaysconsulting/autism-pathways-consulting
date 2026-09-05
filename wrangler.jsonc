@@ -37,6 +37,12 @@
         "APC_CONTENT_OS_GITHUB_ALLOWED_SENDER": "autismpathwaysconsulting"
       },
       "kv_namespaces": [],
+      "services": [
+        {
+          "binding": "APC_ANALYTICS_CONNECTOR",
+          "service": "apc-content-os-analytics-ingestor"
+        }
+      ],
       "d1_databases": [
         {
           "binding": "APC_CONTENT_OS_DB",

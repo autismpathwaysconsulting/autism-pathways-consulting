@@ -1,0 +1,19 @@
+{
+  "name": "apc-content-os-analytics-ingestor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "types": "wrangler types",
+    "test": "vitest run",
+    "deploy:dry": "wrangler deploy --dry-run",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "latest",
+    "@types/node": "22.15.17",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.0",
+    "wrangler": "^4.129.0"
+  }
+}
