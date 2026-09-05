@@ -199,7 +199,7 @@
             <div class="field"><label for="rFormat">Format</label><select id="rFormat"><option>Reel</option><option>Carousel</option><option>Story</option><option>Photo Mode</option><option>Short</option><option>Long-form</option></select></div>
             <div class="field">
               <label for="rHookType">Hook type</label>
-              <select id="rHookType"><option>Contradiction</option><option>Frustration</option><option>Uncomfortable recognition</option><option>Wait, what?</option><option>Taboo / rarely discussed</option><option>Future fear</option><option>Other</option></select>
+              <select id="rHookType"><option>Frustration</option><option>Contradiction</option><option>Confusion</option><option>Guilt / parent conflict</option><option>Future worry</option><option>Taboo / rarely discussed</option><option>Surprise</option><option>Relief / reframe</option><option>Other</option></select>
             </div>
             <div class="field"><label for="rDurationSeconds">Duration in seconds <span class="optional">if video</span></label><input id="rDurationSeconds" type="number" min="0" step="1" inputmode="numeric"></div>
             <div class="field"><label for="rSlideCount">Slides <span class="optional">if carousel</span></label><input id="rSlideCount" type="number" min="0" step="1" inputmode="numeric"></div>
@@ -292,13 +292,42 @@
 
     <section id="prompts" class="page-section" aria-labelledby="prompts-title">
       <div class="section-heading"><div><p class="section-kicker">Create next</p><h2 id="prompts-title">Prompt builder</h2><p class="section-summary">Turn one approved topic into a copy-ready production brief.</p></div></div>
+      <section class="card hook-check-card" aria-labelledby="hook-check-title">
+        <div class="card-heading">
+          <div><p class="card-label">Creative QA only</p><h3 id="hook-check-title">Winner Hook Check</h3><p class="subtle">Test the opening before filming. This does not change analytics scoring, the September experiment, or product validation.</p></div>
+          <span id="hookCheckCount" class="status-badge error" aria-live="polite">0 / 5 yes</span>
+        </div>
+        <fieldset class="hook-checklist">
+          <legend class="visually-hidden">Five-point pre-production hook checklist</legend>
+          <label class="hook-check-item"><input type="checkbox" data-hook-check><span><strong>1. Recognition</strong> Can a parent recognise the situation within the first 1–2 seconds?</span></label>
+          <label class="hook-check-item"><input type="checkbox" data-hook-check><span><strong>2. Emotional pull</strong> Does the opening evoke genuine frustration, confusion, guilt, worry, surprise, discomfort, or relief?</span></label>
+          <label class="hook-check-item"><input type="checkbox" data-hook-check><span><strong>3. Tension / gap</strong> Does a contradiction or unanswered question make the viewer want the explanation?</span></label>
+          <label class="hook-check-item"><input type="checkbox" data-hook-check><span><strong>4. Practical payoff</strong> Will the viewer leave with one concrete thing to notice, try, change, or remember?</span></label>
+          <label class="hook-check-item"><input type="checkbox" data-hook-check><span><strong>5. Save / share reason</strong> Is there a clear reason a parent would save this or send it to someone?</span></label>
+        </fieldset>
+        <div class="hook-gate" role="status" aria-live="polite">
+          <strong id="hookGateResult">DO NOT FILM YET</strong>
+          <span id="hookGateDetail" class="subtle">0–2 yes means the opening needs more work.</span>
+        </div>
+        <details class="reference-item hypothesis-reference">
+          <summary>CURRENT WORKING HYPOTHESIS</summary>
+          <p>Recent APC underperformance may be partly explained by emotionally flat, explanation-first openings compared with winner episodes.</p>
+          <div class="pattern-table-wrap">
+            <table class="pattern-table" aria-label="Winner and recent opening pattern comparison">
+              <thead><tr><th scope="col">Winner pattern</th><th scope="col">Recent weak pattern</th></tr></thead>
+              <tbody><tr><td data-label="Winner pattern"><ul><li>Lived parent moment</li><li>Emotional recognition</li><li>Contradiction</li><li>Fast curiosity</li><li>Tangible payoff</li><li>Strong save/share utility</li></ul></td><td data-label="Recent weak pattern"><ul><li>Concept first</li><li>Explanation first</li><li>Emotionally neutral opening</li><li>Mechanism before recognition</li><li>Practical payoff arrives too late</li></ul></td></tr></tbody>
+            </table>
+          </div>
+          <p class="field-help">This is not a permanent APC rule. Promotion requires multiple recent posts, comparable performance data, winner comparisons, and replication across more than one topic.</p>
+        </details>
+      </section>
       <div class="card form-card">
         <div class="field-grid four">
           <div class="field span-2"><label for="pTopic">Topic or hook</label><input id="pTopic" placeholder="Choose from the topic bank or type here"></div>
           <div class="field"><label for="pArea">Problem area</label><input id="pArea" placeholder="Task initiation"></div>
           <div class="field"><label for="pStage">Life stage</label><select id="pStage"></select></div>
           <div class="field"><label for="pFamily">Product family</label><select id="pFamily"></select></div>
-          <div class="field"><label for="pOutput">Output</label><select id="pOutput"><option value="content">Content development HTML</option><option value="carousel">Carousel package</option><option value="youtube">YouTube package</option><option value="validation">Validation follow-up</option></select></div>
+          <div class="field"><label for="pOutput">Output</label><select id="pOutput"><option value="content">Content development HTML</option><option value="reel">Reel / short-form episode package</option><option value="carousel">Carousel package</option><option value="youtube">YouTube package</option><option value="validation">Validation follow-up</option></select></div>
           <div class="field"><label for="pGoal">Primary goal</label><select id="pGoal"><option>Audience discovery</option><option>Reach/shares</option><option>Course interest</option><option>Workshop validation</option><option>Book development</option></select></div>
           <div class="field"><label for="pPlatform">Platform</label><select id="pPlatform"><option>Instagram + TikTok</option><option>Instagram</option><option>TikTok</option><option>YouTube</option></select></div>
           <div class="field"><label for="pEnding">Ending or CTA <span class="optional">optional</span></label><select id="pEnding"><option value="none">No CTA, let the ending land</option><option value="save">Invite a save</option><option value="share">Invite a share</option><option value="comment_question">Ask a comment question</option><option value="story_question">Ask a Story question</option><option value="waitlist">Invite waitlist interest</option></select></div>

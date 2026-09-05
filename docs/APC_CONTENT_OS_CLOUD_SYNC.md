@@ -49,6 +49,12 @@ The standard comparison checkpoints are 24 hours, 7 days, and 28 days. A publica
 
 The weekly automation creates at most five findings and three topic candidates. The secure GitHub webhook writes only validated research rows and delivery audit records. Research reads are bounded and cursor-paginated. The Founder can keep useful findings, archive noise, add a candidate to the planner, or attach exact governed research context to Prompt Builder. Prompt Builder also includes a concise deidentified analytics learning summary for the selected problem area. Automation cannot edit planning state, change governance, create permanent rules, or publish content.
 
+### Creative QA working hypothesis
+
+Prompt Builder includes a non-persistent five-point Winner Hook Check for recognition, genuine emotional pull, tension, practical payoff, and save/share utility. It is a creative pre-production aid only. It does not write to D1, change analytics scores, affect product or replication gates, or alter the September starter plan.
+
+The current working hypothesis is that recent APC underperformance may be partly explained by emotionally flat, explanation-first openings compared with winner episodes. This is not an approved permanent rule and cannot become one until multiple recent posts have comparable checkpoint data, relevant winner comparisons are available, and the pattern replicates across more than one topic.
+
 ### Episode Studio
 
 Episode Studio uses the same governed research and analytics records instead of copying them into a second system. A topic candidate or manually entered title can become an episode with this fixed lifecycle:

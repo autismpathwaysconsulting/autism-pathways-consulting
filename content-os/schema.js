@@ -138,7 +138,8 @@ const EXPERIMENT_VALUES = [
 const FORMAT_VALUES = ["Carousel", "Photo Mode", "Reel", "Short", "Long-form", "Story"];
 const HOOK_VALUES = [
   "Contradiction", "Frustration", "Uncomfortable recognition", "Wait, what?",
-  "Taboo / rarely discussed", "Future fear", "Other",
+  "Taboo / rarely discussed", "Future fear", "Confusion", "Guilt / parent conflict",
+  "Future worry", "Surprise", "Relief / reframe", "Other",
 ];
 const METRIC_SOURCE_VALUES = ["manual_meta", "manual_other", "legacy"];
 
