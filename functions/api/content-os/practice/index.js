@@ -4,11 +4,34 @@ const CLIENT_STAGES = new Set([
   "PAYMENT_VERIFIED", "BOOKED", "PREPARATION", "SESSION_READY", "IN_SESSION",
   "DOCUMENTATION_DRAFT", "CJ_APPROVED", "DELIVERED", "COMPLETE", "REFERRED", "CANCELLED", "PAUSED",
 ]);
-const SERVICES = new Set(["TBD", "RM350", "RM1800", "CUSTOM"]);
+const SERVICES = new Set(["TBD", "RM350", "RM1800"]);
 const SOURCE_STATUSES = new Set(["UNVERIFIED", "PARENT_REPORTED", "CJ_VERIFIED"]);
 const SESSION_STATUSES = new Set(["PLANNED", "READY", "IN_SESSION", "DOCUMENTATION_DRAFT", "CJ_APPROVED", "DELIVERED", "COMPLETE", "CANCELLED"]);
 const DOCUMENT_STATUSES = new Set(["DRAFT", "CJ_APPROVED", "EXPORTED", "DELIVERED", "SUPERSEDED"]);
 const OPERATOR_EDITABLE_DOCUMENT_STATUSES = new Set(["DRAFT", "CJ_APPROVED", "SUPERSEDED"]);
+const RM350_JOURNEY = Object.freeze([
+  { code: "PRE_SESSION_1", order: 1, label: "Pre-session" },
+  { code: "SESSION_1", order: 2, label: "Session 1" },
+  { code: "POST_SESSION_1", order: 3, label: "Post-session" },
+]);
+const RM1800_JOURNEY = Object.freeze([
+  { code: "PRE_SESSION_1", order: 1, label: "Pre-session 1" },
+  { code: "SESSION_1", order: 2, label: "Session 1" },
+  { code: "SESSION_2", order: 3, label: "Session 2" },
+  { code: "SESSION_3", order: 4, label: "Session 3" },
+  { code: "SESSION_4", order: 5, label: "Session 4" },
+  { code: "POST_SESSION_4", order: 6, label: "Post-session 4" },
+]);
+export const JOURNEY_TEMPLATES = Object.freeze({ RM350: RM350_JOURNEY, RM1800: RM1800_JOURNEY });
+export const JOURNEY_STAGES = Object.freeze([
+  ...RM1800_JOURNEY,
+  RM350_JOURNEY[2],
+]);
+const JOURNEY_STAGE_CODES = new Set(JOURNEY_STAGES.map((stage) => stage.code));
+
+function journeyStagesForService(serviceCode) {
+  return JOURNEY_TEMPLATES[serviceCode] || [];
+}
 
 function json(body, status = 200, headers = {}) {
   return Response.json(body, { status, headers: { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", ...headers } });
@@ -57,12 +80,13 @@ function validateClient(client) {
 }
 
 function validateSession(session) {
-  const keys = ["status", "scheduledAt", "occurredAt", "preparation", "privateNotes", "parentSummary", "actionPlan", "documentStatus"];
+  const keys = ["journeyStage", "status", "scheduledAt", "occurredAt", "preparation", "templateAnswers", "privateNotes", "parentSummary", "actionPlan", "parentMaterials", "documentStatus"];
   if (!exactKeys(session, keys)) return "Session record does not match the expected schema.";
+  if (!JOURNEY_STAGE_CODES.has(session.journeyStage)) return "Client journey stage is invalid.";
   if (!SESSION_STATUSES.has(session.status) || !DOCUMENT_STATUSES.has(session.documentStatus)) return "Session status is invalid.";
   if (!OPERATOR_EDITABLE_DOCUMENT_STATUSES.has(session.documentStatus)) return "Export and delivery states must come from the recorded export workflow.";
   if (!validOptionalDate(session.scheduledAt) || !validOptionalDate(session.occurredAt)) return "Session date is invalid.";
-  if (!validText(session.preparation, 10000, false) || !validText(session.privateNotes, 30000, false) || !validText(session.parentSummary, 20000, false) || !validText(session.actionPlan, 20000, false)) return "Session notes are invalid.";
+  if (!validText(session.preparation, 10000, false) || !validText(session.templateAnswers, 30000, false) || !validText(session.privateNotes, 30000, false) || !validText(session.parentSummary, 20000, false) || !validText(session.actionPlan, 20000, false) || !validText(session.parentMaterials, 10000, false)) return "Session notes are invalid.";
   if (["CJ_APPROVED", "EXPORTED", "DELIVERED"].includes(session.documentStatus) && (!session.parentSummary.trim() || !session.actionPlan.trim())) return "CJ approval requires both a parent summary and an action plan.";
   return null;
 }
@@ -175,13 +199,16 @@ function sessionFromRow(row) {
     sessionId: row.session_id,
     caseId: row.case_id,
     sessionNumber: Number(row.session_number),
+    journeyStage: row.journey_stage,
     status: row.status,
     scheduledAt: row.scheduled_at,
     occurredAt: row.occurred_at,
     preparation: row.preparation,
+    templateAnswers: row.template_answers,
     privateNotes: row.private_notes,
     parentSummary: row.parent_summary,
     actionPlan: row.action_plan,
+    parentMaterials: row.parent_materials,
     documentStatus: row.document_status,
     revision: Number(row.revision),
     createdAt: row.created_at,
@@ -195,11 +222,17 @@ async function overview(database, actionResult = null) {
     database.prepare("SELECT * FROM practice_sessions ORDER BY updated_at DESC"),
     database.prepare("SELECT * FROM practice_exports ORDER BY created_at DESC LIMIT 500"),
     database.prepare("SELECT revision_id, case_id, revision, event_type, actor, reason, created_at FROM practice_client_revisions ORDER BY created_at DESC LIMIT 500"),
-    database.prepare("SELECT revision_id, session_id, case_id, revision, event_type, actor, created_at FROM practice_session_revisions ORDER BY created_at DESC LIMIT 500"),
+    database.prepare(`SELECT history.revision_id, history.session_id, history.case_id, history.revision,
+      history.event_type, history.actor, history.created_at, sessions.journey_stage
+      FROM practice_session_revisions AS history
+      LEFT JOIN practice_sessions AS sessions ON sessions.session_id = history.session_id
+      ORDER BY history.created_at DESC LIMIT 500`),
   ]);
   return {
-    schemaVersion: "apc.practice_console.v1",
+    schemaVersion: "apc.practice_console.v2",
     actionResult,
+    journeyStages: JOURNEY_STAGES,
+    journeyTemplates: JOURNEY_TEMPLATES,
     clients: (clients.results || []).map(clientFromRow),
     sessions: (sessions.results || []).map(sessionFromRow),
     exports: (exports.results || []).map((row) => ({
@@ -224,7 +257,7 @@ async function overview(database, actionResult = null) {
       })),
       ...(sessionHistory.results || []).map((row) => ({
         id: row.revision_id, recordType: "SESSION", caseId: row.case_id, sessionId: row.session_id,
-        revision: Number(row.revision), eventType: row.event_type, actor: row.actor,
+        journeyStage: row.journey_stage, revision: Number(row.revision), eventType: row.event_type, actor: row.actor,
         reason: "Session workspace revision", createdAt: row.created_at,
       })),
     ].sort((left, right) => String(right.createdAt).localeCompare(String(left.createdAt))).slice(0, 500),
@@ -251,13 +284,16 @@ function sessionSnapshot(identifier, caseIdentifier, number, session, revision, 
 
 function editableSessionFromRow(row, overrides = {}) {
   return {
+    journeyStage: row.journey_stage,
     status: row.status,
     scheduledAt: row.scheduled_at,
     occurredAt: row.occurred_at,
     preparation: row.preparation,
+    templateAnswers: row.template_answers,
     privateNotes: row.private_notes,
     parentSummary: row.parent_summary,
     actionPlan: row.action_plan,
+    parentMaterials: row.parent_materials,
     documentStatus: row.document_status,
     ...overrides,
   };
@@ -276,13 +312,51 @@ async function sha256Hex(value) {
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-function safeFilename(caseIdentifier, serviceCode, sessionNumber, documentVersion, date) {
+function safeFilename(caseIdentifier, serviceCode, journeyStage, documentVersion, date) {
   const service = serviceCode === "RM1800" ? "RM1800" : serviceCode === "RM350" ? "RM350" : "APC";
-  return `APC_${caseIdentifier}_${service}_S${String(sessionNumber).padStart(2, "0")}_Follow-Through-Pack_v${String(documentVersion).padStart(2, "0")}_${date}.md`;
+  return `APC_${caseIdentifier}_${service}_${journeyStage}_Follow-Through-Pack_v${String(documentVersion).padStart(2, "0")}_${date}.md`;
 }
 
-function followThroughMarkdown(client, session) {
-  return `---\ndocument_type: session_follow_through_pack\ncase_id: ${client.case_id}\noffer: ${client.service_code}\nsession: ${session.session_number}\ncase_revision: ${client.revision}\ndocument_version: ${session.revision}\nstatus: ${session.document_status}\ncreated_at: ${session.updated_at}\n---\n\n# Session ${session.session_number} follow-through pack\n\nPrepared for the family.\n\n## Meeting summary\n\n${session.parent_summary.trim()}\n\n## Action plan\n\n${session.action_plan.trim()}\n\n## Scope note\n\nThis is an educational working summary from the examples discussed. It is not a diagnosis, assessment, therapy plan, medical recommendation or crisis service.\n`;
+export function followThroughMarkdown(client, session) {
+  const stage = JOURNEY_STAGES.find((item) => item.code === session.journey_stage);
+  const materials = session.parent_materials.trim() || "No additional materials were assigned for this stage.";
+  return `---\ndocument_type: session_follow_through_pack\ncase_id: ${client.case_id}\noffer: ${client.service_code}\njourney_stage: ${session.journey_stage}\njourney_order: ${session.session_number}\ncase_revision: ${client.revision}\ndocument_version: ${session.revision}\nstatus: ${session.document_status}\ncreated_at: ${session.updated_at}\n---\n\n# ${stage?.label || session.journey_stage} follow-through pack\n\nPrepared for the family.\n\n## Discussion summary\n\n${session.parent_summary.trim()}\n\n## Action plan\n\n${session.action_plan.trim()}\n\n## Materials and resources\n\n${materials}\n\n## Scope note\n\nThis is an educational working summary from the examples discussed. It is not a diagnosis, assessment, therapy plan, medical recommendation or crisis service.\n`;
+}
+
+function blankJourneySession(stage, scheduledAt = null) {
+  return {
+    journeyStage: stage.code,
+    status: "PLANNED",
+    scheduledAt,
+    occurredAt: null,
+    preparation: "",
+    templateAnswers: "",
+    privateNotes: "",
+    parentSummary: "",
+    actionPlan: "",
+    parentMaterials: "",
+    documentStatus: "DRAFT",
+  };
+}
+
+function newJourneyStageStatements(database, caseIdentifier, stage, now, scheduledAt = null) {
+  const sessionId = crypto.randomUUID();
+  const session = blankJourneySession(stage, scheduledAt);
+  const snapshot = sessionSnapshot(sessionId, caseIdentifier, stage.order, session, 1, now);
+  return {
+    sessionId,
+    statements: [
+      database.prepare(`INSERT INTO practice_sessions
+        (session_id, case_id, session_number, journey_stage, status, scheduled_at, occurred_at, preparation,
+         template_answers, private_notes, parent_summary, action_plan, parent_materials, document_status,
+         revision, created_at, updated_at)
+        VALUES (?, ?, ?, ?, 'PLANNED', ?, NULL, '', '', '', '', '', '', 'DRAFT', 1, ?, ?)`)
+        .bind(sessionId, caseIdentifier, stage.order, stage.code, scheduledAt, now, now),
+      database.prepare(`INSERT INTO practice_session_revisions
+        (revision_id, session_id, case_id, revision, event_type, actor, snapshot_json, created_at)
+        VALUES (?, ?, ?, 1, 'CREATED', 'CJ', ?, ?)`).bind(crypto.randomUUID(), sessionId, caseIdentifier, JSON.stringify(snapshot), now),
+    ],
+  };
 }
 
 export async function onRequestGet({ env }) {
@@ -313,6 +387,7 @@ export async function onRequestPost({ request, env }) {
       while (await database.prepare("SELECT case_id FROM practice_clients WHERE case_id = ?").bind(identifier).first()) identifier = caseId();
       const values = clientValues(payload.client);
       const snapshot = clientSnapshot(identifier, payload.client, 1, now);
+      const journey = journeyStagesForService(payload.client.serviceCode).map((stage) => newJourneyStageStatements(database, identifier, stage, now));
       await database.batch([
         database.prepare(`INSERT INTO practice_clients
           (case_id, display_name, child_age, region, concern, stage, service_code, next_action, source_status,
@@ -321,17 +396,24 @@ export async function onRequestPost({ request, env }) {
         database.prepare(`INSERT INTO practice_client_revisions
           (revision_id, case_id, revision, event_type, actor, reason, snapshot_json, created_at)
           VALUES (?, ?, 1, 'CREATED', 'CJ', ?, ?, ?)`).bind(crypto.randomUUID(), identifier, payload.reason.trim(), JSON.stringify(snapshot), now),
+        ...journey.flatMap((item) => item.statements),
       ]);
-      return json(await overview(database, { action: payload.action, caseId: identifier }), 201);
+      return json(await overview(database, { action: payload.action, caseId: identifier, sessionId: journey[0]?.sessionId || null }), 201);
     }
 
     if (payload.action === "update_client") {
       const current = await database.prepare("SELECT * FROM practice_clients WHERE case_id = ?").bind(payload.caseId).first();
       if (!current) return json({ error: "Client record was not found." }, 404);
       if (Number(current.revision) !== payload.expectedRevision) return json({ error: "Client record changed on another screen. Refresh before saving." }, 409);
+      if (current.service_code === "CUSTOM" && !["RM350", "RM1800"].includes(payload.client.serviceCode)) return json({ error: "Legacy CUSTOM cases must be explicitly reclassified as RM350 or RM1,800 before saving." }, 409);
+      const existingSessions = await database.prepare("SELECT session_id FROM practice_sessions WHERE case_id = ? LIMIT 1").bind(payload.caseId).all();
+      if (current.service_code !== payload.client.serviceCode && (existingSessions.results || []).length) return json({ error: "A service cannot be changed after its journey has started. Create a new case so the RM350 and RM1,800 boundaries remain separate." }, 409);
       const nextRevision = payload.expectedRevision + 1;
       const values = clientValues(payload.client);
       const snapshot = clientSnapshot(payload.caseId, payload.client, nextRevision, now);
+      const journey = current.service_code !== payload.client.serviceCode
+        ? journeyStagesForService(payload.client.serviceCode).map((stage) => newJourneyStageStatements(database, payload.caseId, stage, now))
+        : [];
       await database.batch([
         database.prepare(`UPDATE practice_clients SET display_name = ?, child_age = ?, region = ?, concern = ?, stage = ?,
           service_code = ?, next_action = ?, source_status = ?, known_facts_json = ?, open_questions_json = ?, boundary_flags_json = ?,
@@ -339,28 +421,23 @@ export async function onRequestPost({ request, env }) {
         database.prepare(`INSERT INTO practice_client_revisions
           (revision_id, case_id, revision, event_type, actor, reason, snapshot_json, created_at)
           VALUES (?, ?, ?, 'UPDATED', 'CJ', ?, ?, ?)`).bind(crypto.randomUUID(), payload.caseId, nextRevision, payload.reason.trim(), JSON.stringify(snapshot), now),
+        ...journey.flatMap((item) => item.statements),
       ]);
-      return json(await overview(database, { action: payload.action, caseId: payload.caseId }));
+      return json(await overview(database, { action: payload.action, caseId: payload.caseId, sessionId: journey[0]?.sessionId || null }));
     }
 
     if (payload.action === "create_session") {
-      const client = await database.prepare("SELECT case_id FROM practice_clients WHERE case_id = ? AND archived_at IS NULL").bind(payload.caseId).first();
+      const client = await database.prepare("SELECT case_id, service_code FROM practice_clients WHERE case_id = ? AND archived_at IS NULL").bind(payload.caseId).first();
       if (!client) return json({ error: "Active client record was not found." }, 404);
-      const latest = await database.prepare("SELECT COALESCE(MAX(session_number), 0) AS number FROM practice_sessions WHERE case_id = ?").bind(payload.caseId).first();
-      const number = Number(latest?.number || 0) + 1;
-      if (number > 12) return json({ error: "This record already has the maximum supported session count." }, 409);
-      const sessionId = crypto.randomUUID();
-      const session = { status: "PLANNED", scheduledAt: payload.scheduledAt, occurredAt: null, preparation: "", privateNotes: "", parentSummary: "", actionPlan: "", documentStatus: "DRAFT" };
-      const snapshot = sessionSnapshot(sessionId, payload.caseId, number, session, 1, now);
-      await database.batch([
-        database.prepare(`INSERT INTO practice_sessions
-          (session_id, case_id, session_number, status, scheduled_at, occurred_at, preparation, private_notes,
-           parent_summary, action_plan, document_status, revision, created_at, updated_at)
-          VALUES (?, ?, ?, 'PLANNED', ?, NULL, '', '', '', '', 'DRAFT', 1, ?, ?)`).bind(sessionId, payload.caseId, number, payload.scheduledAt, now, now),
-        database.prepare(`INSERT INTO practice_session_revisions
-          (revision_id, session_id, case_id, revision, event_type, actor, snapshot_json, created_at)
-          VALUES (?, ?, ?, 1, 'CREATED', 'CJ', ?, ?)`).bind(crypto.randomUUID(), sessionId, payload.caseId, JSON.stringify(snapshot), now),
-      ]);
+      const existing = await database.prepare("SELECT journey_stage FROM practice_sessions WHERE case_id = ?").bind(payload.caseId).all();
+      const present = new Set((existing.results || []).map((row) => row.journey_stage));
+      const template = journeyStagesForService(client.service_code);
+      if (!template.length) return json({ error: "Choose RM350 or RM1,800 before creating a client journey." }, 409);
+      const stage = template.find((item) => !present.has(item.code));
+      if (!stage) return json({ error: "All client journey stages already exist." }, 409);
+      const created = newJourneyStageStatements(database, payload.caseId, stage, now, payload.scheduledAt);
+      await database.batch(created.statements);
+      const { sessionId } = created;
       return json(await overview(database, { action: payload.action, caseId: payload.caseId, sessionId }), 201);
     }
 
@@ -368,15 +445,16 @@ export async function onRequestPost({ request, env }) {
       const current = await database.prepare("SELECT * FROM practice_sessions WHERE session_id = ?").bind(payload.sessionId).first();
       if (!current) return json({ error: "Session record was not found." }, 404);
       if (Number(current.revision) !== payload.expectedRevision) return json({ error: "Session changed on another screen. Refresh before saving." }, 409);
+      if (payload.session.journeyStage !== current.journey_stage) return json({ error: "Client journey stages cannot be reordered or renamed." }, 409);
       const nextRevision = payload.expectedRevision + 1;
       const eventType = payload.session.documentStatus === "CJ_APPROVED" && current.document_status !== "CJ_APPROVED" ? "APPROVED" : payload.session.documentStatus === "DELIVERED" ? "DELIVERED" : "UPDATED";
       const snapshot = sessionSnapshot(payload.sessionId, current.case_id, Number(current.session_number), payload.session, nextRevision, now);
       await database.batch([
         database.prepare(`UPDATE practice_sessions SET status = ?, scheduled_at = ?, occurred_at = ?, preparation = ?,
-          private_notes = ?, parent_summary = ?, action_plan = ?, document_status = ?, revision = ?, updated_at = ?
+          template_answers = ?, private_notes = ?, parent_summary = ?, action_plan = ?, parent_materials = ?, document_status = ?, revision = ?, updated_at = ?
           WHERE session_id = ? AND revision = ?`).bind(payload.session.status, payload.session.scheduledAt, payload.session.occurredAt,
-          payload.session.preparation, payload.session.privateNotes, payload.session.parentSummary, payload.session.actionPlan,
-          payload.session.documentStatus, nextRevision, now, payload.sessionId, payload.expectedRevision),
+          payload.session.preparation, payload.session.templateAnswers, payload.session.privateNotes, payload.session.parentSummary,
+          payload.session.actionPlan, payload.session.parentMaterials, payload.session.documentStatus, nextRevision, now, payload.sessionId, payload.expectedRevision),
         database.prepare(`INSERT INTO practice_session_revisions
           (revision_id, session_id, case_id, revision, event_type, actor, snapshot_json, created_at)
           VALUES (?, ?, ?, ?, ?, 'CJ', ?, ?)`).bind(crypto.randomUUID(), payload.sessionId, current.case_id, nextRevision, eventType, JSON.stringify(snapshot), now),
@@ -397,7 +475,7 @@ export async function onRequestPost({ request, env }) {
         AND document_version = ? AND destination = ?`).bind(payload.sessionId, documentVersion, destination).first();
       if (existing && existing.content_sha256 !== contentSha256) return json({ error: "This approved document version no longer matches its recorded hash. Save a new session revision before exporting again." }, 409);
       const exportId = existing?.export_id || crypto.randomUUID();
-      const filename = safeFilename(client.case_id, client.service_code, Number(session.session_number), documentVersion, now.slice(0, 10));
+      const filename = safeFilename(client.case_id, client.service_code, session.journey_stage, documentVersion, now.slice(0, 10));
       if (!existing) {
         const statements = [database.prepare(`INSERT INTO practice_exports
           (export_id, case_id, session_id, document_type, document_version, destination, filename, content_sha256,
