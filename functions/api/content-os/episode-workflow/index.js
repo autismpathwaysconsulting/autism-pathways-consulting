@@ -5,6 +5,7 @@ const RESULTS = new Set(["PENDING", "READY", "NOT_READY"]);
 const HOOK_RESULTS = new Set(["PASS", "REWORK", "FAIL"]);
 const FINAL_DECISIONS = new Set(["FILM", "REVISE"]);
 const PACKAGE_SCHEMA = "apc.episode_pack.v2";
+export const MINIMUM_REDTEAM_PASS_SCORE = 8.5;
 
 function json(body, status = 200, headers = {}) {
   return Response.json(body, { status, headers: { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", ...headers } });
@@ -60,6 +61,7 @@ function validateProductionPack(pack) {
   if (pack.schemaVersion !== PACKAGE_SCHEMA || !validEpisodeId(pack.episodeId)) return "Imported pack identity is invalid.";
   if (!exactKeys(pack.masterRules, ["version", "sha256"]) || !validText(pack.masterRules.version, 40) || !/^[0-9a-f]{64}$/.test(pack.masterRules.sha256)) return "Imported pack master rule identity is invalid.";
   if (!exactKeys(pack.redteam, ["result", "score", "risks", "fixes"]) || !["PASS", "FAIL"].includes(pack.redteam.result) || !Number.isFinite(pack.redteam.score) || pack.redteam.score < 0 || pack.redteam.score > 10 || !validStringArray(pack.redteam.risks) || !validStringArray(pack.redteam.fixes)) return "Imported pack red-team result is invalid. Score must be between 0 and 10.";
+  if (pack.redteam.result === "PASS" && pack.redteam.score < MINIMUM_REDTEAM_PASS_SCORE) return `A red-team PASS requires a score of at least ${MINIMUM_REDTEAM_PASS_SCORE}/10.`;
   if (!exactKeys(pack.hookGate, ["result", "yesCount", "checks"]) || !HOOK_RESULTS.has(pack.hookGate.result) || !Number.isSafeInteger(pack.hookGate.yesCount) || pack.hookGate.yesCount < 0 || pack.hookGate.yesCount > 5 || !Array.isArray(pack.hookGate.checks) || pack.hookGate.checks.length !== 5 || !pack.hookGate.checks.every(value => typeof value === "boolean") || pack.hookGate.checks.filter(Boolean).length !== pack.hookGate.yesCount) return "Imported pack hook gate is invalid.";
   if (!FINAL_DECISIONS.has(pack.finalDecision) || !validMultiline(pack.spokenScript, 20000) || !Array.isArray(pack.filmingBoard) || !pack.filmingBoard.length || pack.filmingBoard.length > 80 || !Array.isArray(pack.overlays) || pack.overlays.length > 80 || !validMultiline(pack.hyperframesPrompt, 30000, false)) return "Imported pack production content is invalid.";
   if (!(isObject(pack.visualAssets) || Array.isArray(pack.visualAssets)) || !validStringArray(pack.editNotes, 50, 3000) || !validStringArray(pack.sourceNotes, 50, 3000) || !isObject(pack.platformCopy) || !validStringArray(pack.claimCautions, 50, 3000) || hasUnsafeKey(pack)) return "Imported pack supporting content is invalid.";
@@ -201,7 +203,7 @@ function eventStatement(database, { episodeId, eventType, artifactId = null, ide
 }
 function packGate(pack) {
   const coreHookChecksPass = pack.hookGate.checks.slice(0, 3).every(Boolean);
-  return pack.redteam.result === "PASS" && pack.hookGate.result === "PASS" && pack.hookGate.yesCount >= 4 && coreHookChecksPass && pack.finalDecision === "FILM";
+  return pack.redteam.result === "PASS" && pack.redteam.score >= MINIMUM_REDTEAM_PASS_SCORE && pack.hookGate.result === "PASS" && pack.hookGate.yesCount >= 4 && coreHookChecksPass && pack.finalDecision === "FILM";
 }
 async function latestProductionArtifact(database, episodeId) {
   return database.prepare(`SELECT * FROM episode_artifacts
@@ -328,7 +330,7 @@ export async function onRequestPost({ request, env }) {
       if (!episode) return json({ error: "Episode was not found." }, 404);
       if (episode.archived_at) return json({ error: "Restore this episode before locking its script." }, 409);
       const gated = await requireGatedPack(database, payload.episodeId);
-      if (!gated) return json({ error: "Red-team PASS, Hook Gate PASS and FILM decision are required before filming." }, 409);
+      if (!gated) return json({ error: `Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and FILM decision are required before filming.` }, 409);
       await database.batch([
         database.prepare("UPDATE episodes SET status = 'SCRIPT_LOCKED', updated_at = ? WHERE id = ?").bind(now, payload.episodeId),
         eventStatement(database, { episodeId: payload.episodeId, eventType: "SCRIPT_LOCKED", artifactId: gated.artifact.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { packVersion: gated.artifact.version, packSha256: gated.artifact.payload_sha256 }, now }),
@@ -405,7 +407,7 @@ export async function onRequestPost({ request, env }) {
       if (!transitions[episode.status]?.has(payload.status)) return json({ error: "Move the episode one tracked stage at a time." }, 409);
       if (["FILMED", "EDITING", "REVIEW", "PUBLISHED"].includes(payload.status)) {
         const gated = await requireGatedPack(database, payload.episodeId);
-        if (!gated) return json({ error: "Import a package with Red-team PASS, Hook Gate PASS and FILM decision before advancing this episode." }, 409);
+        if (!gated) return json({ error: `Import a package with Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and FILM decision before advancing this episode.` }, 409);
       }
       if (payload.status === "PUBLISHED") {
         const publication = await database.prepare("SELECT publication_id FROM content_publications WHERE json_extract(publication_json, '$.episodeId') = ? LIMIT 1").bind(payload.episodeId).first();

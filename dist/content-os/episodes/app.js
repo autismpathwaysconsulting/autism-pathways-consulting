@@ -65,7 +65,7 @@ function packageContract(episodeId) {
     "",
     "MANDATORY FINAL RED-TEAM",
     "Before presenting the final version, run /redteam on factual accuracy, evidence scope, autism-community framing, parent shame, burden framing, overclaiming, production alignment and likely backlash. Correct all fixable issues before the final output.",
-    "A PASS means the corrected final pack is safe enough to film. If the risks cannot be corrected, return REVISE.",
+    "A PASS requires a corrected score of at least 8.5/10 and means the corrected final pack is safe enough to film. If the score is below 8.5 or the risks cannot be corrected, return REVISE.",
     "",
     "TRACKED PACKAGE RETURN",
     "After the readable episode pack, finish with exactly one fenced JSON block that follows this contract. This block will be pasted into Episode Studio:",
@@ -204,7 +204,7 @@ function renderMasterIdeas() {
 function nextAction(episode, packArtifact, publications) {
   if (!packArtifact) return "Next: copy the saved prompt into Codex, then import the final JSON package.";
   if (episode.status === "APPROVED") {
-    if (packArtifact.redteam_status !== "PASS") return "Next: revise the package until the red-team result is PASS.";
+    if (packArtifact.redteam_status !== "PASS" || Number(packArtifact.payload?.redteam?.score || 0) < 8.5) return "Next: revise the package until the red-team result is PASS at 8.5/10 or higher.";
     if (packArtifact.hook_gate_status !== "PASS" || packArtifact.final_decision !== "FILM") return "Next: rework the hook before filming.";
     return "Next: lock the approved script for filming.";
   }
@@ -218,7 +218,7 @@ function nextAction(episode, packArtifact, publications) {
   return "Next: develop the episode prompt.";
 }
 function packPasses(packArtifact) {
-  return Boolean(packArtifact && packArtifact.redteam_status === "PASS" && packArtifact.hook_gate_status === "PASS" && packArtifact.final_decision === "FILM");
+  return Boolean(packArtifact && packArtifact.redteam_status === "PASS" && Number(packArtifact.payload?.redteam?.score || 0) >= 8.5 && packArtifact.hook_gate_status === "PASS" && packArtifact.final_decision === "FILM");
 }
 function previousStatus(status) {
   return { APPROVED: "IDEA", SCRIPT_LOCKED: "APPROVED", FILMED: "SCRIPT_LOCKED", EDITING: "FILMED", REVIEW: "EDITING", READY: "REVIEW", PUBLISHED: "READY" }[status] || null;
@@ -482,7 +482,7 @@ function render() {
   renderMasterIdeas(); renderResearch(); renderEpisodes(); renderEpisodeOptions(); renderWorkflowSteps(); renderResults();
   if (selectedFilmingEpisodeId && episodeById(selectedFilmingEpisodeId) && !episodeById(selectedFilmingEpisodeId).archived_at) renderFilmingPack(selectedFilmingEpisodeId);
   element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " and tracked package gate active";
-  element("masterRulesDetail").textContent = "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) + ". Every new prompt is saved before it is shown. A red-team PASS and Hook Gate PASS are required before filming.";
+  element("masterRulesDetail").textContent = "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) + ". Every new prompt is saved before it is shown. A red-team PASS at 8.5/10 or higher and Hook Gate PASS are required before filming.";
   element("episodeId").value = nextEpisodeId();
   const readyEpisode = active.find(item => item.status === "READY");
   element("publicationLink").href = readyEpisode ? "/content-os/?episode=" + encodeURIComponent(readyEpisode.id) + "#results" : "/content-os/?from=episodes#results";

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Calm Feedback Inbox | APC Content OS</title>
+  <link rel="stylesheet" href="/content-os/app.css">
+  <script type="module" src="/content-os/calm-feedback/app.js"></script>
+</head>
+<body class="operator-page">
+  <a class="skip-link" href="#main-content">Skip to feedback</a>
+  <header class="app-header">
+    <div class="shell header-layout">
+      <div>
+        <p class="eyebrow">Autism Pathways Consulting</p>
+        <h1>Calm Feedback Inbox</h1>
+        <p class="header-summary">Review every response, record the decision and keep product learning connected.</p>
+        <div class="button-row quick-launch-row" aria-label="Quick launch links">
+          <a class="button secondary compact" href="/content-os/">Content OS</a>
+          <a class="button secondary compact" href="/content-os/episodes/">Episode Studio</a>
+          <a class="button secondary compact" href="/content-os/practice/">Practice Console</a>
+        </div>
+      </div>
+      <div class="sync-panel" role="status" aria-live="polite">
+        <div id="inboxStatus" class="sync-status">Loading private feedback</div>
+        <div id="inboxDetail" class="sync-detail">Only the authenticated APC operator can use this inbox.</div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="shell main-content" tabindex="-1">
+    <section class="page-section" aria-labelledby="inbox-title">
+      <div class="section-heading">
+        <div><p class="section-kicker">Owner workflow</p><h2 id="inbox-title">Feedback requiring attention</h2><p class="section-summary">Comments may contain private information. Keep them inside this protected screen.</p></div>
+        <button id="refreshFeedback" class="button secondary" type="button">Refresh</button>
+      </div>
+      <div id="feedbackMetrics" class="metric-grid" aria-label="Feedback status counts"></div>
+      <div class="card filter-bar">
+        <label for="feedbackFilter">Show status</label>
+        <select id="feedbackFilter">
+          <option value="ALL">All feedback</option>
+          <option value="NEW">New</option>
+          <option value="ACTION_NEEDED">Action needed</option>
+          <option value="REVIEWED">Reviewed</option>
+          <option value="IMPLEMENTED">Implemented</option>
+          <option value="ARCHIVED">Archived</option>
+        </select>
+      </div>
+      <div id="feedbackList" class="operator-list" aria-live="polite"></div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

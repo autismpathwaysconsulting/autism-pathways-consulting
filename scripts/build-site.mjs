@@ -69,6 +69,10 @@ export const PUBLIC_FILES = Object.freeze([
   "content-os/video-rules.js",
   "content-os/episodes/index.html",
   "content-os/episodes/app.js",
+  "content-os/practice/index.html",
+  "content-os/practice/app.js",
+  "content-os/calm-feedback/index.html",
+  "content-os/calm-feedback/app.js",
 ]);
 
 const DENIED_FIRST_SEGMENTS = new Set([

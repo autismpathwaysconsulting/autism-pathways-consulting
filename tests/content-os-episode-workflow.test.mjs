@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-import { validateAction } from "../functions/api/content-os/episode-workflow/index.js";
+import { MINIMUM_REDTEAM_PASS_SCORE, validateAction } from "../functions/api/content-os/episode-workflow/index.js";
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "../content-os/video-rules.js";
 
@@ -75,6 +75,7 @@ test("episode schema extends the existing governed research and analytics stores
 });
 
 test("tracked package contract requires the red-team and five-check filming gate", () => {
+  assert.equal(MINIMUM_REDTEAM_PASS_SCORE, 8.5);
   const failedRedTeam = importedPack({ redteam: { result: "FAIL", score: 4, risks: ["Overclaim"], fixes: [] }, finalDecision: "REVISE" });
   assert.equal(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: failedRedTeam, idempotencyKey: "pack:EP09:failed001" }), null);
 
@@ -83,6 +84,9 @@ test("tracked package contract requires the red-team and five-check filming gate
 
   const wrongScoreScale = importedPack({ redteam: { result: "PASS", score: 95, risks: [], fixes: [] } });
   assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: wrongScoreScale, idempotencyKey: "pack:EP09:badscore1" }), /between 0 and 10/i);
+
+  const weakPass = importedPack({ redteam: { result: "PASS", score: 8.4, risks: [], fixes: [] } });
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: weakPass, idempotencyKey: "pack:EP09:weakpass1" }), /at least 8\.5\/10/i);
 });
 
 test("Episode Studio assets are in the public allowlist without exposing operational files", () => {
@@ -135,7 +139,7 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /checks: \[true, true, true, true, true\]/);
   assert.match(episodeHtml, /id="import"/);
   assert.match(episodeHtml, /Validate \+ import package/);
-  assert.match(episodeHtml, /validates the episode ID, master-rule hash, red-team result and five hook checks/);
+  assert.match(episodeHtml, /red-team score of at least 8\.5\/10/);
   assert.match(episodeHtml, /Film and edit from one page/);
   assert.match(episodeHtml, /Download HTML/);
   assert.match(episodeApp, /standalonePackHtml/);

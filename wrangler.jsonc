@@ -34,6 +34,7 @@
         "APC_CONTENT_OS_ENVIRONMENT": "production",
         "APC_CONTENT_OS_AUTOMATION_ENABLED": "true",
         "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "true",
+        "APC_PRACTICE_LIVE_WRITES_ENABLED": "false",
         "APC_CONTENT_OS_GITHUB_REPOSITORY_ID": "1327407191",
         "APC_CONTENT_OS_GITHUB_REPOSITORY": "autismpathwaysconsulting/APC-AI-OS",
         "APC_CONTENT_OS_GITHUB_ISSUE_LABEL": "apc-dashboard-feed",
@@ -52,6 +53,11 @@
           "database_name": "apc-content-os",
           "database_id": "7a642992-b0a8-4806-9ab9-517b2b0142fa",
           "migrations_dir": "migrations"
+        },
+        {
+          "binding": "APC_CALM_FEEDBACK_DB",
+          "database_name": "apc-calm-feedback-production",
+          "database_id": "af6c2c79-7bca-41c0-b412-2a737a0ff0b0"
         }
       ]
     }
