@@ -86,6 +86,7 @@ export async function onRequestGet({ request, env }) {
         productFamily: publication.productFamily,
         format: publication.format,
         durationSeconds: publication.durationSeconds,
+        slideCount: publication.slideCount,
         hookType: publication.hookType,
         creativeVersion: publication.creativeVersion,
         ctaType: publication.ctaType,

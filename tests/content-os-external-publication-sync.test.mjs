@@ -543,9 +543,10 @@ test("the signed export returns only canonical Meta mappings", async () => {
     APC_CONTENT_OS_ANALYTICS_INGEST_SECRET: secret,
     APC_CONTENT_OS_DB: database,
   };
+  const registeredPublication = publication({ slideCount: 7 });
   const registration = await registerExternalPublication({
     env,
-    request: requestBody({ idempotencyKey: `publication:${canonicalPublicationId}`, publication: publication() }),
+    request: requestBody({ idempotencyKey: `publication:${canonicalPublicationId}`, publication: registeredPublication }),
   });
   assert.equal(registration.status, 201);
 
@@ -559,7 +560,8 @@ test("the signed export returns only canonical Meta mappings", async () => {
   assert.equal(body.source, "content-os-d1");
   assert.equal(body.mappings.length, 1);
   assert.equal(body.mappings[0].episodeId, "EP01");
-  assert.equal(body.mappings[0].postRef, publication().postRef);
+  assert.equal(body.mappings[0].postRef, registeredPublication.postRef);
+  assert.equal(body.mappings[0].slideCount, 7);
 });
 
 test("the mapping export is limited to explicitly linked, active PUBLISHED episodes", async () => {
