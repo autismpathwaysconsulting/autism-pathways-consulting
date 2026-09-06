@@ -47,9 +47,10 @@ projection may reduce public risk but cannot approve an offer, close a hold, or 
    payment proof, verifies payment, and manually confirms the booking details. A
    request, payment, or proof is not automatic booking confirmation. Cal.com slug
    Do not publish or link the paid `parent-strategy-session` event while containment is active.
-3. **APC Home Support Programme**: RM1,800, four sessions once every two weeks, personalised Home
-   Support Plan, WhatsApp clarification throughout the active programme, plus one check-in about a
-   month after the final session. There is no unlimited messaging.
+3. **APC Home Support Programme**: RM1,800, four 60-minute sessions over approximately six to eight
+   weeks, personalised Home Support Plan, bounded weekly parent updates and WhatsApp clarification
+   during the active programme, final written plan or summary, and no additional post-programme
+   check-in. There is no unlimited messaging.
 
 Paid support is not an unrestricted public checkout. Every request remains subject to individual
 Founder suitability, capacity, and availability review and written permission before payment.
