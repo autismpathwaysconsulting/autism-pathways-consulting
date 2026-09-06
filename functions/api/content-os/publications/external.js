@@ -146,6 +146,9 @@ export async function onRequestPost({ request, env }) {
   if (publication.platform !== "Instagram") {
     return json({ error: "The existing feed currently supports Instagram publications only.", code: "unsupported_platform" }, 409);
   }
+  if (publication.format !== "Reel") {
+    return json({ error: "The existing Meta feed currently supports Reel publications only.", code: "unsupported_format" }, 409);
+  }
   try {
     const postRef = canonicalInstagramReelPostRef(publication.postRef);
     publication = {

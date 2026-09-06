@@ -478,6 +478,31 @@ test("the browser never lets a cached Reel override the selected episode", async
   const source = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
   assert.match(source, /if \(existingPublication\?\.episodeId === episodeId\) return existingPublication;/);
   assert.doesNotMatch(source, /if \(existingPublication\) return existingPublication;/);
+  assert.match(source, /format: options\?\.canonicalInstagramReel \? "Reel" : element\("automaticFormat"\)\.value/);
+});
+
+test("the external Meta route rejects every non-Reel format before D1 access", async () => {
+  const database = new MemoryDatabase();
+  const prepare = database.prepare.bind(database);
+  let prepareCalls = 0;
+  database.prepare = sql => {
+    prepareCalls++;
+    return prepare(sql);
+  };
+  for (const format of ["Carousel", "Photo Mode", "Story", "Short", "Long-form"]) {
+    const response = await registerExternalPublication({
+      env: enabledEnv(database),
+      request: requestBody({
+        idempotencyKey: `publication:${canonicalPublicationId}:${format.replaceAll(" ", "-")}`,
+        publication: publication({ format }),
+      }),
+    });
+    assert.equal(response.status, 409, format);
+    assert.equal((await response.json()).code, "unsupported_format", format);
+  }
+  assert.equal(prepareCalls, 0);
+  assert.equal(database.publications.size, 0);
+  assert.equal(database.events.size, 0);
 });
 
 test("external registration rejects cross-origin writes and unsupported Reel references", async () => {

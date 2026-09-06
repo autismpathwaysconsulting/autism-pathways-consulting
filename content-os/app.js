@@ -1883,7 +1883,7 @@ async function buildTrackingPublication(options) {
     topic: episode.title.slice(0, 240),
     problemArea: text(topic.name || episode.title).slice(0, 160),
     productFamily: text(topic.family).slice(0, 120),
-    format: element("automaticFormat").value,
+    format: options?.canonicalInstagramReel ? "Reel" : element("automaticFormat").value,
     durationSeconds: null,
     slideCount: null,
     hookType: element("automaticHookType").value,
