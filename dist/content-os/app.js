@@ -20,6 +20,7 @@ import {
   validateAnalyticsSubmission,
 } from "./analytics.js";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "./video-rules.js";
+import { MASTER_TOPIC_BANK, MASTER_TOPIC_BANK_VERSION } from "./topic-bank.js";
 
 const DATA = {
   families:[
@@ -36,31 +37,7 @@ const DATA = {
     "Their body is changing","Friends, boundaries and relationships","My child isn’t little anymore",
     "What happens after school?","Everyone tells me something different","What about the future?"
   ],
-  topics:[
-    {name:"Behaviour, meltdowns & overwhelm",hook:"I stayed calm. I warned them. I gave extra time. They STILL melted down.",family:"Understand the Behaviour",stage:"Starting school",use:"Flagship",keywords:"meltdown behaviour overwhelm regulation escalation"},
-    {name:"Communication breakdowns",hook:"They can talk for 20 minutes about Roblox. Then “How was school?” gets “I don’t know.”",family:"Make Communication Easier",stage:"Starting school",use:"Flagship",keywords:"communication language questions i don't know instructions"},
-    {name:"Task initiation / executive functioning",hook:"The homework takes 20 minutes. Starting it takes 90.",family:"Make School & Learning Work",stage:"Growing independence",use:"Workshop",keywords:"homework executive function starting task initiation"},
-    {name:"Independence / prompting",hook:"I know they can dress themselves. But if I wait, we’ll be late. So I do it for them. Again.",family:"Build Independence",stage:"Starting school",use:"Flagship",keywords:"independence dressing prompting hygiene daily living"},
-    {name:"School-home gap",hook:"Teacher: “They were fine today.” Me after the worst evening all week: “Fine?”",family:"Make School & Learning Work",stage:"Starting school",use:"Workshop",keywords:"school home masking stress crash"},
-    {name:"Routines / transitions",hook:"The iPad turns off. Suddenly the whole evening falls apart.",family:"Everyday Life",stage:"Starting school",use:"Workshop",keywords:"transition routine ipad screen stopping"},
-    {name:"Sensory contradictions",hook:"They blast YouTube. Then the hand dryer makes them cover their ears.",family:"Everyday Life",stage:"Starting school",use:"Reach",keywords:"sensory sound hand dryer noise"},
-    {name:"Selective eating",hook:"They eat chicken nuggets. Just not THAT brand of chicken nuggets.",family:"Everyday Life",stage:"Preschool",use:"Workshop",keywords:"feeding eating food picky selective"},
-    {name:"Sleep",hook:"They’re exhausted all morning. Then 10pm comes and suddenly they’re wide awake.",family:"Everyday Life",stage:"Starting school",use:"Workshop",keywords:"sleep bedtime tired waking"},
-    {name:"Body awareness",hook:"They say they’re not hungry. Ten minutes later they’re STARVING and everything is wrong.",family:"Everyday Life",stage:"Growing independence",use:"Workshop",keywords:"interoception hunger toilet fatigue body"},
-    {name:"Toileting",hook:"They know how to use the toilet. Why do they hold it the entire school day?",family:"Everyday Life",stage:"Preschool",use:"Collaboration",keywords:"toilet toileting diaper constipation"},
-    {name:"Puberty / privacy",hook:"My child keeps touching themselves in the living room. Saying STOP isn’t enough.",family:"Growing Up Autistic",stage:"Puberty / early adolescence",use:"Flagship",keywords:"puberty privacy masturbation touching"},
-    {name:"Consent / boundaries",hook:"We keep saying “That’s private.” But what exactly does PRIVATE mean?",family:"Growing Up Autistic",stage:"Puberty / early adolescence",use:"Flagship",keywords:"consent boundaries private body sexuality"},
-    {name:"Friendship",hook:"They have classmates. Does that mean they actually have friends?",family:"Growing Up Autistic",stage:"Growing independence",use:"Workshop",keywords:"friend friendship social peer"},
-    {name:"Emotional development",hook:"I corrected one tiny thing. Suddenly it’s: “I’m stupid. I can’t do anything.”",family:"Understand the Behaviour",stage:"Growing independence",use:"Workshop",keywords:"emotion correction confidence perfectionism"},
-    {name:"Medication literacy",hook:"My child started medication. Everyone asks, “Is it working?” What exactly am I supposed to watch?",family:"Authority / Evidence",stage:"Starting school",use:"Collaboration",keywords:"medication medicine clinician appetite sleep"},
-    {name:"Diet myths",hook:"Should I remove gluten because my child is autistic?",family:"Authority / Evidence",stage:"Starting school",use:"Authority",keywords:"diet gluten sugar supplements dairy evidence"},
-    {name:"Early development",hook:"Everyone keeps saying, “They’ll talk when they’re ready.” When should you actually ask for help?",family:"Make Communication Easier",stage:"Early development",use:"Workshop",keywords:"development speech milestones toddler"},
-    {name:"Motor / coordination",hook:"They know exactly what to write. Their hand can’t keep up.",family:"Make School & Learning Work",stage:"Starting school",use:"Collaboration",keywords:"motor handwriting coordination OT"},
-    {name:"Adolescence",hook:"At what age should I stop reminding them about everything?",family:"Build Independence",stage:"Teen years",use:"Flagship",keywords:"teen adolescence reminders independence"},
-    {name:"Leaving school",hook:"School gave them a timetable for years. Then adulthood says: organise your own life.",family:"Life After School",stage:"Preparing to leave school",use:"Flagship",keywords:"adult transition school work university"},
-    {name:"Future planning",hook:"The question parents hate thinking about: Who helps my child when I can’t?",family:"Life After School",stage:"Long-term adulthood",use:"Collaboration",keywords:"future ageing parents siblings housing"},
-    {name:"Autism myths",hook:"They talk, so communication isn’t a problem.",family:"Authority / Evidence",stage:"Starting school",use:"Reach",keywords:"myths eye contact empathy attention"}
-  ]
+  topics: MASTER_TOPIC_BANK
 };
 
 const STORAGE = Object.freeze({
@@ -1245,8 +1222,36 @@ function initialiseFormOptions() {
   if (legacyCheckpoint) legacyCheckpoint.disabled = true;
 }
 
-function useTopic(topic, stage, family, area) {
+function masterTopicContext(topic) {
+  if (!topic || !topic.source) return null;
+  return {
+    type: "master-topic",
+    masterRulesVersion: MASTER_VIDEO_RULES.version,
+    topicBankVersion: MASTER_TOPIC_BANK_VERSION,
+    topic: {
+      id: topic.id,
+      name: topic.name,
+      hook: topic.hook,
+      overlay: topic.overlay,
+      parentMoment: topic.parentMoment,
+      tension: topic.tension,
+      practicalPayoff: topic.practicalPayoff,
+    },
+    sources: [structuredClone(topic.source)],
+    limitations: [topic.source.scope],
+    promptSeed: topic.hook,
+  };
+}
+
+function topicBankMatchByHook(hook) {
+  const normalisedHook = text(hook).trim();
+  return DATA.topics.find(function (topic) { return topic.hook === normalisedHook; }) || null;
+}
+
+function useTopic(topic, stage, family, area, bankTopic) {
   clearSelectedResearchContext();
+  selectedResearchContext = masterTopicContext(bankTopic || topicBankMatchByHook(topic));
+  renderSelectedResearchContext();
   element("pTopic").value = text(topic);
   element("pArea").value = text(area);
   if (DATA.stages.includes(stage)) element("pStage").value = stage;
@@ -1419,7 +1424,11 @@ function filteredTopics() {
   const stage = element("stageFilter").value;
   const use = element("useFilter").value;
   return DATA.topics.filter(function (topic) {
-    const searchable = [topic.name, topic.hook, topic.family, topic.stage, topic.use, topic.keywords]
+    const searchable = [
+      topic.name, topic.hook, topic.overlay, topic.parentMoment, topic.tension,
+      topic.practicalPayoff, topic.family, topic.stage, topic.use, topic.keywords,
+      topic.source && topic.source.title,
+    ]
       .join(" ")
       .toLowerCase();
     return (!query || searchable.includes(query)) &&
@@ -1445,10 +1454,23 @@ function renderTopics() {
     card.appendChild(makeNode("p", "card-label", topic.name));
     card.appendChild(makeNode("blockquote", "topic-hook", topic.hook));
     const labels = makeNode("div", "pill-row");
+    appendPill(labels, "Master " + MASTER_TOPIC_BANK_VERSION, "green");
     appendPill(labels, topic.family);
     appendPill(labels, topic.stage, "gold");
     appendPill(labels, topic.use, "coral");
     card.appendChild(labels);
+
+    const recognition = makeNode("div", "topic-recipe");
+    recognition.appendChild(makeNode("p", "topic-detail", "Parent moment: " + topic.parentMoment));
+    recognition.appendChild(makeNode("p", "topic-detail", "Payoff: " + topic.practicalPayoff));
+    card.appendChild(recognition);
+
+    const source = makeNode("a", "topic-source", "Evidence: " + topic.source.title + " (" + topic.source.year + ")");
+    source.href = topic.source.url;
+    source.target = "_blank";
+    source.rel = "noopener noreferrer";
+    card.appendChild(source);
+    card.appendChild(makeNode("p", "topic-scope", topic.source.scope));
 
     const actions = makeNode("div", "actions");
     actions.appendChild(makeButton("Use topic", "use-bank-topic", "button compact", { index: originalIndex }));
@@ -2651,7 +2673,8 @@ function renderSelectedResearchContext() {
   }
   panel.hidden = false;
   const selected = selectedResearchContext.topic || selectedResearchContext.finding || {};
-  detail.textContent = (selectedResearchContext.type === "topic" ? text(selected.hook) : text(selected.title)) +
+  const selectedLabel = selectedResearchContext.topic ? text(selected.hook || selected.name) : text(selected.title);
+  detail.textContent = selectedLabel +
     " | " + selectedResearchContext.sources.length + " governed source(s) | " +
     selectedResearchContext.limitations.length + " limitation note(s)";
 }
@@ -2996,10 +3019,10 @@ function updateWinnerHookCheck() {
 }
 
 function renderMasterVideoRulesStatus() {
-  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " active";
+  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " and teen idea bank active";
   element("masterRulesDetail").textContent =
     "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) +
-    ". Old HTML boards and previous rule copies are excluded.";
+    ". Idea bank " + MASTER_TOPIC_BANK_VERSION + " carries its source into the prompt. Old HTML boards and previous rule copies are excluded.";
 }
 
 function buildPrompt() {
@@ -3032,11 +3055,12 @@ function buildPrompt() {
     "Wording: " + wording,
     "Evidence: " + research,
     "Ending: " + ending,
+    "Master topic bank: " + MASTER_TOPIC_BANK_VERSION,
     "",
     "APC ANALYTICS LEARNING FOR THIS PROBLEM AREA",
     analyticsLearningSummary(area),
     "",
-    "SELECTED GOVERNED RESEARCH CONTEXT",
+    "SELECTED EVIDENCE CONTEXT",
     selectedResearchContext ? JSON.stringify(selectedResearchContext, null, 2) : "No governed research item is attached.",
     "Use attached research only within its stated sources and limitations. Do not invent missing evidence.",
     "",
@@ -3536,7 +3560,7 @@ function handleClick(event) {
     const date = control.dataset.date;
     const entry = state.calendar[date];
     if (!entry) return;
-    if (action === "use-calendar-topic") useTopic(entry.topic, entry.stage, entry.family, entry.area);
+    if (action === "use-calendar-topic") useTopic(entry.topic, entry.stage, entry.family, entry.area, topicBankMatchByHook(entry.topic));
     else logTopic(entry.topic, entry.area, entry.family, date);
   } else if (action === "edit-plan-item") {
     const date = control.dataset.date;
@@ -3548,7 +3572,7 @@ function handleClick(event) {
       action === "log-bank-topic" || action === "book-bank-topic") {
     const topic = DATA.topics[Number(control.dataset.index)];
     if (!topic) return;
-    if (action === "use-bank-topic") useTopic(topic.hook, topic.stage, topic.family, topic.name);
+    if (action === "use-bank-topic") useTopic(topic.hook, topic.stage, topic.family, topic.name, topic);
     if (action === "plan-bank-topic") prefillPlanForm(topic.hook, topic.name, topic.family, topic.stage, "");
     if (action === "log-bank-topic") logTopic(topic.hook, topic.name, topic.family, "");
     if (action === "book-bank-topic") sendTopicToBook(topic.hook, topic.stage, topic.family, topic.name);

@@ -36,6 +36,7 @@ test("Episode Studio assets are in the public allowlist without exposing operati
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/index.html"));
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/app.js"));
   assert.ok(PUBLIC_FILES.includes("content-os/video-rules.js"));
+  assert.ok(PUBLIC_FILES.includes("content-os/topic-bank.js"));
   assert.ok(!PUBLIC_FILES.includes("migrations/0003_episode_workflow.sql"));
   assert.ok(!PUBLIC_FILES.includes("functions/api/content-os/episode-workflow/index.js"));
 });
