@@ -24,6 +24,16 @@ test("quick launch links directly to the production Calm feedback database", asy
   );
 });
 
+test("quick launch opens the private local Practice Console without implying a data connection", async () => {
+  const html = await source("content-os/index.html");
+
+  assert.match(
+    html,
+    /href="http:\/\/127\.0\.0\.1:4173\/"[^>]*target="_blank"[^>]*rel="noopener"[^>]*>Practice Console<\/a>/,
+  );
+  assert.doesNotMatch(html, /href="https?:\/\/[^"']+practice-console/i);
+});
+
 test("backup and recovery include the validated offline analytics queue", async () => {
   const app = await source("content-os/app.js");
   assert.match(app, /MAX_IMPORT_BYTES = 64 \* 1024 \* 1024/);
