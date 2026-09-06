@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import { onRequest as authorize } from "../functions/_middleware.js";
 import { forwardAnalyticsConnector } from "../functions/lib/content-os/analytics-connector-proxy.js";
 import { assertValidAnalyticsSnapshot } from "../content-os/analytics.js";
+import { onRequestGet as getConnections } from "../functions/api/content-os/connections/index.js";
 import { onRequestPost as ingestGithubAnalytics } from "../functions/api/content-os/ingest/analytics-github.js";
 
 async function signGithubBody(secret, body) {
@@ -116,6 +117,27 @@ test("Pages forwards connector traffic through a service binding and protects wr
   }, { write: true });
   assert.equal(denied.status, 403);
   assert.equal(calls.length, 1);
+});
+
+test("the external Meta feed remains available when the direct connector is absent", async () => {
+  const available = await getConnections({
+    env: { APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED: "true" },
+    request: new Request("https://example.com/api/content-os/connections"),
+  });
+  assert.equal(available.status, 200);
+  assert.deepEqual(await available.json(), {
+    configuredProviders: {},
+    connections: [],
+    ingestionEnabled: false,
+    enabledProviders: [],
+    externalProviders: { meta: true },
+  });
+
+  const unavailable = await getConnections({
+    env: {},
+    request: new Request("https://example.com/api/content-os/connections"),
+  });
+  assert.equal(unavailable.status, 503);
 });
 
 test("connector snapshots use provider-specific collection methods", () => {
