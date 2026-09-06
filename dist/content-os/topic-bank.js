@@ -268,3 +268,344 @@ export const MASTER_TOPIC_BANK = Object.freeze([
     }
   }
 ]);
+
+export const CJ_IDEA_BACKLOG_VERSION = "2026-09-06.1";
+
+export const CJ_IDEA_BACKLOG = Object.freeze([
+  {
+    id: "stem-cells-autism",
+    name: "Stem cells and autism",
+    brief: "Explain what families should check before trusting stem-cell claims about autism.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Talking head",
+    gate: "Research verification required", keywords: "stem cells autism treatment cure claims medical evidence",
+    references: []
+  },
+  {
+    id: "opinions-on-aba",
+    name: "Opinions on ABA",
+    brief: "Give a careful APC view of ABA, including qualifications, terminology, family concerns and differences between providers without treating all practice as identical.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Talking head",
+    gate: "Verify credential pathways and professional-title rules by jurisdiction before scripting", keywords: "ABA opinion therapist title qualifications ethics practice",
+    references: ["https://vt.tiktok.com/ZSxvSXe2F/", "https://vt.tiktok.com/ZSxQuGSE2/"]
+  },
+  {
+    id: "ole-ivar-lovaas-history",
+    name: "Ole Ivar Lovaas and ABA history",
+    brief: "Examine the history associated with Ole Ivar Lovaas and explain why historical context matters to present-day family decisions.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Talking head",
+    gate: "Research verification required", keywords: "Ole Ivar Lovaas ABA history ethics autism",
+    references: []
+  },
+  {
+    id: "phrases-that-work-at-home",
+    name: "Phrases that work at home",
+    brief: "Show practical wording parents can try during one common home routine and explain why the phrasing may reduce demand or confusion.",
+    family: "Make Communication Easier", stage: "Growing independence", use: "Workshop", format: "Demonstration",
+    gate: "Research verification required before claiming a phrase works", keywords: "phrases home communication parent language routines",
+    references: ["https://vt.tiktok.com/ZSxQHFhmA/"]
+  },
+  {
+    id: "phrases-that-build-language",
+    name: "Phrases that build language",
+    brief: "Demonstrate language-modelling phrases that fit naturally into daily routines without pressuring a child to repeat them.",
+    family: "Make Communication Easier", stage: "Early development", use: "Workshop", format: "Demonstration",
+    gate: "Research verification required", keywords: "language modelling phrases communication speech home routines",
+    references: []
+  },
+  {
+    id: "palmar-grasp",
+    name: "Palmar grasp",
+    brief: "Explain what parents may notice about grasp development and when an occupational-therapy assessment may be appropriate.",
+    family: "Everyday Life", stage: "Early development", use: "Collaboration", format: "Demonstration",
+    gate: "Clinical scope and developmental evidence must be verified", keywords: "palmar grasp fine motor pencil occupational therapy development",
+    references: []
+  },
+  {
+    id: "autism-friendly-live-events",
+    name: "Autism-friendly live events",
+    brief: "Use the Coldplay and KultureCity example to show practical features that can make concerts and live events more accessible.",
+    family: "Everyday Life", stage: "Teen years", use: "Reach", format: "Case study",
+    gate: "Verify the partnership and current accessibility provisions", keywords: "Coldplay KultureCity concert live event sensory accessibility",
+    references: []
+  },
+  {
+    id: "focus-expectations",
+    name: "If adults cannot focus all day",
+    brief: "Challenge the expectation that autistic children should sustain attention all day when adults also need movement, breaks and changing demands.",
+    family: "Make School & Learning Work", stage: "Starting school", use: "Reach", format: "Talking head",
+    gate: "Research verification required", keywords: "focus attention school breaks expectations adults children",
+    references: []
+  },
+  {
+    id: "aggression-and-the-brain",
+    name: "Aggression and the brain",
+    brief: "Separate the observable behaviour from possible contributors and explain why a safety-first assessment should come before a single-cause story.",
+    family: "Understand the Behaviour", stage: "Teen years", use: "Authority", format: "Talking head",
+    gate: "Research and safeguarding review required", keywords: "aggression brain behaviour safety assessment regulation",
+    references: ["https://vt.tiktok.com/ZSxHgMCyY/"]
+  },
+  {
+    id: "expectations-for-autistic-children",
+    name: "Expectations",
+    brief: "Show how to keep meaningful expectations while adjusting the steps, time, cues and support needed to reach them.",
+    family: "Build Independence", stage: "Growing independence", use: "Flagship", format: "Talking head",
+    gate: "Research verification required", keywords: "expectations potential support challenge independence growth",
+    references: []
+  },
+  {
+    id: "responsibilities-at-home",
+    name: "Responsibilities at home",
+    brief: "Turn one household responsibility into visible steps and show how support can be faded as reliability grows.",
+    family: "Build Independence", stage: "Teen years", use: "Workshop", format: "Demonstration",
+    gate: "Research verification required", keywords: "responsibility chores home independence routines prompts",
+    references: []
+  },
+  {
+    id: "consequences-and-learning",
+    name: "Consequences and learning",
+    brief: "Explain when consequences teach a usable skill and when they only add pressure to an unmet demand.",
+    family: "Understand the Behaviour", stage: "Growing independence", use: "Flagship", format: "Talking head",
+    gate: "Research verification required", keywords: "consequences discipline behaviour learning parenting",
+    references: ["https://vt.tiktok.com/ZSxQV1gJd/"]
+  },
+  {
+    id: "sensory-friendly-clothing",
+    name: "Sensory-friendly clothing",
+    brief: "Show what parents can observe about seams, fabric, fit, temperature and dressing demands before assuming refusal.",
+    family: "Everyday Life", stage: "Growing independence", use: "Workshop", format: "Demonstration",
+    gate: "Research verification required", keywords: "sensory friendly clothing seams fabric dressing refusal",
+    references: ["https://www.instagram.com/reel/DYhgEMHMhH6/"]
+  },
+  {
+    id: "saved-inspiration-dwe6",
+    name: "Saved Instagram inspiration DWE6",
+    brief: "Review the saved reference, identify its transferable format and propose an autism-specific parent problem before scripting.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Reach", format: "Format study",
+    gate: "Content and claims must be reviewed first", keywords: "saved inspiration instagram format study",
+    references: ["https://www.instagram.com/reel/DWE6DGCDYyk/"]
+  },
+  {
+    id: "street-interview-autism",
+    name: "Street interview",
+    brief: "Develop a respectful street-interview format around one autism-awareness question without inviting diagnosis, ridicule or disclosure of private information.",
+    family: "Growing Up Autistic", stage: "Teen years", use: "Reach", format: "Street interview",
+    gate: "Safeguarding, consent and question review required", keywords: "street interview public opinion autism awareness consent",
+    references: ["https://vt.tiktok.com/ZSxkJ6bun/"]
+  },
+  {
+    id: "travelling-with-autism",
+    name: "Travelling",
+    brief: "Give families one practical way to prepare an autistic child or teenager for an unfamiliar journey.",
+    family: "Everyday Life", stage: "Teen years", use: "Workshop", format: "Talking head",
+    gate: "Research verification required", keywords: "travel airport holiday routine preparation autism",
+    references: []
+  },
+  {
+    id: "saved-inspiration-dywh",
+    name: "Saved Instagram inspiration DYWH",
+    brief: "Review the saved reference, identify its topic and format, then translate only the useful pattern into APC-safe content.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Reach", format: "Format study",
+    gate: "Content and claims must be reviewed first", keywords: "saved inspiration instagram format study",
+    references: ["https://www.instagram.com/reel/DYWHoW1p5XS/"]
+  },
+  {
+    id: "false-hope-autism",
+    name: "False hope",
+    brief: "Help parents distinguish a hopeful, testable support claim from guarantees, cure language and emotionally costly promises.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Reaction",
+    gate: "Research verification required", keywords: "false hope cure claims promises evidence autism",
+    references: ["https://vt.tiktok.com/ZSxj2koRQ/"]
+  },
+  {
+    id: "blood-tests-and-autism",
+    name: "Blood tests and autism",
+    brief: "Clarify what blood tests may investigate in clinical care and what they cannot establish about autism.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Talking head",
+    gate: "Medical research and clinical-scope review required", keywords: "blood test autism diagnosis biomarkers medical claims",
+    references: []
+  },
+  {
+    id: "autism-toy-reviews",
+    name: "Review toys",
+    brief: "Review a toy by the actual demand it creates, the skill it may support and which children may or may not enjoy it.",
+    family: "Everyday Life", stage: "Early development", use: "Reach", format: "Product review",
+    gate: "Avoid therapeutic promises and disclose any commercial relationship", keywords: "toy review play sensory motor language product",
+    references: []
+  },
+  {
+    id: "medical-advances-autism",
+    name: "Medical advances",
+    brief: "Explain one current autism-related medical research development with its study stage, limits and relevance to families.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Research update",
+    gate: "Current primary-source verification required", keywords: "medical advances research autism study evidence update",
+    references: []
+  },
+  {
+    id: "sensory-needs",
+    name: "Sensory needs",
+    brief: "Start with one lived sensory moment, explain a plausible demand and give one observation parents can make before changing the environment.",
+    family: "Everyday Life", stage: "Teen years", use: "Flagship", format: "Talking head",
+    gate: "Research verification required", keywords: "sensory needs environment sound light touch regulation",
+    references: []
+  },
+  {
+    id: "saved-inspiration-dv8",
+    name: "Saved Instagram inspiration DV8",
+    brief: "Review the saved reference, identify its transferable hook and decide whether it supports an APC episode or only a format experiment.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Reach", format: "Format study",
+    gate: "Content and claims must be reviewed first", keywords: "saved inspiration instagram hook format",
+    references: ["https://www.instagram.com/reel/DV8MZvfjyAZ/"]
+  },
+  {
+    id: "brain-explainer",
+    name: "Brain explainer",
+    brief: "Use one carefully bounded brain finding to reframe a recognisable parent moment without suggesting a scan explains one child's behaviour.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Talking head",
+    gate: "Primary research and causal-language review required", keywords: "brain neuroscience autism mechanism research",
+    references: ["https://vt.tiktok.com/ZS9vecadX/"]
+  },
+  {
+    id: "finances-and-autism",
+    name: "Finances",
+    brief: "Teach one age-appropriate money skill through a real routine such as budgeting, paying or checking change.",
+    family: "Life After School", stage: "Preparing to leave school", use: "Workshop", format: "Demonstration",
+    gate: "Research verification required", keywords: "money finances budgeting banking independence transition",
+    references: []
+  },
+  {
+    id: "autism-cafe-project",
+    name: "Autism Cafe Project",
+    brief: "Highlight the project, what opportunity it creates and what other communities can learn without turning one story into a universal outcome.",
+    family: "Life After School", stage: "Young adulthood", use: "Reach", format: "Case study",
+    gate: "Verify the organisation, people, consent and current facts", keywords: "autism cafe project employment community inclusion",
+    references: ["https://www.instagram.com/p/DWoPEbKk6xn/"]
+  },
+  {
+    id: "autism-key-individuals",
+    name: "Highlight key autistic individuals",
+    brief: "Profile an autistic person whose work, advocacy or achievement offers a useful and accurately sourced lesson.",
+    family: "Growing Up Autistic", stage: "Teen years", use: "Reach", format: "Photo post",
+    gate: "Identity, quotes, diagnosis disclosure and image rights must be verified", keywords: "autistic individuals advocate creator achievement profile",
+    references: []
+  },
+  {
+    id: "autistic-celebrities-photo-post",
+    name: "Autistic celebrities photo post",
+    brief: "Create a sourced photo post that distinguishes self-disclosure from speculation and avoids using achievement as a measure of worth.",
+    family: "Growing Up Autistic", stage: "Teen years", use: "Reach", format: "Photo post",
+    gate: "Verify self-disclosure, quotes and image rights", keywords: "autistic celebrities photo post representation identity",
+    references: ["https://vt.tiktok.com/ZSHEeTHDx/"]
+  },
+  {
+    id: "dad-built-amusement-park",
+    name: "Dad built an amusement park",
+    brief: "React to the reported story through the lens of accessibility, family problem-solving and what can be adapted at a smaller scale.",
+    family: "Everyday Life", stage: "Growing independence", use: "Reach", format: "Reaction",
+    gate: "Verify the story, consent, images and current facts", keywords: "dad amusement park autism accessibility family story",
+    references: ["https://www.instagram.com/p/DXEO_V2il52/"]
+  },
+  {
+    id: "reported-162-iq-girl",
+    name: "Reported 162 IQ autistic girl",
+    brief: "Respond carefully to the reported story while separating intelligence scores, support needs, autonomy and human worth.",
+    family: "Growing Up Autistic", stage: "Teen years", use: "Reach", format: "Reaction",
+    gate: "Verify the person, age, diagnosis disclosure, score, consent and image rights", keywords: "162 IQ autistic girl intelligence support needs profile",
+    references: ["https://www.instagram.com/p/DXTAgbKjeqJ/"]
+  },
+  {
+    id: "autism-oku-card",
+    name: "Autism and the OKU card",
+    brief: "Explain what Malaysian families may need to know about the OKU card, including purpose, process, benefits and common concerns.",
+    family: "Life After School", stage: "Teen years", use: "Authority", format: "Explainer",
+    gate: "Verify current Malaysian government rules and application details", keywords: "Malaysia OKU card autism registration benefits JKM",
+    references: []
+  },
+  {
+    id: "sports-for-autistic-children",
+    name: "Sports",
+    brief: "Show how to choose and adapt a sport around interests, motor demands, sensory load, coaching style and participation goals.",
+    family: "Everyday Life", stage: "Teen years", use: "Workshop", format: "Demonstration",
+    gate: "Research verification required", keywords: "sports exercise movement coaching sensory motor autism",
+    references: []
+  },
+  {
+    id: "activities-for-autistic-children",
+    name: "Activities suitable for autistic children",
+    brief: "Replace one-size-fits-all activity lists with a practical matching process based on interests, sensory profile, motor demands and support.",
+    family: "Everyday Life", stage: "Growing independence", use: "Workshop", format: "List",
+    gate: "Research verification required", keywords: "activities autism interests sensory motor play participation",
+    references: []
+  },
+  {
+    id: "parenting-techniques-autism",
+    name: "Applying parenting techniques to autistic children",
+    brief: "Take one common parenting technique and show what may need to change when communication, sensory or executive demands are different.",
+    family: "Understand the Behaviour", stage: "Growing independence", use: "Flagship", format: "Talking head",
+    gate: "Research verification required", keywords: "parenting techniques autism adaptation communication sensory executive function",
+    references: []
+  },
+  {
+    id: "reaction-student-speech",
+    name: "Reaction: autistic student giving a speech",
+    brief: "Respond to the speech by centring the speaker's message, agency and context rather than treating the person as inspiration.",
+    family: "Growing Up Autistic", stage: "Teen years", use: "Reach", format: "Reaction",
+    gate: "Safeguarding, consent, context and reuse-rights review required", keywords: "student speech autism reaction agency consent",
+    references: ["https://www.instagram.com/p/DW4ZMiMFsV9/"]
+  },
+  {
+    id: "reaction-first-spoken-words",
+    name: "Reaction: first spoken words",
+    brief: "Respond without implying speech is the only valid communication or using a private milestone as spectacle.",
+    family: "Make Communication Easier", stage: "Early development", use: "Reach", format: "Reaction",
+    gate: "Safeguarding, consent, context and reuse-rights review required", keywords: "first words nonspeaking communication reaction consent",
+    references: ["https://www.instagram.com/p/DXAKy2Wgu6u/"]
+  },
+  {
+    id: "reaction-jack-black-fan",
+    name: "Reaction: Jack Black meets an autistic fan",
+    brief: "Use the interaction to discuss respect, shared interests and inclusion without speculating about the fan's private experience.",
+    family: "Growing Up Autistic", stage: "Teen years", use: "Reach", format: "Reaction",
+    gate: "Verify context, consent and reuse rights", keywords: "Jack Black autistic fan reaction inclusion shared interest",
+    references: ["https://www.tiktok.com/@nextlevelsoul/video/7614328337497967885"]
+  },
+  {
+    id: "reaction-autistic-brother",
+    name: "Reaction: autistic brother",
+    brief: "Identify the actual lesson in the sibling clip while protecting dignity and avoiding burden or hero narratives.",
+    family: "Growing Up Autistic", stage: "Teen years", use: "Reach", format: "Reaction",
+    gate: "Safeguarding, consent, context and reuse-rights review required", keywords: "autistic brother sibling reaction dignity consent",
+    references: ["https://www.tiktok.com/@tysonsfanpage12/video/7612185097403370766"]
+  },
+  {
+    id: "reaction-stimming",
+    name: "Reaction: stimming",
+    brief: "Use the clip to explain what can be observed, what cannot be inferred and when safety or context changes the response.",
+    family: "Understand the Behaviour", stage: "Teen years", use: "Reach", format: "Reaction",
+    gate: "Safeguarding, consent and research review required", keywords: "stimming self regulation reaction observation safety",
+    references: ["https://vt.tiktok.com/ZS9JoNN8B/"]
+  },
+  {
+    id: "reaction-autism-1957",
+    name: "Reaction: autism in 1957",
+    brief: "Compare historical language or practice with current understanding while stating exactly what changed and what remains uncertain.",
+    family: "Authority / Evidence", stage: "Teen years", use: "Authority", format: "Reaction",
+    gate: "Historical source, context and reuse-rights verification required", keywords: "autism 1957 history language practice reaction",
+    references: ["https://www.instagram.com/reel/DVK9FRAEoWK/"]
+  },
+  {
+    id: "reaction-speaking-to-nonspeaking-person",
+    name: "Reaction: speaking to a nonspeaking person",
+    brief: "Discuss respectful communication, presumed competence and access to communication without claiming one method suits everyone.",
+    family: "Make Communication Easier", stage: "Teen years", use: "Reach", format: "Reaction",
+    gate: "Safeguarding, consent, communication-method and reuse-rights review required", keywords: "nonspeaking communication presumed competence reaction consent",
+    references: ["https://www.instagram.com/reel/DVucXonDUOh/"]
+  },
+  {
+    id: "cameras-special-needs-classrooms",
+    name: "Should classrooms have security cameras?",
+    brief: "Present the safeguarding, privacy, consent, staff and student implications of cameras in special-education classrooms without pretending there is one simple answer.",
+    family: "Make School & Learning Work", stage: "Starting school", use: "Authority", format: "Picture post",
+    gate: "Current Malaysian legal, safeguarding and privacy review required", keywords: "security cameras special education classroom safeguarding privacy Malaysia",
+    references: []
+  }
+]);

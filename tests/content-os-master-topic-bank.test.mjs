@@ -3,7 +3,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
-import { MASTER_TOPIC_BANK, MASTER_TOPIC_BANK_VERSION } from "../content-os/topic-bank.js";
+import {
+  CJ_IDEA_BACKLOG,
+  CJ_IDEA_BACKLOG_VERSION,
+  MASTER_TOPIC_BANK,
+  MASTER_TOPIC_BANK_VERSION,
+} from "../content-os/topic-bank.js";
 
 async function source(relativePath) {
   return readFile(new URL("../" + relativePath, import.meta.url), "utf8");
@@ -60,6 +65,52 @@ test("master topic bank is published with Content OS", () => {
   assert.ok(PUBLIC_FILES.includes("content-os/topic-bank.js"));
 });
 
+test("CJ idea backlog preserves new ideas as unverified inspiration", () => {
+  assert.equal(CJ_IDEA_BACKLOG_VERSION, "2026-09-06.1");
+  assert.ok(CJ_IDEA_BACKLOG.length >= 40);
+  assert.equal(new Set(CJ_IDEA_BACKLOG.map(topic => topic.id)).size, CJ_IDEA_BACKLOG.length);
+
+  const requiredIdeas = [
+    "Stem cells and autism",
+    "Opinions on ABA",
+    "Phrases that work at home",
+    "Phrases that build language",
+    "Sports",
+    "Expectations",
+    "Responsibilities at home",
+    "Applying parenting techniques to autistic children",
+    "Autism and the OKU card",
+    "Should classrooms have security cameras?",
+  ];
+  for (const name of requiredIdeas) {
+    assert.ok(CJ_IDEA_BACKLOG.some(topic => topic.name === name), name);
+  }
+
+  for (const topic of CJ_IDEA_BACKLOG) {
+    assert.match(topic.id, /^[a-z0-9-]+$/);
+    assert.ok(topic.brief.length > 20, topic.id);
+    assert.ok(topic.gate.length > 10, topic.id);
+    assert.ok(Array.isArray(topic.references), topic.id);
+    assert.ok(topic.references.every(url => /^https:\/\//.test(url)), topic.id);
+    assert.equal(Object.hasOwn(topic, "source"), false, topic.id);
+  }
+});
+
+test("CJ backlog builds a research-gated development prompt", async () => {
+  const [app, html] = await Promise.all([
+    source("content-os/app.js"),
+    source("content-os/index.html"),
+  ]);
+  assert.match(app, /ideaBacklog: CJ_IDEA_BACKLOG/);
+  assert.match(app, /function backlogTopicContext\(topic\)/);
+  assert.match(app, /verificationStatus: "research-required"/);
+  assert.match(app, /Inspiration links are not governed evidence/);
+  assert.match(app, /function buildDevelopmentPromptFromBacklog\(topic\)/);
+  assert.match(app, /buildDevelopmentPromptFromBacklog\(topic\)/);
+  assert.match(app, /RESEARCH GATE/);
+  assert.match(html, /Ready ideas \+ CJ backlog/);
+});
+
 test("idea actions build a copy-ready script prompt without another required click", async () => {
   const [app, html, episodeApp, episodeHtml] = await Promise.all([
     source("content-os/app.js"),
@@ -72,7 +123,7 @@ test("idea actions build a copy-ready script prompt without another required cli
   assert.match(app, /element\("pOutput"\)\.value = "reel";\s*buildPrompt\(\);/);
   assert.match(app, /buildScriptPromptFromTopic\(topic\.hook, topic\.stage, topic\.family, topic\.name, topic\)/);
   assert.match(app, /item\.type === "topic"[\s\S]*buildPrompt\(\);/);
-  assert.match(html, /Choose Build script prompt/);
+  assert.match(html, /Ready ideas include governed evidence/);
 
   assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode\)/);
   assert.match(episodeApp, /element\("packEpisode"\)\.value = episode\.id;/);
