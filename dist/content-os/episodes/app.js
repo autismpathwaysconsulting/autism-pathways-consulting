@@ -50,6 +50,13 @@ function episodeById(episodeId) { return workflow.episodes.find(item => item.id 
 function latestPrompt(episodeId) { return latestArtifact(episodeId, "PROMPT")?.payload || null; }
 function latestPack(episodeId) { return latestArtifact(episodeId, "PRODUCTION_PACK")?.payload || null; }
 function sourceContext(episodeId) { return latestPrompt(episodeId)?.sourceContext || episodeById(episodeId)?.productionPack?.sourceContext || null; }
+function existingEpisodeForSource(source) {
+  const topicId = source?.topic?.id || source?.researchItem?.itemId || null;
+  if (!topicId) return null;
+  const promptArtifact = workflow.artifacts.find(item => item.artifact_type === "PROMPT" &&
+    (item.payload?.sourceContext?.topic?.id === topicId || item.payload?.sourceContext?.researchItem?.itemId === topicId));
+  return promptArtifact ? episodeById(promptArtifact.episode_id) : null;
+}
 function masterIdentity() {
   return { version: MASTER_VIDEO_RULES.version, sha256: MASTER_VIDEO_RULES.sha256, sourcePath: MASTER_VIDEO_RULES.sourcePath };
 }
@@ -311,7 +318,7 @@ function episodeCard(episode) {
   heading.appendChild(title);
   heading.appendChild(node("span", "status-badge " + (episode.status === "READY" || episode.status === "PUBLISHED" ? "success" : "neutral"), episode.archived_at ? "ARCHIVED" : episode.status));
   card.appendChild(heading);
-  if (packArtifact) card.appendChild(node("p", "subtle", `HTML filming pack v${packArtifact.version} saved · Red-team ${packArtifact.redteam_status} · Hook ${packArtifact.hook_gate_status || "not set"} · ${packArtifact.final_decision || "no decision"}`));
+  if (packArtifact) card.appendChild(node("p", "subtle", `Filming pack v${packArtifact.version} saved · HTML view ready · Red-team ${packArtifact.redteam_status} · Hook ${packArtifact.hook_gate_status || "not set"} · ${packArtifact.final_decision || "no decision"}`));
   else card.appendChild(node("p", "subtle", "Prompt saved. No returned production package imported yet."));
   if (!episode.archived_at) {
     card.appendChild(node("p", "next-action", nextAction(episode, packArtifact, publications)));
@@ -492,6 +499,17 @@ function promptRecord(episode, format, notes, sourceContext) {
   };
 }
 async function createEpisodeAndBuildPrompt(episode, sourceContext) {
+  const existing = existingEpisodeForSource(sourceContext);
+  if (existing && !existing.archived_at) {
+    element("packEpisode").value = existing.id;
+    element("importEpisode").value = existing.id;
+    element("reviewEpisode").value = existing.id;
+    element("promptOutput").textContent = latestPrompt(existing.id)?.text || "The existing prompt could not be loaded.";
+    element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
+    const sourceName = sourceContext?.topic?.name || sourceContext?.researchItem?.title || existing.title;
+    setStatus("Existing episode opened", sourceName + " is already tracked as " + existing.id + ". Rebuild it as a revision instead of creating a duplicate.", "success");
+    return;
+  }
   setStatus("Saving tracked episode", "The prompt will appear after D1 confirms the episode record.", "saving");
   const format = element("packFormat").value;
   const notes = element("packNotes").value.trim();

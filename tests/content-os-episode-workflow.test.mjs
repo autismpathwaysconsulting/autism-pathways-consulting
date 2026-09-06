@@ -139,10 +139,13 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeHtml, /Film and edit from one page/);
   assert.match(episodeHtml, /Download HTML/);
   assert.match(episodeApp, /standalonePackHtml/);
+  assert.match(episodeApp, /existingEpisodeForSource/);
+  assert.match(episodeApp, /Rebuild it as a revision instead of creating a duplicate/);
   assert.match(episodeApp, /arrangeWorkflowSections/);
   assert.match(episodeApp, /History and management/);
   assert.match(episodeHtml, /archivedEpisodeList/);
   assert.match(mainApp, /arrangeContentWorkflowSections/);
+  assert.match(mainApp, /already tracks this idea/);
   assert.match(mainHtml, /Publish \+ schedule analytics/);
   assert.match(mainHtml, /id="trackPublicationButton"/);
   assert.match(mainHtml, /Step 1 · Ready ideas \+ CJ backlog/);

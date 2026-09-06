@@ -3534,6 +3534,22 @@ async function createTrackedEpisodePrompt() {
     instruction: "Verify material claims and do not invent a statistic or source.",
     promptSeed: topic,
   };
+  const sourceTopicId = sourceContext?.topic?.id || sourceContext?.researchItem?.itemId || null;
+  const existingArtifact = sourceTopicId ? (overview.artifacts || []).find(function (item) {
+    return item.artifact_type === "PROMPT" &&
+      (item.payload?.sourceContext?.topic?.id === sourceTopicId || item.payload?.sourceContext?.researchItem?.itemId === sourceTopicId);
+  }) : null;
+  const existingEpisode = existingArtifact ? (overview.episodes || []).find(function (item) { return item.id === existingArtifact.episode_id && !item.archived_at; }) : null;
+  if (existingEpisode) {
+    episodeWorkflowState = overview;
+    renderContentWorkflow();
+    element("promptText").textContent = existingArtifact.payload.text;
+    element("trackedEpisodeNotice").textContent = existingEpisode.id + " already tracks this idea. Its saved prompt was reopened instead of creating a duplicate.";
+    element("trackedEpisodeLink").href = "/content-os/episodes/?episode=" + encodeURIComponent(existingEpisode.id) + "#pack";
+    element("builtPrompt").hidden = false;
+    scrollToNode(element("builtPrompt"), "nearest");
+    return;
+  }
   const payload = {
     action: "create_tracked_prompt",
     episode: { id: episodeId, title: title, researchItemId: null },
