@@ -8,7 +8,7 @@ async function textFile(relativePath) {
 }
 
 test("Content OS HTML uses external CSS and module JavaScript only", async () => {
-  for (const path of ["content-os/index.html", "content-os/episodes/index.html"]) {
+  for (const path of ["content-os/index.html", "content-os/episodes/index.html", "content-os/practice/index.html", "content-os/calm-feedback/index.html"]) {
     const html = await textFile(path);
     assert.match(html, /<link\b[^>]*href=["'](?:\/content-os\/|\.\/)?app\.css["'][^>]*>/i);
     assert.match(html, /<script\b[^>]*type=["']module["'][^>]*src=["'][^"']+\.js["'][^>]*><\/script>/i);
@@ -18,7 +18,7 @@ test("Content OS HTML uses external CSS and module JavaScript only", async () =>
 });
 
 test("Content OS source has no inline event or style attributes", async () => {
-  for (const path of ["content-os/index.html", "content-os/episodes/index.html"]) {
+  for (const path of ["content-os/index.html", "content-os/episodes/index.html", "content-os/practice/index.html", "content-os/calm-feedback/index.html"]) {
     const html = await textFile(path);
     assert.doesNotMatch(html, /\son[a-z]+\s*=/i);
     assert.doesNotMatch(html, /\sstyle\s*=/i);
@@ -46,19 +46,18 @@ test("preview cannot share the production D1 database", async () => {
   assert.equal(preview?.vars?.APC_CONTENT_OS_ENVIRONMENT, "preview");
   assert.equal(production?.vars?.APC_CONTENT_OS_PREVIEW_AUTH_ENABLED, "false");
   assert.equal(preview?.vars?.APC_CONTENT_OS_AUTOMATION_ENABLED, "false");
-  assert.equal(production?.d1_databases?.length, 1);
+  assert.equal(production?.d1_databases?.length, 2);
 
-  const productionId = production.d1_databases[0].database_id;
-  const productionName = production.d1_databases[0].database_name;
-  assert.ok(productionId);
-  assert.ok(productionName);
-
-  for (const binding of preview?.d1_databases || []) {
-    assert.notEqual(binding.database_id, productionId);
-    assert.notEqual(binding.database_name, productionName);
-  }
-  for (const binding of config.d1_databases || []) {
-    assert.notEqual(binding.database_id, productionId, "default/local config must not silently bind production D1");
+  for (const productionBinding of production.d1_databases) {
+    assert.ok(productionBinding.database_id);
+    assert.ok(productionBinding.database_name);
+    for (const binding of preview?.d1_databases || []) {
+      assert.notEqual(binding.database_id, productionBinding.database_id);
+      assert.notEqual(binding.database_name, productionBinding.database_name);
+    }
+    for (const binding of config.d1_databases || []) {
+      assert.notEqual(binding.database_id, productionBinding.database_id, "default/local config must not silently bind production D1");
+    }
   }
 });
 

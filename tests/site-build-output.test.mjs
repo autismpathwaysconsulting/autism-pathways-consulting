@@ -77,6 +77,10 @@ test("site build emits exactly the public allowlist", async () => {
       "content-os/topic-bank.js",
       "content-os/episodes/index.html",
       "content-os/episodes/app.js",
+      "content-os/practice/index.html",
+      "content-os/practice/app.js",
+      "content-os/calm-feedback/index.html",
+      "content-os/calm-feedback/app.js",
     ]) {
       assert.equal((await lstat(join(result.output, ...required.split("/")))).isFile(), true);
     }

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Practice Console | APC Content OS</title>
+  <link rel="stylesheet" href="/content-os/app.css">
+  <script type="module" src="/content-os/practice/app.js"></script>
+</head>
+<body class="operator-page">
+  <a class="skip-link" href="#main-content">Skip to Practice Console</a>
+  <header class="app-header">
+    <div class="shell header-layout">
+      <div>
+        <p class="eyebrow">Private APC operator tool</p>
+        <h1>Practice Console <span class="version-mark">cloud</span></h1>
+        <p class="header-summary">Prepare, run and document RM350 and RM1,800 parent work from one protected record.</p>
+        <div class="button-row quick-launch-row" aria-label="Quick launch links">
+          <a class="button secondary compact" href="/content-os/">Content OS</a>
+          <a class="button secondary compact" href="/content-os/episodes/">Episode Studio</a>
+          <a class="button secondary compact" href="/content-os/calm-feedback/">Calm feedback</a>
+        </div>
+      </div>
+      <div class="sync-panel" role="status" aria-live="polite">
+        <div id="practiceStatus" class="sync-status">Loading protected records</div>
+        <div id="practiceDetail" class="sync-detail">Client information is never built into the public files.</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="section-nav" aria-label="Practice Console sections">
+    <div class="shell nav-scroll">
+      <a href="#today" aria-current="location">Today</a>
+      <a href="#clients">Clients</a>
+      <a href="#workspace">Meeting workspace</a>
+      <a href="#exports">Exports</a>
+      <a href="#history">History</a>
+    </div>
+  </nav>
+
+  <main id="main-content" class="shell main-content" tabindex="-1">
+    <section id="today" class="page-section" aria-labelledby="today-title">
+      <div class="section-heading">
+        <div><p class="section-kicker">Start here</p><h2 id="today-title">Today</h2><p class="section-summary">Records needing verification, session documentation and approved exports stay visible.</p></div>
+        <button id="showNewClient" class="button" type="button">Add new client</button>
+      </div>
+      <div id="practiceMetrics" class="metric-grid" aria-label="Practice workflow summary"></div>
+      <aside id="practiceWriteNotice" class="card scope-card"><strong>Human decision boundary:</strong> The console organises information and drafts. CJ decides suitability, interpretation, approval, referral and what is shared with a parent.</aside>
+    </section>
+
+    <section id="newClientPanel" class="page-section" aria-labelledby="new-client-title" hidden>
+      <div class="section-heading"><div><p class="section-kicker">New record</p><h2 id="new-client-title">Create a client workspace</h2><p class="section-summary">Use minimum necessary information. The system generates an opaque case ID.</p></div><button id="cancelNewClient" class="button secondary" type="button">Cancel</button></div>
+      <form id="newClientForm" class="card operator-form">
+        <div class="form-grid">
+          <label>Parent or client name<input name="displayName" maxlength="200" required autocomplete="off"></label>
+          <label>Child age<input name="childAge" type="number" min="0" max="25"></label>
+          <label>Region<input name="region" maxlength="200" value="Malaysia" required autocomplete="off"></label>
+          <label>Service<select name="serviceCode"><option value="TBD">To be confirmed</option><option value="RM350">RM350</option><option value="RM1800">RM1,800</option><option value="CUSTOM">Current custom programme</option></select></label>
+          <label class="span-two">Main concern<textarea name="concern" maxlength="4000" rows="3" required></textarea></label>
+          <label>Current stage<select name="stage"><option value="RECORD_REVIEW_REQUIRED">Record needs review</option><option value="FIT_REVIEW">Fit review</option><option value="APPROVED_TO_PAY">Approved to pay</option><option value="PAYMENT_VERIFIED">Payment verified</option><option value="BOOKED">Booked</option><option value="PREPARATION">Preparation</option><option value="SESSION_READY">Session ready</option><option value="IN_SESSION">In session</option><option value="DOCUMENTATION_DRAFT">Documentation draft</option><option value="CJ_APPROVED">CJ approved</option><option value="DELIVERED">Delivered</option><option value="COMPLETE">Complete</option><option value="PAUSED">Paused</option></select></label>
+          <label>Source status<select name="sourceStatus"><option value="UNVERIFIED">Unverified</option><option value="PARENT_REPORTED">Parent reported</option><option value="CJ_VERIFIED">CJ verified</option></select></label>
+          <label class="span-two">Next action<textarea name="nextAction" maxlength="4000" rows="2" required>Confirm the current information and next valid action.</textarea></label>
+          <label>Known facts <span>one per line</span><textarea name="knownFacts" rows="4"></textarea></label>
+          <label>Questions to confirm <span>one per line</span><textarea name="openQuestions" rows="4"></textarea></label>
+          <label class="span-two">Boundaries or safety notes <span>one per line</span><textarea name="boundaryFlags" rows="3"></textarea></label>
+          <label class="span-two">Reason for creating this record<input name="reason" maxlength="500" required value="New client workspace created by CJ"></label>
+        </div>
+        <button class="button" type="submit">Create protected record</button>
+      </form>
+    </section>
+
+    <section id="clients" class="page-section" aria-labelledby="clients-title">
+      <div class="section-heading"><div><p class="section-kicker">One source of truth</p><h2 id="clients-title">Clients</h2><p class="section-summary">Select a family to update the record, prepare the next meeting or complete documents.</p></div><button id="refreshPractice" class="button secondary" type="button">Refresh</button></div>
+      <div id="clientList" class="operator-list" aria-live="polite"></div>
+    </section>
+
+    <section id="workspace" class="page-section" aria-labelledby="workspace-title">
+      <div class="section-heading"><div><p class="section-kicker">Pre to post meeting</p><h2 id="workspace-title">Meeting workspace</h2><p id="workspaceSummary" class="section-summary">Choose a client to begin.</p></div><button id="addSession" class="button" type="button" disabled>Add session</button></div>
+      <div id="clientWorkspace" class="operator-workspace"></div>
+      <div id="sessionWorkspace" class="operator-workspace"></div>
+    </section>
+
+    <section id="exports" class="page-section" aria-labelledby="exports-title">
+      <div class="section-heading"><div><p class="section-kicker">Versioned parent documents</p><h2 id="exports-title">Local and Drive archive</h2><p class="section-summary">Only CJ-approved summaries and action plans can be exported. Drive copies are one-way snapshots, not a second database.</p></div></div>
+      <div id="exportList" class="operator-list"></div>
+    </section>
+
+    <section id="history" class="page-section" aria-labelledby="history-title">
+      <div class="section-heading"><div><p class="section-kicker">Append-only record</p><h2 id="history-title">Activity history</h2><p class="section-summary">Every client and session revision remains traceable without exposing private note snapshots in this list.</p></div></div>
+      <div id="activityList" class="operator-list" aria-live="polite"></div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
