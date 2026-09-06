@@ -6,6 +6,9 @@ _local_backups/
 .dev.vars
 .dev.vars.*
 .wrangler/
-dist/
+dist/*
+!dist/content-os/
+dist/content-os/*
+!dist/content-os/topic-bank.js
 node_modules/
 __pycache__/
