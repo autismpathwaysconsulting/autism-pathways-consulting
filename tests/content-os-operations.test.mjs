@@ -227,3 +227,17 @@ test("Practice Console preserves legacy CUSTOM visibly until CJ reclassifies it"
   assert.doesNotMatch(source, /serviceOptions = \["TBD", "RM350", "RM1800", "CUSTOM"\]/);
   assert.match(await readFile(new URL("../functions/api/content-os/practice/index.js", import.meta.url), "utf8"), /Legacy CUSTOM cases must be explicitly reclassified as RM350 or RM1,800/);
 });
+
+test("Practice Console can prepare a privacy-minimised chat intake without saving it", async () => {
+  const page = await readFile(new URL("../content-os/practice/index.html", import.meta.url), "utf8");
+  const source = await readFile(new URL("../content-os/practice/app.js", import.meta.url), "utf8");
+  assert.match(page, /id="copyClientIntakePrompt"/);
+  assert.match(page, /id="clientIntakePromptPreview"/);
+  assert.match(page, /id="clientDraftJson"/);
+  assert.match(page, /Nothing is saved until you review/);
+  assert.match(source, /Ask one short question at a time/);
+  assert.match(source, /create one family workspace, not duplicate client records/);
+  assert.match(source, /Do not ask for phone numbers, email addresses/);
+  assert.match(source, /Draft loaded for review\. Nothing has been saved\./);
+  assert.match(source, /element\("saveNewClient"\)\.disabled = !enabled/);
+});
