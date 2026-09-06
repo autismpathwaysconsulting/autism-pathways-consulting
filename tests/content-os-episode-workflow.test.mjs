@@ -146,7 +146,15 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /existingEpisodeForSource/);
   assert.match(episodeApp, /Rebuild it as a revision instead of creating a duplicate/);
   assert.match(episodeApp, /arrangeWorkflowSections/);
-  assert.match(episodeApp, /History and management/);
+  assert.match(episodeApp, /Edit title and view history/);
+  assert.match(episodeApp, /Possible duplicate/);
+  assert.match(episodeApp, /Archive duplicate/);
+  assert.match(episodeApp, /Download \.md archive/);
+  assert.match(episodeApp, /episodeMarkdownArchive/);
+  assert.match(episodeApp, /Content OS does not store uploaded or exported video files/);
+  assert.match(episodeHtml, /Cloud record here, video files on your SSD/);
+  assert.match(episodeHtml, /Practice Console/);
+  assert.match(episodeHtml, /Calm feedback inbox/);
   assert.match(episodeHtml, /archivedEpisodeList/);
   assert.match(mainApp, /arrangeContentWorkflowSections/);
   assert.match(mainApp, /already tracks this idea/);
