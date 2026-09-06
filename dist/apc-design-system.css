@@ -2620,6 +2620,7 @@ html.apc-home-snap {
 @media (max-width: 640px) {
   .apc-home-page .hero-grid {
     gap: 10px !important;
+    margin-block: 10px 0;
   }
 
   .apc-home-page .hero-copy h1 {
@@ -4218,6 +4219,138 @@ html {
 
 .apc-choice-carousel.is-enhanced [data-carousel-track] > [data-carousel-slide][hidden] {
   display: none !important;
+}
+
+/* Hero artwork clarity and reliable mobile section stops */
+.apc-home-page .hero-visual .hero-approach {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 100%;
+  margin-top: 12px;
+  padding: 18px 22px !important;
+  border-radius: 20px;
+}
+
+.apc-home-page .hero-visual .hero-approach .eyebrow {
+  margin-bottom: 6px !important;
+}
+
+.apc-home-page .hero-visual .hero-approach h2 {
+  max-width: 23ch;
+  font-size: clamp(1.35rem, min(1.75vw, 2.8vh), 1.65rem) !important;
+}
+
+@media (max-width: 900px) {
+  .apc-home-page .hero-visual .hero-approach {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  html.apc-home-snap,
+  html.apc-site-snap {
+    scroll-padding-top: 94px !important;
+    scroll-snap-type: y mandatory !important;
+  }
+
+  .apc-home-page {
+    --apc-home-header: 94px;
+  }
+
+  .apc-v2 .apc-shell-inner {
+    padding-block: 5px;
+    gap: 0 12px;
+  }
+
+  .apc-v2 .apc-shell-logo img {
+    height: 34px;
+  }
+
+  .apc-v2 .apc-shell-start {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
+
+  .apc-v2 .apc-shell-nav a {
+    min-height: 36px;
+    font-size: .74rem !important;
+  }
+
+  .apc-home-page main > section {
+    min-height: calc(100svh - var(--apc-home-header));
+  }
+
+  .apc-tier-a.apc-home-page main > .hero {
+    height: calc(100svh - var(--apc-home-header));
+    min-height: 560px;
+    align-items: start;
+    padding-block: 14px !important;
+  }
+
+  .apc-home-page .hero-grid {
+    gap: 10px !important;
+  }
+
+  .apc-home-page .hero-copy .eyebrow {
+    margin-bottom: 6px;
+    font-size: .68rem;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    max-width: none !important;
+    margin-bottom: 10px !important;
+    font-size: clamp(1.82rem, 8.5vw, 2.12rem) !important;
+    line-height: 1 !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    margin-bottom: 0;
+    font-size: .9rem !important;
+    line-height: 1.36 !important;
+  }
+
+  .apc-home-page .hero-actions {
+    gap: 10px !important;
+    margin-top: 10px !important;
+  }
+
+  .apc-home-page .hero-actions .button {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: .74rem;
+  }
+
+  .apc-home-page .hero-actions .text-action {
+    font-size: .78rem;
+  }
+
+  .apc-home-page .hero-visual {
+    height: clamp(185px, 26svh, 220px);
+  }
+
+  .apc-home-page .hero-visual img {
+    object-position: center 70%;
+  }
+}
+
+@media (max-width: 640px) and (max-height: 700px) {
+  .apc-tier-a.apc-home-page main > .hero {
+    min-height: calc(100svh - var(--apc-home-header));
+    padding-block: 10px !important;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    font-size: 1.68rem !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    font-size: .82rem !important;
+  }
+
+  .apc-home-page .hero-visual {
+    height: 104px;
+  }
 }
 
 /* Fluid page navigation and compact choice carousels */
