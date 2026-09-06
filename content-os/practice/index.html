@@ -47,6 +47,28 @@
       </div>
       <div id="practiceMetrics" class="metric-grid" aria-label="Practice workflow summary"></div>
       <aside id="practiceWriteNotice" class="card scope-card"><strong>Human decision boundary:</strong> The console organises information and drafts. CJ decides suitability, interpretation, approval, referral and what is shared with a parent.</aside>
+      <aside class="card intake-helper" aria-labelledby="chat-intake-title">
+        <div class="card-heading">
+          <div>
+            <p class="card-label">Fill gaps without guessing</p>
+            <h3 id="chat-intake-title">Ask for client information in chat</h3>
+            <p class="section-summary">Copy a privacy-minimised prompt, answer one question at a time, then paste the returned JSON here. Nothing is saved until you review the populated form and submit it.</p>
+          </div>
+          <button id="copyClientIntakePrompt" class="button secondary compact" type="button">Copy chat prompt</button>
+        </div>
+        <details class="intake-import">
+          <summary>View prompt or paste structured chat response</summary>
+          <label for="clientIntakePromptPreview">Chat prompt</label>
+          <textarea id="clientIntakePromptPreview" rows="12" readonly></textarea>
+          <label for="clientDraftJson">Client record JSON</label>
+          <textarea id="clientDraftJson" class="package-json" rows="12" spellcheck="false" placeholder="Paste the final JSON object from chat here."></textarea>
+          <div class="button-row">
+            <button id="reviewClientDraft" class="button secondary" type="button">Review in client form</button>
+            <button id="clearClientDraft" class="button secondary" type="button">Clear</button>
+          </div>
+          <p class="field-help">Importing fills the form only. It does not create or update a cloud record.</p>
+        </details>
+      </aside>
     </section>
 
     <section id="newClientPanel" class="page-section" aria-labelledby="new-client-title" hidden>
@@ -66,7 +88,7 @@
           <label class="span-two">Boundaries or safety notes <span>one per line</span><textarea name="boundaryFlags" rows="3"></textarea></label>
           <label class="span-two">Reason for creating this record<input name="reason" maxlength="500" required value="New client workspace created by CJ"></label>
         </div>
-        <button class="button" type="submit">Create protected record</button>
+        <button id="saveNewClient" class="button" type="submit">Create protected record</button>
       </form>
     </section>
 
