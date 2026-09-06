@@ -4221,6 +4221,153 @@ html {
   display: none !important;
 }
 
+/* About contrast correction and Resources visual composition */
+.apc-about-page .work-step {
+  color: rgba(255, 255, 255, .82) !important;
+}
+
+.apc-about-page .work-step strong {
+  color: #fff !important;
+}
+
+.apc-resources-page .resource-hero .wrap {
+  display: grid;
+  min-height: calc(100svh - 168px);
+  grid-template-columns: minmax(0, .78fr) minmax(420px, 1.22fr);
+  gap: clamp(48px, 7vw, 100px);
+  align-items: center;
+}
+
+.apc-resources-page .resource-hero-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.apc-resources-page .resource-hero-copy > p:last-child {
+  max-width: 34ch;
+}
+
+.apc-resources-page .resource-visual {
+  position: relative;
+  width: min(100%, 650px);
+  justify-self: end;
+  isolation: isolate;
+}
+
+.apc-resources-page .resource-visual picture {
+  display: block;
+  overflow: hidden;
+  background: #fff8ef;
+  border: 1px solid rgba(7, 55, 52, .1);
+  border-radius: 42px 42px 120px 42px;
+  box-shadow: 0 34px 80px rgba(7, 55, 52, .14);
+}
+
+.apc-resources-page .resource-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 65%;
+}
+
+.apc-resources-page .resource-signal {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  border: 5px solid rgba(255, 255, 255, .82);
+  border-radius: 50%;
+  box-shadow: 0 16px 36px rgba(7, 55, 52, .18);
+  animation: apc-resource-float 5.8s ease-in-out infinite;
+}
+
+.apc-resources-page .resource-signal-one {
+  top: -24px;
+  right: 15%;
+  width: 78px;
+  height: 78px;
+  background: var(--apc-coral);
+}
+
+.apc-resources-page .resource-signal-two {
+  right: -20px;
+  bottom: 19%;
+  width: 54px;
+  height: 54px;
+  background: var(--apc-bright-teal);
+  animation-delay: -1.9s;
+}
+
+.apc-resources-page .resource-signal-three {
+  bottom: -18px;
+  left: 18%;
+  width: 64px;
+  height: 64px;
+  background: var(--apc-sage);
+  animation-delay: -3.6s;
+}
+
+@keyframes apc-resource-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+  50% { transform: translate3d(0, -10px, 0) rotate(4deg); }
+}
+
+@media (max-width: 900px) {
+  .apc-resources-page .resource-hero .wrap {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .apc-resources-page .resource-hero-copy > p:last-child {
+    max-width: 54ch;
+  }
+
+  .apc-resources-page .resource-visual {
+    width: min(100%, 620px);
+    justify-self: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .apc-resources-page .resource-hero .wrap {
+    gap: 22px;
+  }
+
+  .apc-resources-page .resource-visual picture {
+    border-radius: 24px 24px 68px 24px;
+  }
+
+  .apc-resources-page .resource-visual img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .apc-resources-page .resource-signal-one {
+    top: -12px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .apc-resources-page .resource-signal-two {
+    right: -8px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .apc-resources-page .resource-signal-three {
+    bottom: -10px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apc-resources-page .resource-signal {
+    animation: none !important;
+  }
+}
+
 /* Hero artwork clarity and reliable mobile section stops */
 .apc-home-page .hero-visual .hero-approach {
   position: relative;
