@@ -388,6 +388,22 @@ h3 {
 
 .calendar-grid { margin-top: 14px; }
 
+.topic-group-heading {
+  grid-column: 1 / -1;
+  margin: 12px 0 0;
+  padding: 4px 2px;
+}
+
+.topic-group-heading p { margin: 0; }
+.topic-group-heading .subtle { margin-top: 3px; }
+.idea-backlog-card { border-color: var(--sage); }
+
+.topic-references {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .calendar-card,
 .topic,
 .topic-card,

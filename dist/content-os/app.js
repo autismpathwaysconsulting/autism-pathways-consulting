@@ -20,7 +20,12 @@ import {
   validateAnalyticsSubmission,
 } from "./analytics.js";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "./video-rules.js";
-import { MASTER_TOPIC_BANK, MASTER_TOPIC_BANK_VERSION } from "./topic-bank.js";
+import {
+  CJ_IDEA_BACKLOG,
+  CJ_IDEA_BACKLOG_VERSION,
+  MASTER_TOPIC_BANK,
+  MASTER_TOPIC_BANK_VERSION,
+} from "./topic-bank.js";
 
 const DATA = {
   families:[
@@ -37,7 +42,8 @@ const DATA = {
     "Their body is changing","Friends, boundaries and relationships","My child isn’t little anymore",
     "What happens after school?","Everyone tells me something different","What about the future?"
   ],
-  topics: MASTER_TOPIC_BANK
+  topics: MASTER_TOPIC_BANK,
+  ideaBacklog: CJ_IDEA_BACKLOG
 };
 
 const STORAGE = Object.freeze({
@@ -1243,6 +1249,26 @@ function masterTopicContext(topic) {
   };
 }
 
+function backlogTopicContext(topic) {
+  if (!topic) return null;
+  return {
+    type: "user-idea-backlog",
+    ideaBacklogVersion: CJ_IDEA_BACKLOG_VERSION,
+    verificationStatus: "research-required",
+    topic: {
+      id: topic.id,
+      name: topic.name,
+      brief: topic.brief,
+      format: topic.format,
+      gate: topic.gate,
+    },
+    sources: [],
+    limitations: [topic.gate, "Inspiration links are not governed evidence and must not be quoted as factual sources."],
+    inspirationLinks: structuredClone(topic.references),
+    promptSeed: topic.brief,
+  };
+}
+
 function topicBankMatchByHook(hook) {
   const normalisedHook = text(hook).trim();
   return DATA.topics.find(function (topic) { return topic.hook === normalisedHook; }) || null;
@@ -1262,6 +1288,18 @@ function useTopic(topic, stage, family, area, bankTopic) {
 
 function buildScriptPromptFromTopic(topic, stage, family, area, bankTopic) {
   useTopic(topic, stage, family, area, bankTopic);
+  element("pOutput").value = "reel";
+  buildPrompt();
+}
+
+function buildDevelopmentPromptFromBacklog(topic) {
+  clearSelectedResearchContext();
+  selectedResearchContext = backlogTopicContext(topic);
+  renderSelectedResearchContext();
+  element("pTopic").value = topic.brief;
+  element("pArea").value = topic.name;
+  if (DATA.stages.includes(topic.stage)) element("pStage").value = topic.stage;
+  if (DATA.families.includes(topic.family)) element("pFamily").value = topic.family;
   element("pOutput").value = "reel";
   buildPrompt();
 }
@@ -1424,24 +1462,31 @@ function renderCalendar() {
   });
 }
 
-function filteredTopics() {
+function topicMatchesFilters(topic) {
   const query = text(element("topicSearch").value).trim().toLowerCase();
   const family = element("familyFilter").value;
   const stage = element("stageFilter").value;
   const use = element("useFilter").value;
-  return DATA.topics.filter(function (topic) {
-    const searchable = [
-      topic.name, topic.hook, topic.overlay, topic.parentMoment, topic.tension,
-      topic.practicalPayoff, topic.family, topic.stage, topic.use, topic.keywords,
-      topic.source && topic.source.title,
-    ]
-      .join(" ")
-      .toLowerCase();
-    return (!query || searchable.includes(query)) &&
-      (!family || topic.family === family) &&
-      (!stage || topic.stage === stage) &&
-      (!use || topic.use === use);
-  });
+  const searchable = [
+    topic.name, topic.hook, topic.brief, topic.overlay, topic.parentMoment, topic.tension,
+    topic.practicalPayoff, topic.family, topic.stage, topic.use, topic.format, topic.gate,
+    topic.keywords, topic.source && topic.source.title,
+    ...(Array.isArray(topic.references) ? topic.references : []),
+  ]
+    .join(" ")
+    .toLowerCase();
+  return (!query || searchable.includes(query)) &&
+    (!family || topic.family === family) &&
+    (!stage || topic.stage === stage) &&
+    (!use || topic.use === use);
+}
+
+function filteredTopics() {
+  return DATA.topics.filter(topicMatchesFilters);
+}
+
+function filteredIdeaBacklog() {
+  return DATA.ideaBacklog.filter(topicMatchesFilters);
 }
 
 function renderTopics() {
@@ -1449,9 +1494,17 @@ function renderTopics() {
   if (!grid) return;
   clearNode(grid);
   const topics = filteredTopics();
-  if (!topics.length) {
+  const backlog = filteredIdeaBacklog();
+  if (!topics.length && !backlog.length) {
     grid.appendChild(makeNode("div", "empty-state", "No topics match these filters."));
     return;
+  }
+
+  if (topics.length) {
+    const heading = makeNode("div", "topic-group-heading");
+    heading.appendChild(makeNode("p", "card-label", "Ready to develop"));
+    heading.appendChild(makeNode("p", "subtle", topics.length + " master-aligned idea(s) with governed evidence."));
+    grid.appendChild(heading);
   }
 
   topics.forEach(function (topic) {
@@ -1483,6 +1536,51 @@ function renderTopics() {
     actions.appendChild(makeButton("Add to plan", "plan-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add analytics", "log-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Send to book", "book-bank-topic", "button secondary compact", { index: originalIndex }));
+    card.appendChild(actions);
+    grid.appendChild(card);
+  });
+
+  if (backlog.length) {
+    const heading = makeNode("div", "topic-group-heading");
+    heading.appendChild(makeNode("p", "card-label", "CJ idea backlog"));
+    heading.appendChild(makeNode("p", "subtle", backlog.length + " saved idea(s). Inspiration links are not evidence."));
+    grid.appendChild(heading);
+  }
+
+  backlog.forEach(function (topic) {
+    const originalIndex = DATA.ideaBacklog.indexOf(topic);
+    const card = makeNode("article", "topic-card idea-backlog-card");
+    card.appendChild(makeNode("p", "card-label", topic.name));
+    card.appendChild(makeNode("blockquote", "topic-hook", topic.brief));
+    const labels = makeNode("div", "pill-row");
+    appendPill(labels, "CJ backlog " + CJ_IDEA_BACKLOG_VERSION, "gold");
+    appendPill(labels, topic.family);
+    appendPill(labels, topic.stage, "gold");
+    appendPill(labels, topic.format, "coral");
+    card.appendChild(labels);
+
+    const gate = makeNode("div", "topic-recipe");
+    gate.appendChild(makeNode("p", "topic-detail", "Gate: " + topic.gate + "."));
+    gate.appendChild(makeNode("p", "topic-detail", "The master hook, evidence and safety rules still apply before filming."));
+    card.appendChild(gate);
+
+    if (topic.references.length) {
+      const references = makeNode("div", "topic-references");
+      topic.references.forEach(function (url, index) {
+        const link = makeNode("a", "topic-source", "Open inspiration" + (topic.references.length > 1 ? " " + (index + 1) : ""));
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        references.appendChild(link);
+      });
+      card.appendChild(references);
+    }
+
+    const actions = makeNode("div", "actions");
+    actions.appendChild(makeButton("Build development prompt", "use-backlog-topic", "button compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Add to plan", "plan-backlog-topic", "button secondary compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Add analytics", "log-backlog-topic", "button secondary compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Send to book", "book-backlog-topic", "button secondary compact", { index: originalIndex }));
     card.appendChild(actions);
     grid.appendChild(card);
   });
@@ -3030,10 +3128,11 @@ function updateWinnerHookCheck() {
 }
 
 function renderMasterVideoRulesStatus() {
-  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " and teen idea bank active";
+  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " and episode ideas active";
   element("masterRulesDetail").textContent =
     "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) +
-    ". Idea bank " + MASTER_TOPIC_BANK_VERSION + " carries its source into the prompt. Old HTML boards and previous rule copies are excluded.";
+    ". Ready bank " + MASTER_TOPIC_BANK_VERSION + " carries governed evidence. CJ backlog " + CJ_IDEA_BACKLOG_VERSION +
+    " keeps inspiration separate until research is verified. Old HTML boards and previous rule copies are excluded.";
 }
 
 function buildPrompt() {
@@ -3091,6 +3190,17 @@ function buildPrompt() {
     "- Medication stays with prescribers.",
     "- Do not use em dashes.",
   ];
+
+  if (selectedResearchContext && selectedResearchContext.verificationStatus === "research-required") {
+    header.push(
+      "",
+      "RESEARCH GATE",
+      "- Research verification is required before producing a final factual script.",
+      "- Treat every saved social link as inspiration only, not as evidence.",
+      "- Verify material claims with suitable current sources and preserve scope limits.",
+      "- If no defensible statistic or specific number exists, return REVISE and do not invent one."
+    );
+  }
 
   if (isEpisodeDevelopment) {
     header.push(
@@ -3587,6 +3697,14 @@ function handleClick(event) {
     if (action === "plan-bank-topic") prefillPlanForm(topic.hook, topic.name, topic.family, topic.stage, "");
     if (action === "log-bank-topic") logTopic(topic.hook, topic.name, topic.family, "");
     if (action === "book-bank-topic") sendTopicToBook(topic.hook, topic.stage, topic.family, topic.name);
+  } else if (action === "use-backlog-topic" || action === "plan-backlog-topic" ||
+      action === "log-backlog-topic" || action === "book-backlog-topic") {
+    const topic = DATA.ideaBacklog[Number(control.dataset.index)];
+    if (!topic) return;
+    if (action === "use-backlog-topic") buildDevelopmentPromptFromBacklog(topic);
+    if (action === "plan-backlog-topic") prefillPlanForm(topic.brief, topic.name, topic.family, topic.stage, "");
+    if (action === "log-backlog-topic") logTopic(topic.brief, topic.name, topic.family, "");
+    if (action === "book-backlog-topic") sendTopicToBook(topic.name, topic.stage, topic.family, topic.brief);
   } else if (action === "clear-analytics") {
     clearAnalyticsForm();
   } else if (action === "discard-queued-analytics") {
