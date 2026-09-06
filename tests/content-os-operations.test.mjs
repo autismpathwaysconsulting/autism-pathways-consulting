@@ -49,6 +49,7 @@ test("Practice Console accepts controlled client, session and export actions", (
     { action: "prepare_export", sessionId, destination: "LOCAL" },
     { action: "prepare_export", sessionId, destination: "GOOGLE_DRIVE" },
     { action: "confirm_drive_export", exportId: sessionId, providerFileId: "synthetic-drive-file-id" },
+    { action: "mark_delivered", sessionId, expectedRevision: 2 },
   ]) assert.equal(validatePracticeAction(payload), null, payload.action);
 });
 
@@ -58,6 +59,8 @@ test("Practice Console rejects unsafe or incomplete writes", () => {
   assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-1234-1234-123456789abc", expectedRevision: 1, session: session({ documentStatus: "CJ_APPROVED", parentSummary: "" }) }), /requires both/i);
   assert.match(validatePracticeAction({ action: "prepare_export", sessionId: "12345678-1234-1234-1234-123456789abc", destination: "PUBLIC" }), /invalid/i);
   assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-1234-1234-123456789abc", expectedRevision: 1, session: session({ documentStatus: "DELIVERED" }) }), /recorded export workflow/i);
+  assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-02-30" }), /date/i);
+  assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-99-99TZZZ" }), /date/i);
 });
 
 test("Calm inbox accepts only controlled triage records", () => {
@@ -78,6 +81,7 @@ test("practice and Calm workflows are private build assets with durable schemas"
     "functions/api/content-os/practice/index.js",
     "functions/api/content-os/calm-feedback/index.js",
     "migrations/0007_practice_and_feedback_workflows.sql",
+    "migrations/0008_workflow_concurrency_hardening.sql",
   ]) assert.ok(!PUBLIC_FILES.includes(path), path);
 
   const migration = await readFile(new URL("../migrations/0007_practice_and_feedback_workflows.sql", import.meta.url), "utf8");
@@ -85,6 +89,9 @@ test("practice and Calm workflows are private build assets with durable schemas"
   assert.match(migration, /practice_client_revisions is append-only/);
   assert.match(migration, /practice_session_revisions is append-only/);
   assert.match(migration, /calm_feedback_triage_events is append-only/);
+  const hardening = await readFile(new URL("../migrations/0008_workflow_concurrency_hardening.sql", import.meta.url), "utf8");
+  assert.match(hardening, /UNIQUE INDEX IF NOT EXISTS idx_calm_feedback_triage_events_revision/);
+  assert.match(hardening, /calm feedback triage revision conflict/);
 
   const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
   const productionBindings = config.env.production.d1_databases.map((item) => item.binding);
@@ -95,7 +102,7 @@ test("practice and Calm workflows are private build assets with durable schemas"
 test("all Content OS migrations apply together and keep workflow history append-only", async () => {
   const database = new DatabaseSync(":memory:");
   try {
-    for (let number = 1; number <= 7; number += 1) {
+    for (let number = 1; number <= 8; number += 1) {
       const names = [
         "0001_content_os_state.sql",
         "0002_content_os_v23_hardening.sql",
@@ -104,6 +111,7 @@ test("all Content OS migrations apply together and keep workflow history append-
         "0005_episode_tracking.sql",
         "0006_episode_management.sql",
         "0007_practice_and_feedback_workflows.sql",
+        "0008_workflow_concurrency_hardening.sql",
       ];
       database.exec(await readFile(new URL(`../migrations/${names[number - 1]}`, import.meta.url), "utf8"));
     }
@@ -117,6 +125,9 @@ test("all Content OS migrations apply together and keep workflow history append-
       VALUES (?, ?, 1, 'CREATED', 'CJ', ?, '{}', ?)`)
       .run("12345678-1234-1234-1234-123456789abc", "CASE-2026-ABC234", "Synthetic test", "2026-09-06T00:00:00Z");
     assert.throws(() => database.prepare("UPDATE practice_client_revisions SET reason = 'changed' WHERE case_id = ?").run("CASE-2026-ABC234"), /append-only/);
+    database.prepare("INSERT INTO calm_feedback_triage (feedback_id, status, decision_note, revision, updated_at) VALUES (?, 'REVIEWED', 'First decision', 1, ?)").run("feedback-12345678", "2026-09-06T00:00:00Z");
+    database.prepare("INSERT INTO calm_feedback_triage_events (event_id, feedback_id, status, decision_note, revision, actor, created_at) VALUES (?, ?, 'REVIEWED', 'First decision', 1, 'CJ', ?)").run("event-12345678", "feedback-12345678", "2026-09-06T00:00:00Z");
+    assert.throws(() => database.prepare("INSERT INTO calm_feedback_triage_events (event_id, feedback_id, status, decision_note, revision, actor, created_at) VALUES (?, ?, 'ACTION_NEEDED', 'Losing decision', 1, 'CJ', ?)").run("event-87654321", "feedback-12345678", "2026-09-06T00:00:01Z"), /revision conflict|UNIQUE/);
   } finally {
     database.close();
   }

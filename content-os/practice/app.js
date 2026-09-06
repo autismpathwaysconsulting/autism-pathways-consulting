@@ -128,7 +128,7 @@ function sessionForm(session) {
       <label class="span-two">Parent meeting summary<textarea name="parentSummary" rows="8" maxlength="20000">${escapeHtml(session.parentSummary)}</textarea></label>
       <label class="span-two">Parent action plan<textarea name="actionPlan" rows="8" maxlength="20000">${escapeHtml(session.actionPlan)}</textarea></label>
     </div>
-    <div class="button-row"><button class="button" type="submit">Save session revision</button><button class="button secondary" type="button" data-export="LOCAL">Download approved Markdown</button><button class="button secondary" type="button" data-export="GOOGLE_DRIVE">Prepare Drive archive</button></div>
+    <div class="button-row"><button class="button" type="submit">Save session revision</button><button class="button secondary" type="button" data-export="LOCAL">Download approved Markdown</button><button class="button secondary" type="button" data-export="GOOGLE_DRIVE">Prepare Drive archive</button>${session.documentStatus === "EXPORTED" ? `<button class="button secondary" type="button" data-deliver-session="${session.sessionId}">Mark parent pack delivered</button>` : ""}</div>
   </form>`;
 }
 
@@ -235,6 +235,15 @@ document.addEventListener("click", async (event) => {
         toast("Markdown downloaded. Upload it to the approved private Drive folder, then record its file ID.");
       } else toast("Approved Markdown downloaded and recorded.");
       render();
+    } catch (error) { toast(error.message); }
+  }
+  if (target.dataset.deliverSession) {
+    const session = activeSession();
+    if (!session || session.sessionId !== target.dataset.deliverSession) return;
+    try {
+      state.data = await api({ action: "mark_delivered", sessionId: session.sessionId, expectedRevision: session.revision });
+      render();
+      toast("Parent pack marked as delivered.");
     } catch (error) { toast(error.message); }
   }
 });

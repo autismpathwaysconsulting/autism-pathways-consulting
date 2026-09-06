@@ -27,7 +27,11 @@ function validText(value, maximum, required = true) {
 }
 
 function validOptionalDate(value) {
-  return value === null || (typeof value === "string" && value.length <= 40 && /^\d{4}-\d{2}-\d{2}(?:T[0-9:.+-Z]+)?$/.test(value));
+  if (value === null) return true;
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return parsed.getUTCFullYear() === year && parsed.getUTCMonth() === month - 1 && parsed.getUTCDate() === day;
 }
 
 function validList(value, maximumItems = 80) {
@@ -74,7 +78,8 @@ export function validatePracticeAction(payload) {
     return validateClient(payload.client);
   }
   if (payload.action === "create_session") {
-    if (!exactKeys(payload, ["action", "caseId", "scheduledAt"]) || !validCaseId(payload.caseId) || !validOptionalDate(payload.scheduledAt)) return "New session request is invalid.";
+    if (!exactKeys(payload, ["action", "caseId", "scheduledAt"]) || !validCaseId(payload.caseId)) return "New session request is invalid.";
+    if (!validOptionalDate(payload.scheduledAt)) return "Session date is invalid.";
     return null;
   }
   if (payload.action === "save_session") {
@@ -87,6 +92,10 @@ export function validatePracticeAction(payload) {
   }
   if (payload.action === "confirm_drive_export") {
     if (!exactKeys(payload, ["action", "exportId", "providerFileId"]) || !validSessionId(payload.exportId) || !validText(payload.providerFileId, 240)) return "Drive confirmation is invalid.";
+    return null;
+  }
+  if (payload.action === "mark_delivered") {
+    if (!exactKeys(payload, ["action", "sessionId", "expectedRevision"]) || !validSessionId(payload.sessionId) || !Number.isSafeInteger(payload.expectedRevision) || payload.expectedRevision < 1) return "Delivery confirmation is invalid.";
     return null;
   }
   return "Practice action is not supported.";
@@ -240,6 +249,24 @@ function sessionSnapshot(identifier, caseIdentifier, number, session, revision, 
   return { schemaVersion: "apc.practice_session_snapshot.v1", sessionId: identifier, caseId: caseIdentifier, sessionNumber: number, ...session, revision, updatedAt: now };
 }
 
+function editableSessionFromRow(row, overrides = {}) {
+  return {
+    status: row.status,
+    scheduledAt: row.scheduled_at,
+    occurredAt: row.occurred_at,
+    preparation: row.preparation,
+    privateNotes: row.private_notes,
+    parentSummary: row.parent_summary,
+    actionPlan: row.action_plan,
+    documentStatus: row.document_status,
+    ...overrides,
+  };
+}
+
+function isRevisionConflict(error) {
+  return /revision conflict|UNIQUE constraint failed: practice_(?:client|session)_revisions/i.test(String(error?.message || error));
+}
+
 function clientValues(client) {
   return [client.displayName.trim(), client.childAge, client.region.trim(), client.concern.trim(), client.stage, client.serviceCode, client.nextAction.trim(), client.sourceStatus, JSON.stringify(client.knownFacts), JSON.stringify(client.openQuestions), JSON.stringify(client.boundaryFlags)];
 }
@@ -372,21 +399,63 @@ export async function onRequestPost({ request, env }) {
       const exportId = existing?.export_id || crypto.randomUUID();
       const filename = safeFilename(client.case_id, client.service_code, Number(session.session_number), documentVersion, now.slice(0, 10));
       if (!existing) {
-        await database.prepare(`INSERT INTO practice_exports
+        const statements = [database.prepare(`INSERT INTO practice_exports
           (export_id, case_id, session_id, document_type, document_version, destination, filename, content_sha256,
            byte_size, provider_file_id, status, created_at) VALUES (?, ?, ?, 'FOLLOW_THROUGH_PACK', ?, ?, ?, ?, ?, NULL, ?, ?)`)
-          .bind(exportId, client.case_id, payload.sessionId, documentVersion, destination, filename, contentSha256, new TextEncoder().encode(content).byteLength, destination === "LOCAL" ? "SAVED" : "QUEUED", now).run();
+          .bind(exportId, client.case_id, payload.sessionId, documentVersion, destination, filename, contentSha256, new TextEncoder().encode(content).byteLength, destination === "LOCAL" ? "SAVED" : "QUEUED", now)];
+        if (destination === "LOCAL" && session.document_status === "CJ_APPROVED") {
+          const nextRevision = Number(session.revision) + 1;
+          const nextSession = editableSessionFromRow(session, { documentStatus: "EXPORTED" });
+          statements.push(
+            database.prepare("UPDATE practice_sessions SET document_status = 'EXPORTED', revision = ?, updated_at = ? WHERE session_id = ? AND revision = ?").bind(nextRevision, now, payload.sessionId, Number(session.revision)),
+            database.prepare(`INSERT INTO practice_session_revisions
+              (revision_id, session_id, case_id, revision, event_type, actor, snapshot_json, created_at)
+              VALUES (?, ?, ?, ?, 'UPDATED', 'CJ', ?, ?)`).bind(crypto.randomUUID(), payload.sessionId, session.case_id, nextRevision, JSON.stringify(sessionSnapshot(payload.sessionId, session.case_id, Number(session.session_number), nextSession, nextRevision, now)), now),
+          );
+        }
+        await database.batch(statements);
       }
       return json({ ...(await overview(database, { action: payload.action, caseId: client.case_id, sessionId: payload.sessionId, exportId })), download: { exportId, filename, content, contentSha256, destination, status: existing?.status || (destination === "LOCAL" ? "SAVED" : "QUEUED") } });
     }
 
     if (payload.action === "confirm_drive_export") {
-      const result = await database.prepare(`UPDATE practice_exports SET provider_file_id = ?, status = 'SAVED'
-        WHERE export_id = ? AND destination = 'GOOGLE_DRIVE' AND status = 'QUEUED'`).bind(payload.providerFileId.trim(), payload.exportId).run();
-      if (Number(result.meta?.changes || 0) !== 1) return json({ error: "Queued Drive export was not found." }, 404);
+      const queued = await database.prepare("SELECT * FROM practice_exports WHERE export_id = ? AND destination = 'GOOGLE_DRIVE' AND status = 'QUEUED'").bind(payload.exportId).first();
+      if (!queued) return json({ error: "Queued Drive export was not found." }, 404);
+      const session = await database.prepare("SELECT * FROM practice_sessions WHERE session_id = ?").bind(queued.session_id).first();
+      const statements = [database.prepare("UPDATE practice_exports SET provider_file_id = ?, status = 'SAVED' WHERE export_id = ? AND status = 'QUEUED'").bind(payload.providerFileId.trim(), payload.exportId)];
+      if (session && session.document_status === "CJ_APPROVED" && Number(session.revision) === Number(queued.document_version)) {
+        const nextRevision = Number(session.revision) + 1;
+        const nextSession = editableSessionFromRow(session, { documentStatus: "EXPORTED" });
+        statements.push(
+          database.prepare("UPDATE practice_sessions SET document_status = 'EXPORTED', revision = ?, updated_at = ? WHERE session_id = ? AND revision = ?").bind(nextRevision, now, session.session_id, Number(session.revision)),
+          database.prepare(`INSERT INTO practice_session_revisions
+            (revision_id, session_id, case_id, revision, event_type, actor, snapshot_json, created_at)
+            VALUES (?, ?, ?, ?, 'UPDATED', 'CJ', ?, ?)`).bind(crypto.randomUUID(), session.session_id, session.case_id, nextRevision, JSON.stringify(sessionSnapshot(session.session_id, session.case_id, Number(session.session_number), nextSession, nextRevision, now)), now),
+        );
+      }
+      await database.batch(statements);
       return json(await overview(database, { action: payload.action, exportId: payload.exportId }));
     }
+
+    if (payload.action === "mark_delivered") {
+      const session = await database.prepare("SELECT * FROM practice_sessions WHERE session_id = ?").bind(payload.sessionId).first();
+      if (!session) return json({ error: "Session record was not found." }, 404);
+      if (Number(session.revision) !== payload.expectedRevision) return json({ error: "Session changed on another screen. Refresh before saving." }, 409);
+      if (session.document_status !== "EXPORTED") return json({ error: "A recorded saved export is required before delivery." }, 409);
+      const saved = await database.prepare("SELECT export_id FROM practice_exports WHERE session_id = ? AND status = 'SAVED' LIMIT 1").bind(payload.sessionId).first();
+      if (!saved) return json({ error: "A recorded saved export is required before delivery." }, 409);
+      const nextRevision = Number(session.revision) + 1;
+      const nextSession = editableSessionFromRow(session, { status: "DELIVERED", documentStatus: "DELIVERED" });
+      await database.batch([
+        database.prepare("UPDATE practice_sessions SET status = 'DELIVERED', document_status = 'DELIVERED', revision = ?, updated_at = ? WHERE session_id = ? AND revision = ?").bind(nextRevision, now, payload.sessionId, Number(session.revision)),
+        database.prepare(`INSERT INTO practice_session_revisions
+          (revision_id, session_id, case_id, revision, event_type, actor, snapshot_json, created_at)
+          VALUES (?, ?, ?, ?, 'DELIVERED', 'CJ', ?, ?)`).bind(crypto.randomUUID(), payload.sessionId, session.case_id, nextRevision, JSON.stringify(sessionSnapshot(payload.sessionId, session.case_id, Number(session.session_number), nextSession, nextRevision, now)), now),
+      ]);
+      return json(await overview(database, { action: payload.action, caseId: session.case_id, sessionId: payload.sessionId }));
+    }
   } catch (error) {
+    if (isRevisionConflict(error)) return json({ error: "The record changed on another screen. Refresh before saving." }, 409);
     console.error(JSON.stringify({ message: "Practice Console write failed", action: payload.action, errorType: String(error?.name || "Error") }));
     return json({ error: "The Practice Console update could not be saved." }, 503);
   }

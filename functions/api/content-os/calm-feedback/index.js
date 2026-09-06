@@ -27,6 +27,10 @@ export function validateCalmFeedbackAction(payload) {
   return null;
 }
 
+function isRevisionConflict(error) {
+  return /calm feedback triage revision conflict|UNIQUE constraint failed: calm_feedback_triage_events/i.test(String(error?.message || error));
+}
+
 async function readBody(request) {
   if (request.headers.get("X-APC-Content-OS") !== "1") return { error: json({ error: "Missing Content OS request header." }, 400) };
   if (new URL(request.url).search) return { error: json({ error: "POST does not accept query parameters." }, 400) };
@@ -129,6 +133,7 @@ export async function onRequestPost({ request, env }) {
     ]);
     return json(await overview(env.APC_CONTENT_OS_DB, env.APC_CALM_FEEDBACK_DB));
   } catch (error) {
+    if (isRevisionConflict(error)) return json({ error: "Feedback changed on another screen. Refresh before saving." }, 409);
     console.error(JSON.stringify({ message: "Calm feedback triage write failed", errorType: String(error?.name || "Error") }));
     return json({ error: "The feedback decision could not be saved." }, 503);
   }
