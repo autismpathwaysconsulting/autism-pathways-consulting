@@ -64,7 +64,7 @@ function renderResearch() {
     card.appendChild(node("h3", "", item.title));
     const summary = item.data?.parent_problem || item.data?.summary || item.data?.practical_action || "";
     if (summary) card.appendChild(node("p", "subtle", summary));
-    const button = node("button", "button compact", "Create episode");
+    const button = node("button", "button compact", "Build script prompt");
     button.type = "button";
     button.dataset.researchItem = item.itemId;
     button.dataset.title = item.title;
@@ -88,7 +88,7 @@ function renderMasterIdeas() {
     source.target = "_blank";
     source.rel = "noopener noreferrer";
     card.appendChild(source);
-    const button = node("button", "button compact", "Create episode");
+    const button = node("button", "button compact", "Build script prompt");
     button.type = "button";
     button.dataset.masterTopic = topic.id;
     card.appendChild(button);
@@ -231,10 +231,20 @@ function productionPrompt() {
   ].join("\n");
 }
 
+async function createEpisodeAndBuildPrompt(episode) {
+  await request({ action: "create_episode", episode: episode });
+  element("packEpisode").value = episode.id;
+  element("promptOutput").textContent = productionPrompt();
+  element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
+  element("copyPrompt").focus({ preventScroll: true });
+  setStatus("Script prompt ready", episode.id + " is selected. Copy the prompt into Codex to generate the complete filming pack.", "success");
+}
+
 element("episodeForm").addEventListener("submit", async event => {
   event.preventDefault();
   try {
-    await request({ action: "create_episode", episode: { id: element("episodeId").value.trim().toUpperCase(), title: element("episodeTitle").value.trim(), researchItemId: null } });
+    const episode = { id: element("episodeId").value.trim().toUpperCase(), title: element("episodeTitle").value.trim(), researchItemId: null };
+    await createEpisodeAndBuildPrompt(episode);
     element("episodeTitle").value = "";
     element("episodeId").value = nextEpisodeId();
   } catch (error) { setStatus("Could not create episode", error.message, "error"); }
@@ -243,7 +253,7 @@ element("episodeForm").addEventListener("submit", async event => {
 element("researchIdeas").addEventListener("click", async event => {
   const button = event.target.closest("button[data-research-item]");
   if (!button) return;
-  try { await request({ action: "create_episode", episode: { id: nextEpisodeId(), title: button.dataset.title, researchItemId: button.dataset.researchItem } }); }
+  try { await createEpisodeAndBuildPrompt({ id: nextEpisodeId(), title: button.dataset.title, researchItemId: button.dataset.researchItem }); }
   catch (error) { setStatus("Could not create episode", error.message, "error"); }
 });
 
@@ -252,7 +262,7 @@ element("masterIdeas").addEventListener("click", async event => {
   if (!button) return;
   const topic = MASTER_TOPIC_BANK.find(item => item.id === button.dataset.masterTopic);
   if (!topic) return;
-  try { await request({ action: "create_episode", episode: { id: nextEpisodeId(), title: topic.name, researchItemId: null } }); }
+  try { await createEpisodeAndBuildPrompt({ id: nextEpisodeId(), title: topic.name, researchItemId: null }); }
   catch (error) { setStatus("Could not create episode", error.message, "error"); }
 });
 
