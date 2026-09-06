@@ -223,11 +223,29 @@ function packPasses(packArtifact) {
 function previousStatus(status) {
   return { APPROVED: "IDEA", SCRIPT_LOCKED: "APPROVED", FILMED: "SCRIPT_LOCKED", EDITING: "FILMED", REVIEW: "EDITING", READY: "REVIEW", PUBLISHED: "READY" }[status] || null;
 }
+function normalizedEpisodeTitle(value) {
+  return String(value || "").toLocaleLowerCase("en").normalize("NFKC").replaceAll(/[^a-z0-9]+/g, " ").trim();
+}
+function duplicateEpisodeIds(episode) {
+  const identity = normalizedEpisodeTitle(episode.title);
+  if (!identity) return [];
+  return activeEpisodes().filter(item => item.id !== episode.id && normalizedEpisodeTitle(item.title) === identity).map(item => item.id);
+}
 function appendEpisodeActions(actions, episode, packArtifact) {
   const open = node("button", "button secondary compact", packArtifact ? "Open filming page" : "Open prompt");
   open.type = "button";
   open.dataset.openEpisode = episode.id;
   actions.appendChild(open);
+
+  const edit = node("button", "button secondary compact", "Edit title");
+  edit.type = "button";
+  edit.dataset.editEpisode = episode.id;
+  actions.appendChild(edit);
+
+  const download = node("button", "button secondary compact", "Download .md archive");
+  download.type = "button";
+  download.dataset.downloadEpisode = episode.id;
+  actions.appendChild(download);
 
   if (packArtifact) {
     const editPack = node("button", "button secondary compact", "Edit script/package");
@@ -261,10 +279,18 @@ function appendEpisodeActions(actions, episode, packArtifact) {
     publish.href = "/content-os/?episode=" + encodeURIComponent(episode.id) + "#results";
     actions.appendChild(publish);
   }
+
+  const duplicateIds = duplicateEpisodeIds(episode);
+  const archive = node("button", "button danger compact", duplicateIds.length ? "Archive duplicate" : "Archive episode");
+  archive.type = "button";
+  archive.dataset.archiveEpisode = episode.id;
+  archive.dataset.archived = "true";
+  actions.appendChild(archive);
 }
 function appendEpisodeTimeline(card, episode) {
   const timeline = node("details", "timeline");
-  timeline.appendChild(node("summary", "", "History and management"));
+  timeline.dataset.episodeManagement = episode.id;
+  timeline.appendChild(node("summary", "", episode.archived_at ? "Restore and view history" : "Edit title and view history"));
   const management = node("div", "episode-management");
   const titleField = node("label", "field");
   titleField.appendChild(node("span", "", "Episode title"));
@@ -287,11 +313,13 @@ function appendEpisodeTimeline(card, episode) {
     back.dataset.advanceStatus = prior;
     controls.appendChild(back);
   }
-  const archive = node("button", "button danger compact", episode.archived_at ? "Restore episode" : "Archive episode");
-  archive.type = "button";
-  archive.dataset.archiveEpisode = episode.id;
-  archive.dataset.archived = episode.archived_at ? "false" : "true";
-  controls.appendChild(archive);
+  if (episode.archived_at) {
+    const restore = node("button", "button compact", "Restore episode");
+    restore.type = "button";
+    restore.dataset.archiveEpisode = episode.id;
+    restore.dataset.archived = "false";
+    controls.appendChild(restore);
+  }
   management.appendChild(controls);
   timeline.appendChild(management);
   const eventList = node("ol", "timeline-list");
@@ -321,6 +349,13 @@ function episodeCard(episode) {
   if (packArtifact) card.appendChild(node("p", "subtle", `Filming pack v${packArtifact.version} saved · HTML view ready · Red-team ${packArtifact.redteam_status} · Hook ${packArtifact.hook_gate_status || "not set"} · ${packArtifact.final_decision || "no decision"}`));
   else card.appendChild(node("p", "subtle", "Prompt saved. No returned production package imported yet."));
   if (!episode.archived_at) {
+    const duplicateIds = duplicateEpisodeIds(episode);
+    if (duplicateIds.length) {
+      const warning = node("div", "duplicate-warning");
+      warning.appendChild(node("strong", "", "Possible duplicate"));
+      warning.appendChild(node("span", "", "Same title as " + duplicateIds.join(", ") + ". Open both records, keep the one with the correct history, then archive the other."));
+      card.appendChild(warning);
+    }
     card.appendChild(node("p", "next-action", nextAction(episode, packArtifact, publications)));
     const actions = node("div", "button-row");
     appendEpisodeActions(actions, episode, packArtifact);
@@ -449,6 +484,63 @@ function downloadFilmingHtml() {
   anchor.click();
   anchor.remove();
   setTimeout(() => URL.revokeObjectURL(href), 1000);
+}
+function markdownJson(value) {
+  return "````json\n" + JSON.stringify(value, null, 2) + "\n````";
+}
+function episodeMarkdownArchive(episode) {
+  const promptArtifact = latestArtifact(episode.id, "PROMPT");
+  const packArtifact = latestArtifact(episode.id, "PRODUCTION_PACK");
+  const archive = {
+    episode,
+    artifacts: workflow.artifacts.filter(item => item.episode_id === episode.id),
+    events: workflow.events.filter(item => item.episode_id === episode.id),
+    reviews: workflow.reviews.filter(item => item.episode_id === episode.id),
+    publications: workflow.publications.filter(item => item.episodeId === episode.id),
+  };
+  return [
+    "# " + episode.id + ": " + episode.title,
+    "",
+    "Downloaded from APC Episode Studio on " + new Date().toISOString() + ".",
+    "",
+    "## Storage note",
+    "",
+    "The canonical structured episode record, prompt revisions, packages and audit history remain in the private Content OS D1 database. Content OS does not store uploaded or exported video files. Save this Markdown archive together with the original video, final export and captions in the episode folder on the SSD.",
+    "",
+    "## Current status",
+    "",
+    "- Episode ID: " + episode.id,
+    "- Stage: " + episode.status,
+    "- Updated: " + episode.updated_at,
+    "- Archived: " + (episode.archived_at || "No"),
+    "",
+    "## Latest saved prompt",
+    "",
+    promptArtifact ? markdownJson(promptArtifact.payload) : "No saved prompt artifact is available.",
+    "",
+    "## Latest production package",
+    "",
+    packArtifact ? markdownJson(packArtifact.payload) : "No production package has been imported.",
+    "",
+    "## Complete Content OS record",
+    "",
+    markdownJson(archive),
+    "",
+  ].join("\n");
+}
+function downloadEpisodeArchive(episodeId) {
+  const episode = episodeById(episodeId);
+  if (!episode) return;
+  const blob = new Blob([episodeMarkdownArchive(episode)], { type: "text/markdown;charset=utf-8" });
+  const href = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = href;
+  anchor.download = episode.id + "_content_os_archive.md";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 1000);
+  setStatus("Episode archive downloaded", episode.id + " is ready to place in its SSD episode folder. Video files remain outside Content OS.", "success");
 }
 function renderResults() {
   const reviews = element("reviewList");
@@ -588,6 +680,8 @@ async function handleEpisodeClick(event) {
   const lock = button.dataset.lockEpisode;
   const open = button.dataset.openEpisode;
   const editPack = button.dataset.editPack;
+  const editEpisode = button.dataset.editEpisode;
+  const downloadEpisode = button.dataset.downloadEpisode;
   const saveTitle = button.dataset.saveEpisodeTitle;
   const archive = button.dataset.archiveEpisode;
   const advance = button.dataset.advanceEpisode;
@@ -611,6 +705,17 @@ async function handleEpisodeClick(event) {
       element("import").scrollIntoView({ behavior: "smooth", block: "start" });
       element("packageJson").focus({ preventScroll: true });
     }
+    if (editEpisode) {
+      const card = button.closest("article");
+      const timeline = card?.querySelector(`[data-episode-management="${editEpisode}"]`);
+      const input = card?.querySelector(`[data-episode-title="${editEpisode}"]`);
+      if (timeline) timeline.open = true;
+      if (input) {
+        input.focus({ preventScroll: true });
+        input.select();
+      }
+    }
+    if (downloadEpisode) downloadEpisodeArchive(downloadEpisode);
     if (saveTitle) await updateEpisodeTitle(saveTitle, button.closest("article"));
     if (archive) await setEpisodeArchived(archive, button.dataset.archived === "true");
     if (advance) await updateEpisodeStage(advance, button.dataset.advanceStatus);

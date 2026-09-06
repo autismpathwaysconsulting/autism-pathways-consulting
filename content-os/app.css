@@ -373,6 +373,25 @@ h3 {
   font-size: 0.95rem;
 }
 
+.storage-card {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 14px;
+  border-color: var(--sage);
+  background: var(--cream);
+}
+
+.duplicate-warning {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border: 1px solid var(--coral);
+  border-radius: 10px;
+  background: var(--coral-pale);
+  color: var(--navy);
+  font-size: 0.82rem;
+}
+
 .compact-field {
   min-width: 150px;
   margin: 0;
