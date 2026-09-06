@@ -3,7 +3,7 @@ export const MASTER_VIDEO_RULES = Object.freeze({
   version: "2026-09-06.1",
   sourceRepository: "autismpathwaysconsulting/APC-AI-OS",
   sourcePath: "02_CONTENT_SYSTEM/APC_Video_Rules_and_Winning_Examples.md",
-  sha256: "4ca0f301ed6f786974867d1faae2221e18c8e33d10da2777445953b965f29d3c",
+  sha256: "84ffc4702deef119897113494be9749077a664eed47adfb97ad0c05f8757ac16",
   legacySourcesAllowed: false,
   activeRules: Object.freeze([
     "MASTER RULE SOURCE: APC-AI-OS/02_CONTENT_SYSTEM/APC_Video_Rules_and_Winning_Examples.md",
