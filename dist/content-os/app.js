@@ -1260,6 +1260,12 @@ function useTopic(topic, stage, family, area, bankTopic) {
   element("pTopic").focus();
 }
 
+function buildScriptPromptFromTopic(topic, stage, family, area, bankTopic) {
+  useTopic(topic, stage, family, area, bankTopic);
+  element("pOutput").value = "reel";
+  buildPrompt();
+}
+
 function logTopic(topic, area, family, date) {
   element("rTopic").value = text(topic);
   element("rArea").value = text(area);
@@ -1409,7 +1415,7 @@ function renderCalendar() {
       select.appendChild(option);
     });
     actions.appendChild(select);
-    actions.appendChild(makeButton("Use topic", "use-calendar-topic", "button secondary compact", { date: date }));
+    actions.appendChild(makeButton("Build script prompt", "use-calendar-topic", "button secondary compact", { date: date }));
     actions.appendChild(makeButton("Add analytics", "log-calendar-topic", "button secondary compact", { date: date }));
     actions.appendChild(makeButton("Edit", "edit-plan-item", "button secondary compact", { date: date }));
     actions.appendChild(makeButton("Delete", "delete-plan-item", "button danger compact", { date: date }));
@@ -1473,7 +1479,7 @@ function renderTopics() {
     card.appendChild(makeNode("p", "topic-scope", topic.source.scope));
 
     const actions = makeNode("div", "actions");
-    actions.appendChild(makeButton("Use topic", "use-bank-topic", "button compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Build script prompt", "use-bank-topic", "button compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add to plan", "plan-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add analytics", "log-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Send to book", "book-bank-topic", "button secondary compact", { index: originalIndex }));
@@ -2710,7 +2716,7 @@ function appendResearchCard(container, item, run, runItems, useful) {
 
   const actions = makeNode("div", "actions");
   actions.appendChild(makeButton(
-    useful ? "Attach to prompt" : (item.type === "topic" ? "Use topic" : "Use finding"),
+    useful ? "Attach to prompt" : (item.type === "topic" ? "Build script prompt" : "Use finding"),
     "use-research",
     "button compact",
     { itemId: item.itemId }
@@ -2840,7 +2846,12 @@ async function useResearchItem(itemId) {
     element("pResearch").value = "Use current evidence where needed";
   }
   renderSelectedResearchContext();
-  scrollToNode(element("prompts"), "start");
+  if (item.type === "topic") {
+    element("pOutput").value = "reel";
+    buildPrompt();
+  } else {
+    scrollToNode(element("prompts"), "start");
+  }
   try {
     await recordResearchDecision(itemId, "used");
   } catch (error) {
@@ -3560,7 +3571,7 @@ function handleClick(event) {
     const date = control.dataset.date;
     const entry = state.calendar[date];
     if (!entry) return;
-    if (action === "use-calendar-topic") useTopic(entry.topic, entry.stage, entry.family, entry.area, topicBankMatchByHook(entry.topic));
+    if (action === "use-calendar-topic") buildScriptPromptFromTopic(entry.topic, entry.stage, entry.family, entry.area, topicBankMatchByHook(entry.topic));
     else logTopic(entry.topic, entry.area, entry.family, date);
   } else if (action === "edit-plan-item") {
     const date = control.dataset.date;
@@ -3572,7 +3583,7 @@ function handleClick(event) {
       action === "log-bank-topic" || action === "book-bank-topic") {
     const topic = DATA.topics[Number(control.dataset.index)];
     if (!topic) return;
-    if (action === "use-bank-topic") useTopic(topic.hook, topic.stage, topic.family, topic.name, topic);
+    if (action === "use-bank-topic") buildScriptPromptFromTopic(topic.hook, topic.stage, topic.family, topic.name, topic);
     if (action === "plan-bank-topic") prefillPlanForm(topic.hook, topic.name, topic.family, topic.stage, "");
     if (action === "log-bank-topic") logTopic(topic.hook, topic.name, topic.family, "");
     if (action === "book-bank-topic") sendTopicToBook(topic.hook, topic.stage, topic.family, topic.name);

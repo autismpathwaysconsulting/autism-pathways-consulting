@@ -59,3 +59,26 @@ test("selecting a master idea carries its evidence into the production prompt", 
 test("master topic bank is published with Content OS", () => {
   assert.ok(PUBLIC_FILES.includes("content-os/topic-bank.js"));
 });
+
+test("idea actions build a copy-ready script prompt without another required click", async () => {
+  const [app, html, episodeApp, episodeHtml] = await Promise.all([
+    source("content-os/app.js"),
+    source("content-os/index.html"),
+    source("content-os/episodes/app.js"),
+    source("content-os/episodes/index.html"),
+  ]);
+
+  assert.match(app, /function buildScriptPromptFromTopic\(topic, stage, family, area, bankTopic\)/);
+  assert.match(app, /element\("pOutput"\)\.value = "reel";\s*buildPrompt\(\);/);
+  assert.match(app, /buildScriptPromptFromTopic\(topic\.hook, topic\.stage, topic\.family, topic\.name, topic\)/);
+  assert.match(app, /item\.type === "topic"[\s\S]*buildPrompt\(\);/);
+  assert.match(html, /Choose Build script prompt/);
+
+  assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode\)/);
+  assert.match(episodeApp, /element\("packEpisode"\)\.value = episode\.id;/);
+  assert.match(episodeApp, /element\("promptOutput"\)\.textContent = productionPrompt\(\);/);
+  assert.match(episodeApp, /createEpisodeAndBuildPrompt\(\{ id: nextEpisodeId\(\), title: topic\.name, researchItemId: null \}\)/);
+  assert.match(episodeApp, /"Build script prompt"/);
+  assert.match(episodeHtml, />Create \+ build prompt</);
+  assert.match(episodeHtml, />Copy prompt</);
+});
