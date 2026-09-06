@@ -120,16 +120,20 @@ test("idea actions build a copy-ready script prompt without another required cli
   ]);
 
   assert.match(app, /function buildScriptPromptFromTopic\(topic, stage, family, area, bankTopic\)/);
-  assert.match(app, /element\("pOutput"\)\.value = "reel";\s*buildPrompt\(\);/);
+  assert.match(app, /element\("pOutput"\)\.value = "reel";\s*await createTrackedEpisodePrompt\(\);/);
   assert.match(app, /buildScriptPromptFromTopic\(topic\.hook, topic\.stage, topic\.family, topic\.name, topic\)/);
-  assert.match(app, /item\.type === "topic"[\s\S]*buildPrompt\(\);/);
+  assert.match(app, /item\.type === "topic"[\s\S]*await createTrackedEpisodePrompt\(\);/);
+  assert.match(app, /episodeWorkflow: "\/api\/content-os\/episode-workflow"/);
+  assert.match(app, /action: "create_tracked_prompt"/);
+  assert.match(app, /element\("builtPrompt"\)\.hidden = true/);
   assert.match(html, /Ready ideas include governed evidence/);
 
-  assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode\)/);
+  assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode, sourceContext\)/);
   assert.match(episodeApp, /element\("packEpisode"\)\.value = episode\.id;/);
-  assert.match(episodeApp, /element\("promptOutput"\)\.textContent = productionPrompt\(\);/);
-  assert.match(episodeApp, /createEpisodeAndBuildPrompt\(\{ id: nextEpisodeId\(\), title: topic\.name, researchItemId: null \}\)/);
-  assert.match(episodeApp, /"Build script prompt"/);
-  assert.match(episodeHtml, />Create \+ build prompt</);
+  assert.match(episodeApp, /action: "create_tracked_prompt"/);
+  assert.match(episodeApp, /element\("promptOutput"\)\.textContent = prompt\.text/);
+  assert.match(episodeApp, /createEpisodeAndBuildPrompt\(\{ id: nextEpisodeId\(\), title: topic\.name, researchItemId: null \}, masterContext\(topic\)\)/);
+  assert.match(episodeApp, /"Create episode \+ build prompt"/);
+  assert.match(episodeHtml, />Create episode \+ build prompt</);
   assert.match(episodeHtml, />Copy prompt</);
 });

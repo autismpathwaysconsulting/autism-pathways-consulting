@@ -284,6 +284,46 @@ h3 {
 
 .card { padding: 18px; }
 
+.episode-workflow-card {
+  display: grid;
+  gap: 12px;
+}
+
+.episode-workflow-card .next-action {
+  font-size: 0.95rem;
+}
+
+.compact-field {
+  min-width: 150px;
+  margin: 0;
+}
+
+.timeline {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.timeline summary {
+  color: var(--teal);
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.timeline-list {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding-left: 22px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.package-json {
+  min-height: 280px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
 .next-card {
   border-color: var(--teal);
   border-left-width: 4px;

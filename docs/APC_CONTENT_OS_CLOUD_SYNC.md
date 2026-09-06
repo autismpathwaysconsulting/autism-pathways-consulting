@@ -80,7 +80,11 @@ Episode Studio uses the same governed research and analytics records instead of 
 
 `IDEA -> APPROVED -> SCRIPT_LOCKED -> FILMED -> EDITING -> REVIEW -> READY -> PUBLISHED`
 
-Each episode can store one filming-pack prompt and multiple immutable review manifests. Every review is identified by the exported video's SHA-256 hash and review mode, so a renamed file is not mistaken for a new cut. Publication and analytics entry remain in the main Content OS and connect to an episode through its episode ID.
+Every new production prompt is written to D1 before the interface reveals it. The stored prompt includes the exact topic or research snapshot, output format, master-rule version and master-rule SHA-256. Prompt revisions and imported production packs are immutable artifacts; the episode record points to the latest version without deleting prior versions.
+
+The returned production pack must use `apc.episode_pack.v2`. Episode Studio validates the episode identity, master identity, final `/redteam` result, all five hook checks and the FILM or REVISE decision. The script can be locked only when the latest pack has Red-team PASS, Hook Gate PASS, at least four yes answers including recognition, emotional pull and tension, and a FILM decision. A new prompt or pack revision returns the episode to APPROVED so an older lock cannot silently cover changed words.
+
+Workflow events are append-only and idempotent. They record prompt creation, prompt and pack versions, script lock, stage changes and video reviews. Every review is identified by the exported video's SHA-256 hash and review mode, so a renamed file is not mistaken for a new cut. READY can only come from a final `ready` review. A platform publication must carry the same episode ID before the episode can move to PUBLISHED. Existing 24-hour, 7-day and 28-day analytics remain unchanged and stay linked through the publication's episode ID.
 
 ### Ongoing planner
 

@@ -65,6 +65,7 @@ const ENDPOINTS = Object.freeze({
   ingestionStatus: "/api/content-os/ingestion-status",
   research: "/api/content-os/research",
   history: "/api/content-os/history",
+  episodeWorkflow: "/api/content-os/episode-workflow",
 });
 
 const BACKUP_FORMAT = "apc.content-os.backup.v2.3";
@@ -1286,13 +1287,13 @@ function useTopic(topic, stage, family, area, bankTopic) {
   element("pTopic").focus();
 }
 
-function buildScriptPromptFromTopic(topic, stage, family, area, bankTopic) {
+async function buildScriptPromptFromTopic(topic, stage, family, area, bankTopic) {
   useTopic(topic, stage, family, area, bankTopic);
   element("pOutput").value = "reel";
-  buildPrompt();
+  await createTrackedEpisodePrompt();
 }
 
-function buildDevelopmentPromptFromBacklog(topic) {
+async function buildDevelopmentPromptFromBacklog(topic) {
   clearSelectedResearchContext();
   selectedResearchContext = backlogTopicContext(topic);
   renderSelectedResearchContext();
@@ -1301,7 +1302,7 @@ function buildDevelopmentPromptFromBacklog(topic) {
   if (DATA.stages.includes(topic.stage)) element("pStage").value = topic.stage;
   if (DATA.families.includes(topic.family)) element("pFamily").value = topic.family;
   element("pOutput").value = "reel";
-  buildPrompt();
+  await createTrackedEpisodePrompt();
 }
 
 function logTopic(topic, area, family, date) {
@@ -1532,7 +1533,7 @@ function renderTopics() {
     card.appendChild(makeNode("p", "topic-scope", topic.source.scope));
 
     const actions = makeNode("div", "actions");
-    actions.appendChild(makeButton("Build script prompt", "use-bank-topic", "button compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Create episode + prompt", "use-bank-topic", "button compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add to plan", "plan-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add analytics", "log-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Send to book", "book-bank-topic", "button secondary compact", { index: originalIndex }));
@@ -1577,7 +1578,7 @@ function renderTopics() {
     }
 
     const actions = makeNode("div", "actions");
-    actions.appendChild(makeButton("Build development prompt", "use-backlog-topic", "button compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Create episode + prompt", "use-backlog-topic", "button compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add to plan", "plan-backlog-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add analytics", "log-backlog-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Send to book", "book-backlog-topic", "button secondary compact", { index: originalIndex }));
@@ -2946,7 +2947,7 @@ async function useResearchItem(itemId) {
   renderSelectedResearchContext();
   if (item.type === "topic") {
     element("pOutput").value = "reel";
-    buildPrompt();
+    await createTrackedEpisodePrompt();
   } else {
     scrollToNode(element("prompts"), "start");
   }
@@ -3135,12 +3136,43 @@ function renderMasterVideoRulesStatus() {
     " keeps inspiration separate until research is verified. Old HTML boards and previous rule copies are excluded.";
 }
 
-function buildPrompt() {
+function episodePackageContractLines(episodeId) {
+  return [
+    "",
+    "MANDATORY FINAL RED-TEAM",
+    "Before presenting the final version, run /redteam on factual accuracy, evidence scope, autism-community framing, parent shame, burden framing, overclaiming, production alignment and likely backlash. Correct all fixable issues before the final output.",
+    "A PASS means the corrected final pack is safe enough to film. If the risks cannot be corrected, return REVISE.",
+    "",
+    "TRACKED PACKAGE RETURN",
+    "After the readable episode pack, finish with exactly one fenced JSON block for import into Episode Studio:",
+    JSON.stringify({
+      schemaVersion: "apc.episode_pack.v2",
+      episodeId: episodeId,
+      masterRules: { version: MASTER_VIDEO_RULES.version, sha256: MASTER_VIDEO_RULES.sha256 },
+      redteam: { result: "PASS", score: 9.5, risks: [], fixes: [] },
+      hookGate: { result: "PASS", yesCount: 5, checks: [true, true, true, true, true] },
+      finalDecision: "FILM",
+      spokenScript: "Final words exactly as CJ should say them.",
+      filmingBoard: [{ start: "0:00", end: "0:07", spokenWords: "Exact words", direction: "Exact filming direction" }],
+      overlays: [{ start: "0:00", end: "0:04", type: "on-screen text", text: "EXACT TEXT", safeZone: "top 65%" }],
+      hyperframesPrompt: "Complete HyperFrames prompt.",
+      visualAssets: { cards: [], sourcePills: [] },
+      editNotes: ["One concrete edit note."],
+      sourceNotes: ["One source and scope note."],
+      platformCopy: { instagram: "Caption", tiktok: "Caption", youtubeShorts: "Caption" },
+      claimCautions: ["One claim boundary, or an empty array if none remain."]
+    }, null, 2),
+    "Use the exact episode ID and master identity shown. Keep every top-level key. Do not add extra top-level keys. Do not create an SRT file.",
+  ];
+}
+
+function buildPrompt(options) {
+  const settings = options || {};
   const topic = text(element("pTopic").value).trim();
   if (!topic) {
     alert("Choose or type a topic first.");
     element("pTopic").focus();
-    return;
+    return null;
   }
   const area = text(element("pArea").value).trim() || "Unclassified problem";
   const stage = element("pStage").value;
@@ -3155,6 +3187,7 @@ function buildPrompt() {
 
   const header = [
     "CREATE A FINAL APC PRODUCTION PACKAGE",
+    ...(settings.episodeId ? ["TRACKED EPISODE: " + settings.episodeId] : []),
     "",
     "Topic or hook: " + topic,
     "Problem area: " + area,
@@ -3275,7 +3308,57 @@ function buildPrompt() {
     ],
   };
 
-  element("promptText").textContent = header.concat(packages[output] || packages.content).join("\n");
+  const prompt = header.concat(
+    packages[output] || packages.content,
+    settings.episodeId && isEpisodeDevelopment ? episodePackageContractLines(settings.episodeId) : []
+  ).join("\n");
+  element("promptText").textContent = prompt;
+  if (!settings.deferReveal) {
+    element("builtPrompt").hidden = false;
+    scrollToNode(element("builtPrompt"), "nearest");
+  }
+  return prompt;
+}
+
+async function createTrackedEpisodePrompt() {
+  const topic = text(element("pTopic").value).trim();
+  if (!topic) return buildPrompt();
+  element("builtPrompt").hidden = true;
+  const overviewResponse = await fetch(ENDPOINTS.episodeWorkflow, { headers: { Accept: "application/json" } });
+  const overview = await overviewResponse.json();
+  if (!overviewResponse.ok) throw new Error(text(overview.error) || "Episode tracking is unavailable.");
+  const episodeId = overview.nextEpisodeId;
+  const prompt = buildPrompt({ episodeId: episodeId, deferReveal: true });
+  if (!prompt) return;
+  const area = text(element("pArea").value).trim();
+  const title = (area || topic).slice(0, 200);
+  const sourceContext = selectedResearchContext || {
+    type: "manual",
+    instruction: "Verify material claims and do not invent a statistic or source.",
+    promptSeed: topic,
+  };
+  const payload = {
+    action: "create_tracked_prompt",
+    episode: { id: episodeId, title: title, researchItemId: null },
+    prompt: {
+      schemaVersion: "apc.episode_prompt.v1",
+      format: element("pOutput").value,
+      notes: "Goal: " + element("pGoal").value + ". Platform: " + element("pPlatform").value + ".",
+      text: prompt,
+      sourceContext: sourceContext,
+      masterRules: { version: MASTER_VIDEO_RULES.version, sha256: MASTER_VIDEO_RULES.sha256, sourcePath: MASTER_VIDEO_RULES.sourcePath },
+    },
+    idempotencyKey: "prompt:" + episodeId + ":" + newUuid(),
+  };
+  const response = await fetch(ENDPOINTS.episodeWorkflow, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-APC-Content-OS": "1" },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(text(result.error) || "The tracked episode could not be saved.");
+  element("trackedEpisodeNotice").textContent = episodeId + " saved to Episode Studio before this prompt was shown.";
+  element("trackedEpisodeLink").href = "/content-os/episodes/#" + episodeId;
   element("builtPrompt").hidden = false;
   scrollToNode(element("builtPrompt"), "nearest");
 }
@@ -3681,7 +3764,7 @@ function handleClick(event) {
     const date = control.dataset.date;
     const entry = state.calendar[date];
     if (!entry) return;
-    if (action === "use-calendar-topic") buildScriptPromptFromTopic(entry.topic, entry.stage, entry.family, entry.area, topicBankMatchByHook(entry.topic));
+    if (action === "use-calendar-topic") buildScriptPromptFromTopic(entry.topic, entry.stage, entry.family, entry.area, topicBankMatchByHook(entry.topic)).catch(function (error) { alert(text(error && error.message)); });
     else logTopic(entry.topic, entry.area, entry.family, date);
   } else if (action === "edit-plan-item") {
     const date = control.dataset.date;
@@ -3693,7 +3776,7 @@ function handleClick(event) {
       action === "log-bank-topic" || action === "book-bank-topic") {
     const topic = DATA.topics[Number(control.dataset.index)];
     if (!topic) return;
-    if (action === "use-bank-topic") buildScriptPromptFromTopic(topic.hook, topic.stage, topic.family, topic.name, topic);
+    if (action === "use-bank-topic") buildScriptPromptFromTopic(topic.hook, topic.stage, topic.family, topic.name, topic).catch(function (error) { alert(text(error && error.message)); });
     if (action === "plan-bank-topic") prefillPlanForm(topic.hook, topic.name, topic.family, topic.stage, "");
     if (action === "log-bank-topic") logTopic(topic.hook, topic.name, topic.family, "");
     if (action === "book-bank-topic") sendTopicToBook(topic.hook, topic.stage, topic.family, topic.name);
@@ -3701,7 +3784,7 @@ function handleClick(event) {
       action === "log-backlog-topic" || action === "book-backlog-topic") {
     const topic = DATA.ideaBacklog[Number(control.dataset.index)];
     if (!topic) return;
-    if (action === "use-backlog-topic") buildDevelopmentPromptFromBacklog(topic);
+    if (action === "use-backlog-topic") buildDevelopmentPromptFromBacklog(topic).catch(function (error) { alert(text(error && error.message)); });
     if (action === "plan-backlog-topic") prefillPlanForm(topic.brief, topic.name, topic.family, topic.stage, "");
     if (action === "log-backlog-topic") logTopic(topic.brief, topic.name, topic.family, "");
     if (action === "book-backlog-topic") sendTopicToBook(topic.name, topic.stage, topic.family, topic.brief);
@@ -3713,7 +3796,7 @@ function handleClick(event) {
     visibleResultLimit += DEFAULT_RESULT_LIMIT;
     renderResults();
   } else if (action === "build-prompt") {
-    buildPrompt();
+    createTrackedEpisodePrompt().catch(function (error) { alert(text(error && error.message)); });
   } else if (action === "clear-research-context") {
     clearSelectedResearchContext();
   } else if (action === "copy-prompt") {
