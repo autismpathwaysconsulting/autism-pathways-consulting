@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import { onRequest as authorize } from "../functions/_middleware.js";
 import { forwardAnalyticsConnector } from "../functions/lib/content-os/analytics-connector-proxy.js";
 import { assertValidAnalyticsSnapshot } from "../content-os/analytics.js";
+import { onRequestGet as getConnections } from "../functions/api/content-os/connections/index.js";
 import { onRequestPost as ingestGithubAnalytics } from "../functions/api/content-os/ingest/analytics-github.js";
 
 async function signGithubBody(secret, body) {
@@ -118,6 +119,27 @@ test("Pages forwards connector traffic through a service binding and protects wr
   assert.equal(calls.length, 1);
 });
 
+test("the external Meta feed remains available when the direct connector is absent", async () => {
+  const available = await getConnections({
+    env: { APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED: "true" },
+    request: new Request("https://example.com/api/content-os/connections"),
+  });
+  assert.equal(available.status, 200);
+  assert.deepEqual(await available.json(), {
+    configuredProviders: {},
+    connections: [],
+    ingestionEnabled: false,
+    enabledProviders: [],
+    externalProviders: { meta: true },
+  });
+
+  const unavailable = await getConnections({
+    env: {},
+    request: new Request("https://example.com/api/content-os/connections"),
+  });
+  assert.equal(unavailable.status, 503);
+});
+
 test("connector snapshots use provider-specific collection methods", () => {
   const base = {
     schemaVersion: "apc.analytics.v1",
@@ -138,13 +160,14 @@ test("connector snapshots use provider-specific collection methods", () => {
   assert.doesNotThrow(() => assertValidAnalyticsSnapshot({ ...base, collectionMethod: "youtube_connector", sourceSystem: "YouTube Studio" }));
 });
 
-test("the dashboard distinguishes a running external feed from an episode-linked connector", async () => {
+test("the dashboard offers the existing Meta feed as a synced publication path", async () => {
   const app = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
   const html = await readFile(new URL("../content-os/index.html", import.meta.url), "utf8");
   assert.match(app, /Partial setup/);
-  assert.match(app, /Feed running, not mapped/);
-  assert.match(app, /separate APC-AI-OS episode register is not yet synced from Content OS/);
-  assert.match(html, /existing Meta feed is shown separately until its episode mapping is synced/);
+  assert.match(app, /Connected feed/);
+  assert.match(app, /Existing Meta automation/);
+  assert.match(app, /supplies its episode mapping from Content OS automatically/);
+  assert.match(html, /existing Meta feed now reads new episode mappings directly from Content OS/);
   assert.match(html, /id="trackPublicationButton"[^>]+disabled/);
 });
 

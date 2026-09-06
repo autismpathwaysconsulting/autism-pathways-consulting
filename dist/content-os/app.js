@@ -19,6 +19,10 @@ import {
   safeRate,
   validateAnalyticsSubmission,
 } from "./analytics.js";
+import {
+  canonicalInstagramReelPostRef,
+  canonicalInstagramReelPublicationId,
+} from "./instagram-reels.js";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "./video-rules.js";
 import {
   CJ_IDEA_BACKLOG,
@@ -62,6 +66,7 @@ const ENDPOINTS = Object.freeze({
   analytics: "/api/content-os/analytics",
   connections: "/api/content-os/connections",
   publications: "/api/content-os/publications",
+  externalPublications: "/api/content-os/publications/external",
   ingestionStatus: "/api/content-os/ingestion-status",
   research: "/api/content-os/research",
   history: "/api/content-os/history",
@@ -819,7 +824,7 @@ function renderConnectorState() {
     button.textContent = configured[provider] === true ? "Connect " + providerLabels[provider] :
       externallyConnected ? providerLabels[provider] + " feed enabled" : "Set up " + providerLabels[provider];
     button.title = button.disabled ?
-      (externallyConnected ? "The external feed is running, but new Content OS episodes still need an episode mapping before analytics can attach." : "One-time provider app setup is still required.") :
+      (externallyConnected ? "The external feed reads new publication mappings from Content OS after you register the post." : "One-time provider app setup is still required.") :
       "Authorise the account once so Content OS can attach future checkpoints to an episode.";
   });
   const active = Array.isArray(connectorState.connections) ? connectorState.connections.filter(function (connection) {
@@ -831,7 +836,7 @@ function renderConnectorState() {
   status.className = "status-badge" + (fullyConnected ? " success" : " warning");
   clearNode(list);
   if (!active.length && !externalFeedOn) list.appendChild(makeNode("p", "subtle", "No provider account is connected to the checkpoint scheduler yet."));
-  if (external.meta === true) list.appendChild(makeNode("p", "subtle", "Meta collection is running, but its separate APC-AI-OS episode register is not yet synced from Content OS. No eligible episode checkpoint has reached this dashboard."));
+  if (external.meta === true) list.appendChild(makeNode("p", "subtle", "Instagram collection is running. Registering an Instagram Reel here now supplies its episode mapping from Content OS automatically."));
   active.forEach(function (connection) {
     const row = makeNode("div", "connection-row");
     row.appendChild(makeNode("span", "", connection.accountName + " · " + connection.provider));
@@ -845,15 +850,21 @@ function renderConnectorState() {
     const platform = element("automaticPlatform") ? element("automaticPlatform").value : "Instagram";
     const previous = select.value;
     select.replaceChildren(new Option("Choose a connected account", ""));
+    if (external.meta === true && platform === "Instagram") {
+      select.appendChild(new Option("Existing Meta automation", "external:meta"));
+    }
     active.filter(function (connection) { return connectorMatchesPlatform(connection.provider, platform); })
       .forEach(function (connection) { select.appendChild(new Option(connection.accountName + " · " + connection.provider, connection.connectionId)); });
     if (Array.from(select.options).some(function (option) { return option.value === previous; })) select.value = previous;
+    else if (external.meta === true && platform === "Instagram" && !active.some(function (connection) { return connectorMatchesPlatform(connection.provider, platform); })) select.value = "external:meta";
   }
   const trackButton = element("trackPublicationButton");
   if (trackButton) {
     const platform = element("automaticPlatform") ? element("automaticPlatform").value : "Instagram";
-    const hasMatchingConnection = active.some(function (connection) { return connectorMatchesPlatform(connection.provider, platform); });
-    trackButton.disabled = !connectorState.ingestionEnabled || !hasMatchingConnection;
+    const hasDirectConnection = connectorState.ingestionEnabled && active.some(function (connection) { return connectorMatchesPlatform(connection.provider, platform); });
+    const hasExternalConnection = external.meta === true && platform === "Instagram";
+    const hasMatchingConnection = hasDirectConnection || hasExternalConnection;
+    trackButton.disabled = !hasMatchingConnection;
     trackButton.title = trackButton.disabled ? "Connect the matching platform account once before publishing from this workflow." : "Link this post and schedule its checkpoints.";
   }
   renderSystemConnections();
@@ -892,11 +903,11 @@ function renderSystemConnections() {
     const connected = active.some(function (item) { return item.provider === provider; });
     const feedEnabled = external[provider] === true;
     const providerConfigured = configured[provider] === true;
-    const statusLabel = connected ? "Connected" : feedEnabled ? "Feed running, not mapped" : providerConfigured ? "Ready to connect" : "App setup required";
+    const statusLabel = connected ? "Connected" : feedEnabled ? "Connected feed" : providerConfigured ? "Ready to connect" : "App setup required";
     const detail = connected ? "New publications can schedule automatic 24h, 7d and 28d checkpoints." :
-      feedEnabled ? "The existing private feed is healthy, but its separate episode register does not yet receive new Content OS episode IDs." :
+      feedEnabled ? "Register a published Instagram Reel once in Content OS. The private feed then reads its mapping automatically." :
         providerConfigured ? "Use Connect " + label + " once to authorise the account." : "OAuth identifiers and secrets still need one-time Cloudflare setup.";
-    grid.appendChild(connectionStatusCard(label, statusLabel, detail, connected ? "success" : "warning"));
+    grid.appendChild(connectionStatusCard(label, statusLabel, detail, connected || feedEnabled ? "success" : "warning"));
   }
 }
 
@@ -1839,14 +1850,17 @@ function updateSourceForPlatform() {
   renderConnectorState();
 }
 
-async function buildTrackingPublication() {
+async function buildTrackingPublication(options) {
   const episodeId = text(element("automaticEpisode").value).trim();
   const episode = activeEpisodeRows().find(function (item) { return item.id === episodeId; });
   if (!episode || !["READY", "PUBLISHED"].includes(episode.status)) throw new Error("Complete the final READY video review before publishing.");
   const platform = element("automaticPlatform").value;
-  const postRef = text(element("automaticPostRef").value).trim();
+  const rawPostRef = text(element("automaticPostRef").value).trim();
   const publishedAt = toUtcIso(element("automaticPublishedAt").value);
-  if (!postRef || !publishedAt) throw new Error("Add the published post link or stable ID and publication time.");
+  if (!rawPostRef || !publishedAt) throw new Error("Add the published post link or stable ID and publication time.");
+  const postRef = options?.canonicalInstagramReel
+    ? canonicalInstagramReelPostRef(rawPostRef)
+    : rawPostRef;
   const existingPublication = matchingPublication(platform, postRef);
   if (existingPublication) return existingPublication;
   const promptArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
@@ -1858,7 +1872,9 @@ async function buildTrackingPublication() {
   const topic = isPlainObject(promptArtifact?.payload?.sourceContext?.topic) ? promptArtifact.payload.sourceContext.topic : {};
   const publication = {
     schemaVersion: ANALYTICS_SCHEMA_VERSION,
-    publicationId: await publicationIdFor(platform, postRef),
+    publicationId: options?.canonicalInstagramReel
+      ? await canonicalInstagramReelPublicationId(postRef)
+      : await publicationIdFor(platform, postRef),
     episodeId: episodeId,
     platform: platform,
     postRef: postRef,
@@ -1883,18 +1899,20 @@ async function trackPublicationAutomatically() {
   const status = element("connectorFormStatus");
   const connectionId = element("connectorConnection").value;
   const remoteMediaId = text(element("automaticRemoteMediaId").value).trim();
-  if (!connectionId) throw new Error("Connect and choose the matching platform account first.");
-  if (!remoteMediaId) throw new Error("Add the platform media ID.");
+  if (!connectionId) throw new Error("Choose the matching analytics connection first.");
+  const usesExternalMeta = connectionId === "external:meta";
+  if (!usesExternalMeta && !remoteMediaId) throw new Error("Add the platform media ID.");
   status.textContent = "Linking the publication and scheduling checkpoints…";
-  const publication = await buildTrackingPublication();
-  const result = await apiFetch(ENDPOINTS.publications, {
+  const publication = await buildTrackingPublication({ canonicalInstagramReel: usesExternalMeta });
+  const idempotencyKey = "publication:" + publication.publicationId;
+  const result = await apiFetch(usesExternalMeta ? ENDPOINTS.externalPublications : ENDPOINTS.publications, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ connectionId: connectionId, remoteMediaId: remoteMediaId, publication: publication }),
+    body: JSON.stringify(usesExternalMeta ? { idempotencyKey: idempotencyKey, publication: publication } : { connectionId: connectionId, remoteMediaId: remoteMediaId, publication: publication }),
   });
   if (!result.response.ok) throw new Error(text(result.body && result.body.error) || "The publication could not be linked.");
   const episode = activeEpisodeRows().find(function (item) { return item.id === publication.episodeId; });
-  if (episode?.status === "READY") {
+  if (!usesExternalMeta && episode?.status === "READY") {
     const stage = await apiFetch(ENDPOINTS.episodeWorkflow, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1905,7 +1923,9 @@ async function trackPublicationAutomatically() {
   }
   await Promise.all([readConnectorState(), readAnalytics(), readEpisodeWorkflow()]);
   renderResults();
-  status.textContent = "Published and linked. The 24h, 7d and 28d checkpoint jobs are scheduled.";
+  status.textContent = usesExternalMeta ?
+    "Published and linked. The existing Meta automation will use this episode mapping at 24h, 7d and 28d." :
+    "Published and linked. The 24h, 7d and 28d checkpoint jobs are scheduled.";
 }
 
 async function refreshAutomaticAnalytics() {

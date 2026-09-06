@@ -63,6 +63,7 @@ export const PUBLIC_FILES = Object.freeze([
   "content-os/app.css",
   "content-os/app.js",
   "content-os/analytics.js",
+  "content-os/instagram-reels.js",
   "content-os/research-schema.js",
   "content-os/schema.js",
   "content-os/topic-bank.js",
