@@ -8,9 +8,9 @@
     "source_authority_record_id": "APC-REV-DAY0-2026-08-21",
     "source_schema_version": "1.2",
     "source_authority_version": "1.2",
-    "source_candidate_commit": "b7206744965929ce1469295129661a863bbdf733",
-    "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
+    "source_candidate_commit": "e575b805b51c1574ed98e90a7658dbc2970d7554",
+    "canonical_source_sha256": "sha256:c9ae9376c5187b38585b6ca52b80d8cf681e0bf940fa5ea53815c92f32964752",
+    "governed_projection_sha256": "sha256:49f962f73d44fc6fd8481bf6f8f1b78d99aa316f83260ddfebeb53f300ffbf8c",
     "generation_method": "Founder-approved website projection update from canonical mirror"
   },
   "offers": {
@@ -93,8 +93,8 @@
         "Implementation guidance",
         "Review what happened",
         "Adjust the plan based on the family's experience",
-        "WhatsApp clarification throughout the active programme",
-        "One check-in about a month after the final session"
+        "Bounded weekly parent updates and WhatsApp clarification during the active programme",
+        "Final written plan or summary"
       ],
       "price": {
         "currency": [
@@ -111,7 +111,7 @@
         6,
         8
       ],
-      "additional_post_programme_checkin": true,
+      "additional_post_programme_checkin": false,
       "fit_call_required": true,
       "payment_methods": [
         "Bank transfer",
@@ -124,7 +124,7 @@
           "signals": [
             "APC Home Support Programme",
             "RM1,800",
-            "Four sessions"
+            "Four 60-minute sessions"
           ]
         },
         "terms.html": {
@@ -132,7 +132,7 @@
           "signals": [
             "APC Home Support Programme",
             "RM1,800",
-            "four sessions"
+            "four 60-minute online sessions"
           ]
         },
         "pay/index.html": {
@@ -140,7 +140,7 @@
           "signals": [
             "APC Home Support Programme",
             "RM1,800",
-            "Four sessions"
+            "Four 60-minute sessions"
           ]
         }
       }
@@ -181,8 +181,8 @@
       "DuitNow QR"
     ],
     "international_payment_method": "Wise bank transfer",
-    "home_support_clarification": "WhatsApp clarification throughout the active programme",
-    "post_programme_checkin": "One check-in about a month after the final session"
+    "home_support_clarification": "Bounded weekly parent updates and WhatsApp clarification during the active programme",
+    "post_programme_checkin": "None"
   },
   "claim_boundaries": {
     "excludes": [
