@@ -405,6 +405,7 @@ export async function onRequestPost({ request, env }) {
       const current = await database.prepare("SELECT * FROM practice_clients WHERE case_id = ?").bind(payload.caseId).first();
       if (!current) return json({ error: "Client record was not found." }, 404);
       if (Number(current.revision) !== payload.expectedRevision) return json({ error: "Client record changed on another screen. Refresh before saving." }, 409);
+      if (current.service_code === "CUSTOM" && !["RM350", "RM1800"].includes(payload.client.serviceCode)) return json({ error: "Legacy CUSTOM cases must be explicitly reclassified as RM350 or RM1,800 before saving." }, 409);
       const existingSessions = await database.prepare("SELECT session_id FROM practice_sessions WHERE case_id = ? LIMIT 1").bind(payload.caseId).all();
       if (current.service_code !== payload.client.serviceCode && (existingSessions.results || []).length) return json({ error: "A service cannot be changed after its journey has started. Create a new case so the RM350 and RM1,800 boundaries remain separate." }, 409);
       const nextRevision = payload.expectedRevision + 1;

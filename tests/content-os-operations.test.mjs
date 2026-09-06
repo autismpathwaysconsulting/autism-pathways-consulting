@@ -223,5 +223,7 @@ test("Practice Console preserves legacy CUSTOM visibly until CJ reclassifies it"
   const source = await readFile(new URL("../content-os/practice/app.js", import.meta.url), "utf8");
   assert.match(source, /CUSTOM — choose a current service/);
   assert.match(source, /Choose RM350 or RM1,800 explicitly before saving/);
+  assert.match(source, /client\.serviceCode === "CUSTOM" \? \["RM350", "RM1800"\]/);
   assert.doesNotMatch(source, /serviceOptions = \["TBD", "RM350", "RM1800", "CUSTOM"\]/);
+  assert.match(await readFile(new URL("../functions/api/content-os/practice/index.js", import.meta.url), "utf8"), /Legacy CUSTOM cases must be explicitly reclassified as RM350 or RM1,800/);
 });
