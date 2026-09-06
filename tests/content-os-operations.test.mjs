@@ -221,7 +221,7 @@ test("Practice Console fixes service-aware journeys and separates internal notes
 
 test("Practice Console preserves legacy CUSTOM visibly until CJ reclassifies it", async () => {
   const source = await readFile(new URL("../content-os/practice/app.js", import.meta.url), "utf8");
-  assert.match(source, /CUSTOM — choose a current service/);
+  assert.match(source, /CUSTOM: choose a current service/);
   assert.match(source, /Choose RM350 or RM1,800 explicitly before saving/);
   assert.match(source, /client\.serviceCode === "CUSTOM" \? \["RM350", "RM1800"\]/);
   assert.doesNotMatch(source, /serviceOptions = \["TBD", "RM350", "RM1800", "CUSTOM"\]/);

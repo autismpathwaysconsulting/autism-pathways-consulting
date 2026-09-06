@@ -108,7 +108,7 @@ function clientForm(client) {
   const sourceOptions = ["UNVERIFIED", "PARENT_REPORTED", "CJ_VERIFIED"];
   const options = (items, selected) => items.map((value) => `<option value="${value}"${value === selected ? " selected" : ""}>${value.replaceAll("_", " ")}</option>`).join("");
   const legacyService = client.serviceCode === "CUSTOM"
-    ? `<option value="" selected disabled>CUSTOM — choose a current service</option>`
+    ? `<option value="" selected disabled>CUSTOM: choose a current service</option>`
     : "";
   return `<form id="clientEditForm" class="card operator-form" data-case-id="${escapeHtml(client.caseId)}" data-revision="${client.revision}">
     <div class="card-heading"><div><p class="card-label">Protected client record</p><h3>${escapeHtml(client.caseId)}</h3></div><span class="status-badge">Revision ${client.revision}</span></div>
@@ -178,12 +178,12 @@ function sessionForm(session) {
       <label>Planned date<input name="scheduledAt" type="date" value="${escapeHtml((session.scheduledAt || "").slice(0, 10))}"></label>
       <label>Completed / meeting date<input name="occurredAt" type="date" value="${escapeHtml((session.occurredAt || "").slice(0, 10))}"></label>
     </div></fieldset>
-    <fieldset class="stage-section internal"><legend>Internal workspace — not shared with parents</legend><div class="form-grid">
+    <fieldset class="stage-section internal"><legend>Internal workspace (not shared with parents)</legend><div class="form-grid">
       <label class="span-two">Preparation and agenda<textarea name="preparation" rows="5" maxlength="10000">${escapeHtml(session.preparation)}</textarea></label>
       <label class="span-two">Template answers and source information <span>retained internally; not included in the parent export</span><textarea name="templateAnswers" rows="7" maxlength="30000">${escapeHtml(session.templateAnswers)}</textarea></label>
       <label class="span-two">Facilitator notes <span>private working notes; never included in the parent export</span><textarea name="privateNotes" rows="8" maxlength="30000">${escapeHtml(session.privateNotes)}</textarea></label>
     </div></fieldset>
-    <fieldset class="stage-section parent"><legend>Parent follow-through — eligible for approved export</legend><div class="form-grid">
+    <fieldset class="stage-section parent"><legend>Parent follow-through (eligible for approved export)</legend><div class="form-grid">
       <label class="span-two">Discussion summary<textarea name="parentSummary" rows="8" maxlength="20000">${escapeHtml(session.parentSummary)}</textarea></label>
       <label class="span-two">Action plan for parents<textarea name="actionPlan" rows="8" maxlength="20000">${escapeHtml(session.actionPlan)}</textarea></label>
       <label class="span-two">Materials and resources for parents<textarea name="parentMaterials" rows="6" maxlength="10000">${escapeHtml(session.parentMaterials)}</textarea></label>
