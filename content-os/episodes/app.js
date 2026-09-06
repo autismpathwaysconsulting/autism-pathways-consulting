@@ -1,4 +1,5 @@
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "../video-rules.js";
+import { MASTER_TOPIC_BANK, MASTER_TOPIC_BANK_VERSION } from "../topic-bank.js";
 
 const EPISODE_API = "/api/content-os/episode-workflow";
 const RESEARCH_API = "/api/content-os/research?limit=12";
@@ -67,6 +68,29 @@ function renderResearch() {
     button.type = "button";
     button.dataset.researchItem = item.itemId;
     button.dataset.title = item.title;
+    card.appendChild(button);
+    list.appendChild(card);
+  }
+}
+
+function renderMasterIdeas() {
+  const list = element("masterIdeas");
+  clear(list);
+  for (const topic of MASTER_TOPIC_BANK) {
+    const card = node("article", "card");
+    card.appendChild(node("span", "status-badge success", "Master " + MASTER_TOPIC_BANK_VERSION));
+    card.appendChild(node("h3", "", topic.name));
+    card.appendChild(node("blockquote", "topic-hook", topic.hook));
+    card.appendChild(node("p", "subtle", "Parent moment: " + topic.parentMoment));
+    card.appendChild(node("p", "subtle", "Payoff: " + topic.practicalPayoff));
+    const source = node("a", "topic-source", "Evidence: " + topic.source.title + " (" + topic.source.year + ")");
+    source.href = topic.source.url;
+    source.target = "_blank";
+    source.rel = "noopener noreferrer";
+    card.appendChild(source);
+    const button = node("button", "button compact", "Create episode");
+    button.type = "button";
+    button.dataset.masterTopic = topic.id;
     card.appendChild(button);
     list.appendChild(card);
   }
@@ -148,14 +172,15 @@ function render() {
   element("filmingCount").textContent = String(workflow.episodes.filter(item => item.status === "SCRIPT_LOCKED").length);
   element("readyCount").textContent = String(workflow.episodes.filter(item => item.status === "READY").length);
   element("publishedCount").textContent = String(workflow.episodes.filter(item => item.status === "PUBLISHED").length);
+  renderMasterIdeas();
   renderResearch();
   renderEpisodes();
   renderEpisodeOptions();
   renderResults();
-  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " active";
+  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " and teen idea bank active";
   element("masterRulesDetail").textContent =
     "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) +
-    ". Old HTML boards and previous rule copies are excluded.";
+    ". Idea bank " + MASTER_TOPIC_BANK_VERSION + " carries its evidence into the filming prompt. Old HTML boards and previous rule copies are excluded.";
   if (!element("episodeId").value) element("episodeId").value = nextEpisodeId();
 }
 
@@ -163,11 +188,27 @@ function productionPrompt() {
   const episode = workflow.episodes.find(item => item.id === element("packEpisode").value);
   if (!episode) return "Create an episode first.";
   const notes = element("packNotes").value.trim() || "Keep the language warm, practical and within APC scope.";
+  const masterTopic = MASTER_TOPIC_BANK.find(topic => topic.name === episode.title) || null;
+  const researchItem = (research.items || []).find(item => item.itemId === episode.source_research_item_id) || null;
+  const evidenceContext = masterTopic ? {
+    sourceType: "master-topic-bank",
+    masterRulesVersion: MASTER_VIDEO_RULES.version,
+    topicBankVersion: MASTER_TOPIC_BANK_VERSION,
+    topic: masterTopic,
+  } : researchItem ? {
+    sourceType: "governed-research-feed",
+    researchItem: researchItem,
+  } : {
+    sourceType: "manual",
+    instruction: "Verify the required statistic or specific number before writing the hook. Do not invent it.",
+  };
   return [
     `Create a complete, filming-ready APC episode pack for ${episode.id}: ${episode.title}.`,
     "",
     "Format: " + element("packFormat").value,
     "Constraints: " + notes,
+    "Evidence context:",
+    JSON.stringify(evidenceContext, null, 2),
     "",
     ...masterVideoRulePromptLines(),
     "",
@@ -203,6 +244,15 @@ element("researchIdeas").addEventListener("click", async event => {
   const button = event.target.closest("button[data-research-item]");
   if (!button) return;
   try { await request({ action: "create_episode", episode: { id: nextEpisodeId(), title: button.dataset.title, researchItemId: button.dataset.researchItem } }); }
+  catch (error) { setStatus("Could not create episode", error.message, "error"); }
+});
+
+element("masterIdeas").addEventListener("click", async event => {
+  const button = event.target.closest("button[data-master-topic]");
+  if (!button) return;
+  const topic = MASTER_TOPIC_BANK.find(item => item.id === button.dataset.masterTopic);
+  if (!topic) return;
+  try { await request({ action: "create_episode", episode: { id: nextEpisodeId(), title: topic.name, researchItemId: null } }); }
   catch (error) { setStatus("Could not create episode", error.message, "error"); }
 });
 

@@ -423,6 +423,33 @@ h3 {
   margin-top: 11px;
 }
 
+.topic-recipe {
+  display: grid;
+  gap: 7px;
+  margin-top: 11px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: var(--canvas);
+}
+
+.topic-detail,
+.topic-scope {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.topic-source {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--teal-dark, var(--navy));
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.topic-scope { margin-top: 5px; }
+
 .calstatus,
 .calendar-status {
   width: auto;
