@@ -4251,13 +4251,13 @@ html {
   html.apc-home-snap,
   html.apc-site-snap {
     scroll-padding-top: 94px !important;
-    scroll-snap-type: y proximity !important;
+    scroll-snap-type: y mandatory !important;
   }
 
   .apc-v2 main > *,
   .apc-v2 > footer,
   .apc-v2 .apc-snap-stop {
-    scroll-snap-stop: normal !important;
+    scroll-snap-stop: always !important;
   }
 
   .apc-home-page {
