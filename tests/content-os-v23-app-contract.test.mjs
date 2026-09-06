@@ -15,6 +15,15 @@ test("manual analytics offers current checkpoints and platform sources only", as
   assert.match(html, />Reset planning data<\/button>/);
 });
 
+test("quick launch links directly to the production Calm feedback database", async () => {
+  const html = await source("content-os/index.html");
+
+  assert.match(
+    html,
+    /href="https:\/\/dash\.cloudflare\.com\/1252618cc62bbdf9c346f12b3469b1ca\/workers\/d1\/databases\/af6c2c79-7bca-41c0-b412-2a737a0ff0b0\/studio"[^>]*target="_blank"[^>]*rel="noopener"[^>]*>Check Calm feedback<\/a>/,
+  );
+});
+
 test("backup and recovery include the validated offline analytics queue", async () => {
   const app = await source("content-os/app.js");
   assert.match(app, /MAX_IMPORT_BYTES = 64 \* 1024 \* 1024/);
