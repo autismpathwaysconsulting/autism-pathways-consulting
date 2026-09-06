@@ -65,6 +65,7 @@ test("Practice Console rejects unsafe or incomplete writes", () => {
   assert.match(validatePracticeAction({ action: "confirm_drive_export", exportId: "12345678-1234-4234-8234-123456789abc", providerFileId: "not a Drive id" }), /Drive confirmation/i);
   assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-02-30" }), /date/i);
   assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-99-99TZZZ" }), /date/i);
+  assert.match(validatePracticeAction({ action: "create_client", client: client({ serviceCode: "CUSTOM" }), reason: "test" }), /status/i);
 });
 
 test("Calm inbox accepts only controlled triage records", () => {
@@ -102,11 +103,39 @@ test("practice and Calm workflows are private build assets with durable schemas"
   assert.match(journey, /idx_practice_sessions_journey_stage/);
   assert.match(journey, /trg_practice_session_journey_order_insert/);
   assert.match(journey, /trg_practice_session_journey_order_update/);
+  assert.match(journey, /practice_journey_migration_guard/);
 
   const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
   const productionBindings = config.env.production.d1_databases.map((item) => item.binding);
   assert.deepEqual(productionBindings, ["APC_CONTENT_OS_DB", "APC_CALM_FEEDBACK_DB"]);
   assert.equal(config.env.production.vars.APC_PRACTICE_LIVE_WRITES_ENABLED, "false");
+});
+
+test("journey migration fails closed instead of guessing the meaning of legacy sessions", async () => {
+  const database = new DatabaseSync(":memory:");
+  try {
+    const names = [
+      "0001_content_os_state.sql", "0002_content_os_v23_hardening.sql", "0003_episode_workflow.sql",
+      "0004_analytics_connectors.sql", "0005_episode_tracking.sql", "0006_episode_management.sql",
+      "0007_practice_and_feedback_workflows.sql", "0008_workflow_concurrency_hardening.sql",
+    ];
+    for (const name of names) database.exec(await readFile(new URL(`../migrations/${name}`, import.meta.url), "utf8"));
+    database.prepare(`INSERT INTO practice_clients
+      (case_id, display_name, child_age, region, concern, stage, service_code, next_action, source_status,
+       known_facts_json, open_questions_json, boundary_flags_json, revision, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '[]', '[]', '[]', 1, ?, ?)`)
+      .run("CASE-2026-ABC234", "Synthetic Parent", 8, "Malaysia", "Synthetic concern", "PREPARATION", "RM1800", "Prepare", "CJ_VERIFIED", "2026-09-06T00:00:00Z", "2026-09-06T00:00:00Z");
+    database.prepare(`INSERT INTO practice_sessions
+      (session_id, case_id, session_number, status, scheduled_at, occurred_at, preparation, private_notes,
+       parent_summary, action_plan, document_status, revision, created_at, updated_at)
+      VALUES (?, ?, 1, 'PLANNED', NULL, NULL, '', '', '', '', 'DRAFT', 1, ?, ?)`)
+      .run("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", "CASE-2026-ABC234", "2026-09-06T00:00:00Z", "2026-09-06T00:00:00Z");
+    const journey = await readFile(new URL("../migrations/0009_practice_client_journey.sql", import.meta.url), "utf8");
+    assert.throws(() => database.exec(journey), /CHECK constraint failed/);
+    assert.deepEqual(database.prepare("PRAGMA table_info(practice_sessions)").all().map((column) => column.name).includes("journey_stage"), false);
+  } finally {
+    database.close();
+  }
 });
 
 test("all Content OS migrations apply together and keep workflow history append-only", async () => {

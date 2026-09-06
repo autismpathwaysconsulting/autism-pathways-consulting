@@ -104,7 +104,7 @@ function renderClients() {
 
 function clientForm(client) {
   const stageOptions = ["RECORD_REVIEW_REQUIRED", "FIT_REVIEW", "APPROVED_TO_PAY", "PAYMENT_PROOF_RECEIVED", "PAYMENT_VERIFIED", "BOOKED", "PREPARATION", "SESSION_READY", "IN_SESSION", "DOCUMENTATION_DRAFT", "CJ_APPROVED", "DELIVERED", "COMPLETE", "REFERRED", "CANCELLED", "PAUSED"];
-  const serviceOptions = ["TBD", "RM350", "RM1800", "CUSTOM"];
+  const serviceOptions = ["TBD", "RM350", "RM1800"];
   const sourceOptions = ["UNVERIFIED", "PARENT_REPORTED", "CJ_VERIFIED"];
   const options = (items, selected) => items.map((value) => `<option value="${value}"${value === selected ? " selected" : ""}>${value.replaceAll("_", " ")}</option>`).join("");
   return `<form id="clientEditForm" class="card operator-form" data-case-id="${escapeHtml(client.caseId)}" data-revision="${client.revision}">

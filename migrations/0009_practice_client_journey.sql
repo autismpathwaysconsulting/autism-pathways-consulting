@@ -1,3 +1,16 @@
+-- Legacy generic sessions cannot be classified as pre-session, paid-session or
+-- post-session records without a human decision. Fail closed instead of
+-- silently relabelling them. The approved production rollout verified this
+-- table was empty before applying the migration.
+CREATE TABLE practice_journey_migration_guard (
+  marker INTEGER NOT NULL CHECK (marker = 0)
+);
+
+INSERT INTO practice_journey_migration_guard (marker)
+SELECT 1 FROM practice_sessions LIMIT 1;
+
+DROP TABLE practice_journey_migration_guard;
+
 ALTER TABLE practice_sessions
 ADD COLUMN journey_stage TEXT CHECK (
   journey_stage IS NULL OR journey_stage IN (
@@ -10,14 +23,6 @@ ADD COLUMN template_answers TEXT NOT NULL DEFAULT '' CHECK (length(template_answ
 
 ALTER TABLE practice_sessions
 ADD COLUMN parent_materials TEXT NOT NULL DEFAULT '' CHECK (length(parent_materials) <= 10000);
-
-UPDATE practice_sessions
-SET journey_stage = CASE session_number
-  WHEN 1 THEN 'PRE_SESSION_1'
-  WHEN 2 THEN 'SESSION_1'
-  ELSE NULL
-END
-WHERE journey_stage IS NULL;
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_practice_sessions_journey_stage
 ON practice_sessions (case_id, journey_stage)
