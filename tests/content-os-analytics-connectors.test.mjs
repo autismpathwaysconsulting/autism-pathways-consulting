@@ -138,6 +138,16 @@ test("connector snapshots use provider-specific collection methods", () => {
   assert.doesNotThrow(() => assertValidAnalyticsSnapshot({ ...base, collectionMethod: "youtube_connector", sourceSystem: "YouTube Studio" }));
 });
 
+test("the dashboard distinguishes a running external feed from an episode-linked connector", async () => {
+  const app = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
+  const html = await readFile(new URL("../content-os/index.html", import.meta.url), "utf8");
+  assert.match(app, /Partial setup/);
+  assert.match(app, /Feed running, not mapped/);
+  assert.match(app, /separate APC-AI-OS episode register is not yet synced from Content OS/);
+  assert.match(html, /existing Meta feed is shown separately until its episode mapping is synced/);
+  assert.match(html, /id="trackPublicationButton"[^>]+disabled/);
+});
+
 test("connector migration and configs define the secure scheduled architecture", async () => {
   const [migration, workerConfig, pagesConfig] = await Promise.all([
     readFile(new URL("../migrations/0004_analytics_connectors.sql", import.meta.url), "utf8"),

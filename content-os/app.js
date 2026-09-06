@@ -65,6 +65,7 @@ const ENDPOINTS = Object.freeze({
   ingestionStatus: "/api/content-os/ingestion-status",
   research: "/api/content-os/research",
   history: "/api/content-os/history",
+  episodeWorkflow: "/api/content-os/episode-workflow",
 });
 
 const BACKUP_FORMAT = "apc.content-os.backup.v2.3";
@@ -102,6 +103,8 @@ let syncMeta = loadSyncMeta();
 let analyticsRecords = loadAnalyticsCache();
 let analyticsQueue = loadAnalyticsQueue();
 let connectorState = { configuredProviders: {}, connections: [], ingestionEnabled: false, enabledProviders: [] };
+let episodeWorkflowState = { episodes: [], artifacts: [], publications: [], reviews: [] };
+let researchConnectionState = "checking";
 let researchCache = loadResearchCache();
 let pendingCloudRecord = null;
 let historyRecords = [];
@@ -119,6 +122,15 @@ let databasePromise = null;
 
 function element(id) {
   return document.getElementById(id);
+}
+
+function arrangeContentWorkflowSections() {
+  const main = element("main-content");
+  if (!main) return;
+  ["dashboard", "topics", "prompts", "results", "research", "products", "book", "reference"].forEach(function (id) {
+    const section = element(id);
+    if (section) main.appendChild(section);
+  });
 }
 
 function text(value) {
@@ -803,20 +815,23 @@ function renderConnectorState() {
   document.querySelectorAll("[data-connector-provider]").forEach(function (button) {
     const provider = button.dataset.connectorProvider;
     const externallyConnected = external[provider] === true;
-    button.disabled = externallyConnected || configured[provider] !== true;
-    button.textContent = externallyConnected ? providerLabels[provider] + " connected automatically" : "Connect " + providerLabels[provider];
-    button.title = externallyConnected ? "This account is connected through APC's private automation." :
-      (button.disabled ? "One-time provider app setup is still required." : "");
+    button.disabled = configured[provider] !== true;
+    button.textContent = configured[provider] === true ? "Connect " + providerLabels[provider] :
+      externallyConnected ? providerLabels[provider] + " feed enabled" : "Set up " + providerLabels[provider];
+    button.title = button.disabled ?
+      (externallyConnected ? "The external feed is running, but new Content OS episodes still need an episode mapping before analytics can attach." : "One-time provider app setup is still required.") :
+      "Authorise the account once so Content OS can attach future checkpoints to an episode.";
   });
   const active = Array.isArray(connectorState.connections) ? connectorState.connections.filter(function (connection) {
     return isPlainObject(connection) && connection.status === "active";
   }) : [];
-  const automaticOn = connectorState.ingestionEnabled || Object.values(external).some(function (value) { return value === true; });
-  status.textContent = automaticOn ? "Automatic collection on" : "Setup mode";
-  status.className = "status-badge" + (automaticOn ? " success" : "");
+  const fullyConnected = connectorState.ingestionEnabled && active.length > 0;
+  const externalFeedOn = Object.values(external).some(function (value) { return value === true; });
+  status.textContent = fullyConnected ? "Automatic" : externalFeedOn ? "Partial setup" : "Setup required";
+  status.className = "status-badge" + (fullyConnected ? " success" : " warning");
   clearNode(list);
-  if (!active.length && !automaticOn) list.appendChild(makeNode("p", "subtle", "No platform account is connected yet."));
-  if (external.meta === true) list.appendChild(makeNode("p", "subtle", "Meta · existing APC automation connected"));
+  if (!active.length && !externalFeedOn) list.appendChild(makeNode("p", "subtle", "No provider account is connected to the checkpoint scheduler yet."));
+  if (external.meta === true) list.appendChild(makeNode("p", "subtle", "Meta collection is running, but its separate APC-AI-OS episode register is not yet synced from Content OS. No eligible episode checkpoint has reached this dashboard."));
   active.forEach(function (connection) {
     const row = makeNode("div", "connection-row");
     row.appendChild(makeNode("span", "", connection.accountName + " · " + connection.provider));
@@ -827,12 +842,61 @@ function renderConnectorState() {
     list.appendChild(row);
   });
   if (select) {
-    const platform = element("rPlatform") ? element("rPlatform").value : "Instagram";
+    const platform = element("automaticPlatform") ? element("automaticPlatform").value : "Instagram";
     const previous = select.value;
     select.replaceChildren(new Option("Choose a connected account", ""));
     active.filter(function (connection) { return connectorMatchesPlatform(connection.provider, platform); })
       .forEach(function (connection) { select.appendChild(new Option(connection.accountName + " · " + connection.provider, connection.connectionId)); });
     if (Array.from(select.options).some(function (option) { return option.value === previous; })) select.value = previous;
+  }
+  const trackButton = element("trackPublicationButton");
+  if (trackButton) {
+    const platform = element("automaticPlatform") ? element("automaticPlatform").value : "Instagram";
+    const hasMatchingConnection = active.some(function (connection) { return connectorMatchesPlatform(connection.provider, platform); });
+    trackButton.disabled = !connectorState.ingestionEnabled || !hasMatchingConnection;
+    trackButton.title = trackButton.disabled ? "Connect the matching platform account once before publishing from this workflow." : "Link this post and schedule its checkpoints.";
+  }
+  renderSystemConnections();
+}
+
+function connectionStatusCard(title, label, detail, kind) {
+  const card = makeNode("article", "connection-status-card");
+  card.appendChild(makeNode("strong", "", title));
+  card.appendChild(makeNode("span", "status-badge " + (kind || "neutral"), label));
+  card.appendChild(makeNode("p", "subtle", detail));
+  return card;
+}
+
+function renderSystemConnections() {
+  const grid = element("systemConnectionGrid");
+  if (!grid) return;
+  clearNode(grid);
+  const configured = isPlainObject(connectorState.configuredProviders) ? connectorState.configuredProviders : {};
+  const external = isPlainObject(connectorState.externalProviders) ? connectorState.externalProviders : {};
+  const active = Array.isArray(connectorState.connections) ? connectorState.connections.filter(function (item) { return item.status === "active"; }) : [];
+  const researchHasData = researchCache.runs.length > 0;
+  grid.appendChild(connectionStatusCard(
+    "Cloud records",
+    cloudMode === "local" ? "Offline" : "Connected",
+    cloudMode === "local" ? "Using validated browser storage until the secure D1 connection returns." : "Planning, episodes and analytics use the canonical D1 database.",
+    cloudMode === "local" ? "warning" : "success"
+  ));
+  grid.appendChild(connectionStatusCard(
+    "Weekly research",
+    researchHasData ? "Data received" : researchConnectionState === "connected" ? "Connected, empty" : researchConnectionState === "error" ? "Needs attention" : "Checking",
+    researchHasData ? "The latest governed research bundle is available." : researchConnectionState === "connected" ? "The endpoint works, but no scheduled research bundle has been delivered." : "The current research connection has not been confirmed.",
+    researchHasData || researchConnectionState === "connected" ? "success" : "warning"
+  ));
+  for (const provider of ["meta", "tiktok", "youtube"]) {
+    const label = provider === "meta" ? "Meta" : provider === "tiktok" ? "TikTok" : "YouTube";
+    const connected = active.some(function (item) { return item.provider === provider; });
+    const feedEnabled = external[provider] === true;
+    const providerConfigured = configured[provider] === true;
+    const statusLabel = connected ? "Connected" : feedEnabled ? "Feed running, not mapped" : providerConfigured ? "Ready to connect" : "App setup required";
+    const detail = connected ? "New publications can schedule automatic 24h, 7d and 28d checkpoints." :
+      feedEnabled ? "The existing private feed is healthy, but its separate episode register does not yet receive new Content OS episode IDs." :
+        providerConfigured ? "Use Connect " + label + " once to authorise the account." : "OAuth identifiers and secrets still need one-time Cloudflare setup.";
+    grid.appendChild(connectionStatusCard(label, statusLabel, detail, connected ? "success" : "warning"));
   }
 }
 
@@ -856,6 +920,62 @@ async function readConnectorState() {
     if (status) status.textContent = text(error && error.message);
     renderConnectorState();
   }
+}
+
+function activeEpisodeRows() {
+  return Array.isArray(episodeWorkflowState.episodes) ? episodeWorkflowState.episodes.filter(function (episode) { return !episode.archived_at; }) : [];
+}
+
+function renderAutomaticEpisodeOptions() {
+  const select = element("automaticEpisode");
+  if (!select) return;
+  const requested = new URL(location.href).searchParams.get("episode") || select.value;
+  clearNode(select);
+  const ready = activeEpisodeRows().filter(function (episode) { return ["READY", "PUBLISHED"].includes(episode.status); });
+  if (!ready.length) {
+    select.appendChild(new Option("Complete a final READY review first", ""));
+    return;
+  }
+  ready.forEach(function (episode) { select.appendChild(new Option(episode.id + ": " + episode.title, episode.id)); });
+  if (ready.some(function (episode) { return episode.id === requested; })) select.value = requested;
+}
+
+function renderContentWorkflow() {
+  const target = element("contentWorkflowSteps");
+  if (!target) return;
+  clearNode(target);
+  const episodes = activeEpisodeRows();
+  const steps = [
+    ["1", "Choose idea", MASTER_TOPIC_BANK.length + " master ideas", "#topics"],
+    ["2", "Build episode", episodes.filter(function (item) { return ["IDEA", "APPROVED"].includes(item.status); }).length + " developing", "#prompts"],
+    ["3", "Film + edit", episodes.filter(function (item) { return ["SCRIPT_LOCKED", "FILMED", "EDITING"].includes(item.status); }).length + " active", "/content-os/episodes/#filming-pack"],
+    ["4", "Final review", episodes.filter(function (item) { return item.status === "REVIEW"; }).length + " in review", "/content-os/episodes/#results"],
+    ["5", "Publish", episodes.filter(function (item) { return item.status === "READY"; }).length + " ready", "#results"],
+    ["6", "Learn", episodes.filter(function (item) { return item.status === "PUBLISHED"; }).length + " published", "#results"],
+  ];
+  steps.forEach(function (step) {
+    const link = makeNode("a", "workflow-step");
+    link.href = step[3];
+    link.appendChild(makeNode("span", "workflow-step-number", step[0]));
+    const copy = makeNode("span", "workflow-step-copy");
+    copy.appendChild(makeNode("strong", "", step[1]));
+    copy.appendChild(makeNode("small", "", step[2]));
+    link.appendChild(copy);
+    target.appendChild(link);
+  });
+  renderAutomaticEpisodeOptions();
+}
+
+async function readEpisodeWorkflow() {
+  try {
+    const result = await apiFetch(ENDPOINTS.episodeWorkflow, { method: "GET" });
+    if (!result.response.ok || !isPlainObject(result.body) || !Array.isArray(result.body.episodes)) throw new Error("Episode workflow is unavailable.");
+    episodeWorkflowState = result.body;
+  } catch {
+    episodeWorkflowState = { episodes: [], artifacts: [], publications: [], reviews: [] };
+  }
+  renderContentWorkflow();
+  refreshDashboard();
 }
 
 async function disconnectConnector(connectionId, provider) {
@@ -1224,6 +1344,9 @@ function initialiseFormOptions() {
   if (element("rCapturedAt") && !element("rCapturedAt").value) {
     element("rCapturedAt").value = toLocalInputValue(new Date());
   }
+  if (element("automaticPublishedAt") && !element("automaticPublishedAt").value) {
+    element("automaticPublishedAt").value = toLocalInputValue(new Date());
+  }
   const legacyCheckpoint = element("rSnapshot").querySelector('option[value="72h_legacy"]');
   if (legacyCheckpoint) legacyCheckpoint.disabled = true;
 }
@@ -1286,13 +1409,13 @@ function useTopic(topic, stage, family, area, bankTopic) {
   element("pTopic").focus();
 }
 
-function buildScriptPromptFromTopic(topic, stage, family, area, bankTopic) {
+async function buildScriptPromptFromTopic(topic, stage, family, area, bankTopic) {
   useTopic(topic, stage, family, area, bankTopic);
   element("pOutput").value = "reel";
-  buildPrompt();
+  await createTrackedEpisodePrompt();
 }
 
-function buildDevelopmentPromptFromBacklog(topic) {
+async function buildDevelopmentPromptFromBacklog(topic) {
   clearSelectedResearchContext();
   selectedResearchContext = backlogTopicContext(topic);
   renderSelectedResearchContext();
@@ -1301,7 +1424,7 @@ function buildDevelopmentPromptFromBacklog(topic) {
   if (DATA.stages.includes(topic.stage)) element("pStage").value = topic.stage;
   if (DATA.families.includes(topic.family)) element("pFamily").value = topic.family;
   element("pOutput").value = "reel";
-  buildPrompt();
+  await createTrackedEpisodePrompt();
 }
 
 function logTopic(topic, area, family, date) {
@@ -1532,7 +1655,7 @@ function renderTopics() {
     card.appendChild(makeNode("p", "topic-scope", topic.source.scope));
 
     const actions = makeNode("div", "actions");
-    actions.appendChild(makeButton("Build script prompt", "use-bank-topic", "button compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Create episode + prompt", "use-bank-topic", "button compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add to plan", "plan-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add analytics", "log-bank-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Send to book", "book-bank-topic", "button secondary compact", { index: originalIndex }));
@@ -1577,7 +1700,7 @@ function renderTopics() {
     }
 
     const actions = makeNode("div", "actions");
-    actions.appendChild(makeButton("Build development prompt", "use-backlog-topic", "button compact", { index: originalIndex }));
+    actions.appendChild(makeButton("Create episode + prompt", "use-backlog-topic", "button compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add to plan", "plan-backlog-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Add analytics", "log-backlog-topic", "button secondary compact", { index: originalIndex }));
     actions.appendChild(makeButton("Send to book", "book-backlog-topic", "button secondary compact", { index: originalIndex }));
@@ -1717,34 +1840,40 @@ function updateSourceForPlatform() {
 }
 
 async function buildTrackingPublication() {
-  const title = text(element("rTopic").value).trim();
-  const problemArea = text(element("rArea").value).trim();
-  const platform = element("rPlatform").value;
-  const postRef = text(element("rPostId").value).trim();
-  const publishedAt = toUtcIso(element("rDate").value);
-  if (!title || !problemArea || !postRef || !publishedAt) {
-    throw new Error("Fill in the post title, problem area, post URL or ID, and published time below first.");
-  }
+  const episodeId = text(element("automaticEpisode").value).trim();
+  const episode = activeEpisodeRows().find(function (item) { return item.id === episodeId; });
+  if (!episode || !["READY", "PUBLISHED"].includes(episode.status)) throw new Error("Complete the final READY video review before publishing.");
+  const platform = element("automaticPlatform").value;
+  const postRef = text(element("automaticPostRef").value).trim();
+  const publishedAt = toUtcIso(element("automaticPublishedAt").value);
+  if (!postRef || !publishedAt) throw new Error("Add the published post link or stable ID and publication time.");
   const existingPublication = matchingPublication(platform, postRef);
   if (existingPublication) return existingPublication;
+  const promptArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
+    return item.episode_id === episodeId && item.artifact_type === "PROMPT";
+  }).sort(function (left, right) { return Number(right.version) - Number(left.version); })[0];
+  const packArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
+    return item.episode_id === episodeId && item.artifact_type === "PRODUCTION_PACK";
+  }).sort(function (left, right) { return Number(right.version) - Number(left.version); })[0];
+  const topic = isPlainObject(promptArtifact?.payload?.sourceContext?.topic) ? promptArtifact.payload.sourceContext.topic : {};
   const publication = {
     schemaVersion: ANALYTICS_SCHEMA_VERSION,
     publicationId: await publicationIdFor(platform, postRef),
-    episodeId: text(element("rEpisodeId").value).trim().slice(0, 100),
+    episodeId: episodeId,
     platform: platform,
     postRef: postRef,
     publishedAt: publishedAt,
-    title: title.slice(0, 240),
-    topic: title.slice(0, 240),
-    problemArea: problemArea.slice(0, 160),
-    productFamily: element("rFamily").value,
-    format: element("rFormat").value,
-    durationSeconds: numericInput("rDurationSeconds", { integer: true, maximum: 1000000 }),
-    slideCount: numericInput("rSlideCount", { integer: true, maximum: 1000000 }),
-    hookType: element("rHookType").value,
-    creativeVersion: text(element("rVersion").value).trim().slice(0, 80),
-    ctaType: element("rCTA").value,
-    experimentType: element("rExperiment").value,
+    title: episode.title.slice(0, 240),
+    topic: episode.title.slice(0, 240),
+    problemArea: text(topic.name || episode.title).slice(0, 160),
+    productFamily: text(topic.family).slice(0, 120),
+    format: element("automaticFormat").value,
+    durationSeconds: null,
+    slideCount: null,
+    hookType: element("automaticHookType").value,
+    creativeVersion: packArtifact ? "pack-v" + packArtifact.version : "",
+    ctaType: "save_share_comment",
+    experimentType: element("automaticExperiment").value,
   };
   assertValidPublication(publication);
   return publication;
@@ -1752,14 +1881,57 @@ async function buildTrackingPublication() {
 
 async function trackPublicationAutomatically() {
   const status = element("connectorFormStatus");
-  status.textContent = "Refreshing automatic analytics…";
-  try {
-    await Promise.all([readConnectorState(), readAnalytics()]);
-    renderResults();
-    status.textContent = "Up to date. New Meta checkpoints arrive automatically after the scheduled cloud collection.";
-  } catch (error) {
-    status.textContent = text(error && error.message);
+  const connectionId = element("connectorConnection").value;
+  const remoteMediaId = text(element("automaticRemoteMediaId").value).trim();
+  if (!connectionId) throw new Error("Connect and choose the matching platform account first.");
+  if (!remoteMediaId) throw new Error("Add the platform media ID.");
+  status.textContent = "Linking the publication and scheduling checkpoints…";
+  const publication = await buildTrackingPublication();
+  const result = await apiFetch(ENDPOINTS.publications, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ connectionId: connectionId, remoteMediaId: remoteMediaId, publication: publication }),
+  });
+  if (!result.response.ok) throw new Error(text(result.body && result.body.error) || "The publication could not be linked.");
+  const episode = activeEpisodeRows().find(function (item) { return item.id === publication.episodeId; });
+  if (episode?.status === "READY") {
+    const stage = await apiFetch(ENDPOINTS.episodeWorkflow, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update_episode_status", episodeId: publication.episodeId, status: "PUBLISHED" }),
+    });
+    if (!stage.response.ok) throw new Error("The post is linked, but the episode stage needs attention: " + text(stage.body && stage.body.error));
+    episodeWorkflowState = stage.body;
   }
+  await Promise.all([readConnectorState(), readAnalytics(), readEpisodeWorkflow()]);
+  renderResults();
+  status.textContent = "Published and linked. The 24h, 7d and 28d checkpoint jobs are scheduled.";
+}
+
+async function refreshAutomaticAnalytics() {
+  const status = element("connectorFormStatus");
+  status.textContent = "Refreshing automatic analytics…";
+  await Promise.all([readConnectorState(), readAnalytics(), readEpisodeWorkflow()]);
+  renderResults();
+  status.textContent = "Up to date. New eligible checkpoints appear here after the scheduled cloud collection.";
+}
+
+function mediaIdFromPostReference(value, platform) {
+  try {
+    const url = new URL(value);
+    if (platform === "YouTube") {
+      if (url.hostname === "youtu.be") return url.pathname.split("/").filter(Boolean)[0] || "";
+      if (url.searchParams.get("v")) return url.searchParams.get("v") || "";
+      const parts = url.pathname.split("/").filter(Boolean);
+      const marker = parts.findIndex(function (part) { return part === "shorts" || part === "embed"; });
+      return marker >= 0 ? parts[marker + 1] || "" : "";
+    }
+    if (platform === "TikTok") {
+      const match = /\/video\/(\d+)/.exec(url.pathname);
+      return match ? match[1] : "";
+    }
+  } catch {}
+  return /^[A-Za-z0-9._:-]{2,300}$/.test(value) ? value : "";
 }
 
 async function buildAnalyticsSubmission() {
@@ -2688,6 +2860,22 @@ function refreshDashboard() {
   if (analyticsQueue.length) {
     nextAction = "Reconnect and sync " + analyticsQueue.length + " queued analytics snapshot(s), then continue the content plan.";
   }
+  const workflowPriority = activeEpisodeRows().slice().sort(function (left, right) {
+    return String(right.updated_at || "").localeCompare(String(left.updated_at || ""));
+  })[0];
+  if (!analyticsQueue.length && workflowPriority) {
+    const workflowActions = {
+      IDEA: "Open " + workflowPriority.id + " and approve its direction.",
+      APPROVED: "Continue " + workflowPriority.id + ": build or import its final script package.",
+      SCRIPT_LOCKED: "Film " + workflowPriority.id + " from its saved HTML filming page.",
+      FILMED: "Start editing " + workflowPriority.id + ", then move it to EDITING.",
+      EDITING: "Finish editing " + workflowPriority.id + " and run its first hash-based review.",
+      REVIEW: "Resolve the remaining review blockers for " + workflowPriority.id + ".",
+      READY: "Publish " + workflowPriority.id + " and link the post to start automatic analytics.",
+      PUBLISHED: "Check the next due analytics checkpoint for " + workflowPriority.id + ".",
+    };
+    nextAction = workflowActions[workflowPriority.status] || nextAction;
+  }
   element("nextAction").textContent = nextAction;
   renderProducts();
   renderBackupStatus();
@@ -2836,11 +3024,18 @@ function renderResearch() {
   if (!researchCache.runs.length) {
     inbox.appendChild(makeNode("div", "empty-state", "No research suggestions have been received."));
     useful.appendChild(makeNode("div", "empty-state", "Research you mark useful will remain visible here."));
+    const statusCopy = researchConnectionState === "connected" ?
+      ["Connected, waiting", "success", "Cloud feed is reachable", "No weekly research run has been delivered yet. The connection is working, but the scheduled research producer still needs to send its first bundle."] :
+      researchConnectionState === "offline" ?
+        ["Offline", "warning", "Using local cache", "The browser is offline. Any previously validated research remains available locally."] :
+        researchConnectionState === "error" ?
+          ["Needs attention", "warning", "Research refresh failed", "The research endpoint could not be reached. Other Content OS records remain available."] :
+          ["Checking", "neutral", "Checking cloud feed", "Research suggestions never publish automatically."];
     setResearchStatus(
-      "Not connected",
-      "neutral",
-      "No research run loaded",
-      "Manual topic and analytics features still work. Suggestions never publish automatically."
+      statusCopy[0],
+      statusCopy[1],
+      statusCopy[2],
+      statusCopy[3]
     );
     return;
   }
@@ -2946,7 +3141,7 @@ async function useResearchItem(itemId) {
   renderSelectedResearchContext();
   if (item.type === "topic") {
     element("pOutput").value = "reel";
-    buildPrompt();
+    await createTrackedEpisodePrompt();
   } else {
     scrollToNode(element("prompts"), "start");
   }
@@ -2967,6 +3162,7 @@ async function archiveResearchItem(itemId) {
 
 async function readResearch() {
   if (!navigator.onLine || cloudMode === "local") {
+    researchConnectionState = "offline";
     renderResearch();
     return;
   }
@@ -3022,9 +3218,11 @@ async function readResearch() {
       nextCursor: bounded ? cursor : null,
     };
     researchHistoryBounded = bounded;
+    researchConnectionState = "connected";
     persistResearchCache();
     renderResearch();
   } catch (error) {
+    researchConnectionState = "error";
     renderResearch();
     const latestRun = researchCache.runs[0];
     setResearchStatus(
@@ -3135,12 +3333,43 @@ function renderMasterVideoRulesStatus() {
     " keeps inspiration separate until research is verified. Old HTML boards and previous rule copies are excluded.";
 }
 
-function buildPrompt() {
+function episodePackageContractLines(episodeId) {
+  return [
+    "",
+    "MANDATORY FINAL RED-TEAM",
+    "Before presenting the final version, run /redteam on factual accuracy, evidence scope, autism-community framing, parent shame, burden framing, overclaiming, production alignment and likely backlash. Correct all fixable issues before the final output.",
+    "A PASS means the corrected final pack is safe enough to film. If the risks cannot be corrected, return REVISE.",
+    "",
+    "TRACKED PACKAGE RETURN",
+    "After the readable episode pack, finish with exactly one fenced JSON block for import into Episode Studio:",
+    JSON.stringify({
+      schemaVersion: "apc.episode_pack.v2",
+      episodeId: episodeId,
+      masterRules: { version: MASTER_VIDEO_RULES.version, sha256: MASTER_VIDEO_RULES.sha256 },
+      redteam: { result: "PASS", score: 9.5, risks: [], fixes: [] },
+      hookGate: { result: "PASS", yesCount: 5, checks: [true, true, true, true, true] },
+      finalDecision: "FILM",
+      spokenScript: "Final words exactly as CJ should say them.",
+      filmingBoard: [{ start: "0:00", end: "0:07", spokenWords: "Exact words", direction: "Exact filming direction" }],
+      overlays: [{ start: "0:00", end: "0:04", type: "on-screen text", text: "EXACT TEXT", safeZone: "top 65%" }],
+      hyperframesPrompt: "Complete HyperFrames prompt.",
+      visualAssets: { cards: [], sourcePills: [] },
+      editNotes: ["One concrete edit note."],
+      sourceNotes: ["One source and scope note."],
+      platformCopy: { instagram: "Caption", tiktok: "Caption", youtubeShorts: "Caption" },
+      claimCautions: ["One claim boundary, or an empty array if none remain."]
+    }, null, 2),
+    "Use the exact episode ID and master identity shown. Keep every top-level key. Do not add extra top-level keys. Do not create an SRT file.",
+  ];
+}
+
+function buildPrompt(options) {
+  const settings = options || {};
   const topic = text(element("pTopic").value).trim();
   if (!topic) {
     alert("Choose or type a topic first.");
     element("pTopic").focus();
-    return;
+    return null;
   }
   const area = text(element("pArea").value).trim() || "Unclassified problem";
   const stage = element("pStage").value;
@@ -3155,6 +3384,7 @@ function buildPrompt() {
 
   const header = [
     "CREATE A FINAL APC PRODUCTION PACKAGE",
+    ...(settings.episodeId ? ["TRACKED EPISODE: " + settings.episodeId] : []),
     "",
     "Topic or hook: " + topic,
     "Problem area: " + area,
@@ -3275,7 +3505,75 @@ function buildPrompt() {
     ],
   };
 
-  element("promptText").textContent = header.concat(packages[output] || packages.content).join("\n");
+  const prompt = header.concat(
+    packages[output] || packages.content,
+    settings.episodeId && isEpisodeDevelopment ? episodePackageContractLines(settings.episodeId) : []
+  ).join("\n");
+  element("promptText").textContent = prompt;
+  if (!settings.deferReveal) {
+    element("builtPrompt").hidden = false;
+    scrollToNode(element("builtPrompt"), "nearest");
+  }
+  return prompt;
+}
+
+async function createTrackedEpisodePrompt() {
+  const topic = text(element("pTopic").value).trim();
+  if (!topic) return buildPrompt();
+  element("builtPrompt").hidden = true;
+  const overviewResponse = await fetch(ENDPOINTS.episodeWorkflow, { headers: { Accept: "application/json" } });
+  const overview = await overviewResponse.json();
+  if (!overviewResponse.ok) throw new Error(text(overview.error) || "Episode tracking is unavailable.");
+  const episodeId = overview.nextEpisodeId;
+  const prompt = buildPrompt({ episodeId: episodeId, deferReveal: true });
+  if (!prompt) return;
+  const area = text(element("pArea").value).trim();
+  const title = (area || topic).slice(0, 200);
+  const sourceContext = selectedResearchContext || {
+    type: "manual",
+    instruction: "Verify material claims and do not invent a statistic or source.",
+    promptSeed: topic,
+  };
+  const sourceTopicId = sourceContext?.topic?.id || sourceContext?.researchItem?.itemId || null;
+  const existingArtifact = sourceTopicId ? (overview.artifacts || []).find(function (item) {
+    return item.artifact_type === "PROMPT" &&
+      (item.payload?.sourceContext?.topic?.id === sourceTopicId || item.payload?.sourceContext?.researchItem?.itemId === sourceTopicId);
+  }) : null;
+  const existingEpisode = existingArtifact ? (overview.episodes || []).find(function (item) { return item.id === existingArtifact.episode_id && !item.archived_at; }) : null;
+  if (existingEpisode) {
+    episodeWorkflowState = overview;
+    renderContentWorkflow();
+    element("promptText").textContent = existingArtifact.payload.text;
+    element("trackedEpisodeNotice").textContent = existingEpisode.id + " already tracks this idea. Its saved prompt was reopened instead of creating a duplicate.";
+    element("trackedEpisodeLink").href = "/content-os/episodes/?episode=" + encodeURIComponent(existingEpisode.id) + "#pack";
+    element("builtPrompt").hidden = false;
+    scrollToNode(element("builtPrompt"), "nearest");
+    return;
+  }
+  const payload = {
+    action: "create_tracked_prompt",
+    episode: { id: episodeId, title: title, researchItemId: null },
+    prompt: {
+      schemaVersion: "apc.episode_prompt.v1",
+      format: element("pOutput").value,
+      notes: "Goal: " + element("pGoal").value + ". Platform: " + element("pPlatform").value + ".",
+      text: prompt,
+      sourceContext: sourceContext,
+      masterRules: { version: MASTER_VIDEO_RULES.version, sha256: MASTER_VIDEO_RULES.sha256, sourcePath: MASTER_VIDEO_RULES.sourcePath },
+    },
+    idempotencyKey: "prompt:" + episodeId + ":" + newUuid(),
+  };
+  const response = await fetch(ENDPOINTS.episodeWorkflow, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-APC-Content-OS": "1" },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(text(result.error) || "The tracked episode could not be saved.");
+  episodeWorkflowState = result;
+  renderContentWorkflow();
+  element("trackedEpisodeNotice").textContent = episodeId + " saved to Episode Studio before this prompt was shown.";
+  element("trackedEpisodeLink").href = "/content-os/episodes/?episode=" + encodeURIComponent(episodeId) + "#pack";
   element("builtPrompt").hidden = false;
   scrollToNode(element("builtPrompt"), "nearest");
 }
@@ -3641,6 +3939,8 @@ function renderAll() {
   renderHistory();
   renderRecoveryCopy();
   renderConnectorState();
+  renderContentWorkflow();
+  renderSystemConnections();
   updateWinnerHookCheck();
   renderMasterVideoRulesStatus();
 }
@@ -3663,6 +3963,10 @@ function handleClick(event) {
     disconnectConnector(control.dataset.connectionId, control.dataset.provider).catch(function (error) {
       element("connectorFormStatus").textContent = text(error && error.message);
     });
+  } else if (action === "refresh-connections") {
+    Promise.all([syncFromCloud(), readResearch(), readConnectorState(), readEpisodeWorkflow()]).catch(function () {});
+  } else if (action === "refresh-automatic-analytics") {
+    refreshAutomaticAnalytics().catch(function (error) { element("connectorFormStatus").textContent = text(error && error.message); });
   } else if (action === "previous-month") {
     shiftCalendarMonth(-1);
   } else if (action === "next-month") {
@@ -3681,7 +3985,7 @@ function handleClick(event) {
     const date = control.dataset.date;
     const entry = state.calendar[date];
     if (!entry) return;
-    if (action === "use-calendar-topic") buildScriptPromptFromTopic(entry.topic, entry.stage, entry.family, entry.area, topicBankMatchByHook(entry.topic));
+    if (action === "use-calendar-topic") buildScriptPromptFromTopic(entry.topic, entry.stage, entry.family, entry.area, topicBankMatchByHook(entry.topic)).catch(function (error) { alert(text(error && error.message)); });
     else logTopic(entry.topic, entry.area, entry.family, date);
   } else if (action === "edit-plan-item") {
     const date = control.dataset.date;
@@ -3693,7 +3997,7 @@ function handleClick(event) {
       action === "log-bank-topic" || action === "book-bank-topic") {
     const topic = DATA.topics[Number(control.dataset.index)];
     if (!topic) return;
-    if (action === "use-bank-topic") buildScriptPromptFromTopic(topic.hook, topic.stage, topic.family, topic.name, topic);
+    if (action === "use-bank-topic") buildScriptPromptFromTopic(topic.hook, topic.stage, topic.family, topic.name, topic).catch(function (error) { alert(text(error && error.message)); });
     if (action === "plan-bank-topic") prefillPlanForm(topic.hook, topic.name, topic.family, topic.stage, "");
     if (action === "log-bank-topic") logTopic(topic.hook, topic.name, topic.family, "");
     if (action === "book-bank-topic") sendTopicToBook(topic.hook, topic.stage, topic.family, topic.name);
@@ -3701,7 +4005,7 @@ function handleClick(event) {
       action === "log-backlog-topic" || action === "book-backlog-topic") {
     const topic = DATA.ideaBacklog[Number(control.dataset.index)];
     if (!topic) return;
-    if (action === "use-backlog-topic") buildDevelopmentPromptFromBacklog(topic);
+    if (action === "use-backlog-topic") buildDevelopmentPromptFromBacklog(topic).catch(function (error) { alert(text(error && error.message)); });
     if (action === "plan-backlog-topic") prefillPlanForm(topic.brief, topic.name, topic.family, topic.stage, "");
     if (action === "log-backlog-topic") logTopic(topic.brief, topic.name, topic.family, "");
     if (action === "book-backlog-topic") sendTopicToBook(topic.name, topic.stage, topic.family, topic.brief);
@@ -3713,7 +4017,7 @@ function handleClick(event) {
     visibleResultLimit += DEFAULT_RESULT_LIMIT;
     renderResults();
   } else if (action === "build-prompt") {
-    buildPrompt();
+    createTrackedEpisodePrompt().catch(function (error) { alert(text(error && error.message)); });
   } else if (action === "clear-research-context") {
     clearSelectedResearchContext();
   } else if (action === "copy-prompt") {
@@ -3778,6 +4082,19 @@ function handleChange(event) {
   if (["familyFilter", "stageFilter", "useFilter"].includes(control.id)) renderTopics();
   if (control.matches("[data-hook-check]")) updateWinnerHookCheck();
   if (control.id === "rPlatform") updateSourceForPlatform();
+  if (control.id === "automaticPlatform") {
+    renderConnectorState();
+    element("automaticFormat").value = control.value === "YouTube" ? "Short" : "Reel";
+    const inferred = mediaIdFromPostReference(element("automaticPostRef").value, control.value);
+    if (inferred) element("automaticRemoteMediaId").value = inferred;
+  }
+  if (control.id === "connectorConnection") {
+    const connection = (connectorState.connections || []).find(function (item) { return item.connectionId === control.value; });
+    if (connection) {
+      element("automaticPlatform").value = connection.provider === "tiktok" ? "TikTok" : connection.provider === "youtube" ? "YouTube" : "Instagram";
+      element("automaticFormat").value = connection.provider === "youtube" ? "Short" : "Reel";
+    }
+  }
   if (control.id === "calendarMonth" && /^\d{4}-\d{2}$/.test(control.value)) {
     selectedCalendarMonth = control.value;
     renderAll();
@@ -3854,6 +4171,7 @@ async function recoverLocalCaches() {
 }
 
 async function initialise() {
+  arrangeContentWorkflowSections();
   initialiseFormOptions();
   initialiseSectionNavigation();
   document.addEventListener("click", handleClick);
@@ -3873,6 +4191,10 @@ async function initialise() {
       element("connectorFormStatus").textContent = text(error && error.message);
     });
   });
+  element("automaticPostRef").addEventListener("input", function () {
+    const inferred = mediaIdFromPostReference(element("automaticPostRef").value.trim(), element("automaticPlatform").value);
+    if (inferred) element("automaticRemoteMediaId").value = inferred;
+  });
   element("planForm").addEventListener("submit", function (event) {
     event.preventDefault();
     savePlanItem().catch(function (error) { alert(text(error && error.message)); });
@@ -3886,7 +4208,7 @@ async function initialise() {
   }
 
   await syncFromCloud();
-  await Promise.all([readAnalytics(), readResearch(), readHistory(), readConnectorState()]);
+  await Promise.all([readAnalytics(), readResearch(), readHistory(), readConnectorState(), readEpisodeWorkflow()]);
   await flushAnalyticsQueue();
   renderAll();
 }

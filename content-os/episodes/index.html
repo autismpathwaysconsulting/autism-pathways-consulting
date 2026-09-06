@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/content-os/app.css">
   <script type="module" src="/content-os/episodes/app.js"></script>
 </head>
-<body>
+<body class="episode-studio">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="app-header">
     <div class="shell header-layout">
@@ -30,28 +30,31 @@
 
   <nav class="section-nav" aria-label="Episode Studio sections">
     <div class="shell nav-scroll">
-      <a href="/content-os/">Content OS</a>
-      <a href="#overview" aria-current="location">Overview</a>
-      <a href="#ideas">Ideas</a>
-      <a href="#episodes">Episodes</a>
-      <a href="#pack">Filming pack</a>
-      <a href="#results">Results</a>
+      <a href="#overview" aria-current="location">Workflow</a>
+      <a href="#ideas">1. Choose idea</a>
+      <a href="#pack">2. Build prompt</a>
+      <a href="#import">3. Import script</a>
+      <a href="#filming-pack">4. Film + edit</a>
+      <a href="#results">5. Review + publish</a>
+      <a href="/content-os/?from=episodes#results">6. Analytics</a>
+      <a href="#episodes">Manage episodes</a>
     </div>
   </nav>
 
   <main id="main-content" class="shell main-content">
     <section id="overview" class="page-section" aria-labelledby="overview-title">
-      <div class="section-heading"><div><p class="section-kicker">Start here</p><h2 id="overview-title">Episode overview</h2></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Start here</p><h2 id="overview-title">One guided workflow</h2><p class="section-summary">Choose one episode and follow the numbered steps. Content OS and Episode Studio use the same cloud record.</p></div></div>
       <div class="metric-grid" aria-label="Episode progress">
         <article class="metric-card"><strong id="episodeCount" class="metric-value">0</strong><span>Episodes</span></article>
         <article class="metric-card"><strong id="filmingCount" class="metric-value">0</strong><span>Ready to film</span></article>
         <article class="metric-card"><strong id="readyCount" class="metric-value">0</strong><span>Upload ready</span></article>
         <article class="metric-card"><strong id="publishedCount" class="metric-value">0</strong><span>Published</span></article>
       </div>
+      <div id="workflowSteps" class="workflow-step-grid" aria-label="Episode workflow steps"></div>
     </section>
 
     <section id="ideas" class="page-section" aria-labelledby="ideas-title">
-      <div class="section-heading"><div><p class="section-kicker">Choose</p><h2 id="ideas-title">Future episode ideas</h2><p class="section-summary">Choose Build script prompt. Episode Studio creates the episode record and immediately shows the complete prompt ready to copy into Codex.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 1</p><h2 id="ideas-title">Choose an idea</h2><p class="section-summary">Choose Create episode + build prompt. The prompt is saved to the cloud before it appears, so the episode is tracked from its first draft.</p></div></div>
       <div class="subsection-heading"><div><h3>Master-aligned ideas</h3><p class="subtle">These replace the previous built-in idea list for future episodes.</p></div></div>
       <div id="masterIdeas" class="card-list"><div class="empty-state">Loading master-aligned ideas.</div></div>
       <div class="subsection-heading"><div><h3>Weekly research candidates</h3><p class="subtle">New governed research may suggest another topic, but the master filming rules still apply.</p></div><a class="button secondary" href="/content-os/#research">Open full research inbox</a></div>
@@ -63,18 +66,22 @@
             <div class="field"><label for="episodeId">Episode ID</label><input id="episodeId" required maxlength="6" placeholder="EP09"></div>
             <div class="field"><label for="episodeTitle">Topic or parent problem</label><input id="episodeTitle" required maxlength="200"></div>
           </div>
-          <div class="form-actions"><button class="button" type="submit">Create + build prompt</button></div>
+          <div class="form-actions"><button class="button" type="submit">Create episode + build prompt</button></div>
         </form>
       </div>
     </section>
 
     <section id="episodes" class="page-section" aria-labelledby="episodes-title">
-      <div class="section-heading"><div><p class="section-kicker">Track</p><h2 id="episodes-title">Episodes</h2><p class="section-summary">Lock the script before filming, then use full, delta and final review modes.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Manage</p><h2 id="episodes-title">Episodes</h2><p class="section-summary">Continue the next action, revise the title or script, or archive an unwanted episode without deleting its audit history.</p></div></div>
       <div id="episodeList" class="card-list"><div class="empty-state">No episodes yet.</div></div>
+      <details id="archivedEpisodesPanel" class="reference-item" hidden>
+        <summary>Archived episodes</summary>
+        <div id="archivedEpisodeList" class="card-list"></div>
+      </details>
     </section>
 
     <section id="pack" class="page-section" aria-labelledby="pack-title">
-      <div class="section-heading"><div><p class="section-kicker">Create</p><h2 id="pack-title">Filming-pack prompt</h2><p class="section-summary">This appears automatically after you choose an idea. Copy it into Codex to generate the aligned script, scenes, captions and HyperFrames instructions.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 2</p><h2 id="pack-title">Build the episode prompt</h2><p class="section-summary">Copy the saved prompt into Codex. It requires the final red-team pass and returns one JSON block for the next step.</p></div></div>
       <div class="hook-gate rework" role="status" aria-live="polite">
         <strong id="masterRulesStatus">Loading master video rules</strong>
         <span id="masterRulesDetail" class="subtle">Checking the current APC-AI-OS source and version.</span>
@@ -85,13 +92,35 @@
           <div class="field"><label for="packFormat">Format</label><select id="packFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option></select></div>
         </div>
         <div class="field"><label for="packNotes">Constraints or notes</label><textarea id="packNotes" maxlength="2000" placeholder="Keep under 75 seconds. Include one practical action."></textarea></div>
-        <div class="button-row"><button id="generatePrompt" class="button" type="button">Rebuild prompt</button><button id="copyPrompt" class="button secondary" type="button">Copy prompt</button><button id="savePack" class="button dark" type="button">Save to episode</button></div>
+        <div class="button-row"><button id="rebuildPrompt" class="button" type="button">Rebuild + save revision</button><button id="copyPrompt" class="button secondary" type="button">Copy prompt</button></div>
         <pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre>
       </div>
     </section>
 
+    <section id="import" class="page-section" aria-labelledby="import-title">
+      <div class="section-heading"><div><p class="section-kicker">Step 3</p><h2 id="import-title">Import and verify the script</h2><p class="section-summary">Paste the final JSON block returned by Codex, or choose its JSON file. Episode Studio validates the episode ID, master-rule hash, red-team result and five hook checks.</p></div></div>
+      <div class="card form-card stack">
+        <div class="field"><label for="importEpisode">Episode</label><select id="importEpisode"></select></div>
+        <div class="field"><label for="packageJson">Final package JSON</label><textarea id="packageJson" class="package-json" maxlength="120000" placeholder='Paste the final apc.episode_pack.v2 JSON block here'></textarea><p class="field-help">Earlier prompt and package versions remain in the timeline. Importing a revision does not overwrite their audit trail.</p></div>
+        <label class="button secondary file-button" for="packageFile">Choose package JSON file<input id="packageFile" class="visually-hidden" type="file" accept="application/json,.json"></label>
+        <div class="button-row"><button id="importPackage" class="button" type="button">Validate + import package</button></div>
+      </div>
+    </section>
+
+    <section id="filming-pack" class="page-section" aria-labelledby="filming-pack-title">
+      <div class="section-heading"><div><p class="section-kicker">Step 4</p><h2 id="filming-pack-title">Film and edit from one page</h2><p class="section-summary">The latest imported package is stored in Content OS and rendered here as an HTML filming page. Earlier versions remain in the audit timeline.</p></div><div class="button-row"><button id="downloadFilmingHtml" class="button secondary" type="button" disabled>Download HTML</button></div></div>
+      <div id="filmingPackViewer" class="card filming-pack-viewer"><div class="empty-state">Open an episode with an imported package to see its script, filming board, overlays, captions and edit notes.</div></div>
+    </section>
+
     <section id="results" class="page-section" aria-labelledby="results-title">
-      <div class="section-heading"><div><p class="section-kicker">Review and learn</p><h2 id="results-title">Reviews and post results</h2><p class="section-summary">Video reviews are hash-based. Publication analytics stay in the main Content OS and use the episode ID.</p></div><a class="button" href="/content-os/#results">Add platform analytics</a></div>
+      <div class="section-heading"><div><p class="section-kicker">Steps 5 to 7</p><h2 id="results-title">Review, publish and learn</h2><p class="section-summary">Save the hash-based final review, then send the same episode ID to Content OS when you publish. The 24h, 7d and 28d analytics stay attached automatically.</p></div><a id="publicationLink" class="button" href="/content-os/?from=episodes#results">Publish + start analytics</a></div>
+      <div class="card form-card stack">
+        <h3>Import video review</h3>
+        <p class="subtle">Paste the review manifest returned after a full, delta or final video audit. The video SHA-256 prevents findings from an older export being mistaken for the latest cut.</p>
+        <div class="field"><label for="reviewEpisode">Episode</label><select id="reviewEpisode"></select></div>
+        <div class="field"><label for="reviewManifest">Review manifest JSON</label><textarea id="reviewManifest" class="package-json" maxlength="120000" placeholder='Paste the review-manifest.json content here'></textarea></div>
+        <div class="button-row"><button id="saveReview" class="button" type="button">Validate + save review</button></div>
+      </div>
       <div id="reviewList" class="card-list"><div class="empty-state">No video reviews recorded yet.</div></div>
       <div id="publicationList" class="card-list"><div class="empty-state">No linked publications yet.</div></div>
     </section>
