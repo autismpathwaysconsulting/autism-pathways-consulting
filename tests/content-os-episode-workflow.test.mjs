@@ -41,6 +41,8 @@ test("accepts the governed and tracked episode workflow actions", () => {
     { action: "save_prompt_revision", episodeId: "EP09", prompt: { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Revised prompt", sourceContext: { sourceType: "manual" }, masterRules }, idempotencyKey: "prompt-revision:EP09:12345678" },
     { action: "import_production_pack", episodeId: "EP09", pack: importedPack(), idempotencyKey: "pack:EP09:12345678" },
     { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:12345678" },
+    { action: "update_episode_details", episodeId: "EP09", title: "A revised useful episode", idempotencyKey: "episode-edit:EP09:12345678" },
+    { action: "set_episode_archived", episodeId: "EP09", archived: true, idempotencyKey: "archive:EP09:12345678" },
     { action: "update_episode_status", episodeId: "EP09", status: "SCRIPT_LOCKED" },
     { action: "save_production_pack", episodeId: "EP09", pack: { prompt: "Create the pack" } },
     { action: "save_review", episodeId: "EP09", manifest: { label: "v1", mode: "full", video: { sha256: hash }, review: { status: "NOT_READY" } } },
@@ -58,6 +60,7 @@ test("rejects unknown fields and invalid identities", () => {
 test("episode schema extends the existing governed research and analytics stores", async () => {
   const migration = await readFile(new URL("../migrations/0003_episode_workflow.sql", import.meta.url), "utf8");
   const trackingMigration = await readFile(new URL("../migrations/0005_episode_tracking.sql", import.meta.url), "utf8");
+  const managementMigration = await readFile(new URL("../migrations/0006_episode_management.sql", import.meta.url), "utf8");
   assert.match(migration, /CREATE TABLE IF NOT EXISTS episodes/);
   assert.match(migration, /REFERENCES research_items\(item_id\)/);
   assert.match(migration, /CREATE TABLE IF NOT EXISTS video_reviews/);
@@ -67,6 +70,8 @@ test("episode schema extends the existing governed research and analytics stores
   assert.match(trackingMigration, /episode_artifacts is append-only/);
   assert.match(trackingMigration, /episode_events is append-only/);
   assert.doesNotMatch(trackingMigration, /ALTER TABLE content_(?:publications|analytics_snapshots)/);
+  assert.match(managementMigration, /ALTER TABLE episodes ADD COLUMN archived_at TEXT/);
+  assert.doesNotMatch(managementMigration, /DELETE FROM|DROP TABLE|ALTER TABLE content_(?:publications|analytics_snapshots)/);
 });
 
 test("tracked package contract requires the red-team and five-check filming gate", () => {
@@ -118,13 +123,29 @@ test("Episode Studio uses only the synced APC master rules for filming-pack prom
 test("Episode Studio tracks prompt and package versions before filming", async () => {
   const episodeApp = await readFile(new URL("../content-os/episodes/app.js", import.meta.url), "utf8");
   const episodeHtml = await readFile(new URL("../content-os/episodes/index.html", import.meta.url), "utf8");
+  const mainApp = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
+  const mainHtml = await readFile(new URL("../content-os/index.html", import.meta.url), "utf8");
   assert.match(episodeApp, /action: "create_tracked_prompt"/);
   assert.match(episodeApp, /action: "save_prompt_revision"/);
   assert.match(episodeApp, /action: "import_production_pack"/);
   assert.match(episodeApp, /action: "lock_script"/);
+  assert.match(episodeApp, /action: "update_episode_details"/);
+  assert.match(episodeApp, /action: "set_episode_archived"/);
   assert.match(episodeApp, /run \/redteam/);
   assert.match(episodeApp, /checks: \[true, true, true, true, true\]/);
   assert.match(episodeHtml, /id="import"/);
   assert.match(episodeHtml, /Validate \+ import package/);
-  assert.match(episodeHtml, /A script cannot be locked until its red-team and hook gates pass/);
+  assert.match(episodeHtml, /validates the episode ID, master-rule hash, red-team result and five hook checks/);
+  assert.match(episodeHtml, /Film and edit from one page/);
+  assert.match(episodeHtml, /Download HTML/);
+  assert.match(episodeApp, /standalonePackHtml/);
+  assert.match(episodeApp, /arrangeWorkflowSections/);
+  assert.match(episodeApp, /History and management/);
+  assert.match(episodeHtml, /archivedEpisodeList/);
+  assert.match(mainApp, /arrangeContentWorkflowSections/);
+  assert.match(mainHtml, /Publish \+ schedule analytics/);
+  assert.match(mainHtml, /id="trackPublicationButton"/);
+  assert.match(mainHtml, /Step 1 · Ready ideas \+ CJ backlog/);
+  assert.match(mainHtml, /Step 2<\/p><h2 id="prompts-title">Build and track the episode/);
+  assert.match(mainHtml, /Step 5<\/p><h2 id="analytics-title">Publish and collect episode performance/);
 });

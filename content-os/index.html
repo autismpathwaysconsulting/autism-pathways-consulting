@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/content-os/app.css">
   <script type="module" src="/content-os/app.js"></script>
 </head>
-<body>
+<body class="content-os-home">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="app-header">
     <div class="shell header-layout">
@@ -36,15 +36,14 @@
 
   <nav class="section-nav" aria-label="Content OS sections">
     <div class="shell nav-scroll">
-      <a href="#dashboard" aria-current="location">Today</a>
-      <a href="#research">Research</a>
-      <a href="#topics">Topics</a>
-      <a href="#results">Analytics</a>
-      <a href="#prompts">Prompt</a>
-      <a href="#products">Products</a>
-      <a href="#book">Book</a>
-      <a href="#reference">Recovery</a>
-      <a href="/content-os/episodes/">Episodes</a>
+      <a href="#dashboard" aria-current="location">Workflow</a>
+      <a href="#topics">1. Choose idea</a>
+      <a href="#prompts">2. Build episode</a>
+      <a href="/content-os/episodes/#filming-pack">3. Film + edit</a>
+      <a href="/content-os/episodes/#results">4. Final review</a>
+      <a href="#results">5. Publish + analytics</a>
+      <a href="#research">Research feed</a>
+      <a href="#reference">Settings + recovery</a>
     </div>
   </nav>
 
@@ -65,6 +64,13 @@
         <p class="card-label">Next best action</p>
         <p id="nextAction" class="next-action">Choose the next planned topic, publish it, then return at the correct checkpoint.</p>
       </div>
+
+      <div id="contentWorkflowSteps" class="workflow-step-grid" aria-label="Content workflow steps"></div>
+
+      <section class="card connection-centre" aria-labelledby="system-connections-title">
+        <div class="card-heading"><div><p class="card-label">Live system status</p><h3 id="system-connections-title">Connections</h3><p class="subtle">Connected and empty are shown separately so an empty feed is not mistaken for an outage.</p></div><button class="button secondary compact" type="button" data-action="refresh-connections">Refresh status</button></div>
+        <div id="systemConnectionGrid" class="connection-status-grid" aria-live="polite"></div>
+      </section>
 
       <div class="metric-grid" aria-label="Content progress">
         <article class="metric-card"><strong id="postsDone" class="metric-value">0</strong><span>Posts completed</span></article>
@@ -118,7 +124,7 @@
     <section id="research" class="page-section" aria-labelledby="research-title">
       <div class="section-heading">
         <div>
-          <p class="section-kicker">Weekly feed</p>
+          <p class="section-kicker">Ongoing input</p>
           <h2 id="research-title">Research inbox</h2>
           <p class="section-summary">A small set of sourced ideas for you to accept or archive.</p>
         </div>
@@ -141,7 +147,7 @@
 
     <section id="topics" class="page-section" aria-labelledby="topics-title">
       <div class="section-heading">
-        <div><p class="section-kicker">Ready ideas + CJ backlog</p><h2 id="topics-title">Episode ideas</h2><p class="section-summary">Ready ideas include governed evidence. New CJ ideas stay clearly marked until their claims, references and safety requirements are reviewed.</p></div>
+        <div><p class="section-kicker">Step 1 · Ready ideas + CJ backlog</p><h2 id="topics-title">Choose an episode idea</h2><p class="section-summary">Ready ideas include governed evidence. New CJ ideas stay clearly marked until their claims, references and safety requirements are reviewed.</p></div>
       </div>
       <div class="card filter-card">
         <div class="field-grid four">
@@ -159,7 +165,7 @@
 
     <section id="results" class="page-section" aria-labelledby="analytics-title">
       <div class="section-heading">
-        <div><p class="section-kicker">Automatic analytics</p><h2 id="analytics-title">Episode performance</h2><p class="section-summary">Connect once. Content OS collects the approved 24-hour, 7-day and 28-day checkpoints for you.</p></div>
+        <div><p class="section-kicker">Step 5</p><h2 id="analytics-title">Publish and collect episode performance</h2><p class="section-summary">Connect once. Content OS links the published post to its episode and collects the approved 24-hour, 7-day and 28-day checkpoints.</p></div>
       </div>
       <div class="privacy-note strong" role="note" aria-label="Privacy requirement">
         <strong>Do not paste names, handles or message text.</strong> Count responses and write only a short, deidentified pattern summary.
@@ -167,7 +173,7 @@
 
       <section class="card connector-panel" aria-labelledby="connector-title">
         <div class="card-heading">
-          <div><p class="card-label">Automatic collection</p><h3 id="connector-title">Connect platform analytics</h3><p class="subtle">Meta uses your existing APC automation. TikTok and YouTube start after a one-time account connection.</p></div>
+          <div><p class="card-label">Automatic collection</p><h3 id="connector-title">Connect platform analytics</h3><p class="subtle">A connected account schedules analytics from the episode record. The existing Meta feed is shown separately until its episode mapping is synced.</p></div>
           <span id="connectorStatus" class="status-badge">Checking</span>
         </div>
         <div class="button-row connector-actions" aria-label="Analytics providers">
@@ -176,8 +182,24 @@
           <button class="button secondary compact" type="button" data-action="connect-provider" data-connector-provider="youtube" disabled>Connect YouTube</button>
         </div>
         <div id="connectionList" class="connection-list" aria-live="polite"></div>
-        <form id="automaticAnalyticsForm" class="connector-link-form">
-          <div class="form-actions"><button class="button" type="submit">Refresh automatic analytics</button><span id="connectorFormStatus" class="subtle" role="status" aria-live="polite"></span></div>
+        <form id="automaticAnalyticsForm" class="connector-link-form stack">
+          <div class="field-grid four">
+            <div class="field"><label for="automaticEpisode">Episode</label><select id="automaticEpisode"></select></div>
+            <div class="field"><label for="connectorConnection">Connected account</label><select id="connectorConnection"><option value="">Choose a connected account</option></select></div>
+            <div class="field"><label for="automaticPlatform">Platform</label><select id="automaticPlatform"><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>YouTube</option></select></div>
+            <div class="field"><label for="automaticPublishedAt">Published</label><input id="automaticPublishedAt" type="datetime-local" required></div>
+            <div class="field span-2"><label for="automaticPostRef">Post URL or stable ID</label><input id="automaticPostRef" autocomplete="off" placeholder="Paste the published post link" required></div>
+            <div class="field span-2"><label for="automaticRemoteMediaId">Platform media ID</label><input id="automaticRemoteMediaId" autocomplete="off" placeholder="Filled automatically from many TikTok and YouTube links" required><p class="field-help">Instagram and Facebook may require the numeric media ID supplied by Meta.</p></div>
+          </div>
+          <details class="reference-item">
+            <summary>Optional classification</summary>
+            <div class="field-grid four">
+              <div class="field"><label for="automaticFormat">Format</label><select id="automaticFormat"><option>Reel</option><option>Short</option><option>Carousel</option><option>Photo Mode</option><option>Story</option><option>Long-form</option></select></div>
+              <div class="field"><label for="automaticHookType">Hook type</label><select id="automaticHookType"><option>Other</option><option>Frustration</option><option>Contradiction</option><option>Confusion</option><option>Guilt / parent conflict</option><option>Future worry</option><option>Taboo / rarely discussed</option><option>Surprise</option><option>Relief / reframe</option></select></div>
+              <div class="field"><label for="automaticExperiment">Experiment</label><select id="automaticExperiment"><option>Discovery post</option><option>Replication post</option><option>Waitlist / interest test</option><option>Paid workshop</option></select></div>
+            </div>
+          </details>
+          <div class="form-actions"><button id="trackPublicationButton" class="button" type="submit" disabled>Publish + schedule analytics</button><button class="button secondary" type="button" data-action="refresh-automatic-analytics">Refresh results</button><span id="connectorFormStatus" class="subtle" role="status" aria-live="polite"></span></div>
         </form>
         <div id="ingestionStatus" class="subtle" aria-live="polite"></div>
       </section>
@@ -291,7 +313,7 @@
     </section>
 
     <section id="prompts" class="page-section" aria-labelledby="prompts-title">
-      <div class="section-heading"><div><p class="section-kicker">Create next</p><h2 id="prompts-title">Prompt builder</h2><p class="section-summary">Idea buttons build the copy-ready script prompt automatically. Use these fields only when you want to adjust or rebuild it.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 2</p><h2 id="prompts-title">Build and track the episode</h2><p class="section-summary">Idea buttons create the episode record and build its copy-ready script prompt automatically. Use these fields only when you want to adjust or rebuild it.</p></div></div>
       <div class="hook-gate rework" role="status" aria-live="polite">
         <strong id="masterRulesStatus">Loading master video rules</strong>
         <span id="masterRulesDetail" class="subtle">Checking the current APC-AI-OS source and version.</span>

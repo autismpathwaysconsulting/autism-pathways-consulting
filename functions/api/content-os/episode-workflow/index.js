@@ -96,6 +96,15 @@ export function validateAction(payload) {
     if (!exactKeys(payload, ["action", "episodeId", "idempotencyKey"]) || !validEpisodeId(payload.episodeId) || !validIdempotencyKey(payload.idempotencyKey)) return "Script lock request is invalid.";
     return null;
   }
+  if (payload.action === "update_episode_details") {
+    if (!exactKeys(payload, ["action", "episodeId", "title", "idempotencyKey"]) || !validEpisodeId(payload.episodeId) || !validIdempotencyKey(payload.idempotencyKey)) return "Episode edit request is invalid.";
+    if (!validText(payload.title, 200) || !deidentifiedTitle(payload.title)) return "Episode title is invalid or not deidentified.";
+    return null;
+  }
+  if (payload.action === "set_episode_archived") {
+    if (!exactKeys(payload, ["action", "episodeId", "archived", "idempotencyKey"]) || !validEpisodeId(payload.episodeId) || typeof payload.archived !== "boolean" || !validIdempotencyKey(payload.idempotencyKey)) return "Episode archive request is invalid.";
+    return null;
+  }
   if (payload.action === "update_episode_status") {
     if (!exactKeys(payload, ["action", "episodeId", "status"]) || !validEpisodeId(payload.episodeId) || !STATUSES.has(payload.status)) return "Episode status request is invalid.";
     return null;
@@ -163,7 +172,7 @@ async function overview(database, actionResult = null) {
   ]);
   const episodeRows = episodes.results || [];
   return {
-    schemaVersion: "apc.episode_workflow.v2",
+    schemaVersion: "apc.episode_workflow.v3",
     nextEpisodeId: nextEpisodeId(episodeRows),
     actionResult,
     episodes: episodeRows.map(row => ({ ...row, productionPack: row.production_pack_json ? safeJson(row.production_pack_json) : null })),
@@ -261,8 +270,9 @@ export async function onRequestPost({ request, env }) {
       const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, prompt: payload.prompt }));
       const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
       if (duplicate) return duplicate;
-      const episode = await database.prepare("SELECT id, status, production_pack_json FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      const episode = await database.prepare("SELECT id, status, archived_at, production_pack_json FROM episodes WHERE id = ?").bind(payload.episodeId).first();
       if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at) return json({ error: "Restore this episode before editing its prompt." }, 409);
       if (!["IDEA", "APPROVED", "SCRIPT_LOCKED"].includes(episode.status)) return json({ error: "This episode has progressed beyond script locking. Create a new episode for a changed prompt." }, 409);
       const promptHash = await sha256Hex(canonicalJson(payload.prompt));
       const samePrompt = await database.prepare("SELECT artifact_id, version FROM episode_artifacts WHERE episode_id = ? AND artifact_type = 'PROMPT' AND payload_sha256 = ?").bind(payload.episodeId, promptHash).first();
@@ -287,8 +297,9 @@ export async function onRequestPost({ request, env }) {
       const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, pack: payload.pack }));
       const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
       if (duplicate) return duplicate;
-      const episode = await database.prepare("SELECT id, status, production_pack_json FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      const episode = await database.prepare("SELECT id, status, archived_at, production_pack_json FROM episodes WHERE id = ?").bind(payload.episodeId).first();
       if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at) return json({ error: "Restore this episode before importing a production pack." }, 409);
       if (!["IDEA", "APPROVED", "SCRIPT_LOCKED"].includes(episode.status)) return json({ error: "This episode has progressed beyond script locking. Create a new episode for a changed script." }, 409);
       const record = safeJson(episode.production_pack_json) || {};
       if (record.masterRules && (record.masterRules.version !== payload.pack.masterRules.version || record.masterRules.sha256 !== payload.pack.masterRules.sha256)) return json({ error: "Imported pack does not match the episode's locked master rules." }, 409);
@@ -313,8 +324,9 @@ export async function onRequestPost({ request, env }) {
       const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, action: payload.action }));
       const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
       if (duplicate) return duplicate;
-      const episode = await database.prepare("SELECT id FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      const episode = await database.prepare("SELECT id, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
       if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at) return json({ error: "Restore this episode before locking its script." }, 409);
       const gated = await requireGatedPack(database, payload.episodeId);
       if (!gated) return json({ error: "Red-team PASS, Hook Gate PASS and FILM decision are required before filming." }, 409);
       await database.batch([
@@ -322,6 +334,37 @@ export async function onRequestPost({ request, env }) {
         eventStatement(database, { episodeId: payload.episodeId, eventType: "SCRIPT_LOCKED", artifactId: gated.artifact.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { packVersion: gated.artifact.version, packSha256: gated.artifact.payload_sha256 }, now }),
       ]);
       return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, artifactId: gated.artifact.artifact_id, eventType: "SCRIPT_LOCKED" }));
+    }
+
+    if (payload.action === "update_episode_details") {
+      const title = payload.title.trim();
+      const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, title }));
+      const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
+      if (duplicate) return duplicate;
+      const episode = await database.prepare("SELECT id, title, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at) return json({ error: "Restore this episode before editing it." }, 409);
+      if (episode.title === title) return json(await overview(database));
+      await database.batch([
+        database.prepare("UPDATE episodes SET title = ?, updated_at = ? WHERE id = ? AND archived_at IS NULL").bind(title, now, payload.episodeId),
+        eventStatement(database, { episodeId: payload.episodeId, eventType: "STATUS_CHANGED", idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { action: "details_updated", title }, now }),
+      ]);
+      return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, eventType: "STATUS_CHANGED" }));
+    }
+
+    if (payload.action === "set_episode_archived") {
+      const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, archived: payload.archived }));
+      const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
+      if (duplicate) return duplicate;
+      const episode = await database.prepare("SELECT id, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      if (!episode) return json({ error: "Episode was not found." }, 404);
+      const alreadyArchived = Boolean(episode.archived_at);
+      if (alreadyArchived === payload.archived) return json(await overview(database));
+      await database.batch([
+        database.prepare("UPDATE episodes SET archived_at = ?, updated_at = ? WHERE id = ?").bind(payload.archived ? now : null, now, payload.episodeId),
+        eventStatement(database, { episodeId: payload.episodeId, eventType: "STATUS_CHANGED", idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { action: payload.archived ? "archived" : "restored" }, now }),
+      ]);
+      return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, eventType: "STATUS_CHANGED" }));
     }
 
     if (payload.action === "create_episode") {
@@ -343,8 +386,9 @@ export async function onRequestPost({ request, env }) {
           VALUES (?, ?, NULL, 'APPROVED', NULL, ?, ?)`).bind(payload.episode.id, payload.episode.title.trim(), now, now).run();
       }
     } else if (payload.action === "update_episode_status") {
-      const episode = await database.prepare("SELECT id, status FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      const episode = await database.prepare("SELECT id, status, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
       if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at) return json({ error: "Restore this episode before changing its stage." }, 409);
       if (payload.status === episode.status) return json(await overview(database));
       if (payload.status === "SCRIPT_LOCKED") return json({ error: "Use Lock for filming so the latest gated package is attached to the lock event." }, 409);
       if (payload.status === "READY") return json({ error: "READY can only be set by a final hash-based video review." }, 409);
@@ -372,12 +416,16 @@ export async function onRequestPost({ request, env }) {
       if (Number(result.meta?.changes || 0) !== 1) return json({ error: "Episode stage was not changed." }, 409);
       await eventStatement(database, { episodeId: payload.episodeId, eventType: payload.status === "SCRIPT_LOCKED" ? "SCRIPT_LOCKED" : "STATUS_CHANGED", idempotencyKey: "status:" + crypto.randomUUID(), payloadHash: statusHash, metadata: { status: payload.status }, now }).run();
     } else if (payload.action === "save_production_pack") {
+      const episode = await database.prepare("SELECT id, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at) return json({ error: "Restore this episode before saving its production pack." }, 409);
       const result = await database.prepare("UPDATE episodes SET production_pack_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(payload.pack), now, payload.episodeId).run();
-      if (Number(result.meta?.changes || 0) !== 1) return json({ error: "Episode was not found." }, 404);
+      if (Number(result.meta?.changes || 0) !== 1) return json({ error: "Episode pack was not changed." }, 409);
     } else if (payload.action === "save_review") {
       const manifest = payload.manifest;
-      const episode = await database.prepare("SELECT id, status FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      const episode = await database.prepare("SELECT id, status, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
       if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at) return json({ error: "Restore this episode before saving a video review." }, 409);
       const result = manifest.review?.status || "PENDING";
       const gated = await requireGatedPack(database, payload.episodeId);
       if (!gated || !["FILMED", "EDITING", "REVIEW", "READY"].includes(episode.status)) return json({ error: "Film and edit the locked, gated package before saving a video review." }, 409);
