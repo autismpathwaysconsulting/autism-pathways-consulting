@@ -40,7 +40,7 @@ function session(overrides = {}) {
 
 test("Practice Console accepts controlled client, session and export actions", () => {
   const caseId = "CASE-2026-ABC234";
-  const sessionId = "12345678-1234-1234-1234-123456789abc";
+  const sessionId = "12345678-1234-4234-8234-123456789abc";
   for (const payload of [
     { action: "create_client", client: client(), reason: "Synthetic test" },
     { action: "update_client", caseId, expectedRevision: 1, client: client(), reason: "Synthetic update" },
@@ -56,9 +56,10 @@ test("Practice Console accepts controlled client, session and export actions", (
 test("Practice Console rejects unsafe or incomplete writes", () => {
   assert.match(validatePracticeAction({ action: "create_client", client: client({ displayName: "" }), reason: "test" }), /required client/i);
   assert.match(validatePracticeAction({ action: "update_client", caseId: "bad", expectedRevision: 1, client: client(), reason: "test" }), /invalid/i);
-  assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-1234-1234-123456789abc", expectedRevision: 1, session: session({ documentStatus: "CJ_APPROVED", parentSummary: "" }) }), /requires both/i);
-  assert.match(validatePracticeAction({ action: "prepare_export", sessionId: "12345678-1234-1234-1234-123456789abc", destination: "PUBLIC" }), /invalid/i);
-  assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-1234-1234-123456789abc", expectedRevision: 1, session: session({ documentStatus: "DELIVERED" }) }), /recorded export workflow/i);
+  assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-4234-8234-123456789abc", expectedRevision: 1, session: session({ documentStatus: "CJ_APPROVED", parentSummary: "" }) }), /requires both/i);
+  assert.match(validatePracticeAction({ action: "prepare_export", sessionId: "12345678-1234-4234-8234-123456789abc", destination: "PUBLIC" }), /invalid/i);
+  assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-4234-8234-123456789abc", expectedRevision: 1, session: session({ documentStatus: "DELIVERED" }) }), /recorded export workflow/i);
+  assert.match(validatePracticeAction({ action: "confirm_drive_export", exportId: "12345678-1234-4234-8234-123456789abc", providerFileId: "not a Drive id" }), /Drive confirmation/i);
   assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-02-30" }), /date/i);
   assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-99-99TZZZ" }), /date/i);
 });

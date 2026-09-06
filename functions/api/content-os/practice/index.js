@@ -43,7 +43,7 @@ function validCaseId(value) {
 }
 
 function validSessionId(value) {
-  return typeof value === "string" && /^[0-9a-f-]{36}$/i.test(value);
+  return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
 
 function validateClient(client) {
@@ -91,7 +91,7 @@ export function validatePracticeAction(payload) {
     return null;
   }
   if (payload.action === "confirm_drive_export") {
-    if (!exactKeys(payload, ["action", "exportId", "providerFileId"]) || !validSessionId(payload.exportId) || !validText(payload.providerFileId, 240)) return "Drive confirmation is invalid.";
+    if (!exactKeys(payload, ["action", "exportId", "providerFileId"]) || !validSessionId(payload.exportId) || !validText(payload.providerFileId, 240) || !/^[A-Za-z0-9_-]{10,240}$/.test(payload.providerFileId)) return "Drive confirmation is invalid.";
     return null;
   }
   if (payload.action === "mark_delivered") {
