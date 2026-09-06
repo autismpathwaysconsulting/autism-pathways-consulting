@@ -138,13 +138,14 @@ test("connector snapshots use provider-specific collection methods", () => {
   assert.doesNotThrow(() => assertValidAnalyticsSnapshot({ ...base, collectionMethod: "youtube_connector", sourceSystem: "YouTube Studio" }));
 });
 
-test("the dashboard distinguishes a running external feed from an episode-linked connector", async () => {
+test("the dashboard offers the existing Meta feed as a synced publication path", async () => {
   const app = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
   const html = await readFile(new URL("../content-os/index.html", import.meta.url), "utf8");
   assert.match(app, /Partial setup/);
-  assert.match(app, /Feed running, not mapped/);
-  assert.match(app, /separate APC-AI-OS episode register is not yet synced from Content OS/);
-  assert.match(html, /existing Meta feed is shown separately until its episode mapping is synced/);
+  assert.match(app, /Connected feed/);
+  assert.match(app, /Existing Meta automation/);
+  assert.match(app, /supplies its episode mapping from Content OS automatically/);
+  assert.match(html, /existing Meta feed now reads new episode mappings directly from Content OS/);
   assert.match(html, /id="trackPublicationButton"[^>]+disabled/);
 });
 

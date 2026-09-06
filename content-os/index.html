@@ -175,7 +175,7 @@
 
       <section class="card connector-panel" aria-labelledby="connector-title">
         <div class="card-heading">
-          <div><p class="card-label">Automatic collection</p><h3 id="connector-title">Connect platform analytics</h3><p class="subtle">A connected account schedules analytics from the episode record. The existing Meta feed is shown separately until its episode mapping is synced.</p></div>
+          <div><p class="card-label">Automatic collection</p><h3 id="connector-title">Connect platform analytics</h3><p class="subtle">A connected account schedules analytics from the episode record. The existing Meta feed now reads new episode mappings directly from Content OS.</p></div>
           <span id="connectorStatus" class="status-badge">Checking</span>
         </div>
         <div class="button-row connector-actions" aria-label="Analytics providers">
@@ -191,7 +191,7 @@
             <div class="field"><label for="automaticPlatform">Platform</label><select id="automaticPlatform"><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>YouTube</option></select></div>
             <div class="field"><label for="automaticPublishedAt">Published</label><input id="automaticPublishedAt" type="datetime-local" required></div>
             <div class="field span-2"><label for="automaticPostRef">Post URL or stable ID</label><input id="automaticPostRef" autocomplete="off" placeholder="Paste the published post link" required></div>
-            <div class="field span-2"><label for="automaticRemoteMediaId">Platform media ID</label><input id="automaticRemoteMediaId" autocomplete="off" placeholder="Filled automatically from many TikTok and YouTube links" required><p class="field-help">Instagram and Facebook may require the numeric media ID supplied by Meta.</p></div>
+            <div class="field span-2"><label for="automaticRemoteMediaId">Platform media ID <span class="optional">if requested</span></label><input id="automaticRemoteMediaId" autocomplete="off" placeholder="Needed for a direct platform connection"><p class="field-help">The existing Instagram automation can match a public Reel link without this field. Facebook still requires its direct connector.</p></div>
           </div>
           <details class="reference-item">
             <summary>Optional classification</summary>

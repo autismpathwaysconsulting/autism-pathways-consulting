@@ -15,7 +15,7 @@ The Episode Studio is served at `/content-os/episodes/`.
 ## Security model
 
 - Pages middleware protects the dashboard and authenticated APIs with private, no-store responses.
-- The exact GitHub webhook route is the only Basic Auth bypass. It accepts POST only and independently requires an enabled production flag, raw-body HMAC SHA-256, a private pinned repository, approved sender and author, one label, one title pattern, a fresh weekly run ID, and a strict schema.
+- Only exact automation routes bypass the dashboard session. Research and analytics ingestion accept POST only and independently require their pinned source, HMAC signature, enabled production flags and strict schemas. The read-only publication-mapping export accepts GET only and requires a fresh timestamp plus an HMAC over the exact method, path and timestamp.
 - Content Security Policy permits self-hosted CSS, JavaScript, images, and same-origin API calls only. Inline scripts, inline styles, event attributes, objects, frames, and form submissions are blocked.
 - D1 is the sole canonical server store.
 - Production D1 is not bound to local or preview environments. Preview can load the authenticated interface, but it remains local-only.
@@ -86,6 +86,14 @@ The returned production pack must use `apc.episode_pack.v2`. Episode Studio vali
 
 Workflow events are append-only and idempotent. They record prompt creation, prompt and pack versions, script lock, stage changes and video reviews. Every review is identified by the exported video's SHA-256 hash and review mode, so a renamed file is not mistaken for a new cut. READY can only come from a final `ready` review. A platform publication must carry the same episode ID before the episode can move to PUBLISHED. Existing 24-hour, 7-day and 28-day analytics remain unchanged and stay linked through the publication's episode ID.
 
+### Automatic Meta publication hand-off
+
+When the existing Meta automation is enabled, the publication form offers `Existing Meta automation` for Instagram. One submission writes the validated publication to canonical D1 storage, appends a `PUBLICATION_LINKED` episode event and moves a READY episode to PUBLISHED in one D1 batch. Retries use the deterministic publication ID as their idempotency identity and cannot silently attach altered data. Facebook remains on the separate direct-connector path.
+
+The APC-AI-OS collector reads only these explicitly linked publication records through `/api/content-os/export/publication-mappings`. The export is bounded to 500 records, excludes archived or non-PUBLISHED episodes and returns only records linked through the Meta synchronization path. Public post URLs may be used transiently for exact configured-account matching, but they are never copied into analytics snapshots. Historical APC-AI-OS CSV mappings remain a backward-compatible source for earlier posts; future Content OS episodes do not need a second CSV edit.
+
+This hand-off does not create or move the 24-hour, 7-day or 28-day windows. It only supplies identity. The existing collector remains responsible for due-window checks, aggregate collection, retries and signed analytics ingestion. Conflicting identities fail closed.
+
 ### Ongoing planner
 
 The calendar is not tied to a campaign month. It stores up to 500 canonical plan entries by ISO date, subject to the stricter 220 KiB state limit, supports month navigation, and lets the Founder add, edit, delete, or complete an entry. Topic Bank and Research can add entries to the same planner. The existing September starter plan appears only for a genuinely new, empty dashboard and does not overwrite imported, local, or cloud state.
@@ -142,6 +150,7 @@ The database migration is additive. Do not roll back to the v2.2 application aft
 
 - An open session sees another device's changes after reload or the next sync event. There is no live push.
 - First-ever offline launch still requires a previously cached page.
-- Scheduled research cannot see D1 directly. It feeds sourced weekly research to the dashboard, while the dashboard combines selected research with its own deidentified analytics when generating a prompt.
+- Scheduled research still cannot see D1 directly. It feeds sourced weekly research to the dashboard, while the dashboard combines selected research with its own deidentified analytics when generating a prompt.
+- Automatic Meta mapping requires the paired APC-AI-OS collector change and the existing shared analytics-ingestion secret. TikTok and YouTube still require their one-time OAuth app setup.
 - The webhook, encrypted secret, D1 migration, and branch protection require production administration outside the repository.
 - Add authorised platform analytics APIs when Instagram, TikTok, and YouTube credentials are available. Until then, snapshots can be entered manually without blocking the rest of the workflow.
