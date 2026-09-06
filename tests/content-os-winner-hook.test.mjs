@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 import { ANALYTICS_CHECKPOINTS } from "../content-os/analytics.js";
 import { STATE_SCHEMA_VERSION } from "../content-os/schema.js";
+import { MASTER_VIDEO_RULES } from "../content-os/video-rules.js";
 
 async function source(relativePath) {
   return readFile(new URL("../" + relativePath, import.meta.url), "utf8");
@@ -45,9 +46,18 @@ test("creative prompts put recognition before mechanism and require the pre-film
   ]);
   assert.match(html, /value="reel">Reel \/ short-form episode package/);
   for (const instruction of [
-    "Do not begin with the mechanism or educational explanation",
-    "Create the curiosity gap before resolving it",
-    "move them behind the hook rather than placing them in the first seconds",
+    "Begin with \"Can I tell you something?\" followed immediately by one verified statistic or specific number",
+    "connect it to a recognisable parent moment",
+    "CURIOSITY BRIDGE: At approximately 7 to 12 seconds",
+    "Explain one plausible mechanism in plain language",
+    "Do not use old HTML script boards",
+  ]) {
+    assert.ok(
+      MASTER_VIDEO_RULES.activeRules.some((line) => line.includes(instruction)),
+      `missing active master rule: ${instruction}`,
+    );
+  }
+  for (const instruction of [
     "PRE-FILM HOOK AUDIT",
     "Parent moment:",
     "Primary emotion:",
@@ -55,20 +65,16 @@ test("creative prompts put recognition before mechanism and require the pre-film
     "Why viewer stays:",
     "Practical payoff:",
     "Save/share reason:",
-    "DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION",
-    "Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it",
     "PASS only when Recognition, Emotional Pull, and Tension / Gap are all satisfied and at least 4 of the 5 checks are satisfied",
     "one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
   ]) {
     assert.match(app, new RegExp(instruction.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
+  assert.equal(MASTER_VIDEO_RULES.legacySourcesAllowed, false);
   assert.match(app, /isEpisodeDevelopment = output !== "validation"/);
-  assert.match(app, /one parent problem and payoff/);
-  assert.match(app, /calibrated corrective turn/);
-  assert.match(app, /observation before interpretation/);
-  assert.match(app, /no single-cause assumption/);
-  assert.match(app, /optional low-pressure CTA/);
-  assert.match(app, /Do not manufacture distress/);
+  assert.match(app, /masterVideoRulePromptLines\(\)/);
+  assert.match(app, /save_comment/);
+  assert.doesNotMatch(html, /No CTA, let the ending land/);
   assert.doesNotMatch(app, /one measurable experiment for the selected checkpoint/);
 });
 

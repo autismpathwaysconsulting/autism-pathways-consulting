@@ -292,6 +292,10 @@
 
     <section id="prompts" class="page-section" aria-labelledby="prompts-title">
       <div class="section-heading"><div><p class="section-kicker">Create next</p><h2 id="prompts-title">Prompt builder</h2><p class="section-summary">Turn one approved topic into a copy-ready production brief.</p></div></div>
+      <div class="hook-gate rework" role="status" aria-live="polite">
+        <strong id="masterRulesStatus">Loading master video rules</strong>
+        <span id="masterRulesDetail" class="subtle">Checking the current APC-AI-OS source and version.</span>
+      </div>
       <section class="card hook-check-card" aria-labelledby="hook-check-title">
         <div class="card-heading">
           <div><p class="card-label">Creative QA only</p><h3 id="hook-check-title">Winner Hook Check</h3><p class="subtle">Test the opening before filming. This does not change analytics scoring, the September experiment, or product validation.</p></div>
@@ -330,7 +334,7 @@
           <div class="field"><label for="pOutput">Output</label><select id="pOutput"><option value="content">Content development HTML</option><option value="reel">Reel / short-form episode package</option><option value="carousel">Carousel package</option><option value="youtube">YouTube package</option><option value="validation">Validation follow-up</option></select></div>
           <div class="field"><label for="pGoal">Primary goal</label><select id="pGoal"><option>Audience discovery</option><option>Reach/shares</option><option>Course interest</option><option>Workshop validation</option><option>Book development</option></select></div>
           <div class="field"><label for="pPlatform">Platform</label><select id="pPlatform"><option>Instagram + TikTok</option><option>Instagram</option><option>TikTok</option><option>YouTube</option></select></div>
-          <div class="field"><label for="pEnding">Ending or CTA <span class="optional">optional</span></label><select id="pEnding"><option value="none">No CTA, let the ending land</option><option value="save">Invite a save</option><option value="share">Invite a share</option><option value="comment_question">Ask a comment question</option><option value="story_question">Ask a Story question</option><option value="waitlist">Invite waitlist interest</option></select></div>
+          <div class="field"><label for="pEnding">Ending pattern</label><select id="pEnding"><option value="save_comment">Save + specific comment question</option><option value="save_share_comment">Save + share + specific comment question</option><option value="save_waitlist_comment">Save + waitlist interest + specific comment question</option></select></div>
           <div class="field"><label for="pLocked">Core wording</label><select id="pLocked"><option>Use approved wording</option><option>Improve wording first</option></select></div>
           <div class="field span-2"><label for="pResearch">Evidence source</label><select id="pResearch"><option>Use current evidence where needed</option><option>Use existing APC evidence only</option></select></div>
         </div>
@@ -338,7 +342,7 @@
           <div><strong>Selected research context</strong><p id="selectedResearchDetail" class="subtle"></p></div>
           <button class="button secondary compact" type="button" data-action="clear-research-context">Clear</button>
         </div>
-        <p class="field-help prompt-ending-note">A clear close can be enough. A CTA is optional, not a requirement for every video.</p>
+        <p class="field-help prompt-ending-note">Every episode closes with a save invitation and one specific personal question. Additional sharing or waitlist language stays low pressure.</p>
         <div class="form-actions"><button class="button" type="button" data-action="build-prompt">Build prompt</button></div>
       </div>
       <div id="builtPrompt" class="prompt-output" hidden>
@@ -399,7 +403,7 @@
         <summary>Content and evidence boundaries</summary>
         <ul><li>One behaviour does not prove one cause.</li><li>Research findings are suggestions until the Founder accepts them.</li><li>Medication stays with prescribers. APC can support observation and communication.</li><li>Paid workshop evidence comes before a full course build.</li></ul>
       </details>
-      <details class="reference-item"><summary>Default content shape</summary><p>Parent moment, recognition, careful reframe, what to notice, practical next step, then an optional ending.</p></details>
+      <details class="reference-item"><summary>Default content shape</summary><p>Verified statistic, recognisable parent moment, tension, careful mechanism, practical next step, save trigger, then one specific personal question.</p></details>
     </section>
   </main>
 

@@ -103,3 +103,18 @@ test("section navigation stays compact without capturing vertical page scroll", 
   assert.match(app, /nav\.scrollTo\(\{ left:/);
   assert.doesNotMatch(app, /current\.scrollIntoView/);
 });
+
+test("Content OS displays the synced master-rule version and excludes legacy rule sources", async () => {
+  const html = await source("content-os/index.html");
+  const episodeHtml = await source("content-os/episodes/index.html");
+  const app = await source("content-os/app.js");
+  const episodeApp = await source("content-os/episodes/app.js");
+  const rules = await source("content-os/video-rules.js");
+
+  assert.match(html, /id="masterRulesStatus"/);
+  assert.match(episodeHtml, /id="masterRulesStatus"/);
+  assert.match(app, /MASTER_VIDEO_RULES/);
+  assert.match(episodeApp, /MASTER_VIDEO_RULES/);
+  assert.match(rules, /legacySourcesAllowed: false/);
+  assert.match(rules, /Do not use old HTML script boards/);
+});

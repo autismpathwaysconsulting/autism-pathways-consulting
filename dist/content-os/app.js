@@ -19,6 +19,7 @@ import {
   safeRate,
   validateAnalyticsSubmission,
 } from "./analytics.js";
+import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "./video-rules.js";
 
 const DATA = {
   families:[
@@ -2804,9 +2805,15 @@ async function useResearchItem(itemId) {
     } else if (DATA.families.includes(data.category)) {
       element("pFamily").value = data.category;
     }
-    if (["none", "save", "share", "comment_question", "story_question", "waitlist"].includes(data.ending)) {
-      element("pEnding").value = data.ending;
-    }
+    const endingMap = {
+      none: "save_comment",
+      save: "save_comment",
+      share: "save_share_comment",
+      comment_question: "save_comment",
+      story_question: "save_comment",
+      waitlist: "save_waitlist_comment",
+    };
+    element("pEnding").value = endingMap[data.ending] || "save_comment";
     element("pResearch").value = "Use current evidence where needed";
   }
   renderSelectedResearchContext();
@@ -2900,14 +2907,11 @@ async function readResearch() {
 
 function endingInstruction(value) {
   const instructions = {
-    none: "No CTA is required. End with a clear, useful takeaway and let it land.",
-    save: "Invite a save only if the content is genuinely useful to revisit.",
-    share: "Invite a share only if it helps another family understand the problem.",
-    comment_question: "End with one low-pressure, deidentified comment question.",
-    story_question: "Use one Story question for aggregate product research.",
-    waitlist: "Invite workshop or waitlist interest without implying proven demand.",
+    save_comment: "Invite a save, then ask one specific, low-pressure personal question for comments.",
+    save_share_comment: "Invite a save and a helpful share, then ask one specific, low-pressure personal question for comments.",
+    save_waitlist_comment: "Invite a save, add low-pressure waitlist interest without implying demand, then ask one specific personal question for comments.",
   };
-  return instructions[value] || instructions.none;
+  return instructions[value] || instructions.save_comment;
 }
 
 function analyticsLearningSummary(area) {
@@ -2991,6 +2995,13 @@ function updateWinnerHookCheck() {
   }
 }
 
+function renderMasterVideoRulesStatus() {
+  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " active";
+  element("masterRulesDetail").textContent =
+    "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) +
+    ". Old HTML boards and previous rule copies are excluded.";
+}
+
 function buildPrompt() {
   const topic = text(element("pTopic").value).trim();
   if (!topic) {
@@ -3049,15 +3060,7 @@ function buildPrompt() {
   if (isEpisodeDevelopment) {
     header.push(
       "",
-      "CREATIVE ORDER: WORKING HYPOTHESIS, NOT A PERMANENT RULE",
-      "- DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION.",
-      "- Follow this sequence: parent emotion -> specific moment -> contradiction / tension -> curiosity -> reframe -> practical action -> save / share takeaway.",
-      "- Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it.",
-      "- Do not begin with the mechanism or educational explanation. Begin with a recognisable parent moment that carries genuine emotional tension. The viewer should feel the situation before APC explains it.",
-      "- Create the curiosity gap before resolving it.",
-      "- Keep evidence, nuance and safety boundaries, but move them behind the hook rather than placing them in the first seconds.",
-      "- Use genuine parent recognition only. Do not manufacture distress, shame parents, portray autistic children as dangerous or burdensome, exaggerate a crisis, or make unsupported causal claims.",
-      "- Preserve one parent problem and payoff, a calibrated corrective turn, emotional recognition with a compassionate reframe, one practical action, one optional low-pressure CTA, observation before interpretation, and no single-cause assumption.",
+      ...masterVideoRulePromptLines(),
       "",
       "PRE-FILM HOOK AUDIT",
       "Complete these fields before recommending filming:",
@@ -3083,7 +3086,7 @@ function buildPrompt() {
       "Return one polished, mobile-friendly content development package with:",
       "- final hook and one clear teaching mechanism",
       "- short-form script or carousel copy suited to the selected platform",
-      "- caption, evidence notes, optional ending, production notes, and QA",
+      "- caption, evidence notes, approved ending pattern, production notes, and QA",
       "- one product hypothesis and one book reuse angle",
       "- one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
     ],
@@ -3092,8 +3095,8 @@ function buildPrompt() {
       "OUTPUT",
       "Return a filming-ready Reel / short-form episode package with:",
       "- cover title, opening overlay, first spoken line, and caption opener sharing one promise without repeating one sentence",
-      "- a natural 45–55 second script that moves from parent emotion and a specific moment into tension, curiosity, reframe, practical action, and an optional save/share takeaway",
-      "- timed scenes, filming direction, on-screen overlays, caption, evidence notes, optional low-pressure CTA, production notes, and final QA",
+      "- a natural script under 55 seconds that follows the canonical master-rule sequence",
+      "- timed scenes, filming direction, on-screen overlays, caption, evidence notes, the approved save-and-question CTA, production notes, and final QA",
       "- the completed PRE-FILM HOOK AUDIT and HOOK GATE before the script",
       "- one measurement plan for this replicated recipe at the selected checkpoint; do not introduce another creative variable",
     ],
@@ -3106,7 +3109,7 @@ function buildPrompt() {
       "3. careful reframe",
       "4. possible mechanisms to check",
       "5. one practical observation or tool",
-      "6. clear takeaway with the optional ending above",
+      "6. clear takeaway with the approved save-and-question ending above",
       "Include caption, source notes, 1080 by 1350 and 1080 by 1920 production guidance, and phone-scale QA.",
     ],
     youtube: [
@@ -3115,7 +3118,7 @@ function buildPrompt() {
       "Return a complete 8 to 15 minute YouTube package with:",
       "- title options, thumbnail concepts, final spoken script, chapters, and visual plan",
       "- evidence notes, description, pinned comment, and phone-friendly Shorts adaptations",
-      "- a natural close that follows the optional ending above",
+      "- a natural close that follows the approved ending above",
       "- one book angle, one workshop opportunity, and final QA",
     ],
     validation: [
@@ -3494,6 +3497,7 @@ function renderAll() {
   renderRecoveryCopy();
   renderConnectorState();
   updateWinnerHookCheck();
+  renderMasterVideoRulesStatus();
 }
 
 function handleClick(event) {
