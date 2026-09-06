@@ -1862,7 +1862,7 @@ async function buildTrackingPublication(options) {
     ? canonicalInstagramReelPostRef(rawPostRef)
     : rawPostRef;
   const existingPublication = matchingPublication(platform, postRef);
-  if (existingPublication) return existingPublication;
+  if (existingPublication?.episodeId === episodeId) return existingPublication;
   const promptArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
     return item.episode_id === episodeId && item.artifact_type === "PROMPT";
   }).sort(function (left, right) { return Number(right.version) - Number(left.version); })[0];

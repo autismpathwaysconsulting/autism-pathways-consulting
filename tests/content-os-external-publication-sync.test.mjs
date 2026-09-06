@@ -474,6 +474,12 @@ test("one Reel cannot be attached to another episode through a URL spelling vari
   assert.equal(database.events.size, 1);
 });
 
+test("the browser never lets a cached Reel override the selected episode", async () => {
+  const source = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
+  assert.match(source, /if \(existingPublication\?\.episodeId === episodeId\) return existingPublication;/);
+  assert.doesNotMatch(source, /if \(existingPublication\) return existingPublication;/);
+});
+
 test("external registration rejects cross-origin writes and unsupported Reel references", async () => {
   const database = new MemoryDatabase();
   const crossOrigin = await registerExternalPublication({
