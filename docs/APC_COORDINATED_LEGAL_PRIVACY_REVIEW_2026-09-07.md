@@ -29,6 +29,12 @@ The public `terms.html`, `cancellation-policy.html`, and `privacy.html` remain u
 
 Connector readback on 7 September 2026 confirmed that all four documents are native Google Docs, contain the expected headings and lists, and are stored in the private `ChatGPT/APC Legal Review` folder.
 
+## GitHub review record
+
+- Draft pull request: https://github.com/autismpathwaysconsulting/autism-pathways-consulting/pull/42
+- Review branch: `codex/legal-terms-coordinated-draft`
+- Publication, merge, deployment, and live Cal.com changes remain unauthorised.
+
 ## Current-law checks
 
 1. Malaysia's Personal Data Protection Act applies to personal-data processing connected with commercial transactions. Child health or diagnosis information can be sensitive personal data and requires stricter handling, including express consent where the Act requires it.
