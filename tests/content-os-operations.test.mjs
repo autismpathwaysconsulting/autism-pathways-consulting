@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { DatabaseSync } from "node:sqlite";
 
 import { validateCalmFeedbackAction } from "../functions/api/content-os/calm-feedback/index.js";
-import { validatePracticeAction } from "../functions/api/content-os/practice/index.js";
+import { followThroughMarkdown, JOURNEY_TEMPLATES, validatePracticeAction } from "../functions/api/content-os/practice/index.js";
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
 
 function client(overrides = {}) {
@@ -26,13 +26,16 @@ function client(overrides = {}) {
 
 function session(overrides = {}) {
   return {
+    journeyStage: "SESSION_1",
     status: "DOCUMENTATION_DRAFT",
     scheduledAt: "2026-09-10",
     occurredAt: null,
     preparation: "Synthetic preparation",
+    templateAnswers: "Synthetic template answers",
     privateNotes: "Synthetic private note",
     parentSummary: "Synthetic parent summary",
     actionPlan: "Synthetic action plan",
+    parentMaterials: "Synthetic parent materials",
     documentStatus: "DRAFT",
     ...overrides,
   };
@@ -83,6 +86,7 @@ test("practice and Calm workflows are private build assets with durable schemas"
     "functions/api/content-os/calm-feedback/index.js",
     "migrations/0007_practice_and_feedback_workflows.sql",
     "migrations/0008_workflow_concurrency_hardening.sql",
+    "migrations/0009_practice_client_journey.sql",
   ]) assert.ok(!PUBLIC_FILES.includes(path), path);
 
   const migration = await readFile(new URL("../migrations/0007_practice_and_feedback_workflows.sql", import.meta.url), "utf8");
@@ -93,6 +97,11 @@ test("practice and Calm workflows are private build assets with durable schemas"
   const hardening = await readFile(new URL("../migrations/0008_workflow_concurrency_hardening.sql", import.meta.url), "utf8");
   assert.match(hardening, /UNIQUE INDEX IF NOT EXISTS idx_calm_feedback_triage_events_revision/);
   assert.match(hardening, /calm feedback triage revision conflict/);
+  const journey = await readFile(new URL("../migrations/0009_practice_client_journey.sql", import.meta.url), "utf8");
+  assert.match(journey, /ADD COLUMN journey_stage/);
+  assert.match(journey, /idx_practice_sessions_journey_stage/);
+  assert.match(journey, /trg_practice_session_journey_order_insert/);
+  assert.match(journey, /trg_practice_session_journey_order_update/);
 
   const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
   const productionBindings = config.env.production.d1_databases.map((item) => item.binding);
@@ -103,7 +112,7 @@ test("practice and Calm workflows are private build assets with durable schemas"
 test("all Content OS migrations apply together and keep workflow history append-only", async () => {
   const database = new DatabaseSync(":memory:");
   try {
-    for (let number = 1; number <= 8; number += 1) {
+    for (let number = 1; number <= 9; number += 1) {
       const names = [
         "0001_content_os_state.sql",
         "0002_content_os_v23_hardening.sql",
@@ -113,6 +122,7 @@ test("all Content OS migrations apply together and keep workflow history append-
         "0006_episode_management.sql",
         "0007_practice_and_feedback_workflows.sql",
         "0008_workflow_concurrency_hardening.sql",
+        "0009_practice_client_journey.sql",
       ];
       database.exec(await readFile(new URL(`../migrations/${names[number - 1]}`, import.meta.url), "utf8"));
     }
@@ -126,6 +136,18 @@ test("all Content OS migrations apply together and keep workflow history append-
       VALUES (?, ?, 1, 'CREATED', 'CJ', ?, '{}', ?)`)
       .run("12345678-1234-1234-1234-123456789abc", "CASE-2026-ABC234", "Synthetic test", "2026-09-06T00:00:00Z");
     assert.throws(() => database.prepare("UPDATE practice_client_revisions SET reason = 'changed' WHERE case_id = ?").run("CASE-2026-ABC234"), /append-only/);
+    database.prepare(`INSERT INTO practice_sessions
+      (session_id, case_id, session_number, journey_stage, status, scheduled_at, occurred_at, preparation,
+       template_answers, private_notes, parent_summary, action_plan, parent_materials, document_status,
+       revision, created_at, updated_at)
+      VALUES (?, ?, 1, 'PRE_SESSION_1', 'PLANNED', NULL, NULL, '', '', '', '', '', '', 'DRAFT', 1, ?, ?)`)
+      .run("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", "CASE-2026-ABC234", "2026-09-06T00:00:00Z", "2026-09-06T00:00:00Z");
+    assert.throws(() => database.prepare(`INSERT INTO practice_sessions
+      (session_id, case_id, session_number, journey_stage, status, scheduled_at, occurred_at, preparation,
+       template_answers, private_notes, parent_summary, action_plan, parent_materials, document_status,
+       revision, created_at, updated_at)
+      VALUES (?, ?, 2, 'SESSION_2', 'PLANNED', NULL, NULL, '', '', '', '', '', '', 'DRAFT', 1, ?, ?)`)
+      .run("bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", "CASE-2026-ABC234", "2026-09-06T00:00:00Z", "2026-09-06T00:00:00Z"), /stage order mismatch/);
     database.prepare("INSERT INTO calm_feedback_triage (feedback_id, status, decision_note, revision, updated_at) VALUES (?, 'REVIEWED', 'First decision', 1, ?)").run("feedback-12345678", "2026-09-06T00:00:00Z");
     database.prepare("INSERT INTO calm_feedback_triage_events (event_id, feedback_id, status, decision_note, revision, actor, created_at) VALUES (?, ?, 'REVIEWED', 'First decision', 1, 'CJ', ?)").run("event-12345678", "feedback-12345678", "2026-09-06T00:00:00Z");
     assert.throws(() => database.prepare("INSERT INTO calm_feedback_triage_events (event_id, feedback_id, status, decision_note, revision, actor, created_at) VALUES (?, ?, 'ACTION_NEEDED', 'Losing decision', 1, 'CJ', ?)").run("event-87654321", "feedback-12345678", "2026-09-06T00:00:01Z"), /revision conflict|UNIQUE/);
@@ -151,4 +173,19 @@ test("Practice Console exposes bounded append-only activity without revision sna
   assert.doesNotMatch(source, /SELECT[^\n]+snapshot_json[^\n]+practice_(?:client|session)_revisions/);
   assert.match(page, /id="history"/);
   assert.match(page, /id="activityList"/);
+});
+
+test("Practice Console fixes service-aware journeys and separates internal notes from parent exports", () => {
+  assert.deepEqual(JOURNEY_TEMPLATES.RM350.map((stage) => stage.code), ["PRE_SESSION_1", "SESSION_1", "POST_SESSION_1"]);
+  assert.deepEqual(JOURNEY_TEMPLATES.RM1800.map((stage) => stage.code), ["PRE_SESSION_1", "SESSION_1", "SESSION_2", "SESSION_3", "SESSION_4", "POST_SESSION_4"]);
+  const output = followThroughMarkdown(
+    { case_id: "CASE-2026-ABC234", service_code: "RM1800", revision: 2 },
+    { journey_stage: "SESSION_2", session_number: 3, revision: 4, document_status: "CJ_APPROVED", updated_at: "2026-09-06T00:00:00Z", parent_summary: "Parent-safe summary", action_plan: "Parent-safe actions", parent_materials: "Parent-safe materials", template_answers: "INTERNAL TEMPLATE ANSWERS", private_notes: "INTERNAL FACILITATOR NOTES" },
+  );
+  assert.match(output, /# Session 2 follow-through pack/);
+  assert.match(output, /Parent-safe summary/);
+  assert.match(output, /Parent-safe actions/);
+  assert.match(output, /Parent-safe materials/);
+  assert.doesNotMatch(output, /INTERNAL TEMPLATE ANSWERS/);
+  assert.doesNotMatch(output, /INTERNAL FACILITATOR NOTES/);
 });

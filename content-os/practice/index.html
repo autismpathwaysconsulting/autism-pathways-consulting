@@ -15,7 +15,7 @@
       <div>
         <p class="eyebrow">Private APC operator tool</p>
         <h1>Practice Console <span class="version-mark">cloud</span></h1>
-        <p class="header-summary">Prepare, run and document RM350 and RM1,800 parent work from one protected record.</p>
+        <p class="header-summary">Track an RM350 case through one bounded session, or an RM1,800 programme through four connected sessions, in one protected record.</p>
         <div class="button-row quick-launch-row" aria-label="Quick launch links">
           <a class="button secondary compact" href="/content-os/">Content OS</a>
           <a class="button secondary compact" href="/content-os/episodes/">Episode Studio</a>
@@ -42,7 +42,7 @@
   <main id="main-content" class="shell main-content" tabindex="-1">
     <section id="today" class="page-section" aria-labelledby="today-title">
       <div class="section-heading">
-        <div><p class="section-kicker">Start here</p><h2 id="today-title">Today</h2><p class="section-summary">Records needing verification, session documentation and approved exports stay visible.</p></div>
+        <div><p class="section-kicker">Start here</p><h2 id="today-title">Today</h2><p class="section-summary">See active client journeys, completed stages, parent packs awaiting delivery and Drive records awaiting confirmation.</p></div>
         <button id="showNewClient" class="button" type="button">Add new client</button>
       </div>
       <div id="practiceMetrics" class="metric-grid" aria-label="Practice workflow summary"></div>
@@ -76,18 +76,18 @@
     </section>
 
     <section id="workspace" class="page-section" aria-labelledby="workspace-title">
-      <div class="section-heading"><div><p class="section-kicker">Pre to post meeting</p><h2 id="workspace-title">Meeting workspace</h2><p id="workspaceSummary" class="section-summary">Choose a client to begin.</p></div><button id="addSession" class="button" type="button" disabled>Add session</button></div>
+      <div class="section-heading"><div><p class="section-kicker">Fixed path for each service</p><h2 id="workspace-title">Client journey</h2><p id="workspaceSummary" class="section-summary">Choose a client to begin.</p></div><button id="addSession" class="button" type="button" disabled hidden>Restore missing stage</button></div>
       <div id="clientWorkspace" class="operator-workspace"></div>
       <div id="sessionWorkspace" class="operator-workspace"></div>
     </section>
 
     <section id="exports" class="page-section" aria-labelledby="exports-title">
-      <div class="section-heading"><div><p class="section-kicker">Versioned parent documents</p><h2 id="exports-title">Local and Drive archive</h2><p class="section-summary">Only CJ-approved summaries and action plans can be exported. Drive copies are one-way snapshots, not a second database.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Versioned parent documents</p><h2 id="exports-title">Local and Drive archive</h2><p class="section-summary">Only CJ-approved discussion summaries, action plans and parent materials can be exported. Internal template answers and facilitator notes are always excluded.</p></div></div>
       <div id="exportList" class="operator-list"></div>
     </section>
 
     <section id="history" class="page-section" aria-labelledby="history-title">
-      <div class="section-heading"><div><p class="section-kicker">Append-only record</p><h2 id="history-title">Activity history</h2><p class="section-summary">Every client and session revision remains traceable without exposing private note snapshots in this list.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Append-only record</p><h2 id="history-title">Activity history</h2><p class="section-summary">Every client and journey-stage revision is logged in order without exposing private note snapshots in this list.</p></div></div>
       <div id="activityList" class="operator-list" aria-live="polite"></div>
     </section>
   </main>
