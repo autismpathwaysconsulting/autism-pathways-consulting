@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-site.mjs",
+    "sync:video-rules": "node scripts/sync-video-rules.mjs",
     "test:site-build": "node --test tests/site-build-output.test.mjs",
     "test:content-os": "node --test tests/content-os*.test.mjs",
     "test:episode-workflow": "node --test tests/episode-workflow.test.mjs",

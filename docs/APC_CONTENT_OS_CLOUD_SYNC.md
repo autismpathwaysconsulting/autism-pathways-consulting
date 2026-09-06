@@ -57,6 +57,23 @@ The current working hypothesis is that recent APC underperformance may be partly
 
 Future episode-development prompts use winner-recipe replication as the default creative mode. They preserve the sequence of parent emotion, specific moment, tension, curiosity, reframe, practical action, and save/share takeaway, and they prohibit an additional creative variable unless the Founder separately approves it. This operational default does not claim that the recipe guarantees virality or prove that any one creative feature caused past performance.
 
+### Canonical master video rules
+
+The sole creative and production rule authority for new APC episodes is:
+
+`autismpathwaysconsulting/APC-AI-OS/02_CONTENT_SYSTEM/APC_Video_Rules_and_Winning_Examples.md`
+
+Content OS uses the generated `content-os/video-rules.js` projection. The projection records the master version and SHA-256 hash and supplies the same active rule block to both Prompt Builder and Episode Studio. Old HTML production boards, prior rule copies, archived prompts and rewritten episode variants are excluded as generation instructions and evidence.
+
+To sync a reviewed master revision locally, run:
+
+```sh
+npm run sync:video-rules -- /absolute/path/to/APC_Video_Rules_and_Winning_Examples.md
+npm run sync:video-rules -- /absolute/path/to/APC_Video_Rules_and_Winning_Examples.md --check
+```
+
+The sync fails if the master does not contain exactly one ordered active-rule block or a valid master version. A missing or stale master must block a new episode workflow rather than trigger fallback to legacy rules. The generated projection is a versioned website artifact, not a competing authority document.
+
 ### Episode Studio
 
 Episode Studio uses the same governed research and analytics records instead of copying them into a second system. A topic candidate or manually entered title can become an episode with this fixed lifecycle:

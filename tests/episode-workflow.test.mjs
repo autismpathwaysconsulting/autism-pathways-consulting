@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 import { validateAction } from "../functions/api/content-os/episode-workflow/index.js";
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
+import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "../content-os/video-rules.js";
 
 test("accepts the four governed episode workflow actions", () => {
   const hash = "a".repeat(64);
@@ -34,23 +35,32 @@ test("episode schema extends the existing governed research and analytics stores
 test("Episode Studio assets are in the public allowlist without exposing operational files", () => {
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/index.html"));
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/app.js"));
+  assert.ok(PUBLIC_FILES.includes("content-os/video-rules.js"));
   assert.ok(!PUBLIC_FILES.includes("migrations/0003_episode_workflow.sql"));
   assert.ok(!PUBLIC_FILES.includes("functions/api/content-os/episode-workflow/index.js"));
 });
 
-test("Episode Studio uses the winner-replication recipe for every filming-pack prompt", async () => {
-  const app = await readFile(new URL("../content-os/episodes/app.js", import.meta.url), "utf8");
+test("Episode Studio uses only the synced APC master rules for filming-pack prompts", async () => {
+  const episodeApp = await readFile(new URL("../content-os/episodes/app.js", import.meta.url), "utf8");
+  const mainApp = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
+  assert.equal(MASTER_VIDEO_RULES.version, "2026-09-06.1");
+  assert.equal(MASTER_VIDEO_RULES.legacySourcesAllowed, false);
+  assert.match(MASTER_VIDEO_RULES.sha256, /^[a-f0-9]{64}$/);
   for (const instruction of [
-    "DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION",
-    "parent emotion -> specific moment -> contradiction / tension -> curiosity -> reframe -> practical action -> save / share takeaway",
-    "Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it",
-    "Do not begin with the mechanism or educational explanation",
-    "PRE-FILM HOOK AUDIT",
-    "Recognition, Emotional Pull, and Tension / Gap are all satisfied",
-    "Do not add another creative variable",
-    "Do not manufacture distress",
+    "SOURCE POLICY: Use only this master rule block",
+    "REPLICATION POLICY: Follow this approved sequence and production pattern by default",
+    "CURRENT AUDIENCE DEFAULT: Create for parents of autistic teenagers",
+    "Begin with \"Can I tell you something?\" followed immediately by one verified statistic or specific number",
+    "CURIOSITY BRIDGE: At approximately 7 to 12 seconds",
+    "VISUAL CARDS: Provide 340 by 605 pixel",
     "Do not create an SRT file",
   ]) {
-    assert.match(app, new RegExp(instruction.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.ok(MASTER_VIDEO_RULES.activeRules.some(line => line.includes(instruction)), instruction);
   }
+  const prompt = masterVideoRulePromptLines().join("\n");
+  assert.match(prompt, /Legacy rule sources allowed: NO/);
+  assert.match(episodeApp, /masterVideoRulePromptLines\(\)/);
+  assert.match(mainApp, /masterVideoRulePromptLines\(\)/);
+  assert.doesNotMatch(episodeApp, /DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION/);
+  assert.doesNotMatch(mainApp, /DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION/);
 });

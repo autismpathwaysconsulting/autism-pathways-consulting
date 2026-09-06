@@ -1,3 +1,5 @@
+import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "../video-rules.js";
+
 const EPISODE_API = "/api/content-os/episode-workflow";
 const RESEARCH_API = "/api/content-os/research?limit=12";
 const STAGES = Object.freeze(["IDEA", "APPROVED", "SCRIPT_LOCKED", "FILMED", "EDITING", "REVIEW", "READY", "PUBLISHED"]);
@@ -150,6 +152,10 @@ function render() {
   renderEpisodes();
   renderEpisodeOptions();
   renderResults();
+  element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " active";
+  element("masterRulesDetail").textContent =
+    "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) +
+    ". Old HTML boards and previous rule copies are excluded.";
   if (!element("episodeId").value) element("episodeId").value = nextEpisodeId();
 }
 
@@ -163,14 +169,7 @@ function productionPrompt() {
     "Format: " + element("packFormat").value,
     "Constraints: " + notes,
     "",
-    "DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION",
-    "Follow this sequence: parent emotion -> specific moment -> contradiction / tension -> curiosity -> reframe -> practical action -> save / share takeaway.",
-    "Do not introduce a new hook structure, storytelling format, pacing pattern, CTA style, or narrative device unless the Founder separately approves it.",
-    "Do not begin with the mechanism or educational explanation. Create the curiosity gap before resolving it.",
-    "Keep evidence, nuance, and safety boundaries underneath the hook and bring them in after the opening recognition and tension.",
-    "Use genuine parent recognition only. Do not manufacture distress, shame parents, portray autistic children as dangerous or burdensome, exaggerate a crisis, or make unsupported causal claims.",
-    "Preserve one parent problem and payoff, a calibrated corrective turn, emotional recognition with a compassionate reframe, one practical action, one optional low-pressure CTA, observation before interpretation, and no single-cause assumption.",
-    "Measure the replicated recipe at the approved checkpoint. Do not add another creative variable.",
+    ...masterVideoRulePromptLines(),
     "",
     "PRE-FILM HOOK AUDIT",
     "- Parent moment:",
