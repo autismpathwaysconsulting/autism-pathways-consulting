@@ -2620,6 +2620,7 @@ html.apc-home-snap {
 @media (max-width: 640px) {
   .apc-home-page .hero-grid {
     gap: 10px !important;
+    margin-block: 10px 0;
   }
 
   .apc-home-page .hero-copy h1 {
@@ -4218,6 +4219,291 @@ html {
 
 .apc-choice-carousel.is-enhanced [data-carousel-track] > [data-carousel-slide][hidden] {
   display: none !important;
+}
+
+/* About contrast correction and Resources visual composition */
+.apc-about-page .work-step {
+  color: rgba(255, 255, 255, .82) !important;
+}
+
+.apc-about-page .work-step strong {
+  color: #fff !important;
+}
+
+.apc-resources-page .resource-hero .wrap {
+  display: grid;
+  min-height: calc(100svh - 168px);
+  grid-template-columns: minmax(0, .78fr) minmax(420px, 1.22fr);
+  gap: clamp(48px, 7vw, 100px);
+  align-items: center;
+}
+
+.apc-resources-page .resource-hero-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.apc-resources-page .resource-hero-copy > p:last-child {
+  max-width: 34ch;
+}
+
+.apc-resources-page .resource-visual {
+  position: relative;
+  width: min(100%, 650px);
+  justify-self: end;
+  isolation: isolate;
+}
+
+.apc-resources-page .resource-visual picture {
+  display: block;
+  overflow: hidden;
+  background: #fff8ef;
+  border: 1px solid rgba(7, 55, 52, .1);
+  border-radius: 42px 42px 120px 42px;
+  box-shadow: 0 34px 80px rgba(7, 55, 52, .14);
+}
+
+.apc-resources-page .resource-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 65%;
+}
+
+.apc-resources-page .resource-signal {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  border: 5px solid rgba(255, 255, 255, .82);
+  border-radius: 50%;
+  box-shadow: 0 16px 36px rgba(7, 55, 52, .18);
+  animation: apc-resource-float 5.8s ease-in-out infinite;
+}
+
+.apc-resources-page .resource-signal-one {
+  top: -24px;
+  right: 15%;
+  width: 78px;
+  height: 78px;
+  background: var(--apc-coral);
+}
+
+.apc-resources-page .resource-signal-two {
+  right: -20px;
+  bottom: 19%;
+  width: 54px;
+  height: 54px;
+  background: var(--apc-bright-teal);
+  animation-delay: -1.9s;
+}
+
+.apc-resources-page .resource-signal-three {
+  bottom: -18px;
+  left: 18%;
+  width: 64px;
+  height: 64px;
+  background: var(--apc-sage);
+  animation-delay: -3.6s;
+}
+
+@keyframes apc-resource-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+  50% { transform: translate3d(0, -10px, 0) rotate(4deg); }
+}
+
+@media (max-width: 900px) {
+  .apc-resources-page .resource-hero .wrap {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .apc-resources-page .resource-hero-copy > p:last-child {
+    max-width: 54ch;
+  }
+
+  .apc-resources-page .resource-visual {
+    width: min(100%, 620px);
+    justify-self: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .apc-resources-page .resource-hero .wrap {
+    gap: 22px;
+  }
+
+  .apc-resources-page .resource-visual picture {
+    border-radius: 24px 24px 68px 24px;
+  }
+
+  .apc-resources-page .resource-visual img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .apc-resources-page .resource-signal-one {
+    top: -12px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .apc-resources-page .resource-signal-two {
+    right: -8px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .apc-resources-page .resource-signal-three {
+    bottom: -10px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apc-resources-page .resource-signal {
+    animation: none !important;
+  }
+}
+
+/* Hero artwork clarity and reliable mobile section stops */
+.apc-home-page .hero-visual .hero-approach {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 100%;
+  margin-top: 12px;
+  padding: 18px 22px !important;
+  border-radius: 20px;
+}
+
+.apc-home-page .hero-visual .hero-approach .eyebrow {
+  margin-bottom: 6px !important;
+}
+
+.apc-home-page .hero-visual .hero-approach h2 {
+  max-width: 23ch;
+  font-size: clamp(1.35rem, min(1.75vw, 2.8vh), 1.65rem) !important;
+}
+
+@media (max-width: 900px) {
+  .apc-home-page .hero-visual .hero-approach {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  html.apc-home-snap,
+  html.apc-site-snap {
+    scroll-padding-top: 94px !important;
+    scroll-snap-type: y mandatory !important;
+  }
+
+  .apc-v2 main > *,
+  .apc-v2 > footer,
+  .apc-v2 .apc-snap-stop {
+    scroll-snap-stop: always !important;
+  }
+
+  .apc-home-page {
+    --apc-home-header: 94px;
+  }
+
+  .apc-v2 .apc-shell-inner {
+    padding-block: 5px;
+    gap: 0 12px;
+  }
+
+  .apc-v2 .apc-shell-logo img {
+    height: 34px;
+  }
+
+  .apc-v2 .apc-shell-start {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
+
+  .apc-v2 .apc-shell-nav a {
+    min-height: 36px;
+    font-size: .74rem !important;
+  }
+
+  .apc-home-page main > section {
+    min-height: calc(100svh - var(--apc-home-header));
+  }
+
+  .apc-tier-a.apc-home-page main > .hero {
+    height: calc(100svh - var(--apc-home-header));
+    min-height: 560px;
+    align-items: start;
+    padding-block: 14px !important;
+  }
+
+  .apc-home-page .hero-grid {
+    gap: 10px !important;
+  }
+
+  .apc-home-page .hero-copy .eyebrow {
+    margin-bottom: 6px;
+    font-size: .68rem;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    max-width: none !important;
+    margin-bottom: 10px !important;
+    font-size: clamp(1.82rem, 8.5vw, 2.12rem) !important;
+    line-height: 1 !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    margin-bottom: 0;
+    font-size: .9rem !important;
+    line-height: 1.36 !important;
+  }
+
+  .apc-home-page .hero-actions {
+    gap: 10px !important;
+    margin-top: 10px !important;
+  }
+
+  .apc-home-page .hero-actions .button {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: .74rem;
+  }
+
+  .apc-home-page .hero-actions .text-action {
+    font-size: .78rem;
+  }
+
+  .apc-home-page .hero-visual {
+    height: clamp(185px, 26svh, 220px);
+  }
+
+  .apc-home-page .hero-visual img {
+    object-position: center 70%;
+  }
+}
+
+@media (max-width: 640px) and (max-height: 700px) {
+  .apc-tier-a.apc-home-page main > .hero {
+    min-height: calc(100svh - var(--apc-home-header));
+    padding-block: 10px !important;
+  }
+
+  .apc-home-page .hero-copy h1 {
+    font-size: 1.68rem !important;
+  }
+
+  .apc-home-page .hero-copy .lead {
+    font-size: .82rem !important;
+  }
+
+  .apc-home-page .hero-visual {
+    height: 104px;
+  }
 }
 
 /* Fluid page navigation and compact choice carousels */
