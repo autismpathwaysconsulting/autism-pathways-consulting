@@ -1,4 +1,8 @@
 import { assertValidPublication } from "../../../../content-os/analytics.js";
+import {
+  canonicalInstagramReelPostRef,
+  canonicalInstagramReelPublicationId,
+} from "../../../../content-os/instagram-reels.js";
 
 const MAX_BODY_BYTES = 64 * 1024;
 const CHECKPOINTS = Object.freeze(["24h", "7d", "28d"]);
@@ -95,6 +99,28 @@ async function readBody(request) {
   }
 }
 
+function statementChanges(result) {
+  return Number(result?.meta?.changes || 0);
+}
+
+async function episodeEligibilityFailure(database, episodeId) {
+  const episode = await database.prepare(`SELECT id, status, archived_at FROM episodes WHERE id = ?`)
+    .bind(episodeId).first();
+  if (!episode) return json({ error: "Episode was not found.", code: "episode_not_found" }, 404);
+  if (episode.archived_at) return json({ error: "Restore this episode before publishing it.", code: "episode_archived" }, 409);
+  if (!["READY", "PUBLISHED"].includes(episode.status)) {
+    return json({ error: "Complete the final READY video review before publishing.", code: "episode_not_ready" }, 409);
+  }
+  return json({ error: "Episode eligibility changed during publication registration. Retry after refreshing.", code: "episode_state_conflict" }, 409);
+}
+
+async function confirmEpisodeEligibility(database, episodeId) {
+  const result = await database.prepare(`UPDATE episodes SET updated_at = updated_at
+    WHERE id = ? AND status IN ('READY', 'PUBLISHED') AND archived_at IS NULL`)
+    .bind(episodeId).run();
+  return statementChanges(result) === 1;
+}
+
 export async function onRequestPost({ request, env }) {
   if (env.APC_CONTENT_OS_AUTOMATION_ENABLED !== "true" || env.APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED !== "true") {
     return json({ error: "The existing Meta automation is not configured.", code: "not_configured" }, 503);
@@ -111,7 +137,7 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "Publication request does not match the expected schema.", code: "invalid_schema" }, 400);
   }
 
-  const publication = payload.publication;
+  let publication = payload.publication;
   try {
     assertValidPublication(publication);
   } catch (error) {
@@ -119,6 +145,16 @@ export async function onRequestPost({ request, env }) {
   }
   if (publication.platform !== "Instagram") {
     return json({ error: "The existing feed currently supports Instagram publications only.", code: "unsupported_platform" }, 409);
+  }
+  try {
+    const postRef = canonicalInstagramReelPostRef(publication.postRef);
+    publication = {
+      ...publication,
+      publicationId: await canonicalInstagramReelPublicationId(postRef),
+      postRef,
+    };
+  } catch (error) {
+    return json({ error: String(error?.message || error), code: "invalid_instagram_reel" }, 400);
   }
   if (!/^EP\d{2,4}$/.test(publication.episodeId || "") || !publication.publishedAt) {
     return json({ error: "A tracked episode ID and publication time are required.", code: "invalid_episode_link" }, 400);
@@ -139,6 +175,9 @@ export async function onRequestPost({ request, env }) {
       if (priorEvent.episode_id !== publication.episodeId || priorEvent.payload_sha256 !== requestHash) {
         return json({ error: "That idempotency key is already attached to different data.", code: "idempotency_conflict" }, 409);
       }
+      if (!await confirmEpisodeEligibility(database, publication.episodeId)) {
+        return await episodeEligibilityFailure(database, publication.episodeId);
+      }
       return json({
         schemaVersion: "apc.external-publication.v1",
         tracked: true,
@@ -147,14 +186,6 @@ export async function onRequestPost({ request, env }) {
         episodeId: publication.episodeId,
         checkpoints: CHECKPOINTS,
       });
-    }
-
-    const episode = await database.prepare(`SELECT id, status, archived_at FROM episodes WHERE id = ?`)
-      .bind(publication.episodeId).first();
-    if (!episode) return json({ error: "Episode was not found.", code: "episode_not_found" }, 404);
-    if (episode.archived_at) return json({ error: "Restore this episode before publishing it.", code: "episode_archived" }, 409);
-    if (!["READY", "PUBLISHED"].includes(episode.status)) {
-      return json({ error: "Complete the final READY video review before publishing.", code: "episode_not_ready" }, 409);
     }
 
     const existing = await database.prepare(`SELECT publication_id, payload_hash FROM content_publications
@@ -169,23 +200,34 @@ export async function onRequestPost({ request, env }) {
     if (!existing) {
       statements.push(database.prepare(`INSERT INTO content_publications
         (publication_id, platform, post_ref, published_at, created_at, payload_hash, publication_json)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`)
-        .bind(publication.publicationId, publication.platform, publication.postRef, publication.publishedAt, now, publicationHash, publicationJson));
+        SELECT ?, ?, ?, ?, ?, ?, ? FROM episodes
+        WHERE id = ? AND status IN ('READY', 'PUBLISHED') AND archived_at IS NULL`)
+        .bind(publication.publicationId, publication.platform, publication.postRef, publication.publishedAt, now,
+          publicationHash, publicationJson, publication.episodeId));
     }
     statements.push(
       database.prepare(`INSERT INTO episode_events
         (event_id, episode_id, event_type, artifact_id, idempotency_key, payload_sha256, metadata_json, created_at)
-        VALUES (?, ?, 'PUBLICATION_LINKED', NULL, ?, ?, ?, ?)`)
-        .bind(crypto.randomUUID(), publication.episodeId, payload.idempotencyKey, requestHash, JSON.stringify({
+        SELECT ?, id, 'PUBLICATION_LINKED', NULL, ?, ?, ?, ? FROM episodes
+        WHERE id = ? AND status IN ('READY', 'PUBLISHED') AND archived_at IS NULL`)
+        .bind(crypto.randomUUID(), payload.idempotencyKey, requestHash, JSON.stringify({
           publicationId: publication.publicationId,
           platform: publication.platform,
           trackingMode: "meta_github_sync",
           checkpoints: CHECKPOINTS,
-        }), now),
-      database.prepare("UPDATE episodes SET status = 'PUBLISHED', updated_at = ? WHERE id = ?")
+        }), now, publication.episodeId),
+      database.prepare(`UPDATE episodes SET status = 'PUBLISHED', updated_at = ?
+        WHERE id = ? AND status IN ('READY', 'PUBLISHED') AND archived_at IS NULL`)
         .bind(now, publication.episodeId),
     );
-    await database.batch(statements);
+    const results = await database.batch(statements);
+    const publicationResult = existing ? null : results[0];
+    const eventResult = results[existing ? 0 : 1];
+    const episodeResult = results.at(-1);
+    if ((!existing && statementChanges(publicationResult) !== 1) ||
+        statementChanges(eventResult) !== 1 || statementChanges(episodeResult) !== 1) {
+      return await episodeEligibilityFailure(database, publication.episodeId);
+    }
     return json({
       schemaVersion: "apc.external-publication.v1",
       tracked: true,
@@ -201,6 +243,9 @@ export async function onRequestPost({ request, env }) {
         WHERE idempotency_key = ?`).bind(payload.idempotencyKey).first();
       if (concurrentEvent) {
         if (concurrentEvent.episode_id === publication.episodeId && concurrentEvent.payload_sha256 === requestHash) {
+          if (!await confirmEpisodeEligibility(database, publication.episodeId)) {
+            return await episodeEligibilityFailure(database, publication.episodeId);
+          }
           return json({
             schemaVersion: "apc.external-publication.v1",
             tracked: true,

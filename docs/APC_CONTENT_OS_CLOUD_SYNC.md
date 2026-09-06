@@ -88,7 +88,7 @@ Workflow events are append-only and idempotent. They record prompt creation, pro
 
 ### Automatic Meta publication hand-off
 
-When the existing Meta automation is enabled, the publication form offers `Existing Meta automation` for Instagram. One submission writes the validated publication to canonical D1 storage, appends a `PUBLICATION_LINKED` episode event and moves a READY episode to PUBLISHED in one D1 batch. Retries use the deterministic publication ID as their idempotency identity and cannot silently attach altered data. Facebook remains on the separate direct-connector path.
+When the existing Meta automation is enabled, the publication form offers `Existing Meta automation` for Instagram. Content OS canonicalizes an Instagram Reel URL or shortcode to one `https://www.instagram.com/reel/{shortcode}/` reference before deriving its publication ID or checking conflicts. One submission writes the validated publication to canonical D1 storage, appends a `PUBLICATION_LINKED` episode event and moves a READY episode to PUBLISHED in one D1 batch. Every statement in that batch requires the episode to still be active and READY or PUBLISHED, so an archive or status change that wins the write race fails registration closed without a partial publication or event. Retries use the deterministic publication ID as their idempotency identity and cannot silently attach altered data. Facebook remains on the separate direct-connector path.
 
 The APC-AI-OS collector reads only these explicitly linked publication records through `/api/content-os/export/publication-mappings`. The export is bounded to 500 records, excludes archived or non-PUBLISHED episodes and returns only records linked through the Meta synchronization path. Public post URLs may be used transiently for exact configured-account matching, but they are never copied into analytics snapshots. Historical APC-AI-OS CSV mappings remain a backward-compatible source for earlier posts; future Content OS episodes do not need a second CSV edit.
 
@@ -133,10 +133,11 @@ The automation must use:
 Run:
 
 ```sh
+npm ci
 npm run build
 npm run test:site-build
 npm run test:content-os
-node --test tests/episode-workflow.test.mjs
+npm run test:episode-workflow
 python3 tests/run_authority_tests.py
 ```
 

@@ -19,6 +19,10 @@ import {
   safeRate,
   validateAnalyticsSubmission,
 } from "./analytics.js";
+import {
+  canonicalInstagramReelPostRef,
+  canonicalInstagramReelPublicationId,
+} from "./instagram-reels.js";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "./video-rules.js";
 import {
   CJ_IDEA_BACKLOG,
@@ -1846,14 +1850,17 @@ function updateSourceForPlatform() {
   renderConnectorState();
 }
 
-async function buildTrackingPublication() {
+async function buildTrackingPublication(options) {
   const episodeId = text(element("automaticEpisode").value).trim();
   const episode = activeEpisodeRows().find(function (item) { return item.id === episodeId; });
   if (!episode || !["READY", "PUBLISHED"].includes(episode.status)) throw new Error("Complete the final READY video review before publishing.");
   const platform = element("automaticPlatform").value;
-  const postRef = text(element("automaticPostRef").value).trim();
+  const rawPostRef = text(element("automaticPostRef").value).trim();
   const publishedAt = toUtcIso(element("automaticPublishedAt").value);
-  if (!postRef || !publishedAt) throw new Error("Add the published post link or stable ID and publication time.");
+  if (!rawPostRef || !publishedAt) throw new Error("Add the published post link or stable ID and publication time.");
+  const postRef = options?.canonicalInstagramReel
+    ? canonicalInstagramReelPostRef(rawPostRef)
+    : rawPostRef;
   const existingPublication = matchingPublication(platform, postRef);
   if (existingPublication) return existingPublication;
   const promptArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
@@ -1865,7 +1872,9 @@ async function buildTrackingPublication() {
   const topic = isPlainObject(promptArtifact?.payload?.sourceContext?.topic) ? promptArtifact.payload.sourceContext.topic : {};
   const publication = {
     schemaVersion: ANALYTICS_SCHEMA_VERSION,
-    publicationId: await publicationIdFor(platform, postRef),
+    publicationId: options?.canonicalInstagramReel
+      ? await canonicalInstagramReelPublicationId(postRef)
+      : await publicationIdFor(platform, postRef),
     episodeId: episodeId,
     platform: platform,
     postRef: postRef,
@@ -1894,7 +1903,7 @@ async function trackPublicationAutomatically() {
   const usesExternalMeta = connectionId === "external:meta";
   if (!usesExternalMeta && !remoteMediaId) throw new Error("Add the platform media ID.");
   status.textContent = "Linking the publication and scheduling checkpoints…";
-  const publication = await buildTrackingPublication();
+  const publication = await buildTrackingPublication({ canonicalInstagramReel: usesExternalMeta });
   const idempotencyKey = "publication:" + publication.publicationId;
   const result = await apiFetch(usesExternalMeta ? ENDPOINTS.externalPublications : ENDPOINTS.publications, {
     method: "POST",
