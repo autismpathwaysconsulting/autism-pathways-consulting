@@ -107,13 +107,16 @@ function clientForm(client) {
   const serviceOptions = ["TBD", "RM350", "RM1800"];
   const sourceOptions = ["UNVERIFIED", "PARENT_REPORTED", "CJ_VERIFIED"];
   const options = (items, selected) => items.map((value) => `<option value="${value}"${value === selected ? " selected" : ""}>${value.replaceAll("_", " ")}</option>`).join("");
+  const legacyService = client.serviceCode === "CUSTOM"
+    ? `<option value="" selected disabled>CUSTOM — choose a current service</option>`
+    : "";
   return `<form id="clientEditForm" class="card operator-form" data-case-id="${escapeHtml(client.caseId)}" data-revision="${client.revision}">
     <div class="card-heading"><div><p class="card-label">Protected client record</p><h3>${escapeHtml(client.caseId)}</h3></div><span class="status-badge">Revision ${client.revision}</span></div>
     <div class="form-grid">
       <label>Parent or client name<input name="displayName" maxlength="200" required autocomplete="off" value="${escapeHtml(client.displayName)}"></label>
       <label>Child age<input name="childAge" type="number" min="0" max="25" value="${client.childAge ?? ""}"></label>
       <label>Region<input name="region" maxlength="200" required autocomplete="off" value="${escapeHtml(client.region)}"></label>
-      <label>Service<select name="serviceCode">${options(serviceOptions, client.serviceCode)}</select></label>
+      <label>Service<select name="serviceCode" required>${legacyService}${options(serviceOptions, client.serviceCode)}</select>${legacyService ? "<span>Legacy classification. Choose RM350 or RM1,800 explicitly before saving.</span>" : ""}</label>
       <label class="span-two">Main concern<textarea name="concern" maxlength="4000" rows="3" required>${escapeHtml(client.concern)}</textarea></label>
       <label>Stage<select name="stage">${options(stageOptions, client.stage)}</select></label>
       <label>Source status<select name="sourceStatus">${options(sourceOptions, client.sourceStatus)}</select></label>
