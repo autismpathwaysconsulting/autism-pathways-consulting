@@ -114,9 +114,9 @@ async function episodeEligibilityFailure(database, episodeId) {
   return json({ error: "Episode eligibility changed during publication registration. Retry after refreshing.", code: "episode_state_conflict" }, 409);
 }
 
-async function confirmEpisodeEligibility(database, episodeId) {
+async function confirmPublishedEpisode(database, episodeId) {
   const result = await database.prepare(`UPDATE episodes SET updated_at = updated_at
-    WHERE id = ? AND status IN ('READY', 'PUBLISHED') AND archived_at IS NULL`)
+    WHERE id = ? AND status = 'PUBLISHED' AND archived_at IS NULL`)
     .bind(episodeId).run();
   return statementChanges(result) === 1;
 }
@@ -175,7 +175,7 @@ export async function onRequestPost({ request, env }) {
       if (priorEvent.episode_id !== publication.episodeId || priorEvent.payload_sha256 !== requestHash) {
         return json({ error: "That idempotency key is already attached to different data.", code: "idempotency_conflict" }, 409);
       }
-      if (!await confirmEpisodeEligibility(database, publication.episodeId)) {
+      if (!await confirmPublishedEpisode(database, publication.episodeId)) {
         return await episodeEligibilityFailure(database, publication.episodeId);
       }
       return json({
@@ -243,7 +243,7 @@ export async function onRequestPost({ request, env }) {
         WHERE idempotency_key = ?`).bind(payload.idempotencyKey).first();
       if (concurrentEvent) {
         if (concurrentEvent.episode_id === publication.episodeId && concurrentEvent.payload_sha256 === requestHash) {
-          if (!await confirmEpisodeEligibility(database, publication.episodeId)) {
+          if (!await confirmPublishedEpisode(database, publication.episodeId)) {
             return await episodeEligibilityFailure(database, publication.episodeId);
           }
           return json({

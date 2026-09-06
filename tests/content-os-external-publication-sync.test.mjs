@@ -108,7 +108,11 @@ class Statement {
       return { meta: { changes: 1 } };
     }
     if (/UPDATE episodes SET updated_at = updated_at/.test(this.sql)) {
-      return { meta: { changes: this.database.isEligible(this.params[0]) ? 1 : 0 } };
+      const requiresPublished = /status = 'PUBLISHED'/.test(this.sql);
+      const eligible = requiresPublished
+        ? this.params[0] === this.database.episode.id && !this.database.episode.archived_at && this.database.episode.status === "PUBLISHED"
+        : this.database.isEligible(this.params[0]);
+      return { meta: { changes: eligible ? 1 : 0 } };
     }
     throw new Error(`Unhandled run query: ${this.sql}`);
   }
@@ -401,6 +405,21 @@ test("idempotent replay fails closed after its episode is archived", async () =>
   const replay = await registerExternalPublication({ env: enabledEnv(database), request: requestBody(payload) });
   assert.equal(replay.status, 409);
   assert.equal((await replay.json()).code, "episode_archived");
+  assert.equal(database.publications.size, 1);
+  assert.equal(database.events.size, 1);
+});
+
+test("idempotent replay fails closed if its episode is moved back to READY", async () => {
+  const database = new MemoryDatabase();
+  const payload = { idempotencyKey: `publication:${canonicalPublicationId}`, publication: publication() };
+  const first = await registerExternalPublication({ env: enabledEnv(database), request: requestBody(payload) });
+  assert.equal(first.status, 201);
+  database.episode.status = "READY";
+
+  const replay = await registerExternalPublication({ env: enabledEnv(database), request: requestBody(payload) });
+  assert.equal(replay.status, 409);
+  assert.equal((await replay.json()).code, "episode_state_conflict");
+  assert.equal(database.episode.status, "READY");
   assert.equal(database.publications.size, 1);
   assert.equal(database.events.size, 1);
 });
