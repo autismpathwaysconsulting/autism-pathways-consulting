@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { execFile } from "node:child_process";
 import {
   lstat,
   mkdir,
@@ -14,8 +15,11 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, sep } from "node:path";
+import { promisify } from "node:util";
 
 import { buildSite, PUBLIC_FILES } from "../scripts/build-site.mjs";
+
+const execFileAsync = promisify(execFile);
 
 function assetVersion(content) {
   return createHash("sha256").update(content).digest("hex").slice(0, 12);
@@ -142,6 +146,21 @@ test("Cloudflare Pages uses the allowlisted build output", async () => {
   const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
   assert.equal(config.pages_build_output_dir, "dist");
   assert.equal(packageJson.scripts.build, "node scripts/build-site.mjs");
+});
+
+test("the committed Pages artifact contains every allowlisted build file", async () => {
+  const { stdout } = await execFileAsync("git", ["ls-files", "-z", "dist"], {
+    cwd: new URL("../", import.meta.url),
+    encoding: "buffer",
+  });
+  const tracked = new Set(stdout.toString("utf8").split("\0").filter(Boolean));
+
+  for (const relativePath of PUBLIC_FILES) {
+    assert.ok(
+      tracked.has(`dist/${relativePath}`),
+      `Tracked Pages artifact is missing dist/${relativePath}. Run npm run build and add the generated file.`,
+    );
+  }
 });
 
 test("shared asset query versions match their content hashes", async () => {
