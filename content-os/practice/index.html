@@ -72,7 +72,16 @@
 
     <section id="clients" class="page-section" aria-labelledby="clients-title">
       <div class="section-heading"><div><p class="section-kicker">One source of truth</p><h2 id="clients-title">Clients</h2><p class="section-summary">Select a family to update the record, prepare the next meeting or complete documents.</p></div><button id="refreshPractice" class="button secondary" type="button">Refresh</button></div>
-      <div id="clientList" class="operator-list" aria-live="polite"></div>
+      <div class="practice-client-controls">
+        <label>Search protected records<input id="clientSearch" type="search" autocomplete="off" placeholder="Name, case ID, concern or next action"></label>
+        <div class="practice-filter-buttons" aria-label="Filter clients">
+          <button type="button" class="secondary" data-client-filter="ALL" aria-pressed="true">All <span id="countAll">0</span></button>
+          <button type="button" class="secondary" data-client-filter="NEW" aria-pressed="false">New <span id="countNew">0</span></button>
+          <button type="button" class="secondary" data-client-filter="ACTIVE" aria-pressed="false">Active <span id="countActive">0</span></button>
+          <button type="button" class="secondary" data-client-filter="FINISHED" aria-pressed="false">Finished <span id="countFinished">0</span></button>
+        </div>
+      </div>
+      <div id="clientList" class="practice-client-lanes" aria-live="polite"></div>
     </section>
 
     <section id="workspace" class="page-section" aria-labelledby="workspace-title">
