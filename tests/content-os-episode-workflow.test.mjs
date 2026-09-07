@@ -61,7 +61,7 @@ test("accepts the governed and tracked episode workflow actions", () => {
   const valid = [
     { action: "create_episode", episode: { id: "EP09", title: "A useful episode", researchItemId: null } },
     { action: "create_tracked_prompt", episode: { id: "EP09", title: "A useful episode", researchItemId: null }, prompt: { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Line one\nLine two", sourceContext: { sourceType: "manual" }, masterRules }, idempotencyKey: "prompt:EP09:12345678" },
-    { action: "save_prompt_revision", episodeId: "EP09", prompt: { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Revised prompt", sourceContext: { sourceType: "manual" }, masterRules }, idempotencyKey: "prompt-revision:EP09:12345678" },
+    { action: "save_prompt_revision", episodeId: "EP09", prompt: { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", preferredScript: "Keep my preferred opening.", text: "Revised prompt", sourceContext: { sourceType: "manual" }, masterRules }, idempotencyKey: "prompt-revision:EP09:12345678" },
     { action: "import_production_pack", episodeId: "EP09", pack: importedPack(), idempotencyKey: "pack:EP09:12345678" },
     { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:12345678" },
     { action: "update_episode_details", episodeId: "EP09", title: "A revised useful episode", displayNumber: 2, idempotencyKey: "episode-edit:EP09:12345678" },
@@ -103,7 +103,7 @@ test("episode schema extends the existing governed research and analytics stores
 });
 
 test("tracked package contract requires the red-team and five-check filming gate", () => {
-  assert.equal(MINIMUM_REDTEAM_PASS_SCORE, 8.5);
+  assert.equal(MINIMUM_REDTEAM_PASS_SCORE, 9);
   const failedRedTeam = importedPack({ redteam: { result: "FAIL", score: 4, risks: ["Overclaim"], fixes: [] }, finalDecision: "REVISE" });
   assert.equal(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: failedRedTeam, idempotencyKey: "pack:EP09:failed001" }), null);
 
@@ -113,8 +113,8 @@ test("tracked package contract requires the red-team and five-check filming gate
   const wrongScoreScale = importedPack({ redteam: { result: "PASS", score: 95, risks: [], fixes: [] } });
   assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: wrongScoreScale, idempotencyKey: "pack:EP09:badscore1" }), /between 0 and 10/i);
 
-  const weakPass = importedPack({ redteam: { result: "PASS", score: 8.4, risks: [], fixes: [] } });
-  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: weakPass, idempotencyKey: "pack:EP09:weakpass1" }), /at least 8\.5\/10/i);
+  const weakPass = importedPack({ redteam: { result: "PASS", score: 8.9, risks: [], fixes: [] } });
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: weakPass, idempotencyKey: "pack:EP09:weakpass1" }), /at least 9\/10/i);
 });
 
 test("tracked package contract supports backward-compatible scene preparation and carousel packs", () => {
@@ -179,7 +179,13 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeHtml, /id="import"/);
   assert.match(episodeHtml, /Paste Codex result \+ import/);
   assert.match(episodeHtml, /You do not need to isolate or edit the JSON yourself/);
-  assert.match(episodeHtml, /red-team score of at least 8\.5\/10/);
+  assert.match(episodeHtml, /red-team score of at least 9\/10/);
+  assert.match(episodeHtml, /My preferred script or wording/);
+  assert.match(episodeHtml, /Save edits \+ copy prompt/);
+  assert.match(episodeHtml, /Save draft only/);
+  assert.match(episodeApp, /CJ'S PREFERRED SCRIPT OR WORDING/);
+  assert.match(episodeApp, /final red-team score of at least 9\/10/);
+  assert.match(episodeApp, /const needsSave =/);
   assert.match(episodeHtml, /Produce and edit from one page/);
   assert.match(episodeHtml, /Download final HTML/);
   assert.match(episodeApp, /standalonePackHtml/);

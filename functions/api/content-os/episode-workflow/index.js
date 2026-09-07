@@ -6,7 +6,7 @@ const HOOK_RESULTS = new Set(["PASS", "REWORK", "FAIL"]);
 const FINAL_DECISIONS = new Set(["FILM", "PRODUCE", "REVISE"]);
 const CONTENT_TYPES = new Set(["VIDEO", "CAROUSEL"]);
 const PACKAGE_SCHEMA = "apc.episode_pack.v2";
-export const MINIMUM_REDTEAM_PASS_SCORE = 8.5;
+export const MINIMUM_REDTEAM_PASS_SCORE = 9;
 
 function json(body, status = 200, headers = {}) {
   return Response.json(body, { status, headers: { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", ...headers } });
@@ -67,8 +67,9 @@ function validCarousel(carousel) {
     validMultiline(slide.sourcePill, 500, false) && validMultiline(slide.action, 1000, false));
 }
 function validatePrompt(prompt) {
-  if (!exactKeys(prompt, ["schemaVersion", "format", "notes", "text", "sourceContext", "masterRules"])) return "Tracked prompt does not match the expected schema.";
+  if (!exactKeys(prompt, ["schemaVersion", "format", "notes", "text", "sourceContext", "masterRules"], ["preferredScript"])) return "Tracked prompt does not match the expected schema.";
   if (prompt.schemaVersion !== "apc.episode_prompt.v1" || !validText(prompt.format, 80) || !validMultiline(prompt.notes, 2000, false) || !validMultiline(prompt.text, 100000)) return "Tracked prompt fields are invalid.";
+  if (Object.hasOwn(prompt, "preferredScript") && !validMultiline(prompt.preferredScript, 20000, false)) return "Preferred script is invalid.";
   if (!isObject(prompt.sourceContext) || hasUnsafeKey(prompt.sourceContext)) return "Prompt source context is invalid.";
   if (!exactKeys(prompt.masterRules, ["version", "sha256", "sourcePath"]) || !validText(prompt.masterRules.version, 40) || !/^[0-9a-f]{64}$/.test(prompt.masterRules.sha256) || !validText(prompt.masterRules.sourcePath, 260)) return "Master rule identity is invalid.";
   return null;
