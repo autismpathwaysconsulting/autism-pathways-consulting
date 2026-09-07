@@ -33,6 +33,31 @@ const sessionsForClient = (caseId) => state.data.sessions.filter((session) => se
 const NEW_STAGES = new Set(["RECORD_REVIEW_REQUIRED", "FIT_REVIEW", "APPROVED_TO_PAY", "PAYMENT_PROOF_RECEIVED", "PAYMENT_VERIFIED"]);
 const FINISHED_STAGES = new Set(["COMPLETE", "REFERRED", "CANCELLED"]);
 const clientLane = (client) => client.archivedAt || FINISHED_STAGES.has(client.stage) ? "FINISHED" : NEW_STAGES.has(client.stage) ? "NEW" : "ACTIVE";
+const utcDay = (value) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return null;
+  const time = Date.parse(value + "T00:00:00Z");
+  return Number.isFinite(time) ? time : null;
+};
+function operationalSummary(sessions) {
+  const todayText = new Date().toISOString().slice(0, 10);
+  const today = utcDay(todayText);
+  const incomplete = sessions.filter((session) => !stageComplete(session) && session.status !== "CANCELLED");
+  const upcoming = incomplete.filter((session) => utcDay(session.scheduledAt) !== null && utcDay(session.scheduledAt) >= today)
+    .sort((left, right) => String(left.scheduledAt).localeCompare(String(right.scheduledAt)))[0];
+  const overdue = incomplete.filter((session) => utcDay(session.scheduledAt) !== null && utcDay(session.scheduledAt) < today)
+    .sort((left, right) => String(right.scheduledAt).localeCompare(String(left.scheduledAt)))[0];
+  const completed = sessions.filter((session) => utcDay(session.occurredAt) !== null && utcDay(session.occurredAt) <= today)
+    .sort((left, right) => String(right.occurredAt).localeCompare(String(left.occurredAt)))[0];
+  const latestDocument = sessions.slice().sort((left, right) => String(right.updatedAt).localeCompare(String(left.updatedAt)))[0];
+  const daysSince = completed ? Math.max(0, Math.floor((today - utcDay(completed.occurredAt)) / 86400000)) : null;
+  const overdueDays = overdue ? Math.max(1, Math.floor((today - utcDay(overdue.scheduledAt)) / 86400000)) : null;
+  return {
+    appointment: upcoming?.scheduledAt || "Not scheduled",
+    lastSession: daysSince === null ? "Not recorded" : daysSince + " day" + (daysSince === 1 ? "" : "s") + " ago",
+    document: latestDocument?.documentStatus?.replaceAll("_", " ") || "No document",
+    timing: overdueDays === null ? "On track" : "Overdue by " + overdueDays + " day" + (overdueDays === 1 ? "" : "s") + ". Choose pause, extend or close.",
+  };
+}
 
 function toast(message) {
   element("toast").textContent = message;
@@ -105,13 +130,14 @@ function renderClients() {
     const total = journeyStagesForClient(client).length;
     const complete = sessions.filter(stageComplete).length;
     const next = sessions.find((session) => !stageComplete(session));
+    const summary = operationalSummary(sessions);
     return `
     <article class="card operator-card${client.caseId === state.activeCaseId ? " selected-card" : ""}">
       <div class="card-heading"><div><p class="card-label">${escapeHtml(client.caseId)}</p><h3>${escapeHtml(client.displayName)}</h3></div><span class="status-badge">${escapeHtml(client.stage.replaceAll("_", " "))}</span></div>
-      <dl class="operator-facts"><div><dt>Service</dt><dd>${escapeHtml(client.serviceCode)}</dd></div><div><dt>Journey</dt><dd>${total ? `${complete} of ${total} complete` : "Select a service"}</dd></div><div><dt>Next stage</dt><dd>${escapeHtml(next ? journeyLabel(next) : total ? "Journey complete" : "Not created")}</dd></div></dl>
+      <dl class="operator-facts"><div><dt>Service</dt><dd>${escapeHtml(client.serviceCode)}</dd></div><div><dt>Journey</dt><dd>${total ? `${complete} of ${total} complete` : "Select a service"}</dd></div><div><dt>Next stage</dt><dd>${escapeHtml(next ? journeyLabel(next) : total ? "Journey complete" : "Not created")}</dd></div><div><dt>Next appointment</dt><dd>${escapeHtml(summary.appointment)}</dd></div><div><dt>Last session</dt><dd>${escapeHtml(summary.lastSession)}</dd></div><div><dt>Document</dt><dd>${escapeHtml(summary.document)}</dd></div><div><dt>Timing</dt><dd>${escapeHtml(summary.timing)}</dd></div></dl>
       <div class="journey-progress progress-${total ? Math.min(total, complete) : 0}-of-${total || 1}" role="progressbar" aria-label="${escapeHtml(client.displayName)} journey progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${complete}"><span></span></div>
       <p><strong>Next:</strong> ${escapeHtml(client.nextAction)}</p>
-      <button class="button secondary compact" type="button" data-open-client="${escapeHtml(client.caseId)}">Open workspace</button>
+      <button class="button secondary compact" type="button" data-open-client="${escapeHtml(client.caseId)}">Continue</button>
     </article>`;
   };
   const lanes = [["NEW", "New"], ["ACTIVE", "Active"], ["FINISHED", "Finished"]];

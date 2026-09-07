@@ -4,7 +4,8 @@ import { readFile } from "node:fs/promises";
 import { DatabaseSync } from "node:sqlite";
 
 import { validateCalmFeedbackAction } from "../functions/api/content-os/calm-feedback/index.js";
-import { followThroughMarkdown, JOURNEY_TEMPLATES, validatePracticeAction } from "../functions/api/content-os/practice/index.js";
+import { clientCompletionGateError, followThroughMarkdown, JOURNEY_TEMPLATES, validatePracticeAction } from "../functions/api/content-os/practice/index.js";
+import { onRequestGet as getPracticeSummary } from "../functions/api/content-os/practice/summary.js";
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
 
 function client(overrides = {}) {
@@ -29,7 +30,7 @@ function session(overrides = {}) {
     journeyStage: "SESSION_1",
     status: "DOCUMENTATION_DRAFT",
     scheduledAt: "2026-09-10",
-    occurredAt: null,
+    occurredAt: "2026-09-10",
     preparation: "Synthetic preparation",
     templateAnswers: "Synthetic template answers",
     privateNotes: "Synthetic private note",
@@ -66,6 +67,42 @@ test("Practice Console rejects unsafe or incomplete writes", () => {
   assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-02-30" }), /date/i);
   assert.match(validatePracticeAction({ action: "create_session", caseId: "CASE-2026-ABC234", scheduledAt: "2026-99-99TZZZ" }), /date/i);
   assert.match(validatePracticeAction({ action: "create_client", client: client({ serviceCode: "CUSTOM" }), reason: "test" }), /status/i);
+  assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-4234-8234-123456789abc", expectedRevision: 1, session: session({ status: "READY", scheduledAt: null, occurredAt: null }) }), /meeting date/i);
+  assert.match(validatePracticeAction({ action: "save_session", sessionId: "12345678-1234-4234-8234-123456789abc", expectedRevision: 1, session: session({ status: "COMPLETE", parentSummary: "", actionPlan: "" }) }), /closure summary/i);
+});
+
+test("Practice Console requires a completed journey and closure summary before client completion", () => {
+  const delivered = JOURNEY_TEMPLATES.RM350.map((stage) => ({
+    journey_stage: stage.code,
+    status: "DELIVERED",
+    document_status: "DELIVERED",
+    parent_summary: "Synthetic parent-safe closure summary",
+    action_plan: "Synthetic parent-safe next step",
+  }));
+  assert.equal(clientCompletionGateError("RM350", delivered), null);
+  assert.match(clientCompletionGateError("RM350", delivered.slice(0, 2)), /every required journey stage/i);
+  assert.match(clientCompletionGateError("RM350", delivered.map((item, index) => index === 2 ? { ...item, parent_summary: "" } : item)), /closure summary/i);
+  assert.match(clientCompletionGateError("RM350", delivered.map((item, index) => index === 1 ? { ...item, status: "PLANNED", document_status: "DRAFT" } : item)), /delivered or completed/i);
+});
+
+test("Practice summary returns aggregate counts only and preserves safe mode", async () => {
+  const database = {
+    prepare(query) { return { query }; },
+    async batch() {
+      return [
+        { results: [{ total: 4, new_count: 1, active: 2, finished: 1 }] },
+        { results: [{ awaiting_action: 3 }] },
+      ];
+    },
+  };
+  const response = await getPracticeSummary({ env: { APC_CONTENT_OS_DB: database, APC_PRACTICE_LIVE_WRITES_ENABLED: "false" } });
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    schemaVersion: "apc.practice_summary.v1",
+    writesEnabled: false,
+    clients: { total: 4, new: 1, active: 2, finished: 1 },
+    actions: 3,
+  });
 });
 
 test("Calm inbox accepts only controlled triage records", () => {
@@ -187,10 +224,17 @@ test("all Content OS migrations apply together and keep workflow history append-
 
 test("Content OS links to operational pages instead of local or database-admin shortcuts", async () => {
   const home = await readFile(new URL("../content-os/index.html", import.meta.url), "utf8");
+  const app = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
+  const practiceSummary = await readFile(new URL("../functions/api/content-os/practice/summary.js", import.meta.url), "utf8");
   assert.match(home, /href="\/content-os\/practice\/"/);
   assert.match(home, /href="\/content-os\/calm-feedback\/"/);
   assert.doesNotMatch(home, /127\.0\.0\.1:4173/);
   assert.doesNotMatch(home, /dash\.cloudflare\.com\/.*\/studio/);
+  assert.match(home, /Client workflow summary/);
+  assert.match(home, /Counts and actions only/);
+  assert.match(app, /practiceSummary: "\/api\/content-os\/practice\/summary"/);
+  assert.doesNotMatch(practiceSummary, /display_name|concern|next_action|parent_summary|private_notes/);
+  assert.match(practiceSummary, /APC_PRACTICE_LIVE_WRITES_ENABLED/);
 });
 
 test("Practice Console exposes bounded append-only activity without revision snapshots", async () => {
@@ -236,6 +280,12 @@ test("Practice Console presents searchable lifecycle lanes without embedding loc
   for (const lane of ["NEW", "ACTIVE", "FINISHED"]) assert.match(page, new RegExp(`data-client-filter="${lane}"`));
   assert.match(source, /const clientLane =/);
   assert.match(source, /Current family records remain in the localhost-only Practice Console/);
+  assert.match(page, /Confirm or change appointments in Cal\.com/);
+  assert.match(source, /Next appointment/);
+  assert.match(source, /Last session/);
+  assert.match(source, /Document/);
+  assert.match(source, /Choose pause, extend or close/);
+  assert.match(source, />Continue</);
   assert.doesNotMatch(source, /localStorage|sessionStorage|indexedDB/);
   assert.match(config, /"APC_PRACTICE_LIVE_WRITES_ENABLED": "false"/);
 });

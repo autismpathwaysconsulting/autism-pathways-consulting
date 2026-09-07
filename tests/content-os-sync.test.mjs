@@ -173,6 +173,17 @@ test("browser login accepts a same-site submission without Origin", async () => 
   assert.match(response.headers.get("Set-Cookie"), /__Host-apc_content_os_session=/);
 });
 
+test("expired browser sessions fail closed", async () => {
+  const expired = `${Date.now() - 1000}.${"0".repeat(64)}`;
+  const response = await authorize({
+    env: { APC_CONTENT_OS_ENVIRONMENT: "production", APC_CONTENT_OS_AUTH: "production-secret" },
+    request: new Request("https://example.com/content-os/", { headers: { Cookie: `__Host-apc_content_os_session=${expired}` } }),
+    next: () => new Response("must not run"),
+  });
+  assert.equal(response.status, 302);
+  assert.equal(response.headers.get("Location"), "https://example.com/content-os/login/");
+});
+
 test("login stylesheet is the only unauthenticated Content OS asset", async () => {
   const accepted = await authorize({
     env: {},
