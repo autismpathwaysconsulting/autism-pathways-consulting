@@ -58,6 +58,12 @@
     <section id="ideas" class="page-section" aria-labelledby="ideas-title">
       <div class="section-heading"><div><p class="section-kicker">Step 1</p><h2 id="ideas-title">Choose an idea and format</h2><p class="section-summary">Create either a video episode or carousel from a topic. The prompt is saved to the cloud before it appears, so every content item is tracked from its first draft.</p></div></div>
       <div class="subsection-heading"><div><h3>Master-aligned ideas</h3><p class="subtle">These replace the previous built-in idea list for future episodes.</p></div></div>
+      <div class="card batch-toolbar" aria-labelledby="batch-title">
+        <div><p class="card-label">Batch create</p><h3 id="batch-title">Select several topics once</h3><p class="subtle">Content OS creates and saves every tracked prompt automatically. Existing items are skipped.</p></div>
+        <div class="field"><label for="batchFormat">Create as</label><select id="batchFormat"><option value="Talking head">Video episodes</option><option value="Carousel post">Carousel posts</option></select></div>
+        <div class="button-row"><button id="selectAllTopics" class="button secondary compact" type="button">Select all</button><button id="clearTopicSelection" class="button secondary compact" type="button">Clear</button><button id="createSelectedTopics" class="button compact" type="button">Create selected prompts</button></div>
+        <p id="batchSelectionCount" class="subtle" aria-live="polite">0 topics selected.</p>
+      </div>
       <div id="masterIdeas" class="card-list"><div class="empty-state">Loading master-aligned ideas.</div></div>
       <div class="subsection-heading"><div><h3>Weekly research candidates</h3><p class="subtle">New governed research may suggest another topic, but the master filming rules still apply.</p></div><a class="button secondary" href="/content-os/#research">Open full research inbox</a></div>
       <div id="researchIdeas" class="card-list"><div class="empty-state">No research candidates loaded.</div></div>
@@ -79,7 +85,7 @@
       <div class="card storage-card" role="note">
         <p class="card-label">File storage</p>
         <h3>Cloud record here, video files on your SSD</h3>
-        <p class="subtle">Content OS stores episode details, prompt revisions, imported script packages, reviews and analytics in its private cloud database. It does not upload or store your original or exported video files. Use Download .md archive on an episode, then keep that file with the video, captions and final export in the episode folder on your SSD.</p>
+        <p class="subtle">Content OS stores episode details, prompt revisions, production packs, reviews and analytics as one canonical cloud record. It does not create duplicate local files automatically. Download the single final HTML only when you want an offline filming copy; original footage and final exports remain in your existing SSD folders.</p>
       </div>
       <div id="episodeList" class="card-list"><div class="empty-state">No episodes yet.</div></div>
       <details id="archivedEpisodesPanel" class="reference-item" hidden>
@@ -116,7 +122,8 @@
     </section>
 
     <section id="filming-pack" class="page-section" aria-labelledby="filming-pack-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 4</p><h2 id="filming-pack-title">Produce and edit from one page</h2><p class="section-summary">The latest package is stored in Content OS and rendered as readable video scene cards or carousel slide cards. Earlier versions remain in the audit timeline.</p></div><div class="button-row"><button id="downloadFilmingHtml" class="button secondary" type="button" disabled>Download HTML</button></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 4</p><h2 id="filming-pack-title">Produce and edit from one page</h2><p class="section-summary">Switch between every prepared item below. Content OS keeps one canonical cloud copy; download a single HTML file only after the content is locked.</p></div><div class="button-row"><button id="downloadFilmingHtml" class="button secondary" type="button" disabled>Download final HTML</button></div></div>
+      <div id="filmingPackSwitcher" class="pack-switcher" aria-label="Prepared content"></div>
       <div id="filmingPackViewer" class="card filming-pack-viewer"><div class="empty-state">Open imported content to see its script or slides, preparation list, exact actions, visual direction and edit notes.</div></div>
     </section>
 

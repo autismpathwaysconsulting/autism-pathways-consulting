@@ -246,6 +246,13 @@ function renderMasterIdeas() {
   clear(list);
   for (const topic of MASTER_TOPIC_BANK) {
     const card = node("article", "card");
+    const selector = node("label", "topic-selector");
+    const checkbox = node("input");
+    checkbox.type = "checkbox";
+    checkbox.dataset.batchTopic = topic.id;
+    selector.appendChild(checkbox);
+    selector.appendChild(node("span", "", "Select for batch"));
+    card.appendChild(selector);
     card.appendChild(node("span", "status-badge success", "Master " + MASTER_TOPIC_BANK_VERSION));
     card.appendChild(node("h3", "", topic.name));
     card.appendChild(node("blockquote", "topic-hook", topic.hook));
@@ -270,6 +277,40 @@ function renderMasterIdeas() {
     card.appendChild(actions);
     list.appendChild(card);
   }
+}
+function selectedMasterTopicIds() {
+  return [...document.querySelectorAll("[data-batch-topic]:checked")].map(input => input.dataset.batchTopic);
+}
+function updateBatchSelectionCount() {
+  const count = selectedMasterTopicIds().length;
+  element("batchSelectionCount").textContent = count + (count === 1 ? " topic selected." : " topics selected.");
+}
+function setAllTopicSelections(checked) {
+  document.querySelectorAll("[data-batch-topic]").forEach(input => { input.checked = checked; });
+  updateBatchSelectionCount();
+}
+async function createSelectedTopicPrompts() {
+  const topicIds = selectedMasterTopicIds();
+  if (!topicIds.length) throw new Error("Select at least one topic.");
+  const format = element("batchFormat").value;
+  let created = 0;
+  let skipped = 0;
+  let lastEpisodeId = null;
+  setStatus("Creating batch", "Saving " + topicIds.length + " tracked prompts one at a time.", "saving");
+  for (const topicId of topicIds) {
+    const topic = MASTER_TOPIC_BANK.find(item => item.id === topicId);
+    if (!topic) continue;
+    const result = await createEpisodeAndBuildPrompt({ id: nextEpisodeId(), title: topic.name, researchItemId: null }, masterContext(topic), format, false);
+    if (result?.created) { created += 1; lastEpisodeId = result.episodeId; }
+    else skipped += 1;
+  }
+  if (lastEpisodeId) {
+    element("packEpisode").value = lastEpisodeId;
+    element("importEpisode").value = lastEpisodeId;
+    element("promptOutput").textContent = latestPrompt(lastEpisodeId)?.text || "Prompt saved.";
+  }
+  setStatus("Batch prompts ready", created + " created and " + skipped + " existing item(s) skipped. Choose any item in Step 2 to copy its saved prompt.", "success");
+  setAllTopicSelections(false);
 }
 function nextAction(episode, packArtifact, publications) {
   const carousel = contentTypeForEpisode(episode.id) === "CAROUSEL";
@@ -316,11 +357,6 @@ function appendEpisodeActions(actions, episode, packArtifact) {
   edit.type = "button";
   edit.dataset.editEpisode = episode.id;
   actions.appendChild(edit);
-
-  const download = node("button", "button secondary compact", "Download .md archive");
-  download.type = "button";
-  download.dataset.downloadEpisode = episode.id;
-  actions.appendChild(download);
 
   if (packArtifact) {
     const editPack = node("button", "button secondary compact", carousel ? "Edit carousel package" : "Edit script/package");
@@ -604,6 +640,46 @@ function appendCarouselBoard(target, carousel) {
   appendPackSection(target, "Carousel design checklist", carousel.designNotes);
   appendPackSection(target, "Carousel caption", carousel.caption);
 }
+function appendScriptEditor(target, episode, pack) {
+  if (pack.contentType === "CAROUSEL" || episode.status !== "APPROVED") return;
+  const editor = node("details", "script-editor");
+  editor.appendChild(node("summary", "", "Edit script before finalising"));
+  editor.appendChild(node("p", "subtle", "Edit the exact words scene by scene. Saving creates a new tracked draft and automatically builds the required re-audit prompt. The previous approved version stays in history."));
+  const fields = node("div", "script-editor-fields");
+  pack.filmingBoard.forEach((scene, index) => {
+    const field = node("label", "field");
+    field.appendChild(node("span", "", "Scene " + (index + 1) + " · " + scene.start + " to " + scene.end));
+    const textarea = node("textarea");
+    textarea.maxLength = 5000;
+    textarea.rows = 4;
+    textarea.value = scene.spokenWords;
+    textarea.dataset.scriptScene = String(index);
+    field.appendChild(textarea);
+    fields.appendChild(field);
+  });
+  editor.appendChild(fields);
+  const save = node("button", "button compact", "Save draft + build review prompt");
+  save.type = "button";
+  save.dataset.saveScriptDraft = episode.id;
+  editor.appendChild(save);
+  target.appendChild(editor);
+}
+function renderFilmingPackSwitcher() {
+  const switcher = element("filmingPackSwitcher");
+  clear(switcher);
+  const prepared = activeEpisodes().filter(episode => latestPack(episode.id));
+  if (!prepared.length) {
+    switcher.appendChild(node("p", "subtle", "Imported production packs will appear here."));
+    return;
+  }
+  for (const episode of prepared) {
+    const button = node("button", "pack-switch-button" + (episode.id === selectedFilmingEpisodeId ? " active" : ""), episodeLabel(episode) + " · " + episode.title);
+    button.type = "button";
+    button.dataset.viewPack = episode.id;
+    button.setAttribute("aria-pressed", String(episode.id === selectedFilmingEpisodeId));
+    switcher.appendChild(button);
+  }
+}
 function renderFilmingPack(episodeId, scroll = false) {
   const viewer = element("filmingPackViewer");
   clear(viewer);
@@ -611,7 +687,8 @@ function renderFilmingPack(episodeId, scroll = false) {
   const artifact = latestArtifact(episodeId, "PRODUCTION_PACK");
   const pack = artifact?.payload;
   selectedFilmingEpisodeId = pack ? episodeId : null;
-  element("downloadFilmingHtml").disabled = !pack;
+  element("downloadFilmingHtml").disabled = !pack || !["SCRIPT_LOCKED", "FILMED", "EDITING", "REVIEW", "READY", "PUBLISHED"].includes(episode?.status);
+  renderFilmingPackSwitcher();
   if (!episode || !pack) {
     viewer.appendChild(node("div", "empty-state", "This episode does not have an imported production package yet."));
     if (scroll) element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -629,6 +706,7 @@ function renderFilmingPack(episodeId, scroll = false) {
   if (carousel) appendCarouselBoard(viewer, pack.carousel);
   else {
     appendPackSection(viewer, "Locked spoken script", pack.spokenScript);
+    appendScriptEditor(viewer, episode, pack);
     appendPropChecklist(viewer, pack.filmingBoard);
     appendFilmingBoard(viewer, pack.filmingBoard);
     appendOverlayBoard(viewer, pack.overlays);
@@ -673,78 +751,11 @@ function downloadFilmingHtml() {
   const href = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = href;
-  anchor.download = episode.id + "_filming_pack_v" + artifact.version + ".html";
+  anchor.download = episode.id + "_final_production_pack.html";
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
   setTimeout(() => URL.revokeObjectURL(href), 1000);
-}
-function markdownJson(value) {
-  return "````json\n" + JSON.stringify(value, null, 2) + "\n````";
-}
-function episodeMarkdownArchive(episode) {
-  const promptArtifact = latestArtifact(episode.id, "PROMPT");
-  const packArtifact = latestArtifact(episode.id, "PRODUCTION_PACK");
-  const archive = {
-    episode,
-    artifacts: workflow.artifacts.filter(item => item.episode_id === episode.id),
-    events: workflow.events.filter(item => item.episode_id === episode.id),
-    reviews: workflow.reviews.filter(item => item.episode_id === episode.id),
-    publications: workflow.publications.filter(item => item.episodeId === episode.id),
-  };
-  return [
-    "# " + episode.id + ": " + episode.title,
-    "",
-    "Downloaded from APC Episode Studio on " + new Date().toISOString() + ".",
-    "",
-    "## Storage note",
-    "",
-    "The canonical structured episode record, prompt revisions, packages and audit history remain in the private Content OS D1 database. Content OS does not store uploaded or exported video files. Save this Markdown archive together with the original video, final export and captions in the episode folder on the SSD.",
-    "",
-    "## Recommended SSD folder contents",
-    "",
-    "- 00_episode_archive: this Markdown file and any JSON export",
-    "- 01_sources: approved references and source notes",
-    "- 02_script: readable script, filming board and captions",
-    "- 03_recording: original camera and audio files",
-    "- 04_edit: project files and working exports",
-    "- 05_final_upload: final video, thumbnail and platform captions",
-    "- 06_analytics: later screenshots or exported reports",
-    "",
-    "## Current status",
-    "",
-    "- Episode ID: " + episode.id,
-    "- Stage: " + episode.status,
-    "- Updated: " + episode.updated_at,
-    "- Archived: " + (episode.archived_at || "No"),
-    "",
-    "## Latest saved prompt",
-    "",
-    promptArtifact ? markdownJson(promptArtifact.payload) : "No saved prompt artifact is available.",
-    "",
-    "## Latest production package",
-    "",
-    packArtifact ? markdownJson(packArtifact.payload) : "No production package has been imported.",
-    "",
-    "## Complete Content OS record",
-    "",
-    markdownJson(archive),
-    "",
-  ].join("\n");
-}
-function downloadEpisodeArchive(episodeId) {
-  const episode = episodeById(episodeId);
-  if (!episode) return;
-  const blob = new Blob([episodeMarkdownArchive(episode)], { type: "text/markdown;charset=utf-8" });
-  const href = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = href;
-  anchor.download = episode.id + "_content_os_archive.md";
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  setTimeout(() => URL.revokeObjectURL(href), 1000);
-  setStatus("Episode archive downloaded", episode.id + " is ready to place in its SSD episode folder. Video files remain outside Content OS.", "success");
 }
 function renderResults() {
   const reviews = element("reviewList");
@@ -777,7 +788,7 @@ function render() {
   element("filmingCount").textContent = String(active.filter(item => item.status === "SCRIPT_LOCKED").length);
   element("readyCount").textContent = String(active.filter(item => item.status === "READY").length);
   element("publishedCount").textContent = String(active.filter(item => item.status === "PUBLISHED").length);
-  renderMasterIdeas(); renderResearch(); renderEpisodes(); renderEpisodeOptions(); renderWorkflowSteps(); renderResults();
+  renderMasterIdeas(); renderResearch(); renderEpisodes(); renderEpisodeOptions(); renderWorkflowSteps(); renderResults(); renderFilmingPackSwitcher();
   if (selectedFilmingEpisodeId && episodeById(selectedFilmingEpisodeId) && !episodeById(selectedFilmingEpisodeId).archived_at) renderFilmingPack(selectedFilmingEpisodeId);
   element("masterRulesStatus").textContent = "Master rules " + MASTER_VIDEO_RULES.version + " and tracked package gate active";
   element("masterRulesDetail").textContent = "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) + ". Every new prompt is saved before it is shown. A red-team PASS at 8.5/10 or higher and Hook Gate PASS are required before filming.";
@@ -796,7 +807,7 @@ function promptRecord(episode, format, notes, sourceContext) {
     masterRules: masterIdentity(),
   };
 }
-async function createEpisodeAndBuildPrompt(episode, sourceContext, requestedFormat = null) {
+async function createEpisodeAndBuildPrompt(episode, sourceContext, requestedFormat = null, navigate = true) {
   const format = requestedFormat || element("packFormat").value;
   const existing = existingEpisodeForSource(sourceContext, format);
   if (existing && !existing.archived_at) {
@@ -804,10 +815,10 @@ async function createEpisodeAndBuildPrompt(episode, sourceContext, requestedForm
     element("importEpisode").value = existing.id;
     element("reviewEpisode").value = existing.id;
     element("promptOutput").textContent = latestPrompt(existing.id)?.text || "The existing prompt could not be loaded.";
-    element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
+    if (navigate) element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
     const sourceName = sourceContext?.topic?.name || sourceContext?.researchItem?.title || existing.title;
     setStatus("Existing content opened", sourceName + " already has a tracked " + (isCarouselFormat(format) ? "carousel" : "video") + " as " + existing.id + ". Rebuild it as a revision instead of creating a duplicate.", "success");
-    return;
+    return { created: false, episodeId: existing.id };
   }
   setStatus("Saving tracked episode", "The prompt will appear after D1 confirms the episode record.", "saving");
   element("packFormat").value = format;
@@ -817,9 +828,12 @@ async function createEpisodeAndBuildPrompt(episode, sourceContext, requestedForm
   element("packEpisode").value = episode.id;
   element("promptOutput").textContent = prompt.text;
   element("importEpisode").value = episode.id;
-  element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
-  element("copyPrompt").focus({ preventScroll: true });
+  if (navigate) {
+    element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
+    element("copyPrompt").focus({ preventScroll: true });
+  }
   setStatus("Prompt saved and ready", episode.id + " now has a cloud record and immutable prompt version 1.", "success");
+  return { created: true, episodeId: episode.id };
 }
 async function savePromptRevision() {
   const episode = workflow.episodes.find(item => item.id === element("packEpisode").value);
@@ -832,6 +846,33 @@ async function savePromptRevision() {
   await apiRequest({ action: "save_prompt_revision", episodeId: episode.id, prompt, idempotencyKey: uniqueKey("prompt-revision", episode.id) });
   element("promptOutput").textContent = prompt.text;
   setStatus("Prompt revision saved", episode.id + " has a new immutable prompt version.", "success");
+}
+async function saveScriptDraft(episodeId, container) {
+  const episode = episodeById(episodeId);
+  const currentPack = latestPack(episodeId);
+  if (!episode || !currentPack || currentPack.contentType === "CAROUSEL") throw new Error("Open a video production pack first.");
+  if (episode.status !== "APPROVED") throw new Error("Move this episode back to APPROVED before changing its script.");
+  const fields = [...container.querySelectorAll("[data-script-scene]")];
+  if (fields.length !== currentPack.filmingBoard.length) throw new Error("The scene editor is incomplete. Refresh and try again.");
+  const revisedPack = structuredClone(currentPack);
+  revisedPack.filmingBoard = revisedPack.filmingBoard.map((scene, index) => ({ ...scene, spokenWords: fields[index].value.trim() }));
+  if (revisedPack.filmingBoard.some(scene => !scene.spokenWords)) throw new Error("Every scene needs spoken words.");
+  revisedPack.spokenScript = revisedPack.filmingBoard.map(scene => scene.spokenWords).join("\n\n");
+  revisedPack.redteam = { result: "FAIL", score: 0, risks: ["The spoken script changed after the previous audit."], fixes: ["Run the automatically generated revision prompt and import the corrected red-team PASS package before locking."] };
+  revisedPack.hookGate = { result: "REWORK", yesCount: 0, checks: [false, false, false, false, false] };
+  revisedPack.finalDecision = "REVISE";
+  setStatus("Saving edited draft", "Preserving the old version and invalidating its previous approval.", "saving");
+  await apiRequest({ action: "import_production_pack", episodeId, pack: revisedPack, idempotencyKey: uniqueKey("script-draft", episodeId) });
+  const format = latestPrompt(episodeId)?.format || "Talking head";
+  const context = sourceContext(episodeId) || manualContext(episode.title);
+  const prompt = promptRecord(episode, format, "Audit and finalise the user-edited draft without changing its intended meaning.", context);
+  prompt.text += "\n\nUSER-EDITED DRAFT TO RED-TEAM AND REALIGN\nPreserve the intended wording where safe. Recalculate timings, keep every scene aligned, update props and actions, run /redteam, and return a corrected import-ready package.\n" + JSON.stringify({ spokenScript: revisedPack.spokenScript, filmingBoard: revisedPack.filmingBoard }, null, 2);
+  await apiRequest({ action: "save_prompt_revision", episodeId, prompt, idempotencyKey: uniqueKey("script-review-prompt", episodeId) });
+  element("packEpisode").value = episodeId;
+  element("importEpisode").value = episodeId;
+  element("promptOutput").textContent = prompt.text;
+  renderFilmingPack(episodeId);
+  setStatus("Edited draft saved", "A new review prompt is ready in Step 2. The script cannot be locked until the corrected package passes red-team again.", "success");
 }
 function parseImportedJson(raw) {
   const trimmed = raw.trim();
@@ -891,7 +932,6 @@ async function handleEpisodeClick(event) {
   const open = button.dataset.openEpisode;
   const editPack = button.dataset.editPack;
   const editEpisode = button.dataset.editEpisode;
-  const downloadEpisode = button.dataset.downloadEpisode;
   const saveDetails = button.dataset.saveEpisodeDetails;
   const archive = button.dataset.archiveEpisode;
   const advance = button.dataset.advanceEpisode;
@@ -926,7 +966,6 @@ async function handleEpisodeClick(event) {
         input.select();
       }
     }
-    if (downloadEpisode) downloadEpisodeArchive(downloadEpisode);
     if (saveDetails) await updateEpisodeDetails(saveDetails, button.closest("article"));
     if (archive) await setEpisodeArchived(archive, button.dataset.archived === "true");
     if (advance) await updateEpisodeStage(advance, button.dataset.advanceStatus);
@@ -959,8 +998,25 @@ element("masterIdeas").addEventListener("click", async event => {
   try { await createEpisodeAndBuildPrompt({ id: nextEpisodeId(), title: topic.name, researchItemId: null }, masterContext(topic), button.dataset.contentFormat || "Talking head"); }
   catch (error) { setStatus("Could not create episode", error.message, "error"); }
 });
+element("masterIdeas").addEventListener("change", event => {
+  if (event.target.matches("[data-batch-topic]")) updateBatchSelectionCount();
+});
+element("selectAllTopics").addEventListener("click", () => setAllTopicSelections(true));
+element("clearTopicSelection").addEventListener("click", () => setAllTopicSelections(false));
+element("createSelectedTopics").addEventListener("click", () => {
+  createSelectedTopicPrompts().catch(error => setStatus("Could not create batch", error.message, "error"));
+});
 element("episodeList").addEventListener("click", handleEpisodeClick);
 element("archivedEpisodeList").addEventListener("click", handleEpisodeClick);
+element("filmingPackSwitcher").addEventListener("click", event => {
+  const button = event.target.closest("button[data-view-pack]");
+  if (button) renderFilmingPack(button.dataset.viewPack);
+});
+element("filmingPackViewer").addEventListener("click", event => {
+  const button = event.target.closest("button[data-save-script-draft]");
+  if (!button) return;
+  saveScriptDraft(button.dataset.saveScriptDraft, button.closest(".script-editor")).catch(error => setStatus("Could not save script draft", error.message, "error"));
+});
 element("packEpisode").addEventListener("change", () => {
   const episodeId = element("packEpisode").value;
   element("importEpisode").value = episodeId;

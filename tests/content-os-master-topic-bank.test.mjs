@@ -128,7 +128,7 @@ test("idea actions build a copy-ready script prompt without another required cli
   assert.match(app, /element\("builtPrompt"\)\.hidden = true/);
   assert.match(html, /Ready ideas include governed evidence/);
 
-  assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode, sourceContext, requestedFormat = null\)/);
+  assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode, sourceContext, requestedFormat = null, navigate = true\)/);
   assert.match(episodeApp, /element\("packEpisode"\)\.value = episode\.id;/);
   assert.match(episodeApp, /action: "create_tracked_prompt"/);
   assert.match(episodeApp, /element\("promptOutput"\)\.textContent = prompt\.text/);

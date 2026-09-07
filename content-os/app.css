@@ -607,6 +607,57 @@ h3 {
 .carousel-slide-card .scene-field { padding-left: 0; padding-right: 0; }
 .topic-actions { margin-top: 14px; }
 
+.batch-toolbar {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 14px;
+  border-color: color-mix(in srgb, var(--teal) 40%, var(--line));
+}
+
+.batch-toolbar h3 { margin: 4px 0; }
+.topic-selector { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--teal); font-size: 0.82rem; font-weight: 800; }
+.topic-selector input { width: 18px; height: 18px; margin: 0; accent-color: var(--teal); }
+
+.pack-switcher {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 4px 0 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.pack-switch-button {
+  flex: 0 0 auto;
+  max-width: min(320px, 82vw);
+  padding: 10px 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--navy);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pack-switch-button:hover,
+.pack-switch-button:focus-visible,
+.pack-switch-button.active { border-color: var(--teal); background: var(--navy); color: white; }
+
+.script-editor {
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--gold) 65%, var(--line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--gold) 7%, var(--surface));
+}
+
+.script-editor summary { color: var(--navy); font-weight: 900; cursor: pointer; }
+.script-editor-fields { display: grid; gap: 12px; margin: 16px 0; }
+
 .next-card {
   border-color: var(--teal);
   border-left-width: 4px;
@@ -1468,6 +1519,8 @@ button:disabled {
   .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .result-card-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .workflow-step-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .batch-toolbar { grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) auto; align-items: end; }
+  .batch-toolbar #batchSelectionCount { grid-column: 1 / -1; }
 }
 
 @media (max-width: 619px) {
