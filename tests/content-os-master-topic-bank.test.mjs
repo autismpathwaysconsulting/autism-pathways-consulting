@@ -128,12 +128,13 @@ test("idea actions build a copy-ready script prompt without another required cli
   assert.match(app, /element\("builtPrompt"\)\.hidden = true/);
   assert.match(html, /Ready ideas include governed evidence/);
 
-  assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode, sourceContext\)/);
+  assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode, sourceContext, requestedFormat = null, navigate = true\)/);
   assert.match(episodeApp, /element\("packEpisode"\)\.value = episode\.id;/);
   assert.match(episodeApp, /action: "create_tracked_prompt"/);
   assert.match(episodeApp, /element\("promptOutput"\)\.textContent = prompt\.text/);
-  assert.match(episodeApp, /createEpisodeAndBuildPrompt\(\{ id: nextEpisodeId\(\), title: topic\.name, researchItemId: null \}, masterContext\(topic\)\)/);
-  assert.match(episodeApp, /"Create episode \+ build prompt"/);
-  assert.match(episodeHtml, />Create episode \+ build prompt</);
-  assert.match(episodeHtml, />Copy prompt</);
+  assert.match(episodeApp, /createEpisodeAndBuildPrompt\(\{ id: nextEpisodeId\(\), title: topic\.name, researchItemId: null \}, masterContext\(topic\), button\.dataset\.contentFormat/);
+  assert.match(episodeApp, /"Create video episode"/);
+  assert.match(episodeApp, /"Create carousel post"/);
+  assert.match(episodeHtml, />Create content \+ build prompt</);
+  assert.match(episodeHtml, />Copy prompt \+ continue</);
 });

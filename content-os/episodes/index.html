@@ -15,7 +15,7 @@
       <div>
         <p class="eyebrow">Autism Pathways Consulting</p>
         <h1>Episode Studio</h1>
-        <p class="header-summary">Move one episode from useful idea to filmed, reviewed, published and learned from.</p>
+        <p class="header-summary">Turn one useful idea into a video or carousel, then review, publish and learn from it.</p>
         <div class="button-row quick-launch-row" aria-label="Quick launch links">
           <a class="button compact" href="/content-os/">Content OS</a>
           <a class="button secondary compact" href="/content-os/episodes/">Episode Studio</a>
@@ -34,9 +34,9 @@
     <div class="shell nav-scroll">
       <a href="#overview" aria-current="location">Workflow</a>
       <a href="#ideas">1. Choose idea</a>
-      <a href="#pack">2. Build prompt</a>
-      <a href="#import">3. Import script</a>
-      <a href="#filming-pack">4. Film + edit</a>
+      <a href="#pack">2. Send to Codex</a>
+      <a href="#import">3. Import result</a>
+      <a href="#filming-pack">4. Produce + edit</a>
       <a href="#results">5. Review + publish</a>
       <a href="/content-os/?from=episodes#results">6. Analytics</a>
       <a href="#episodes">Manage episodes</a>
@@ -56,19 +56,26 @@
     </section>
 
     <section id="ideas" class="page-section" aria-labelledby="ideas-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 1</p><h2 id="ideas-title">Choose an idea</h2><p class="section-summary">Choose Create episode + build prompt. The prompt is saved to the cloud before it appears, so the episode is tracked from its first draft.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 1</p><h2 id="ideas-title">Choose an idea and format</h2><p class="section-summary">Create either a video episode or carousel from a topic. The prompt is saved to the cloud before it appears, so every content item is tracked from its first draft.</p></div></div>
       <div class="subsection-heading"><div><h3>Master-aligned ideas</h3><p class="subtle">These replace the previous built-in idea list for future episodes.</p></div></div>
+      <div class="card batch-toolbar" aria-labelledby="batch-title">
+        <div><p class="card-label">Batch create</p><h3 id="batch-title">Select several topics once</h3><p class="subtle">Content OS creates and saves every tracked prompt automatically. Existing items are skipped.</p></div>
+        <div class="field"><label for="batchFormat">Create as</label><select id="batchFormat"><option value="Talking head">Video episodes</option><option value="Carousel post">Carousel posts</option></select></div>
+        <div class="button-row"><button id="selectAllTopics" class="button secondary compact" type="button">Select all</button><button id="clearTopicSelection" class="button secondary compact" type="button">Clear</button><button id="createSelectedTopics" class="button compact" type="button">Create selected prompts</button></div>
+        <p id="batchSelectionCount" class="subtle" aria-live="polite">0 topics selected.</p>
+      </div>
       <div id="masterIdeas" class="card-list"><div class="empty-state">Loading master-aligned ideas.</div></div>
       <div class="subsection-heading"><div><h3>Weekly research candidates</h3><p class="subtle">New governed research may suggest another topic, but the master filming rules still apply.</p></div><a class="button secondary" href="/content-os/#research">Open full research inbox</a></div>
       <div id="researchIdeas" class="card-list"><div class="empty-state">No research candidates loaded.</div></div>
       <div class="card form-card">
         <h3>Create a manual episode</h3>
         <form id="episodeForm" class="stack">
-          <div class="field-grid two">
+          <div class="field-grid three">
             <div class="field"><label for="episodeId">Episode ID</label><input id="episodeId" required maxlength="6" placeholder="EP09"></div>
             <div class="field"><label for="episodeTitle">Topic or parent problem</label><input id="episodeTitle" required maxlength="200"></div>
+            <div class="field"><label for="manualFormat">Content format</label><select id="manualFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option><option>Carousel post</option></select></div>
           </div>
-          <div class="form-actions"><button class="button" type="submit">Create episode + build prompt</button></div>
+          <div class="form-actions"><button class="button" type="submit">Create content + build prompt</button></div>
         </form>
       </div>
     </section>
@@ -78,7 +85,7 @@
       <div class="card storage-card" role="note">
         <p class="card-label">File storage</p>
         <h3>Cloud record here, video files on your SSD</h3>
-        <p class="subtle">Content OS stores episode details, prompt revisions, imported script packages, reviews and analytics in its private cloud database. It does not upload or store your original or exported video files. Use Download .md archive on an episode, then keep that file with the video, captions and final export in the episode folder on your SSD.</p>
+        <p class="subtle">Content OS stores episode details, prompt revisions, production packs, reviews and analytics as one canonical cloud record. It does not create duplicate local files automatically. Download the single final HTML only when you want an offline filming copy; original footage and final exports remain in your existing SSD folders.</p>
       </div>
       <div id="episodeList" class="card-list"><div class="empty-state">No episodes yet.</div></div>
       <details id="archivedEpisodesPanel" class="reference-item" hidden>
@@ -88,7 +95,7 @@
     </section>
 
     <section id="pack" class="page-section" aria-labelledby="pack-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 2</p><h2 id="pack-title">Build the episode prompt</h2><p class="section-summary">Copy the saved prompt into Codex. It requires the final red-team pass and returns one JSON block for the next step.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 2</p><h2 id="pack-title">Send the episode to Codex</h2><p class="section-summary">The prompt is already built and saved. Copy it to Codex, then return here with the completed response.</p></div></div>
       <div class="hook-gate rework" role="status" aria-live="polite">
         <strong id="masterRulesStatus">Loading master video rules</strong>
         <span id="masterRulesDetail" class="subtle">Checking the current APC-AI-OS source and version.</span>
@@ -96,27 +103,35 @@
       <div class="card form-card stack">
         <div class="field-grid two">
           <div class="field"><label for="packEpisode">Episode</label><select id="packEpisode"></select></div>
-          <div class="field"><label for="packFormat">Format</label><select id="packFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option></select></div>
+          <div class="field"><label for="packFormat">Format</label><select id="packFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option><option>Carousel post</option></select></div>
         </div>
         <div class="field"><label for="packNotes">Constraints or notes</label><textarea id="packNotes" maxlength="2000" placeholder="Keep under 75 seconds. Include one practical action."></textarea></div>
-        <div class="button-row"><button id="rebuildPrompt" class="button" type="button">Rebuild + save revision</button><button id="copyPrompt" class="button secondary" type="button">Copy prompt</button></div>
-        <pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre>
+        <div class="button-row"><button id="copyPrompt" class="button" type="button">Copy prompt + continue</button><button id="rebuildPrompt" class="button secondary" type="button">Rebuild prompt</button></div>
+        <details class="prompt-preview"><summary>View saved prompt</summary><pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre></details>
       </div>
     </section>
 
     <section id="import" class="page-section" aria-labelledby="import-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 3</p><h2 id="import-title">Import and verify the script</h2><p class="section-summary">Paste the final JSON block returned by Codex, or choose its JSON file. Episode Studio validates the episode ID, master-rule hash, red-team score of at least 8.5/10 and five hook checks.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 3</p><h2 id="import-title">Bring the finished response back</h2><p class="section-summary">Copy the complete Codex response. One click pastes it, finds the final JSON package and imports it into the same episode.</p></div></div>
       <div class="card form-card stack">
         <div class="field"><label for="importEpisode">Episode</label><select id="importEpisode"></select></div>
-        <div class="field"><label for="packageJson">Final package JSON</label><textarea id="packageJson" class="package-json" maxlength="120000" placeholder='Paste the final apc.episode_pack.v2 JSON block here'></textarea><p class="field-help">Earlier prompt and package versions remain in the timeline. Importing a revision does not overwrite their audit trail.</p></div>
-        <label class="button secondary file-button" for="packageFile">Choose package JSON file<input id="packageFile" class="visually-hidden" type="file" accept="application/json,.json"></label>
-        <div class="button-row"><button id="importPackage" class="button" type="button">Validate + import package</button></div>
+        <div class="handoff-card" role="note"><strong>Return from Codex</strong><span>Copy its complete answer. You do not need to isolate or edit the JSON yourself.</span><span>Before saving, Content OS verifies the episode ID, master-rule hash, red-team score of at least 8.5/10 and five hook checks.</span></div>
+        <div class="button-row"><button id="pasteAndImportPackage" class="button" type="button">Paste Codex result + import</button><button id="showManualImport" class="button secondary" type="button">Manual fallback</button></div>
+        <details id="manualImportPanel" class="manual-import-panel">
+          <summary>Manual paste or JSON file</summary>
+          <div class="stack manual-import-body">
+            <div class="field"><label for="packageJson">Codex response or final package JSON</label><textarea id="packageJson" class="package-json" maxlength="120000" placeholder='Paste the complete Codex response or apc.episode_pack.v2 JSON here'></textarea><p class="field-help">Episode Studio extracts the last valid JSON block automatically. Earlier versions remain in the timeline.</p></div>
+            <label class="button secondary file-button" for="packageFile">Choose package JSON file<input id="packageFile" class="visually-hidden" type="file" accept="application/json,.json,.txt"></label>
+            <div class="button-row"><button id="importPackage" class="button" type="button">Validate + import pasted result</button></div>
+          </div>
+        </details>
       </div>
     </section>
 
     <section id="filming-pack" class="page-section" aria-labelledby="filming-pack-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 4</p><h2 id="filming-pack-title">Film and edit from one page</h2><p class="section-summary">The latest imported package is stored in Content OS and rendered here as an HTML filming page. Earlier versions remain in the audit timeline.</p></div><div class="button-row"><button id="downloadFilmingHtml" class="button secondary" type="button" disabled>Download HTML</button></div></div>
-      <div id="filmingPackViewer" class="card filming-pack-viewer"><div class="empty-state">Open an episode with an imported package to see its script, filming board, overlays, captions and edit notes.</div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 4</p><h2 id="filming-pack-title">Produce and edit from one page</h2><p class="section-summary">Switch between every prepared item below. Content OS keeps one canonical cloud copy; download a single HTML file only after the content is locked.</p></div><div class="button-row"><button id="downloadFilmingHtml" class="button secondary" type="button" disabled>Download final HTML</button></div></div>
+      <div id="filmingPackSwitcher" class="pack-switcher" aria-label="Prepared content"></div>
+      <div id="filmingPackViewer" class="card filming-pack-viewer"><div class="empty-state">Open imported content to see its script or slides, preparation list, exact actions, visual direction and edit notes.</div></div>
     </section>
 
     <section id="results" class="page-section" aria-labelledby="results-title">
