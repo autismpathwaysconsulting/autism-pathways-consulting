@@ -21,7 +21,7 @@ function importedPack(overrides = {}) {
     hookGate: { result: "PASS", yesCount: 5, checks: [true, true, true, true, true] },
     finalDecision: "FILM",
     spokenScript: "Can I tell you something?\nHere is the careful explanation.",
-    filmingBoard: [{ start: "0:00", end: "0:05", spokenWords: "Exact words", direction: "Talking head" }],
+    filmingBoard: [{ start: "0:00", end: "0:05", spokenWords: "Exact words", direction: "Talking head", props: ["None"], actions: ["Look into the lens"] }],
     overlays: [],
     hyperframesPrompt: "Create the overlay.",
     visualAssets: { cards: [] },
@@ -31,6 +31,29 @@ function importedPack(overrides = {}) {
     claimCautions: [],
     ...overrides,
   };
+}
+
+function carouselPack(overrides = {}) {
+  const slides = Array.from({ length: 5 }, (_, index) => ({
+    number: index + 1,
+    purpose: index === 0 ? "Hook and practical payoff" : "Develop the idea",
+    headline: "Slide headline " + (index + 1),
+    body: "Short copy",
+    visualDirection: "Clear mobile layout",
+    sourcePill: index === 0 ? "Source 2026" : "",
+    action: "Prepare the slide",
+  }));
+  return importedPack({
+    contentType: "CAROUSEL",
+    finalDecision: "PRODUCE",
+    spokenScript: "",
+    filmingBoard: [],
+    overlays: [],
+    hyperframesPrompt: "",
+    carousel: { slides, designNotes: ["Use the APC palette."], caption: "Save this for later." },
+    platformCopy: { instagram: "Save this for later.", tiktok: "Photo Mode caption" },
+    ...overrides,
+  });
 }
 
 test("accepts the governed and tracked episode workflow actions", () => {
@@ -94,6 +117,14 @@ test("tracked package contract requires the red-team and five-check filming gate
   assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: weakPass, idempotencyKey: "pack:EP09:weakpass1" }), /at least 8\.5\/10/i);
 });
 
+test("tracked package contract supports backward-compatible scene preparation and carousel packs", () => {
+  assert.equal(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: carouselPack(), idempotencyKey: "pack:EP09:carousel1" }), null);
+  const missingSlides = carouselPack({ carousel: { slides: [], designNotes: [], caption: "Caption" } });
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: missingSlides, idempotencyKey: "pack:EP09:carousel2" }), /carousel/i);
+  const videoWithCarouselDecision = importedPack({ contentType: "VIDEO", finalDecision: "PRODUCE" });
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: videoWithCarouselDecision, idempotencyKey: "pack:EP09:video0001" }), /video pack/i);
+});
+
 test("Episode Studio assets are in the public allowlist without exposing operational files", () => {
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/index.html"));
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/app.js"));
@@ -148,7 +179,7 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeHtml, /id="import"/);
   assert.match(episodeHtml, /Validate \+ import package/);
   assert.match(episodeHtml, /red-team score of at least 8\.5\/10/);
-  assert.match(episodeHtml, /Film and edit from one page/);
+  assert.match(episodeHtml, /Produce and edit from one page/);
   assert.match(episodeHtml, /Download HTML/);
   assert.match(episodeApp, /standalonePackHtml/);
   assert.match(episodeApp, /existingEpisodeForSource/);
@@ -161,6 +192,11 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /Download \.md archive/);
   assert.match(episodeApp, /episodeMarkdownArchive/);
   assert.match(episodeApp, /Content OS does not store uploaded or exported video files/);
+  assert.match(episodeApp, /Create carousel post/);
+  assert.match(episodeApp, /Scene-by-scene filming board/);
+  assert.match(episodeApp, /Prop checklist/);
+  assert.match(episodeApp, /props: \["None"\]/);
+  assert.match(episodeApp, /contentType: "CAROUSEL"/);
   assert.match(episodeHtml, /Cloud record here, video files on your SSD/);
   assert.match(episodeHtml, /Practice Console/);
   assert.match(episodeHtml, /Calm feedback inbox/);

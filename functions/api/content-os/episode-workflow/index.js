@@ -3,7 +3,8 @@ const STATUSES = new Set(["IDEA", "APPROVED", "SCRIPT_LOCKED", "FILMED", "EDITIN
 const MODES = new Set(["full", "delta", "ready"]);
 const RESULTS = new Set(["PENDING", "READY", "NOT_READY"]);
 const HOOK_RESULTS = new Set(["PASS", "REWORK", "FAIL"]);
-const FINAL_DECISIONS = new Set(["FILM", "REVISE"]);
+const FINAL_DECISIONS = new Set(["FILM", "PRODUCE", "REVISE"]);
+const CONTENT_TYPES = new Set(["VIDEO", "CAROUSEL"]);
 const PACKAGE_SCHEMA = "apc.episode_pack.v2";
 export const MINIMUM_REDTEAM_PASS_SCORE = 8.5;
 
@@ -49,6 +50,22 @@ function deidentifiedTitle(value) {
 function validStringArray(value, maximumItems = 30, maximumText = 2000) {
   return Array.isArray(value) && value.length <= maximumItems && value.every(item => validMultiline(item, maximumText, false));
 }
+function validFilmingScene(scene) {
+  return exactKeys(scene, ["start", "end", "spokenWords", "direction"], ["props", "actions"]) &&
+    validText(scene.start, 20) && validText(scene.end, 20) && validMultiline(scene.spokenWords, 5000) &&
+    validMultiline(scene.direction, 3000) &&
+    (!Object.hasOwn(scene, "props") || validStringArray(scene.props, 20, 300)) &&
+    (!Object.hasOwn(scene, "actions") || validStringArray(scene.actions, 20, 500));
+}
+function validCarousel(carousel) {
+  if (!exactKeys(carousel, ["slides", "designNotes", "caption"]) || !Array.isArray(carousel.slides) ||
+      carousel.slides.length < 4 || carousel.slides.length > 10 || !validStringArray(carousel.designNotes, 30, 2000) ||
+      !validMultiline(carousel.caption, 10000)) return false;
+  return carousel.slides.every((slide, index) => exactKeys(slide, ["number", "purpose", "headline", "body", "visualDirection", "sourcePill", "action"]) &&
+    slide.number === index + 1 && validText(slide.purpose, 120) && validText(slide.headline, 500) &&
+    validMultiline(slide.body, 2500, false) && validMultiline(slide.visualDirection, 1500) &&
+    validMultiline(slide.sourcePill, 500, false) && validMultiline(slide.action, 1000, false));
+}
 function validatePrompt(prompt) {
   if (!exactKeys(prompt, ["schemaVersion", "format", "notes", "text", "sourceContext", "masterRules"])) return "Tracked prompt does not match the expected schema.";
   if (prompt.schemaVersion !== "apc.episode_prompt.v1" || !validText(prompt.format, 80) || !validMultiline(prompt.notes, 2000, false) || !validMultiline(prompt.text, 100000)) return "Tracked prompt fields are invalid.";
@@ -58,13 +75,17 @@ function validatePrompt(prompt) {
 }
 function validateProductionPack(pack) {
   const keys = ["schemaVersion", "episodeId", "masterRules", "redteam", "hookGate", "finalDecision", "spokenScript", "filmingBoard", "overlays", "hyperframesPrompt", "visualAssets", "editNotes", "sourceNotes", "platformCopy", "claimCautions"];
-  if (!exactKeys(pack, keys)) return "Imported pack does not match the expected schema.";
+  if (!exactKeys(pack, keys, ["contentType", "carousel"])) return "Imported pack does not match the expected schema.";
   if (pack.schemaVersion !== PACKAGE_SCHEMA || !validEpisodeId(pack.episodeId)) return "Imported pack identity is invalid.";
+  const contentType = pack.contentType || "VIDEO";
+  if (!CONTENT_TYPES.has(contentType)) return "Imported pack content type is invalid.";
   if (!exactKeys(pack.masterRules, ["version", "sha256"]) || !validText(pack.masterRules.version, 40) || !/^[0-9a-f]{64}$/.test(pack.masterRules.sha256)) return "Imported pack master rule identity is invalid.";
   if (!exactKeys(pack.redteam, ["result", "score", "risks", "fixes"]) || !["PASS", "FAIL"].includes(pack.redteam.result) || !Number.isFinite(pack.redteam.score) || pack.redteam.score < 0 || pack.redteam.score > 10 || !validStringArray(pack.redteam.risks) || !validStringArray(pack.redteam.fixes)) return "Imported pack red-team result is invalid. Score must be between 0 and 10.";
   if (pack.redteam.result === "PASS" && pack.redteam.score < MINIMUM_REDTEAM_PASS_SCORE) return `A red-team PASS requires a score of at least ${MINIMUM_REDTEAM_PASS_SCORE}/10.`;
   if (!exactKeys(pack.hookGate, ["result", "yesCount", "checks"]) || !HOOK_RESULTS.has(pack.hookGate.result) || !Number.isSafeInteger(pack.hookGate.yesCount) || pack.hookGate.yesCount < 0 || pack.hookGate.yesCount > 5 || !Array.isArray(pack.hookGate.checks) || pack.hookGate.checks.length !== 5 || !pack.hookGate.checks.every(value => typeof value === "boolean") || pack.hookGate.checks.filter(Boolean).length !== pack.hookGate.yesCount) return "Imported pack hook gate is invalid.";
-  if (!FINAL_DECISIONS.has(pack.finalDecision) || !validMultiline(pack.spokenScript, 20000) || !Array.isArray(pack.filmingBoard) || !pack.filmingBoard.length || pack.filmingBoard.length > 80 || !Array.isArray(pack.overlays) || pack.overlays.length > 80 || !validMultiline(pack.hyperframesPrompt, 30000, false)) return "Imported pack production content is invalid.";
+  if (!FINAL_DECISIONS.has(pack.finalDecision) || !validMultiline(pack.spokenScript, 20000, contentType === "VIDEO") || !Array.isArray(pack.filmingBoard) || pack.filmingBoard.length > 80 || !pack.filmingBoard.every(validFilmingScene) || !Array.isArray(pack.overlays) || pack.overlays.length > 80 || !validMultiline(pack.hyperframesPrompt, 30000, false)) return "Imported pack production content is invalid.";
+  if (contentType === "VIDEO" && (!pack.filmingBoard.length || pack.finalDecision === "PRODUCE" || Object.hasOwn(pack, "carousel"))) return "A video pack requires filming scenes and a FILM or REVISE decision.";
+  if (contentType === "CAROUSEL" && (!validCarousel(pack.carousel) || pack.spokenScript || pack.filmingBoard.length || pack.overlays.length || pack.hyperframesPrompt || pack.finalDecision === "FILM")) return "A carousel pack requires slide content and a PRODUCE or REVISE decision.";
   if (!(isObject(pack.visualAssets) || Array.isArray(pack.visualAssets)) || !validStringArray(pack.editNotes, 50, 3000) || !validStringArray(pack.sourceNotes, 50, 3000) || !isObject(pack.platformCopy) || !validStringArray(pack.claimCautions, 50, 3000) || hasUnsafeKey(pack)) return "Imported pack supporting content is invalid.";
   return null;
 }
@@ -205,7 +226,8 @@ function eventStatement(database, { episodeId, eventType, artifactId = null, ide
 }
 function packGate(pack) {
   const coreHookChecksPass = pack.hookGate.checks.slice(0, 3).every(Boolean);
-  return pack.redteam.result === "PASS" && pack.redteam.score >= MINIMUM_REDTEAM_PASS_SCORE && pack.hookGate.result === "PASS" && pack.hookGate.yesCount >= 4 && coreHookChecksPass && pack.finalDecision === "FILM";
+  const expectedDecision = pack.contentType === "CAROUSEL" ? "PRODUCE" : "FILM";
+  return pack.redteam.result === "PASS" && pack.redteam.score >= MINIMUM_REDTEAM_PASS_SCORE && pack.hookGate.result === "PASS" && pack.hookGate.yesCount >= 4 && coreHookChecksPass && pack.finalDecision === expectedDecision;
 }
 async function latestProductionArtifact(database, episodeId) {
   return database.prepare(`SELECT * FROM episode_artifacts
@@ -332,7 +354,7 @@ export async function onRequestPost({ request, env }) {
       if (!episode) return json({ error: "Episode was not found." }, 404);
       if (episode.archived_at) return json({ error: "Restore this episode before locking its script." }, 409);
       const gated = await requireGatedPack(database, payload.episodeId);
-      if (!gated) return json({ error: `Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and FILM decision are required before filming.` }, 409);
+      if (!gated) return json({ error: `Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and the correct production decision are required before locking.` }, 409);
       await database.batch([
         database.prepare("UPDATE episodes SET status = 'SCRIPT_LOCKED', updated_at = ? WHERE id = ?").bind(now, payload.episodeId),
         eventStatement(database, { episodeId: payload.episodeId, eventType: "SCRIPT_LOCKED", artifactId: gated.artifact.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { packVersion: gated.artifact.version, packSha256: gated.artifact.payload_sha256 }, now }),
