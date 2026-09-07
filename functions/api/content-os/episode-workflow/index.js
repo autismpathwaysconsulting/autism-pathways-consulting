@@ -245,6 +245,12 @@ function eventStatement(database, { episodeId, eventType, artifactId = null, ide
     (event_id, episode_id, event_type, artifact_id, idempotency_key, payload_sha256, metadata_json, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).bind(crypto.randomUUID(), episodeId, eventType, artifactId, idempotencyKey, payloadHash, JSON.stringify(metadata), now);
 }
+function eventStatementAfterChange(database, { episodeId, eventType, artifactId = null, idempotencyKey, payloadHash, metadata, now }) {
+  return database.prepare(`INSERT INTO episode_events
+    (event_id, episode_id, event_type, artifact_id, idempotency_key, payload_sha256, metadata_json, created_at)
+    SELECT ?, ?, ?, ?, ?, ?, ?, ? WHERE changes() = 1`)
+    .bind(crypto.randomUUID(), episodeId, eventType, artifactId, idempotencyKey, payloadHash, JSON.stringify(metadata), now);
+}
 function packGate(pack) {
   const coreHookChecksPass = pack.hookGate.checks.slice(0, 3).every(Boolean);
   const expectedDecision = pack.contentType === "CAROUSEL" ? "PRODUCE" : "FILM";
@@ -408,10 +414,16 @@ export async function onRequestPost({ request, env }) {
       if (episode.archived_at) return json({ error: "Restore this episode before locking its script." }, 409);
       const gated = await requireGatedPack(database, payload.episodeId);
       if (!gated) return json({ error: `Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and the correct production decision are required before locking.` }, 409);
-      await database.batch([
-        database.prepare("UPDATE episodes SET status = 'SCRIPT_LOCKED', updated_at = ? WHERE id = ?").bind(now, payload.episodeId),
-        eventStatement(database, { episodeId: payload.episodeId, eventType: "SCRIPT_LOCKED", artifactId: gated.artifact.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { packVersion: gated.artifact.version, packSha256: gated.artifact.payload_sha256 }, now }),
+      const lockResults = await database.batch([
+        database.prepare(`UPDATE episodes SET status = 'SCRIPT_LOCKED', updated_at = ?
+          WHERE id = ? AND archived_at IS NULL AND status IN ('APPROVED', 'SCRIPT_LOCKED')
+            AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')`)
+          .bind(now, payload.episodeId, gated.artifact.artifact_id, gated.artifact.payload_sha256),
+        eventStatementAfterChange(database, { episodeId: payload.episodeId, eventType: "SCRIPT_LOCKED", artifactId: gated.artifact.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { packVersion: gated.artifact.version, packSha256: gated.artifact.payload_sha256 }, now }),
       ]);
+      if (Number(lockResults[0]?.meta?.changes || 0) !== 1) return json({ error: "The prompt or episode stage changed while the script was locking. Review the current episode state and try again." }, 409);
       return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, artifactId: gated.artifact.artifact_id, eventType: "SCRIPT_LOCKED" }));
     }
 
@@ -500,18 +512,33 @@ export async function onRequestPost({ request, env }) {
         PUBLISHED: new Set(["READY"]),
       };
       if (!transitions[episode.status]?.has(payload.status)) return json({ error: "Move the episode one tracked stage at a time." }, 409);
+      let gatedArtifact = null;
       if (["FILMED", "EDITING", "REVIEW", "PUBLISHED"].includes(payload.status)) {
         const gated = await requireGatedPack(database, payload.episodeId);
         if (!gated) return json({ error: `Import the current prompt's package with Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and the correct production decision before advancing this episode.` }, 409);
+        gatedArtifact = gated.artifact;
       }
       if (payload.status === "PUBLISHED") {
         const publication = await database.prepare("SELECT publication_id FROM content_publications WHERE json_extract(publication_json, '$.episodeId') = ? LIMIT 1").bind(payload.episodeId).first();
         if (!publication) return json({ error: "Connect the published platform post to this episode ID before marking it PUBLISHED." }, 409);
       }
       const statusHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, status: payload.status, at: now }));
-      const result = await database.prepare("UPDATE episodes SET status = ?, updated_at = ? WHERE id = ?").bind(payload.status, now, payload.episodeId).run();
-      if (Number(result.meta?.changes || 0) !== 1) return json({ error: "Episode stage was not changed." }, 409);
-      await eventStatement(database, { episodeId: payload.episodeId, eventType: payload.status === "SCRIPT_LOCKED" ? "SCRIPT_LOCKED" : "STATUS_CHANGED", idempotencyKey: "status:" + crypto.randomUUID(), payloadHash: statusHash, metadata: { status: payload.status }, now }).run();
+      const statusEventKey = "status:" + crypto.randomUUID();
+      const statusMetadata = { status: payload.status };
+      const statusUpdate = gatedArtifact
+        ? database.prepare(`UPDATE episodes SET status = ?, updated_at = ?
+            WHERE id = ? AND status = ? AND archived_at IS NULL
+              AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')`)
+          .bind(payload.status, now, payload.episodeId, episode.status, gatedArtifact.artifact_id, gatedArtifact.payload_sha256)
+        : database.prepare("UPDATE episodes SET status = ?, updated_at = ? WHERE id = ? AND status = ? AND archived_at IS NULL")
+          .bind(payload.status, now, payload.episodeId, episode.status);
+      const statusResults = await database.batch([
+        statusUpdate,
+        eventStatementAfterChange(database, { episodeId: payload.episodeId, eventType: "STATUS_CHANGED", artifactId: gatedArtifact?.artifact_id || null, idempotencyKey: statusEventKey, payloadHash: statusHash, metadata: statusMetadata, now }),
+      ]);
+      if (Number(statusResults[0]?.meta?.changes || 0) !== 1) return json({ error: "The prompt or episode stage changed while advancing. Review the current episode state and try again." }, 409);
     } else if (payload.action === "save_review") {
       const manifest = payload.manifest;
       const episode = await database.prepare("SELECT id, status, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();

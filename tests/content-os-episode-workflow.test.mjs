@@ -397,6 +397,72 @@ test("a concurrent prompt change rolls back a stale package import", async () =>
   }
 });
 
+test("a concurrent prompt change cannot lock an invalidated package", async () => {
+  const database = new DatabaseSync(":memory:");
+  try {
+    await applyMigrations(database);
+    const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Original prompt", sourceContext: { sourceType: "manual" }, masterRules };
+    let response = await postWorkflow(database, {
+      action: "create_tracked_prompt",
+      episode: { id: "EP09", title: "Synthetic lock race", researchItemId: null },
+      prompt,
+      idempotencyKey: "prompt:EP09:lockrace1",
+    });
+    assert.equal(response.status, 201, await response.text());
+    const pack = bindPackToCurrentPrompt(database, importedPack());
+    response = await postWorkflow(database, { action: "import_production_pack", episodeId: "EP09", pack, idempotencyKey: "pack:EP09:lockrace01" });
+    assert.equal(response.status, 201, await response.text());
+    const raceBinding = new RaceD1(database, () => {
+      const row = database.prepare("SELECT production_pack_json FROM episodes WHERE id = 'EP09'").get();
+      const record = JSON.parse(row.production_pack_json);
+      record.prompt = { artifactId: "33333333-3333-4333-8333-333333333333", version: 2, sha256: "c".repeat(64) };
+      record.latestPackage = null;
+      database.prepare("UPDATE episodes SET status = 'APPROVED', production_pack_json = ? WHERE id = 'EP09'").run(JSON.stringify(record));
+    });
+    response = await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:lockrace01" }, raceBinding);
+    assert.equal(response.status, 409);
+    assert.match((await response.json()).error, /changed while the script was locking/i);
+    assert.equal(database.prepare("SELECT status FROM episodes WHERE id = 'EP09'").get().status, "APPROVED");
+    assert.equal(database.prepare("SELECT COUNT(*) AS count FROM episode_events WHERE idempotency_key = 'lock:EP09:lockrace01'").get().count, 0);
+  } finally {
+    database.close();
+  }
+});
+
+test("a concurrent prompt change cannot advance an invalidated package", async () => {
+  const database = new DatabaseSync(":memory:");
+  try {
+    await applyMigrations(database);
+    const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Original prompt", sourceContext: { sourceType: "manual" }, masterRules };
+    let response = await postWorkflow(database, {
+      action: "create_tracked_prompt",
+      episode: { id: "EP09", title: "Synthetic stage race", researchItemId: null },
+      prompt,
+      idempotencyKey: "prompt:EP09:stagerace",
+    });
+    assert.equal(response.status, 201, await response.text());
+    const pack = bindPackToCurrentPrompt(database, importedPack());
+    response = await postWorkflow(database, { action: "import_production_pack", episodeId: "EP09", pack, idempotencyKey: "pack:EP09:stagerace1" });
+    assert.equal(response.status, 201, await response.text());
+    response = await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:stagerace1" });
+    assert.equal(response.status, 200, await response.text());
+    const raceBinding = new RaceD1(database, () => {
+      const row = database.prepare("SELECT production_pack_json FROM episodes WHERE id = 'EP09'").get();
+      const record = JSON.parse(row.production_pack_json);
+      record.prompt = { artifactId: "44444444-4444-4444-8444-444444444444", version: 2, sha256: "d".repeat(64) };
+      record.latestPackage = null;
+      database.prepare("UPDATE episodes SET status = 'APPROVED', production_pack_json = ? WHERE id = 'EP09'").run(JSON.stringify(record));
+    });
+    response = await postWorkflow(database, { action: "update_episode_status", episodeId: "EP09", status: "FILMED" }, raceBinding);
+    assert.equal(response.status, 409);
+    assert.match((await response.json()).error, /changed while advancing/i);
+    assert.equal(database.prepare("SELECT status FROM episodes WHERE id = 'EP09'").get().status, "APPROVED");
+    assert.equal(database.prepare("SELECT COUNT(*) AS count FROM episode_events WHERE episode_id = 'EP09' AND event_type = 'STATUS_CHANGED'").get().count, 0);
+  } finally {
+    database.close();
+  }
+});
+
 test("Episode Studio assets are in the public allowlist without exposing operational files", () => {
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/index.html"));
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/app.js"));
