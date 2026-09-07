@@ -1,0 +1,17 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "apc-client-pathway-preview",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "APC_PATHWAY_ENVIRONMENT": "preview",
+    "APC_PATHWAY_PRODUCTION_ENABLED": "false",
+    "APC_PATHWAY_D1_MODE": "synthetic-stub",
+    "APC_PATHWAY_R2_MODE": "synthetic-stub",
+    "APC_PATHWAY_ALLOWED_CLIENT_ID": "DEMO-CLIENT-001"
+  },
+  "d1_databases": [],
+  "r2_buckets": []
+}
+

@@ -219,6 +219,11 @@ class InterimContainmentTests(unittest.TestCase):
         self.assertNotIn(f"containment.new_integration_surface:{path}", findings)
         self.assertNotIn(f"containment.public_file_input:{path}", findings)
 
+    def test_isolated_pathway_project_is_not_a_public_site_surface(self):
+        sources, paths = load_public_sources(ROOT)
+        self.assertFalse(any(path.startswith("pathway-preview/") for path in sources))
+        self.assertFalse(any(path.startswith("pathway-preview/") for path in paths))
+
     def test_content_os_lookalike_form_remains_public_fail_closed(self):
         sources = dict(self.sources)
         lookalike_path = "content-os-preview/index.html"

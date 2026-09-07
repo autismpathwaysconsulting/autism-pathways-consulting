@@ -24,7 +24,7 @@ FREE_CAL_URL = "https://cal.com/autismpathwaysconsulting/first-step-call"
 EXPECTED_FORM_COUNTS = {"schools.html": 1}
 PRIVATE_AUTHENTICATED_HTML_PREFIXES = ("content-os/",)
 NON_SOURCE_DIRECTORIES = frozenset(
-    {".git", "dist", "node_modules", ".wrangler", ".Codex", "_local_backups", "backups"}
+    {".git", "dist", "node_modules", ".wrangler", ".Codex", "_local_backups", "backups", "pathway-preview"}
 )
 
 

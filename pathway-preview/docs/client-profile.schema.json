@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autismpathwaysconsulting.com/schemas/client-profile.schema.json",
+  "title": "APC client portal profile",
+  "description": "Minimum production record for an invited APC parent portal account. This schema does not grant persistence authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "parentPreferredName",
+    "portalEmail",
+    "service",
+    "stage",
+    "activeConsentRecordId",
+    "activeAccessGrantId",
+    "consentSummary",
+    "authorityVerificationStatus",
+    "bookingEnabled",
+    "portalAccessStatus",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^APC-[A-Z]+-[0-9]{3,}$" },
+    "parentPreferredName": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "portalEmail": { "type": "string", "format": "email", "maxLength": 160 },
+    "whatsappE164": { "type": ["string", "null"], "pattern": "^\\+[1-9][0-9]{7,14}$" },
+    "childReference": { "type": ["string", "null"], "maxLength": 40, "description": "Optional opaque reference; do not use a full child name by default." },
+    "service": { "enum": ["Home Support Programme", "RM350 One-Concern Parent Session"] },
+    "stage": { "enum": ["Understand + plan", "Review + adjust", "Strengthen + generalise", "Consolidate + next steps", "Session summary"] },
+    "activeConsentRecordId": { "type": ["string", "null"], "pattern": "^CONSENT-[A-Z0-9-]{8,}$" },
+    "activeAccessGrantId": { "type": ["string", "null"], "pattern": "^ACCESS-[A-Z0-9-]{8,}$" },
+    "consentSummary": { "enum": ["pending", "current", "withdrawn", "expired"] },
+    "authorityVerificationStatus": { "enum": ["pending", "verified", "review-required", "revoked"] },
+    "bookingEnabled": { "type": "boolean" },
+    "portalAccessStatus": { "enum": ["not-invited", "ready", "invited", "active", "revoked"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "bookingEnabled": { "const": true } }, "required": ["bookingEnabled"] },
+      "then": {
+        "properties": {
+          "consentSummary": { "const": "current" },
+          "authorityVerificationStatus": { "const": "verified" },
+          "activeConsentRecordId": { "type": "string" },
+          "activeAccessGrantId": { "type": "string" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "portalAccessStatus": { "enum": ["ready", "invited", "active"] } }, "required": ["portalAccessStatus"] },
+      "then": {
+        "properties": {
+          "consentSummary": { "const": "current" },
+          "authorityVerificationStatus": { "const": "verified" },
+          "activeConsentRecordId": { "type": "string" },
+          "activeAccessGrantId": { "type": "string" }
+        }
+      }
+    }
+  ]
+}

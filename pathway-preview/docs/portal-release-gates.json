@@ -1,0 +1,22 @@
+{
+  "artifactId": "APC-PORTAL-RELEASE-GATES-V0-1",
+  "status": "CANDIDATE_FAIL_CLOSED",
+  "productionEnabled": false,
+  "realClientDataEnabled": false,
+  "parentInvitationsEnabled": false,
+  "lastReviewed": "2026-09-07",
+  "mandatoryGates": [
+    { "id": "OPS-HOLD-001", "state": "BLOCKED", "condition": "Current service catalogue reconciled with business authority" },
+    { "id": "OPS-HOLD-002", "state": "BLOCKED", "condition": "Booking, cancellation, rescheduling and no-show wording legally reviewed and approved" },
+    { "id": "OPS-HOLD-003", "state": "BLOCKED", "condition": "Privacy, retention, deletion, access, vendors, transfers and approved-AI policy reviewed and approved" },
+    { "id": "OPS-HOLD-004", "state": "BLOCKED", "condition": "Urgent and safeguarding pathway professionally and legally reviewed and approved" },
+    { "id": "SECURITY-001", "state": "BLOCKED", "condition": "Authentication, object-level authorisation, recovery, session and revocation tests pass" },
+    { "id": "DATA-001", "state": "BLOCKED", "condition": "Canonical record, encrypted private storage, scanning, export, deletion and audit controls pass" },
+    { "id": "INCIDENT-001", "state": "BLOCKED", "condition": "Incident owner, evidence, containment and current notification workflow rehearsed" },
+    { "id": "LEGAL-001", "state": "BLOCKED", "condition": "Qualified Malaysian reviewer signs the external review record and Founder records approval" }
+  ],
+  "conditionalGates": [
+    { "id": "OPS-HOLD-005", "state": "BLOCKED", "appliesWhen": "international-client-or-jurisdiction", "condition": "International service, jurisdiction, privacy and transfer review approved" },
+    { "id": "OPS-HOLD-006", "state": "BLOCKED", "appliesWhen": "international-payment", "condition": "International payment and pricing policy approved" }
+  ]
+}

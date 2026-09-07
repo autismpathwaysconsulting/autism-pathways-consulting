@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autismpathwaysconsulting.com/schemas/consent-record.schema.json",
+  "title": "APC portal consent evidence record",
+  "description": "Versioned evidence for one adult account holder. This schema is an implementation candidate and does not determine legal sufficiency.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "clientProfileId",
+    "accountHolderId",
+    "noticeVersion",
+    "noticeLanguages",
+    "termsVersion",
+    "authorityAttestation",
+    "purposes",
+    "presentedAt",
+    "recordedAt",
+    "recordedBy",
+    "evidenceMethod",
+    "status"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^CONSENT-[A-Z0-9-]{8,}$" },
+    "clientProfileId": { "type": "string", "pattern": "^APC-[A-Z]+-[0-9]{3,}$" },
+    "accountHolderId": { "type": "string", "pattern": "^ACCOUNT-[A-Z0-9-]{8,}$" },
+    "noticeVersion": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "noticeLanguages": {
+      "type": "array",
+      "items": { "enum": ["en-MY", "ms-MY"] },
+      "uniqueItems": true,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "termsVersion": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "authorityAttestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "method", "verifiedAt", "verifiedBy"],
+      "properties": {
+        "status": { "const": "verified" },
+        "method": { "enum": ["operator-confirmed", "document-confirmed", "other-approved-method"] },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "verifiedBy": { "type": "string", "pattern": "^OPERATOR-[A-Z0-9-]{6,}$" }
+      }
+    },
+    "purposes": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["purpose", "decision", "requiredForService"],
+        "properties": {
+          "purpose": {
+            "enum": [
+              "portal-access",
+              "service-records",
+              "sensitive-family-information",
+              "booking",
+              "whatsapp-communication",
+              "media-upload",
+              "marketing-testimonial"
+            ]
+          },
+          "decision": { "enum": ["accepted", "declined"] },
+          "requiredForService": { "type": "boolean" }
+        }
+      }
+    },
+    "presentedAt": { "type": "string", "format": "date-time" },
+    "recordedAt": { "type": "string", "format": "date-time" },
+    "recordedBy": { "enum": ["account-holder", "operator-assisted"] },
+    "evidenceMethod": { "enum": ["authenticated-checkboxes", "signed-record", "operator-recorded-with-source"] },
+    "status": { "enum": ["current", "withdrawn", "superseded", "expired"] },
+    "withdrawal": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["effectiveAt", "recordedAt", "affectedPurposes"],
+      "properties": {
+        "effectiveAt": { "type": "string", "format": "date-time" },
+        "recordedAt": { "type": "string", "format": "date-time" },
+        "affectedPurposes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "reasonProvided": { "type": "boolean" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "withdrawn" } } },
+      "then": {
+        "properties": { "withdrawal": { "type": "object" } },
+        "required": ["withdrawal"]
+      }
+    }
+  ]
+}
