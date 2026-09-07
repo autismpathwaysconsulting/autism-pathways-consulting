@@ -59,7 +59,7 @@ async function loginPage(secret, error = false) {
   const csrf = crypto.randomUUID();
   const signedCsrf = await sessionToken(secret, csrf);
   const message = error ? '<p role="alert">The password was not accepted. Please try again.</p>' : "";
-  return securityHeaders(new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in | APC Content OS</title><link rel="stylesheet" href="/content-os/app.css"></head><body><main class="shell"><section class="panel"><p class="eyebrow">AUTISM PATHWAYS CONSULTING</p><h1>Sign in to Content OS</h1>${message}<form method="post" action="/content-os/login/?csrf=${signedCsrf}"><label for="password">Content OS password</label><input id="password" name="password" type="password" required autocomplete="current-password"><button type="submit">Sign in</button></form></section></main></body></html>`, { status: error ? 401 : 200, headers: { "Content-Type": "text/html; charset=utf-8" } }), true);
+  return securityHeaders(new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in | APC Content OS</title><link rel="stylesheet" href="/content-os/login.css"></head><body><main class="shell"><section class="panel"><p class="eyebrow">AUTISM PATHWAYS CONSULTING</p><h1>Sign in to Content OS</h1>${message}<form method="post" action="/content-os/login/?csrf=${signedCsrf}"><label for="password">Content OS password</label><input id="password" name="password" type="password" required autocomplete="current-password"><button type="submit">Sign in</button></form></section></main></body></html>`, { status: error ? 401 : 200, headers: { "Content-Type": "text/html; charset=utf-8" } }), true);
 }
 
 async function validLoginCsrf(secret, url) {
@@ -187,7 +187,9 @@ export async function onRequest(context) {
     url.pathname === "/api/content-os/export/publication-mappings";
   const isAnalyticsOauthCallback = context.request.method === "GET" &&
     /^\/api\/content-os\/connections\/(?:meta|tiktok|youtube)\/callback$/.test(url.pathname);
-  if (isResearchGithubIngest || isAnalyticsGithubIngest || isPublicationMappingExport || isAnalyticsOauthCallback) {
+  const isLoginStylesheet = context.request.method === "GET" &&
+    url.pathname === "/content-os/login.css" && !url.search;
+  if (isResearchGithubIngest || isAnalyticsGithubIngest || isPublicationMappingExport || isAnalyticsOauthCallback || isLoginStylesheet) {
     return continueWithSecurityHeaders(context);
   }
 

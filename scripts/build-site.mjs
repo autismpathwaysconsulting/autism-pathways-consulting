@@ -60,6 +60,7 @@ export const PUBLIC_FILES = Object.freeze([
   "connect/index.html",
   "pay/index.html",
   "content-os/index.html",
+  "content-os/login.css",
   "content-os/app.css",
   "content-os/app.js",
   "content-os/analytics.js",
