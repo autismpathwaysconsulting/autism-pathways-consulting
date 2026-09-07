@@ -185,12 +185,11 @@ test("all Content OS migrations apply together and keep workflow history append-
   }
 });
 
-test("Content OS links to operational pages instead of local or database-admin shortcuts", async () => {
+test("Content OS links to authenticated operational destinations", async () => {
   const home = await readFile(new URL("../content-os/index.html", import.meta.url), "utf8");
   assert.match(home, /href="\/content-os\/practice\/"/);
-  assert.match(home, /href="\/content-os\/calm-feedback\/"/);
+  assert.match(home, /href="https:\/\/dash\.cloudflare\.com\/1252618cc62bbdf9c346f12b3469b1ca\/workers\/d1\/databases\/af6c2c79-7bca-41c0-b412-2a737a0ff0b0\/studio"/);
   assert.doesNotMatch(home, /127\.0\.0\.1:4173/);
-  assert.doesNotMatch(home, /dash\.cloudflare\.com\/.*\/studio/);
 });
 
 test("Practice Console exposes bounded append-only activity without revision snapshots", async () => {
