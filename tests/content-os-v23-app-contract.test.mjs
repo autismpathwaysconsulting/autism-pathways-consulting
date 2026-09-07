@@ -15,12 +15,10 @@ test("manual analytics offers current checkpoints and platform sources only", as
   assert.match(html, />Reset planning data<\/button>/);
 });
 
-test("quick launch opens the authenticated production Calm feedback database", async () => {
+test("quick launch opens the protected Calm feedback inbox", async () => {
   const html = await source("content-os/index.html");
-  assert.match(
-    html,
-    /href="https:\/\/dash\.cloudflare\.com\/1252618cc62bbdf9c346f12b3469b1ca\/workers\/d1\/databases\/af6c2c79-7bca-41c0-b412-2a737a0ff0b0\/studio"[^>]*target="_blank"[^>]*rel="noopener noreferrer"[^>]*>Calm feedback inbox<\/a>/,
-  );
+  assert.match(html, /href="\/content-os\/calm-feedback\/"[^>]*>Calm feedback inbox<\/a>/);
+  assert.doesNotMatch(html, /dash\.cloudflare\.com\/.*\/studio/);
 });
 
 test("quick launch opens the authenticated cloud Practice Console", async () => {

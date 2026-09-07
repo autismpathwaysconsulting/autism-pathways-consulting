@@ -165,9 +165,11 @@ test("checked-in Pages bundle contains protected operator routes", async () => {
 
   const contentOs = await readFile(new URL("../dist/content-os/index.html", import.meta.url), "utf8");
   const practice = await readFile(new URL("../dist/content-os/practice/index.html", import.meta.url), "utf8");
-  const productionInbox = /href="https:\/\/dash\.cloudflare\.com\/1252618cc62bbdf9c346f12b3469b1ca\/workers\/d1\/databases\/af6c2c79-7bca-41c0-b412-2a737a0ff0b0\/studio"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/;
+  const productionInbox = /href="\/content-os\/calm-feedback\/"/;
   assert.match(contentOs, productionInbox);
   assert.match(practice, productionInbox);
+  assert.doesNotMatch(contentOs, /dash\.cloudflare\.com\/.*\/studio/);
+  assert.doesNotMatch(practice, /dash\.cloudflare\.com\/.*\/studio/);
 });
 
 test("the committed Pages artifact contains every allowlisted build file", async () => {
