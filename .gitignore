@@ -10,5 +10,10 @@ dist/*
 !dist/content-os/
 dist/content-os/*
 !dist/content-os/topic-bank.js
+!dist/content-os/login.css
+!dist/content-os/practice/
+!dist/content-os/practice/**
+!dist/content-os/calm-feedback/
+!dist/content-os/calm-feedback/**
 node_modules/
 __pycache__/

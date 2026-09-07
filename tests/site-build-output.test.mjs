@@ -144,6 +144,27 @@ test("Cloudflare Pages uses the allowlisted build output", async () => {
   assert.equal(packageJson.scripts.build, "node scripts/build-site.mjs");
 });
 
+test("checked-in Pages bundle contains protected operator routes", async () => {
+  for (const relativePath of [
+    "content-os/login.css",
+    "content-os/practice/index.html",
+    "content-os/practice/app.js",
+    "content-os/calm-feedback/index.html",
+    "content-os/calm-feedback/app.js",
+  ]) {
+    assert.equal(
+      await readFile(new URL(`../dist/${relativePath}`, import.meta.url), "utf8"),
+      await readFile(new URL(`../${relativePath}`, import.meta.url), "utf8"),
+      `dist/${relativePath} must match its authoritative source`,
+    );
+  }
+
+  const contentOs = await readFile(new URL("../dist/content-os/index.html", import.meta.url), "utf8");
+  const practice = await readFile(new URL("../dist/content-os/practice/index.html", import.meta.url), "utf8");
+  assert.match(contentOs, /href="\/content-os\/calm-feedback\/"[^>]*>Calm feedback inbox<\/a>/);
+  assert.match(practice, /href="\/content-os\/calm-feedback\/"[^>]*>Calm feedback<\/a>/);
+});
+
 test("shared asset query versions match their content hashes", async () => {
   const projectRoot = new URL("../", import.meta.url);
   const expectedVersions = new Map([
