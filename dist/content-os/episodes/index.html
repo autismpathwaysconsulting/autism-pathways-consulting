@@ -105,8 +105,9 @@
           <div class="field"><label for="packEpisode">Episode</label><select id="packEpisode"></select></div>
           <div class="field"><label for="packFormat">Format</label><select id="packFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option><option>Carousel post</option></select></div>
         </div>
+        <div class="field"><label for="preferredScript">My preferred script or wording <span class="subtle">(optional)</span></label><textarea id="preferredScript" maxlength="20000" rows="12" placeholder="Paste or write your preferred script here before sending it to Codex."></textarea><p class="field-help">Codex must preserve your voice and structure where safe, correct only what is needed for accuracy and alignment, then return a filming-ready version scoring at least 9/10.</p></div>
         <div class="field"><label for="packNotes">Constraints or notes</label><textarea id="packNotes" maxlength="2000" placeholder="Keep under 75 seconds. Include one practical action."></textarea></div>
-        <div class="button-row"><button id="copyPrompt" class="button" type="button">Copy prompt + continue</button><button id="rebuildPrompt" class="button secondary" type="button">Rebuild prompt</button></div>
+        <div class="button-row"><button id="copyPrompt" class="button" type="button">Save edits + copy prompt</button><button id="rebuildPrompt" class="button secondary" type="button">Save draft only</button></div>
         <details class="prompt-preview"><summary>View saved prompt</summary><pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre></details>
       </div>
     </section>
@@ -115,7 +116,7 @@
       <div class="section-heading"><div><p class="section-kicker">Step 3</p><h2 id="import-title">Bring the finished response back</h2><p class="section-summary">Copy the complete Codex response. One click pastes it, finds the final JSON package and imports it into the same episode.</p></div></div>
       <div class="card form-card stack">
         <div class="field"><label for="importEpisode">Episode</label><select id="importEpisode"></select></div>
-        <div class="handoff-card" role="note"><strong>Return from Codex</strong><span>Copy its complete answer. You do not need to isolate or edit the JSON yourself.</span><span>Before saving, Content OS verifies the episode ID, master-rule hash, red-team score of at least 8.5/10 and five hook checks.</span></div>
+        <div class="handoff-card" role="note"><strong>Return from Codex</strong><span>Copy its complete answer. You do not need to isolate or edit the JSON yourself.</span><span>Before saving, Content OS verifies the episode ID, master-rule hash, red-team score of at least 9/10, ready-to-film decision and five hook checks.</span></div>
         <div class="button-row"><button id="pasteAndImportPackage" class="button" type="button">Paste Codex result + import</button><button id="showManualImport" class="button secondary" type="button">Manual fallback</button></div>
         <details id="manualImportPanel" class="manual-import-panel">
           <summary>Manual paste or JSON file</summary>

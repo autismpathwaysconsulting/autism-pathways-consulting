@@ -3359,7 +3359,7 @@ function episodePackageContractLines(episodeId) {
     "",
     "MANDATORY FINAL RED-TEAM",
     "Before presenting the final version, run /redteam on factual accuracy, evidence scope, autism-community framing, parent shame, burden framing, overclaiming, production alignment and likely backlash. Correct all fixable issues before the final output.",
-    "A PASS means the corrected final pack is safe enough to film. If the risks cannot be corrected, return REVISE.",
+    "A PASS requires a corrected score of at least 9/10 and a final FILM decision. Correct and re-audit the script before returning it. If the score remains below 9 or the risks cannot be corrected, return REVISE and do not present it as ready to film.",
     "",
     "TRACKED PACKAGE RETURN",
     "After the readable episode pack, finish with exactly one fenced JSON block for import into Episode Studio:",
