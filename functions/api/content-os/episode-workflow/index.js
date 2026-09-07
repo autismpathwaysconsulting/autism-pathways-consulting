@@ -50,9 +50,15 @@ function deidentifiedTitle(value) {
 function validStringArray(value, maximumItems = 30, maximumText = 2000) {
   return Array.isArray(value) && value.length <= maximumItems && value.every(item => validMultiline(item, maximumText, false));
 }
+function isTimedPauseScene(scene) {
+  if (typeof scene?.spokenWords !== "string" || scene.spokenWords.trim()) return false;
+  const productionCue = [scene.direction, ...(Array.isArray(scene.actions) ? scene.actions : [])].join(" ");
+  return /\b(?:silence|silent|pause|beat|beats)\b/i.test(productionCue);
+}
 function validFilmingScene(scene) {
   return exactKeys(scene, ["start", "end", "spokenWords", "direction"], ["props", "actions"]) &&
-    validText(scene.start, 20) && validText(scene.end, 20) && validMultiline(scene.spokenWords, 5000) &&
+    validText(scene.start, 20) && validText(scene.end, 20) && validMultiline(scene.spokenWords, 5000, false) &&
+    (Boolean(scene.spokenWords.trim()) || isTimedPauseScene(scene)) &&
     validMultiline(scene.direction, 3000) &&
     (!Object.hasOwn(scene, "props") || validStringArray(scene.props, 20, 300)) &&
     (!Object.hasOwn(scene, "actions") || validStringArray(scene.actions, 20, 500));

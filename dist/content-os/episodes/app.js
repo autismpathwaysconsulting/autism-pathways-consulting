@@ -26,11 +26,22 @@ function node(tag, className, text) {
   if (text !== undefined) result.textContent = text;
   return result;
 }
+function isTimedPauseScene(scene) {
+  if (String(scene?.spokenWords || "").trim()) return false;
+  const productionCue = [scene?.direction, ...(Array.isArray(scene?.actions) ? scene.actions : [])].join(" ");
+  return /\b(?:silence|silent|pause|beat|beats)\b/i.test(productionCue);
+}
 function setStatus(title, detail, kind = "") {
   element("episodeStatus").textContent = title;
   element("episodeStatus").className = "sync-status" + (kind ? " " + kind : "");
   element("episodeDetail").textContent = detail;
   element("episodeDetail").className = "sync-detail" + (kind ? " " + kind : "");
+}
+function setImportFeedback(detail, kind = "") {
+  const feedback = element("importFeedback");
+  if (!feedback) return;
+  feedback.textContent = detail;
+  feedback.className = "subtle" + (kind ? " " + kind : "");
 }
 function uniqueKey(prefix, episodeId) {
   return prefix + ":" + episodeId + ":" + crypto.randomUUID();
@@ -601,7 +612,7 @@ function appendFilmingBoard(target, scenes) {
     heading.appendChild(node("span", "scene-number", "Scene " + (index + 1)));
     heading.appendChild(node("strong", "scene-time", scene.start + " to " + scene.end));
     card.appendChild(heading);
-    appendFieldBlock(card, "Say", scene.spokenWords, "scene-script");
+    appendFieldBlock(card, "Say", scene.spokenWords || "Silent beat. Do not speak.", "scene-script");
     appendFieldBlock(card, "Direction", scene.direction);
     const preparation = node("div", "scene-preparation");
     const props = node("div", "scene-prep-column");
@@ -665,6 +676,7 @@ function appendScriptEditor(target, episode, pack) {
     textarea.maxLength = 5000;
     textarea.rows = 4;
     textarea.value = scene.spokenWords;
+    if (!scene.spokenWords) textarea.placeholder = "Silent beat. Leave blank to preserve this timed pause.";
     textarea.dataset.scriptScene = String(index);
     field.appendChild(textarea);
     fields.appendChild(field);
@@ -746,7 +758,7 @@ function standalonePackHtml(episode, artifact) {
     return '<p class="muted">None recorded.</p>';
   };
   const section = (title, value) => `<section><h2>${escapeHtml(title)}</h2>${readableValue(value)}</section>`;
-  const scenes = pack.filmingBoard.map((scene, index) => `<article class="scene"><div class="scene-head"><span>SCENE ${index + 1}</span><strong>${escapeHtml(scene.start)} TO ${escapeHtml(scene.end)}</strong></div><div class="field script"><b>SAY</b><p>${escapeHtml(scene.spokenWords)}</p></div><div class="field"><b>DIRECTION</b><p>${escapeHtml(scene.direction)}</p></div><div class="prep"><div><b>PROPS</b>${list(scene.props, "None listed.")}</div><div><b>ACTIONS</b>${list(scene.actions || [scene.direction])}</div></div></article>`).join("");
+  const scenes = pack.filmingBoard.map((scene, index) => `<article class="scene"><div class="scene-head"><span>SCENE ${index + 1}</span><strong>${escapeHtml(scene.start)} TO ${escapeHtml(scene.end)}</strong></div><div class="field script"><b>SAY</b><p>${escapeHtml(scene.spokenWords || "Silent beat. Do not speak.")}</p></div><div class="field"><b>DIRECTION</b><p>${escapeHtml(scene.direction)}</p></div><div class="prep"><div><b>PROPS</b>${list(scene.props, "None listed.")}</div><div><b>ACTIONS</b>${list(scene.actions || [scene.direction])}</div></div></article>`).join("");
   const allProps = [...new Set(pack.filmingBoard.flatMap(scene => Array.isArray(scene.props) ? scene.props : []).filter(item => item && item.toLowerCase() !== "none"))];
   const overlays = pack.overlays.map(item => `<article class="overlay"><span>${escapeHtml([item.start, item.end, item.type].filter(Boolean).join(" · "))}</span><strong>${escapeHtml(item.text || "No text")}</strong>${item.safeZone ? `<small>Placement: ${escapeHtml(item.safeZone)}</small>` : ""}</article>`).join("");
   const videoBody = `${section("Locked spoken script", pack.spokenScript)}<section><p class="eyebrow">BEFORE RECORDING</p><h2>Prop checklist</h2>${list(allProps, "No physical props are required for this episode.")}</section><section><h2>Scene-by-scene filming board</h2><div class="scene-list">${scenes}</div></section><section><h2>On-screen text and overlays</h2><div class="overlay-list">${overlays || '<p class="muted">No overlays supplied.</p>'}</div></section>${section("HyperFrames prompt", pack.hyperframesPrompt)}`;
@@ -875,8 +887,8 @@ async function saveScriptDraft(episodeId, container) {
   if (fields.length !== currentPack.filmingBoard.length) throw new Error("The scene editor is incomplete. Refresh and try again.");
   const revisedPack = structuredClone(currentPack);
   revisedPack.filmingBoard = revisedPack.filmingBoard.map((scene, index) => ({ ...scene, spokenWords: fields[index].value.trim() }));
-  if (revisedPack.filmingBoard.some(scene => !scene.spokenWords)) throw new Error("Every scene needs spoken words.");
-  revisedPack.spokenScript = revisedPack.filmingBoard.map(scene => scene.spokenWords).join("\n\n");
+  if (revisedPack.filmingBoard.some(scene => !scene.spokenWords && !isTimedPauseScene(scene))) throw new Error("Every scene needs spoken words or an explicit timed-pause direction.");
+  revisedPack.spokenScript = revisedPack.filmingBoard.map(scene => scene.spokenWords.trim()).filter(Boolean).join("\n\n");
   revisedPack.redteam = { result: "FAIL", score: 0, risks: ["The spoken script changed after the previous audit."], fixes: ["Run the automatically generated revision prompt and import the corrected red-team PASS package before locking."] };
   revisedPack.hookGate = { result: "REWORK", yesCount: 0, checks: [false, false, false, false, false] };
   revisedPack.finalDecision = "REVISE";
@@ -911,9 +923,11 @@ async function importPackage() {
   const raw = element("packageJson").value;
   if (!raw.trim()) throw new Error("Paste the completed Codex response or final JSON package.");
   const pack = parseImportedJson(raw);
+  setImportFeedback("Validating and importing the production package.");
   setStatus("Importing package", "Checking identity, master rules, red-team and hook gate.", "saving");
   await apiRequest({ action: "import_production_pack", episodeId, pack, idempotencyKey: uniqueKey("pack", episodeId) });
   renderFilmingPack(episodeId, true);
+  setImportFeedback("Package imported successfully. Step 4 is ready below.", "success");
   setStatus("Package imported", episodeId + " is tracked. Lock for filming is available only after all gates pass.", "success");
 }
 async function pasteAndImportPackage() {
@@ -1085,6 +1099,7 @@ element("copyPrompt").addEventListener("click", async () => {
 element("pasteAndImportPackage").addEventListener("click", () => {
   pasteAndImportPackage().catch(error => {
     element("manualImportPanel").open = true;
+    setImportFeedback("Import failed: " + error.message, "error");
     setStatus("Automatic paste unavailable", error.message, "error");
   });
 });
@@ -1092,7 +1107,12 @@ element("showManualImport").addEventListener("click", () => {
   element("manualImportPanel").open = true;
   element("packageJson").focus();
 });
-element("importPackage").addEventListener("click", () => { importPackage().catch(error => setStatus("Could not import package", error.message, "error")); });
+element("importPackage").addEventListener("click", () => {
+  importPackage().catch(error => {
+    setImportFeedback("Import failed: " + error.message, "error");
+    setStatus("Could not import package", error.message, "error");
+  });
+});
 element("saveReview").addEventListener("click", () => { saveReview().catch(error => setStatus("Could not save review", error.message, "error")); });
 element("packageFile").addEventListener("change", async event => {
   const file = event.target.files?.[0];
@@ -1100,8 +1120,13 @@ element("packageFile").addEventListener("change", async event => {
   try {
     if (file.size > 120000) throw new Error("Package JSON exceeds the 120 KB limit.");
     element("packageJson").value = await file.text();
-    setStatus("Package file loaded", "Validate and import it when the selected episode ID is correct.", "success");
-  } catch (error) { setStatus("Could not load package", error.message, "error"); }
+    setImportFeedback("Package file loaded. Importing it now.");
+    setStatus("Package file loaded", "Validating and importing it for the selected episode.", "saving");
+    await importPackage();
+  } catch (error) {
+    setImportFeedback("Import failed: " + error.message, "error");
+    setStatus("Could not import package", error.message, "error");
+  }
   finally { event.target.value = ""; }
 });
 element("downloadFilmingHtml").addEventListener("click", downloadFilmingHtml);
