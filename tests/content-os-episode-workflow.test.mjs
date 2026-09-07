@@ -125,6 +125,21 @@ test("tracked package contract supports backward-compatible scene preparation an
   assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: videoWithCarouselDecision, idempotencyKey: "pack:EP09:video0001" }), /video pack/i);
 });
 
+test("video packs accept explicit timed pauses but reject accidental blank scenes", () => {
+  const timedPause = importedPack({
+    filmingBoard: [
+      { start: "0:00", end: "0:05", spokenWords: "Behaviour gives us a clue.", direction: "Look into the lens.", props: ["None"], actions: ["Speak slowly."] },
+      { start: "0:05", end: "0:07", spokenWords: "", direction: "Hold two full beats of silence.", props: ["None"], actions: ["Remain silent."] },
+    ],
+  });
+  assert.equal(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: timedPause, idempotencyKey: "pack:EP09:pause0001" }), null);
+
+  const accidentalBlank = importedPack({
+    filmingBoard: [{ start: "0:00", end: "0:05", spokenWords: "", direction: "Talking head", props: ["None"], actions: ["Hold eye contact"] }],
+  });
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: accidentalBlank, idempotencyKey: "pack:EP09:blank0001" }), /production content/i);
+});
+
 test("Episode Studio assets are in the public allowlist without exposing operational files", () => {
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/index.html"));
   assert.ok(PUBLIC_FILES.includes("content-os/episodes/app.js"));
@@ -200,6 +215,12 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.doesNotMatch(episodeApp, /episodeMarkdownArchive/);
   assert.match(episodeApp, /createSelectedTopicPrompts/);
   assert.match(episodeApp, /pasteAndImportPackage/);
+  assert.match(episodeHtml, /id="importFeedback"/);
+  assert.match(episodeHtml, /Choose JSON file \+ import/);
+  assert.match(episodeApp, /Package imported successfully\. Step 4 is ready below\./);
+  assert.match(episodeApp, /await importPackage\(\)/);
+  assert.match(episodeApp, /Silent beat\. Do not speak\./);
+  assert.match(episodeApp, /explicit timed-pause direction/);
   assert.match(episodeApp, /No valid JSON package was found in the Codex response/);
   assert.match(episodeApp, /element\("importEpisode"\)\.value = episodeId/);
   assert.match(episodeApp, /existing item\(s\) skipped/);
