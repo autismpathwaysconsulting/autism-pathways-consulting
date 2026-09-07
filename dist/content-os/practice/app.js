@@ -1,5 +1,5 @@
 const endpoint = "/api/content-os/practice";
-const state = { data: null, activeCaseId: null, activeSessionId: null, saving: false };
+const state = { data: null, activeCaseId: null, activeSessionId: null, saving: false, clientFilter: "ALL", clientSearch: "" };
 const element = (id) => document.getElementById(id);
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;",
@@ -30,6 +30,9 @@ const journeyStage = (code, number = null) => allJourneyStages().find((stage) =>
 const journeyLabel = (session) => journeyStage(session?.journeyStage, session?.sessionNumber)?.label || "Journey stage";
 const stageComplete = (session) => Boolean(session) && (["DELIVERED", "COMPLETE"].includes(session.status) || session.documentStatus === "DELIVERED");
 const sessionsForClient = (caseId) => state.data.sessions.filter((session) => session.caseId === caseId).sort((a, b) => a.sessionNumber - b.sessionNumber);
+const NEW_STAGES = new Set(["RECORD_REVIEW_REQUIRED", "FIT_REVIEW", "APPROVED_TO_PAY", "PAYMENT_PROOF_RECEIVED", "PAYMENT_VERIFIED"]);
+const FINISHED_STAGES = new Set(["COMPLETE", "REFERRED", "CANCELLED"]);
+const clientLane = (client) => client.archivedAt || FINISHED_STAGES.has(client.stage) ? "FINISHED" : NEW_STAGES.has(client.stage) ? "NEW" : "ACTIVE";
 
 function toast(message) {
   element("toast").textContent = message;
@@ -75,18 +78,29 @@ function clientPayload(form) {
 }
 
 function renderMetrics() {
-  const clients = state.data.clients.filter((client) => !client.archivedAt);
-  const completedStages = state.data.sessions.filter(stageComplete).length;
+  const clients = state.data.clients;
+  const newClients = clients.filter((client) => clientLane(client) === "NEW").length;
+  const activeClients = clients.filter((client) => clientLane(client) === "ACTIVE").length;
+  const finishedClients = clients.filter((client) => clientLane(client) === "FINISHED").length;
   const parentPacks = state.data.sessions.filter((session) => ["CJ_APPROVED", "EXPORTED"].includes(session.documentStatus)).length;
   const queued = state.data.exports.filter((item) => item.destination === "GOOGLE_DRIVE" && item.status === "QUEUED").length;
   element("practiceMetrics").innerHTML = [
-    [clients.length, "Active client journeys"], [completedStages, "Stages completed"], [parentPacks, "Parent packs ready"], [queued, "Drive copies to confirm"],
+    [activeClients, "Active client journeys"], [newClients, "New records to review"], [finishedClients, "Finished records"], [parentPacks + queued, "Parent packs / Drive actions"],
   ].map(([value, label]) => `<article class="metric-card"><strong class="metric-value">${value}</strong><span>${label}</span></article>`).join("");
 }
 
 function renderClients() {
-  const clients = state.data.clients.filter((client) => !client.archivedAt);
-  element("clientList").innerHTML = clients.length ? clients.map((client) => {
+  const clients = state.data.clients;
+  const counts = { ALL: clients.length, NEW: 0, ACTIVE: 0, FINISHED: 0 };
+  clients.forEach((client) => { counts[clientLane(client)] += 1; });
+  element("countAll").textContent = counts.ALL;
+  element("countNew").textContent = counts.NEW;
+  element("countActive").textContent = counts.ACTIVE;
+  element("countFinished").textContent = counts.FINISHED;
+  document.querySelectorAll("[data-client-filter]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.clientFilter === state.clientFilter)));
+  const query = state.clientSearch.trim().toLowerCase();
+  const visible = clients.filter((client) => (state.clientFilter === "ALL" || clientLane(client) === state.clientFilter) && (!query || [client.caseId, client.displayName, client.concern, client.nextAction, client.serviceCode].some((value) => String(value || "").toLowerCase().includes(query))));
+  const card = (client) => {
     const sessions = sessionsForClient(client.caseId);
     const total = journeyStagesForClient(client).length;
     const complete = sessions.filter(stageComplete).length;
@@ -99,7 +113,12 @@ function renderClients() {
       <p><strong>Next:</strong> ${escapeHtml(client.nextAction)}</p>
       <button class="button secondary compact" type="button" data-open-client="${escapeHtml(client.caseId)}">Open workspace</button>
     </article>`;
-  }).join("") : `<div class="card empty-state"><h3>No cloud client records yet</h3><p>Add a new client after privacy approval. No family data is embedded in this website.</p></div>`;
+  };
+  const lanes = [["NEW", "New"], ["ACTIVE", "Active"], ["FINISHED", "Finished"]];
+  element("clientList").innerHTML = clients.length ? lanes.map(([key, label]) => {
+    const laneClients = visible.filter((client) => clientLane(client) === key);
+    return `<section class="practice-client-lane" aria-labelledby="practice-lane-${key.toLowerCase()}"><div class="practice-lane-heading"><h3 id="practice-lane-${key.toLowerCase()}">${label}</h3><span>${counts[key]}</span></div><div class="operator-list">${laneClients.length ? laneClients.map(card).join("") : `<div class="card empty-state"><p>No ${label.toLowerCase()} records match this view.</p></div>`}</div></section>`;
+  }).join("") : `<div class="card empty-state"><h3>No cloud client records</h3><p>The protected D1 workspace is empty. Current family records remain in the localhost-only Practice Console and are not copied into this website.</p></div>`;
 }
 
 function clientForm(client) {
@@ -258,6 +277,8 @@ function download(name, content) {
 element("showNewClient").addEventListener("click", () => { element("newClientPanel").hidden = false; element("newClientPanel").scrollIntoView(); });
 element("cancelNewClient").addEventListener("click", () => { element("newClientPanel").hidden = true; });
 element("refreshPractice").addEventListener("click", loadPractice);
+element("clientSearch").addEventListener("input", (event) => { state.clientSearch = event.target.value; renderClients(); });
+document.querySelectorAll("[data-client-filter]").forEach((button) => button.addEventListener("click", () => { state.clientFilter = button.dataset.clientFilter; renderClients(); }));
 element("addSession").addEventListener("click", async () => {
   if (!state.activeCaseId) return;
   try {

@@ -227,3 +227,15 @@ test("Practice Console preserves legacy CUSTOM visibly until CJ reclassifies it"
   assert.doesNotMatch(source, /serviceOptions = \["TBD", "RM350", "RM1800", "CUSTOM"\]/);
   assert.match(await readFile(new URL("../functions/api/content-os/practice/index.js", import.meta.url), "utf8"), /Legacy CUSTOM cases must be explicitly reclassified as RM350 or RM1,800/);
 });
+
+test("Practice Console presents searchable lifecycle lanes without embedding local records", async () => {
+  const source = await readFile(new URL("../content-os/practice/app.js", import.meta.url), "utf8");
+  const page = await readFile(new URL("../content-os/practice/index.html", import.meta.url), "utf8");
+  const config = await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8");
+  assert.match(page, /id="clientSearch"/);
+  for (const lane of ["NEW", "ACTIVE", "FINISHED"]) assert.match(page, new RegExp(`data-client-filter="${lane}"`));
+  assert.match(source, /const clientLane =/);
+  assert.match(source, /Current family records remain in the localhost-only Practice Console/);
+  assert.doesNotMatch(source, /localStorage|sessionStorage|indexedDB/);
+  assert.match(config, /"APC_PRACTICE_LIVE_WRITES_ENABLED": "false"/);
+});
