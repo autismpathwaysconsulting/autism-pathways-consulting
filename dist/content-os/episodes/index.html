@@ -118,11 +118,12 @@
         <div class="field"><label for="importEpisode">Episode</label><select id="importEpisode"></select></div>
         <div class="handoff-card" role="note"><strong>Return from Codex</strong><span>Copy its complete answer. You do not need to isolate or edit the JSON yourself.</span><span>Before saving, Content OS verifies the episode ID, master-rule hash, red-team score of at least 9/10, ready-to-film decision and five hook checks.</span></div>
         <div class="button-row"><button id="pasteAndImportPackage" class="button" type="button">Paste Codex result + import</button><button id="showManualImport" class="button secondary" type="button">Manual fallback</button></div>
+        <p id="importFeedback" class="subtle" role="status" aria-live="polite">No production package has been imported yet.</p>
         <details id="manualImportPanel" class="manual-import-panel">
           <summary>Manual paste or JSON file</summary>
           <div class="stack manual-import-body">
             <div class="field"><label for="packageJson">Codex response or final package JSON</label><textarea id="packageJson" class="package-json" maxlength="120000" placeholder='Paste the complete Codex response or apc.episode_pack.v2 JSON here'></textarea><p class="field-help">Episode Studio extracts the last valid JSON block automatically. Earlier versions remain in the timeline.</p></div>
-            <label class="button secondary file-button" for="packageFile">Choose package JSON file<input id="packageFile" class="visually-hidden" type="file" accept="application/json,.json,.txt"></label>
+            <label class="button secondary file-button" for="packageFile">Choose JSON file + import<input id="packageFile" class="visually-hidden" type="file" accept="application/json,.json,.txt"></label>
             <div class="button-row"><button id="importPackage" class="button" type="button">Validate + import pasted result</button></div>
           </div>
         </details>
