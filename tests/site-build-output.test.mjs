@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { execFile } from "node:child_process";
 import {
   lstat,
   mkdir,
@@ -14,8 +15,11 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, sep } from "node:path";
+import { promisify } from "node:util";
 
 import { buildSite, PUBLIC_FILES } from "../scripts/build-site.mjs";
+
+const execFileAsync = promisify(execFile);
 
 function assetVersion(content) {
   return createHash("sha256").update(content).digest("hex").slice(0, 12);
@@ -164,6 +168,21 @@ test("checked-in Pages bundle contains protected operator routes", async () => {
   const productionInbox = /href="https:\/\/dash\.cloudflare\.com\/1252618cc62bbdf9c346f12b3469b1ca\/workers\/d1\/databases\/af6c2c79-7bca-41c0-b412-2a737a0ff0b0\/studio"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/;
   assert.match(contentOs, productionInbox);
   assert.match(practice, productionInbox);
+});
+
+test("the committed Pages artifact contains every allowlisted build file", async () => {
+  const { stdout } = await execFileAsync("git", ["ls-files", "-z", "dist"], {
+    cwd: new URL("../", import.meta.url),
+    encoding: "buffer",
+  });
+  const tracked = new Set(stdout.toString("utf8").split("\0").filter(Boolean));
+
+  for (const relativePath of PUBLIC_FILES) {
+    assert.ok(
+      tracked.has(`dist/${relativePath}`),
+      `Tracked Pages artifact is missing dist/${relativePath}. Run npm run build and add the generated file.`,
+    );
+  }
 });
 
 test("shared asset query versions match their content hashes", async () => {
