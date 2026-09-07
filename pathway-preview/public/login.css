@@ -1,6 +1,8 @@
 :root { --deep:#073734; --teal:#1e7268; --mint:#e8f7f5; --cream:#faf9f7; --ink:#173a38; --line:#dce4e1; --orange:#f4a261; }
 * { box-sizing:border-box; }
 body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; background:radial-gradient(circle at 15% 10%,rgba(42,157,143,.15),transparent 25rem),radial-gradient(circle at 85% 85%,rgba(244,162,97,.14),transparent 24rem),var(--cream); color:#3d4a5c; font-family:"Avenir Next",Avenir,system-ui,sans-serif; }
+.skip-link { position:fixed; left:12px; top:12px; z-index:3; padding:9px 12px; background:var(--deep); color:#fff; border-radius:8px; transform:translateY(-180%); }
+.skip-link:focus { transform:none; }
 main { width:min(100%,520px); }
 section { padding:clamp(28px,7vw,50px); background:#fff; border:1px solid var(--line); border-radius:28px; box-shadow:0 24px 70px rgba(7,55,52,.12); }
 .eyebrow { margin:0; color:var(--teal); font-size:.78rem; font-weight:800; letter-spacing:.14em; }
@@ -12,5 +14,11 @@ input { min-height:50px; padding:10px 14px; border:1px solid #a8bcb6; border-rad
 button { min-height:50px; margin-top:4px; border:0; border-radius:12px; background:var(--teal); color:#fff; font:inherit; font-weight:800; cursor:pointer; }
 .boundary { margin:24px 0 0; padding:14px; border-radius:12px; background:var(--mint); font-size:.9rem; }
 .error { padding:12px; border-left:4px solid #a94932; background:#fff0ec; color:#742f20; }
-input:focus-visible,button:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
-
+.check { grid-template-columns:auto 1fr; align-items:start; font-weight:600; }
+.check input { min-height:0; width:22px; height:22px; margin-top:2px; }
+dl { margin:22px 0 0; }
+dl div { padding:10px 0; border-bottom:1px solid var(--line); }
+dt { color:var(--deep); font-weight:800; }
+dd { margin:3px 0 0; }
+input:focus-visible,button:focus-visible,a:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+@media(max-width:420px){body{padding:12px}section{border-radius:18px;padding:24px 20px}h1{font-size:2.35rem}}

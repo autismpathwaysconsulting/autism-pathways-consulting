@@ -1,8 +1,18 @@
-(function () {
+(async function () {
   "use strict";
-  const data = window.APC_PORTAL_DATA;
+  let data = window.APC_PORTAL_DATA;
   const main = document.getElementById("portal-main");
   const toast = document.getElementById("toast");
+  try {
+    const response = await fetch("/api/portal", { headers: { Accept: "application/json" } });
+    if (!response.ok) throw new Error("portal unavailable");
+    const stored = await response.json();
+    data = { ...data, profile: { ...data.profile, ...stored.profile }, journals: stored.journals };
+  } catch {
+    main.innerHTML = '<section class="recovery-card" role="alert"><p class="eyebrow">PREVIEW CONNECTION</p><h1>We could not load your synthetic pathway.</h1><p>Your browser did not replace the page with cached client data. Check the connection, then try again.</p><button class="primary-button" type="button" data-retry>Try again</button></section>';
+    document.querySelector("[data-retry]").addEventListener("click", () => window.location.reload());
+    return;
+  }
   const state = {
     view: "today", filter: "All", query: "", saved: new Set(), checkIn: {},
     booking: data.profile.nextSession, journals: [...data.journals]
@@ -118,7 +128,7 @@
     document.querySelectorAll("[data-view]").forEach((button) => button.setAttribute("aria-current", String(button.dataset.view === state.view ? "page" : "false")));
   }
 
-  document.addEventListener("click", (event) => {
+  document.addEventListener("click", async (event) => {
     const target = event.target.closest("button");
     if (!target) return;
     const nextView = target.dataset.view || target.dataset.viewJump;
@@ -140,6 +150,10 @@
     }
     if (target.hasAttribute("data-privacy")) document.getElementById("privacy-dialog").showModal();
     if (target.hasAttribute("data-close-dialog")) target.closest("dialog").close();
+    if (target.hasAttribute("data-logout")) {
+      target.disabled = true;
+      try { await fetch("/api/session/logout", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }); } finally { window.location.assign("/login"); }
+    }
   });
 
   document.addEventListener("input", (event) => {
@@ -150,10 +164,26 @@
       document.querySelector(".resource-grid").innerHTML = cards.map(resourceCard).join("") || "<p>No resources match that search.</p>";
     }
   });
-  document.getElementById("journal-form").addEventListener("submit", (event) => {
+  document.getElementById("journal-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = new FormData(event.target);
-    state.journals.unshift({ id: `journal-${Date.now()}`, date: form.get("date"), time: form.get("time"), title: form.get("title"), entry: form.get("entry") });
+    const submit = event.target.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    let entry;
+    try {
+      const response = await fetch("/api/journals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: form.get("date"), time: form.get("time"), title: form.get("title"), entry: form.get("entry") }),
+      });
+      if (!response.ok) throw new Error("save failed");
+      entry = await response.json();
+    } catch {
+      submit.disabled = false;
+      showToast("The entry was not saved. Please try again.");
+      return;
+    }
+    state.journals.unshift(entry);
     event.target.reset();
     document.getElementById("journal-dialog").close();
     state.view = "progress";

@@ -4,6 +4,17 @@
   "productionEnabled": false,
   "realClientDataEnabled": false,
   "parentInvitationsEnabled": false,
+  "syntheticPreviewEvidenceOnly": true,
+  "syntheticPreviewControls": [
+    "isolated-d1-migrations",
+    "client-scoped-object-authorization",
+    "invitation-expiry-recovery-revocation",
+    "append-only-audit-triggers",
+    "consent-version-gating",
+    "retention-export-deletion-rehearsal",
+    "operator-assigned-private-cal-link-lifecycle",
+    "responsive-accessibility-recovery-tests"
+  ],
   "lastReviewed": "2026-09-07",
   "mandatoryGates": [
     { "id": "OPS-HOLD-001", "state": "BLOCKED", "condition": "Current service catalogue reconciled with business authority" },

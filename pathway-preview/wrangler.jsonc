@@ -2,16 +2,68 @@
   "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "apc-client-pathway-preview",
   "pages_build_output_dir": "./dist",
-  "compatibility_date": "2026-09-01",
+  "compatibility_date": "2026-09-07",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
     "APC_PATHWAY_ENVIRONMENT": "preview",
     "APC_PATHWAY_PRODUCTION_ENABLED": "false",
-    "APC_PATHWAY_D1_MODE": "synthetic-stub",
-    "APC_PATHWAY_R2_MODE": "synthetic-stub",
-    "APC_PATHWAY_ALLOWED_CLIENT_ID": "DEMO-CLIENT-001"
+    "APC_PATHWAY_REAL_CLIENT_DATA_ENABLED": "false",
+    "APC_PATHWAY_D1_MODE": "synthetic-preview",
+    "APC_PATHWAY_R2_MODE": "disabled",
+    "APC_PATHWAY_ALLOWED_CLIENT_ID": "DEMO-CLIENT-001",
+    "APC_PATHWAY_NOTICE_VERSION": "synthetic-notice-v1",
+    "APC_PATHWAY_TERMS_VERSION": "synthetic-terms-v1"
   },
-  "d1_databases": [],
-  "r2_buckets": []
+  "d1_databases": [
+    {
+      "binding": "PATHWAY_DB",
+      "database_name": "apc-client-pathway-preview-synthetic",
+      "database_id": "16329f9f-f191-4279-96f5-b60cee420dae",
+      "preview_database_id": "16329f9f-f191-4279-96f5-b60cee420dae",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "r2_buckets": [],
+  "observability": {
+    "enabled": true,
+    "logs": { "head_sampling_rate": 1 }
+  },
+  "env": {
+    "preview": {
+      "vars": {
+        "APC_PATHWAY_ENVIRONMENT": "preview",
+        "APC_PATHWAY_PRODUCTION_ENABLED": "false",
+        "APC_PATHWAY_REAL_CLIENT_DATA_ENABLED": "false",
+        "APC_PATHWAY_D1_MODE": "synthetic-preview",
+        "APC_PATHWAY_R2_MODE": "disabled",
+        "APC_PATHWAY_ALLOWED_CLIENT_ID": "DEMO-CLIENT-001",
+        "APC_PATHWAY_NOTICE_VERSION": "synthetic-notice-v1",
+        "APC_PATHWAY_TERMS_VERSION": "synthetic-terms-v1"
+      },
+      "d1_databases": [
+        {
+          "binding": "PATHWAY_DB",
+          "database_name": "apc-client-pathway-preview-synthetic",
+          "database_id": "16329f9f-f191-4279-96f5-b60cee420dae",
+          "preview_database_id": "16329f9f-f191-4279-96f5-b60cee420dae",
+          "migrations_dir": "./migrations"
+        }
+      ],
+      "r2_buckets": []
+    },
+    "production": {
+      "vars": {
+        "APC_PATHWAY_ENVIRONMENT": "disabled",
+        "APC_PATHWAY_PRODUCTION_ENABLED": "false",
+        "APC_PATHWAY_REAL_CLIENT_DATA_ENABLED": "false",
+        "APC_PATHWAY_D1_MODE": "disabled",
+        "APC_PATHWAY_R2_MODE": "disabled",
+        "APC_PATHWAY_ALLOWED_CLIENT_ID": "DISABLED",
+        "APC_PATHWAY_NOTICE_VERSION": "synthetic-notice-v1",
+        "APC_PATHWAY_TERMS_VERSION": "synthetic-terms-v1"
+      },
+      "d1_databases": [],
+      "r2_buckets": []
+    }
+  }
 }
-

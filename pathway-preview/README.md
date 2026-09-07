@@ -1,25 +1,47 @@
-# APC Client Pathway protected preview
+# APC Client Pathway protected synthetic preview
 
-This isolated Cloudflare Pages project adapts the reviewed synthetic prototype from APC-AI-OS PR #58 at commit `47282cbd0c72f4d60368a78478dd894327d4c73a`.
+This Cloudflare Pages project is an isolated, non-production review surface derived from APC website PR #51. It persists only the committed `DEMO-*` fixture in a dedicated preview D1 database.
 
-## Safety boundary
+## Enforced boundary
 
-- Preview branch only. Requests on a `main` deployment fail closed with `404`.
-- `APC_PATHWAY_PRODUCTION_ENABLED` must remain `false`.
-- Synthetic profile `DEMO-CLIENT-001` only.
-- D1 and R2 are explicit synthetic stubs. No database or bucket is bound.
-- No Content OS, Practice Console, Meta, Calm Companion, or production database binding is present.
-- The invitation code is stored only as a SHA-256 secret and the session signing secret is never committed.
-- The session contains one allowed synthetic client ID. A future API must derive ownership from that server-side identity and apply `WHERE client_id = ?` to every object read and write.
-- No public paid booking route exists. Cal.com remains the booking source of truth, and a follow-up link can appear only when CJ publishes a client-specific URL and eligibility state. The synthetic preview has no assigned link.
-- Journal and check-in interactions remain in browser memory and disappear on reload.
+- A `main` Pages deployment returns `404` before it reads D1.
+- `APC_PATHWAY_PRODUCTION_ENABLED` and `APC_PATHWAY_REAL_CLIENT_DATA_ENABLED` must both remain `false`.
+- `PATHWAY_DB` must point only to `apc-client-pathway-preview-synthetic`; no APC production database is referenced.
+- Client IDs must match `DEMO-*`, and the runtime allows only `DEMO-CLIENT-001`.
+- R2 and file uploads are disabled. No Content OS, Practice Console, Meta, Calm Companion or canonical client-record binding exists.
+- Invitation and session tokens are random; D1 stores SHA-256 hashes only. Operator and session secrets are Cloudflare secrets, never repository variables.
+- Every client object query derives `client_id` and `account_id` from the server-side session and repeats both predicates in SQL.
+- Audit rows are insert-only. SQLite triggers reject updates and deletes, including during deletion rehearsal.
+- Cal.com remains the only booking source. Only an operator-authenticated CJ assignment can expose one private follow-up event URL; the preview stores no availability or appointments.
 
-## Production gates
+## Implemented synthetic rehearsals
 
-OPS-HOLD-003 remains open. Production is blocked until APC approves and tests invitation recovery and revocation, consent, minimum-data rules, client/CJ roles, object-level authorisation, data location, subprocessors, retention, export, deletion, audit logs, incident response, file scanning, accessibility, recovery, and AI-processing boundaries.
+- invitation issue, one-time acceptance, expiry, recovery and revocation;
+- active account/grant/session checks on every authenticated request;
+- exact privacy-notice and portal-terms version acceptance before portal access;
+- D1-backed journal creation, scoped read and JSON export;
+- operator-only private Cal.com link assignment, replacement, expiry filtering and revocation;
+- explicit retention dry-run with no inferred schedule;
+- confirmed synthetic deletion of journals, booking links and active access while preserving audit/lifecycle evidence;
+- connection-failure recovery UI, keyboard focus, skip links, live status and narrow-screen layouts.
 
-The recommended eventual custom hostname is `pathway.autismpathwaysconsulting.com`, attached only after the production gates are closed. Until then, use a protected branch URL on the separate `apc-client-pathway-preview` Pages project.
+These controls are preview evidence only. They do not close `OPS-HOLD-003`, approve legal wording, authorise real client data or establish the production client-record system.
 
-## Preview setup
+## Local verification
 
-Set project secrets `APC_PATHWAY_PREVIEW_INVITE_SHA256` and `APC_PATHWAY_PREVIEW_SESSION_SECRET`, build with `npm run build:pathway-preview`, then deploy `pathway-preview/dist` to a non-main branch of the separate Pages project. Never attach the production hostname during preview review.
+```sh
+npm run build:pathway-preview
+npm run test:pathway-preview
+npx wrangler d1 migrations apply apc-client-pathway-preview-synthetic --local --config pathway-preview/wrangler.jsonc
+npx wrangler types pathway-preview/worker-configuration.d.ts --config pathway-preview/wrangler.jsonc
+```
+
+The Node tests execute both migrations against SQLite and exercise the Pages middleware/API with a D1-compatible adapter.
+
+## Protected preview deployment
+
+Follow [`docs/PREVIEW_OPERATIONS.md`](docs/PREVIEW_OPERATIONS.md). Use only the separate `apc-client-pathway-preview` Pages project, a non-main branch, the dedicated synthetic D1 database and generated preview secrets. Never attach `pathway.autismpathwaysconsulting.com`.
+
+## Remaining production blockers
+
+The fail-closed states in [`docs/portal-release-gates.json`](docs/portal-release-gates.json) remain authoritative. Legal/privacy approval, real identity and recovery design, canonical record ownership, data location/transfers, approved retention schedule, production deletion/export, incident response, file scanning/private object delivery, external security/accessibility review and Founder approval remain human gates.

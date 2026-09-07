@@ -1,12 +1,12 @@
 # Portal backend contract
 
-This is the intended production boundary, not a live API.
+This is the intended production boundary. The adjacent implementation is a synthetic D1 rehearsal only, not a live client API or approved production record system.
 
 The minimum client account shape is defined in [`client-profile.schema.json`](client-profile.schema.json). It intentionally omits diagnosis, full child name, free-form case history and internal notes. Consent evidence and adult access are separate versioned records defined in [`consent-record.schema.json`](consent-record.schema.json) and [`access-grant.schema.json`](access-grant.schema.json); a profile-level status is never treated as proof of consent or authority.
 
-## Client-safe projection
+## Implemented preview projection
 
-`GET /api/portal`
+`GET /api/portal` applies this projection to the single allowed `DEMO-*` account. Every query repeats server-derived client and account predicates. The production projection remains blocked.
 
 The authenticated client receives only:
 
@@ -30,17 +30,17 @@ Draft practitioner notes, other clients, internal risk notes, private scheduling
 
 The Console OS **Client Publisher** is the intended operator surface for this workflow. Its present implementation is synthetic and in-memory; production must route every read and write through authenticated server-side client ownership and role checks.
 
-## Writes
+## Preview writes and rehearsals
 
-- `POST /api/clients`  -  operator-only client creation after validation against the minimum profile schema.
-- `POST /api/journals`  -  client-owned date, optional time, optional title and entry.
+- Client creation remains migration-only and synthetic; there is no public or runtime client-creation route.
+- `POST /api/journals` stores a client-owned date, optional time, optional title and entry in isolated preview D1.
 - Booking remains in Cal.com for v1. The portal does not create or hold appointments in a second calendar.
 - `POST /api/uploads`  -  file metadata after MIME verification, malware scanning, metadata handling and private-object acceptance succeed.
 - `POST /api/stage-items/:id/opened`  -  clears the client-facing `new` state.
 
-Every write requires server-side identity, client ownership, stage/service permission, bounded inputs, audit metadata and an idempotency key. Browser state is never authoritative.
+Every preview write requires server-side identity, client ownership, bounded inputs and audit metadata. Production also requires approved stage/service permissions and idempotency policy; the preview does not claim those gates are complete. Browser state is never authoritative.
 
-Client creation must generate a random opaque ID server-side, normalise but never expose contact fields in logs, reject booking or invitation activation without a current versioned consent record and active verified-adult access grant, and send invitations only through the approved provider after an explicit operator action.
+Production client creation must generate a random opaque ID server-side, normalise but never expose contact fields in logs, reject booking or invitation activation without a current versioned consent record and active verified-adult access grant, and send invitations only through the approved provider after an explicit operator action. The synthetic preview uses a committed opaque fixture and returns a one-time test invitation only to the authenticated operator caller; it sends no email or message.
 
 Every read, download and write must enforce account-to-client ownership at the object level. Route authentication without object-level authorisation is insufficient. Two-account cross-client tests, revoked-access tests and expired-invitation tests are mandatory release evidence.
 
