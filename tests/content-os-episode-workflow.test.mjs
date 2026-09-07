@@ -177,7 +177,8 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /run \/redteam/);
   assert.match(episodeApp, /checks: \[true, true, true, true, true\]/);
   assert.match(episodeHtml, /id="import"/);
-  assert.match(episodeHtml, /Validate \+ import package/);
+  assert.match(episodeHtml, /Paste Codex result \+ import/);
+  assert.match(episodeHtml, /You do not need to isolate or edit the JSON yourself/);
   assert.match(episodeHtml, /red-team score of at least 8\.5\/10/);
   assert.match(episodeHtml, /Produce and edit from one page/);
   assert.match(episodeHtml, /Download final HTML/);
@@ -192,6 +193,9 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.doesNotMatch(episodeApp, /Download \.md archive/);
   assert.doesNotMatch(episodeApp, /episodeMarkdownArchive/);
   assert.match(episodeApp, /createSelectedTopicPrompts/);
+  assert.match(episodeApp, /pasteAndImportPackage/);
+  assert.match(episodeApp, /No valid JSON package was found in the Codex response/);
+  assert.match(episodeApp, /element\("importEpisode"\)\.value = episodeId/);
   assert.match(episodeApp, /existing item\(s\) skipped/);
   assert.match(episodeApp, /renderFilmingPackSwitcher/);
   assert.match(episodeApp, /Edit script before finalising/);

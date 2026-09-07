@@ -658,6 +658,13 @@ h3 {
 .script-editor summary { color: var(--navy); font-weight: 900; cursor: pointer; }
 .script-editor-fields { display: grid; gap: 12px; margin: 16px 0; }
 
+.prompt-preview > summary,
+.manual-import-panel > summary { color: var(--teal); font-weight: 850; cursor: pointer; }
+.prompt-preview pre { margin-top: 12px; }
+.handoff-card { display: grid; gap: 4px; padding: 14px 16px; border-left: 4px solid var(--gold); border-radius: 10px; background: color-mix(in srgb, var(--gold) 8%, var(--surface)); }
+.handoff-card span { color: var(--muted); }
+.manual-import-body { margin-top: 14px; }
+
 .next-card {
   border-color: var(--teal);
   border-left-width: 4px;

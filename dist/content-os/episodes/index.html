@@ -34,8 +34,8 @@
     <div class="shell nav-scroll">
       <a href="#overview" aria-current="location">Workflow</a>
       <a href="#ideas">1. Choose idea</a>
-      <a href="#pack">2. Build prompt</a>
-      <a href="#import">3. Import content</a>
+      <a href="#pack">2. Send to Codex</a>
+      <a href="#import">3. Import result</a>
       <a href="#filming-pack">4. Produce + edit</a>
       <a href="#results">5. Review + publish</a>
       <a href="/content-os/?from=episodes#results">6. Analytics</a>
@@ -95,7 +95,7 @@
     </section>
 
     <section id="pack" class="page-section" aria-labelledby="pack-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 2</p><h2 id="pack-title">Build the production prompt</h2><p class="section-summary">Copy the saved prompt into Codex. It applies the same APC rules to a video or carousel, requires the final red-team pass and returns one JSON block for the next step.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 2</p><h2 id="pack-title">Send the episode to Codex</h2><p class="section-summary">The prompt is already built and saved. Copy it to Codex, then return here with the completed response.</p></div></div>
       <div class="hook-gate rework" role="status" aria-live="polite">
         <strong id="masterRulesStatus">Loading master video rules</strong>
         <span id="masterRulesDetail" class="subtle">Checking the current APC-AI-OS source and version.</span>
@@ -106,18 +106,25 @@
           <div class="field"><label for="packFormat">Format</label><select id="packFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option><option>Carousel post</option></select></div>
         </div>
         <div class="field"><label for="packNotes">Constraints or notes</label><textarea id="packNotes" maxlength="2000" placeholder="Keep under 75 seconds. Include one practical action."></textarea></div>
-        <div class="button-row"><button id="rebuildPrompt" class="button" type="button">Rebuild + save revision</button><button id="copyPrompt" class="button secondary" type="button">Copy prompt</button></div>
-        <pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre>
+        <div class="button-row"><button id="copyPrompt" class="button" type="button">Copy prompt + continue</button><button id="rebuildPrompt" class="button secondary" type="button">Rebuild prompt</button></div>
+        <details class="prompt-preview"><summary>View saved prompt</summary><pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre></details>
       </div>
     </section>
 
     <section id="import" class="page-section" aria-labelledby="import-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 3</p><h2 id="import-title">Import and verify the content pack</h2><p class="section-summary">Paste the final JSON block returned by Codex, or choose its JSON file. Episode Studio validates the episode ID, master-rule hash, red-team score of at least 8.5/10 and five hook checks.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Step 3</p><h2 id="import-title">Bring the finished response back</h2><p class="section-summary">Copy the complete Codex response. One click pastes it, finds the final JSON package and imports it into the same episode.</p></div></div>
       <div class="card form-card stack">
         <div class="field"><label for="importEpisode">Episode</label><select id="importEpisode"></select></div>
-        <div class="field"><label for="packageJson">Final package JSON</label><textarea id="packageJson" class="package-json" maxlength="120000" placeholder='Paste the final apc.episode_pack.v2 JSON block here'></textarea><p class="field-help">Earlier prompt and package versions remain in the timeline. Importing a revision does not overwrite their audit trail.</p></div>
-        <label class="button secondary file-button" for="packageFile">Choose package JSON file<input id="packageFile" class="visually-hidden" type="file" accept="application/json,.json"></label>
-        <div class="button-row"><button id="importPackage" class="button" type="button">Validate + import package</button></div>
+        <div class="handoff-card" role="note"><strong>Return from Codex</strong><span>Copy its complete answer. You do not need to isolate or edit the JSON yourself.</span><span>Before saving, Content OS verifies the episode ID, master-rule hash, red-team score of at least 8.5/10 and five hook checks.</span></div>
+        <div class="button-row"><button id="pasteAndImportPackage" class="button" type="button">Paste Codex result + import</button><button id="showManualImport" class="button secondary" type="button">Manual fallback</button></div>
+        <details id="manualImportPanel" class="manual-import-panel">
+          <summary>Manual paste or JSON file</summary>
+          <div class="stack manual-import-body">
+            <div class="field"><label for="packageJson">Codex response or final package JSON</label><textarea id="packageJson" class="package-json" maxlength="120000" placeholder='Paste the complete Codex response or apc.episode_pack.v2 JSON here'></textarea><p class="field-help">Episode Studio extracts the last valid JSON block automatically. Earlier versions remain in the timeline.</p></div>
+            <label class="button secondary file-button" for="packageFile">Choose package JSON file<input id="packageFile" class="visually-hidden" type="file" accept="application/json,.json,.txt"></label>
+            <div class="button-row"><button id="importPackage" class="button" type="button">Validate + import pasted result</button></div>
+          </div>
+        </details>
       </div>
     </section>
 

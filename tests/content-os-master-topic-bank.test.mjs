@@ -136,5 +136,5 @@ test("idea actions build a copy-ready script prompt without another required cli
   assert.match(episodeApp, /"Create video episode"/);
   assert.match(episodeApp, /"Create carousel post"/);
   assert.match(episodeHtml, />Create content \+ build prompt</);
-  assert.match(episodeHtml, />Copy prompt</);
+  assert.match(episodeHtml, />Copy prompt \+ continue</);
 });

@@ -523,8 +523,8 @@ function renderWorkflowSteps() {
   const active = activeEpisodes();
   const steps = [
     { number: 1, title: "Choose idea", detail: MASTER_TOPIC_BANK.length + " master ideas available", href: "#ideas" },
-    { number: 2, title: "Build prompt", detail: active.filter(item => ["IDEA", "APPROVED"].includes(item.status)).length + " item(s) developing", href: "#pack" },
-    { number: 3, title: "Import content", detail: active.filter(item => item.status === "APPROVED" && latestArtifact(item.id, "PRODUCTION_PACK")).length + " pack(s) imported", href: "#import" },
+    { number: 2, title: "Send to Codex", detail: active.filter(item => ["IDEA", "APPROVED"].includes(item.status)).length + " prompt(s) ready", href: "#pack" },
+    { number: 3, title: "Import result", detail: active.filter(item => item.status === "APPROVED" && !latestArtifact(item.id, "PRODUCTION_PACK")).length + " awaiting response", href: "#import" },
     { number: 4, title: "Produce + edit", detail: active.filter(item => ["SCRIPT_LOCKED", "FILMED", "EDITING"].includes(item.status)).length + " active", href: "#filming-pack" },
     { number: 5, title: "Final review", detail: active.filter(item => item.status === "REVIEW").length + " awaiting readiness", href: "#results" },
     { number: 6, title: "Publish", detail: active.filter(item => item.status === "READY").length + " ready", href: "/content-os/?from=episodes#results" },
@@ -876,19 +876,32 @@ async function saveScriptDraft(episodeId, container) {
 }
 function parseImportedJson(raw) {
   const trimmed = raw.trim();
-  const fenced = /```(?:json)?\s*([\s\S]*?)```/i.exec(trimmed);
-  return JSON.parse((fenced ? fenced[1] : trimmed).trim());
+  const fenced = [...trimmed.matchAll(/```(?:json)?\s*([\s\S]*?)```/gi)].map(match => match[1].trim()).reverse();
+  const candidates = [...fenced, trimmed];
+  let lastError = null;
+  for (const candidate of candidates) {
+    try { return JSON.parse(candidate); }
+    catch (error) { lastError = error; }
+  }
+  throw new Error("No valid JSON package was found in the Codex response." + (lastError?.message ? " " + lastError.message : ""));
 }
 async function importPackage() {
   const episodeId = element("importEpisode").value;
   if (!episodeId) throw new Error("Choose an episode first.");
   const raw = element("packageJson").value;
-  if (!raw.trim()) throw new Error("Paste the final JSON package from Codex.");
+  if (!raw.trim()) throw new Error("Paste the completed Codex response or final JSON package.");
   const pack = parseImportedJson(raw);
   setStatus("Importing package", "Checking identity, master rules, red-team and hook gate.", "saving");
   await apiRequest({ action: "import_production_pack", episodeId, pack, idempotencyKey: uniqueKey("pack", episodeId) });
   renderFilmingPack(episodeId, true);
   setStatus("Package imported", episodeId + " is tracked. Lock for filming is available only after all gates pass.", "success");
+}
+async function pasteAndImportPackage() {
+  if (!navigator.clipboard?.readText) throw new Error("Clipboard access is unavailable. Open Manual fallback and paste the Codex response.");
+  const response = await navigator.clipboard.readText();
+  if (!response.trim()) throw new Error("The clipboard is empty. Copy the completed Codex response first.");
+  element("packageJson").value = response;
+  await importPackage();
 }
 async function lockScript(episodeId) {
   setStatus("Locking script", "Verifying the latest imported package.", "saving");
@@ -1026,8 +1039,26 @@ element("packEpisode").addEventListener("change", () => {
 });
 element("rebuildPrompt").addEventListener("click", () => { savePromptRevision().catch(error => setStatus("Could not save prompt", error.message, "error")); });
 element("copyPrompt").addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText(element("promptOutput").textContent); setStatus("Prompt copied", "Paste it into Codex. The prompt requires /redteam and returns import-ready JSON.", "success"); }
-  catch { setStatus("Copy unavailable", "Select the prompt and copy it manually.", "error"); }
+  try {
+    const episodeId = element("packEpisode").value;
+    if (!episodeId) throw new Error("Choose an episode first.");
+    await navigator.clipboard.writeText(element("promptOutput").textContent);
+    element("importEpisode").value = episodeId;
+    element("import").scrollIntoView({ behavior: "smooth", block: "start" });
+    element("pasteAndImportPackage").focus({ preventScroll: true });
+    setStatus("Prompt copied", "Paste it into Codex. When Codex finishes, copy its complete response and use Paste Codex result + import below.", "success");
+  }
+  catch (error) { setStatus("Copy unavailable", error.message || "Select the prompt and copy it manually.", "error"); }
+});
+element("pasteAndImportPackage").addEventListener("click", () => {
+  pasteAndImportPackage().catch(error => {
+    element("manualImportPanel").open = true;
+    setStatus("Automatic paste unavailable", error.message, "error");
+  });
+});
+element("showManualImport").addEventListener("click", () => {
+  element("manualImportPanel").open = true;
+  element("packageJson").focus();
 });
 element("importPackage").addEventListener("click", () => { importPackage().catch(error => setStatus("Could not import package", error.message, "error")); });
 element("saveReview").addEventListener("click", () => { saveReview().catch(error => setStatus("Could not save review", error.message, "error")); });
