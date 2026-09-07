@@ -369,12 +369,27 @@ function duplicateEpisodeIds(episode) {
   const contentType = contentTypeForEpisode(episode.id);
   return activeEpisodes().filter(item => item.id !== episode.id && contentTypeForEpisode(item.id) === contentType && normalizedEpisodeTitle(item.title) === identity).map(item => item.id);
 }
+function episodeMatchesFilters(episode) {
+  const query = element("episodeSearch")?.value.trim().toLocaleLowerCase() || "";
+  const status = element("episodeStatusFilter")?.value || "ALL";
+  const format = element("episodeFormatFilter")?.value || "ALL";
+  const archived = Boolean(episode.archived_at);
+  if (status === "ARCHIVED" ? !archived : status !== "ALL" && episode.status !== status) return false;
+  if (format !== "ALL" && contentTypeForEpisode(episode.id) !== format) return false;
+  if (!query) return true;
+  return [episode.id, episodeLabel(episode), episode.title].some(value => String(value).toLocaleLowerCase().includes(query));
+}
 function appendEpisodeActions(actions, episode, packArtifact) {
   const carousel = contentTypeForEpisode(episode.id) === "CAROUSEL";
   const open = node("button", "button secondary compact", packArtifact ? (carousel ? "Open carousel pack" : "Open filming page") : "Open prompt");
   open.type = "button";
   open.dataset.openEpisode = episode.id;
   actions.appendChild(open);
+  const duplicate = node("button", "button secondary compact", "Duplicate as new draft");
+  duplicate.type = "button";
+  duplicate.dataset.duplicateEpisode = episode.id;
+  duplicate.title = "Copies prompt context and preferred wording only. Production packs, approvals, reviews and analytics are not copied.";
+  actions.appendChild(duplicate);
 
   const edit = node("button", "button secondary compact", "Edit episode");
   edit.type = "button";
@@ -517,15 +532,17 @@ function episodeCard(episode) {
 function renderEpisodes() {
   const list = element("episodeList");
   clear(list);
-  const active = activeEpisodes();
-  if (!active.length) list.appendChild(node("div", "empty-state", "Create the first tracked episode from an idea."));
+  const active = activeEpisodes().filter(episodeMatchesFilters);
+  if (!active.length) list.appendChild(node("div", "empty-state", activeEpisodes().length ? "No active episodes match these filters." : "Create the first tracked episode from an idea."));
   for (const episode of active) list.appendChild(episodeCard(episode));
   const archivedPanel = element("archivedEpisodesPanel");
   const archivedList = element("archivedEpisodeList");
-  const archived = archivedEpisodes();
+  const archived = archivedEpisodes().filter(episodeMatchesFilters);
   archivedPanel.hidden = !archived.length;
   clear(archivedList);
   for (const episode of archived) archivedList.appendChild(episodeCard(episode));
+  const summary = element("episodeFilterSummary");
+  if (summary) summary.textContent = "Showing " + (active.length + archived.length) + " of " + workflow.episodes.length + " episode records.";
 }
 function renderEpisodeOptions() {
   for (const selectId of ["packEpisode", "importEpisode", "reviewEpisode"]) {
@@ -962,6 +979,35 @@ async function updateEpisodeDetails(episodeId, container) {
   await apiRequest({ action: "update_episode_details", episodeId, title, displayNumber, idempotencyKey: uniqueKey("episode-edit", episodeId) });
   setStatus("Episode updated", "Episode " + displayNumber + " now uses the revised private label and title. Its canonical history remains unchanged.", "success");
 }
+async function duplicateEpisode(episodeId) {
+  const original = episodeById(episodeId);
+  if (!original || original.archived_at) throw new Error("Choose an active episode to duplicate.");
+  const originalPrompt = latestPrompt(episodeId);
+  if (!originalPrompt) throw new Error("This legacy episode has no tracked prompt to duplicate.");
+  const newId = nextEpisodeId();
+  if (!confirm("Create " + newId + " as a clean draft from " + episodeLabel(original) + "? Production packs, approvals, reviews, publications and analytics will not be copied.")) return;
+  const titleSuffix = " (copy)";
+  const title = original.title.slice(0, 200 - titleSuffix.length).trimEnd() + titleSuffix;
+  const duplicateSource = {
+    sourceType: "episode-duplicate",
+    sourceEpisodeId: original.id,
+    originalSource: originalPrompt.sourceContext,
+  };
+  const episode = { id: newId, title, researchItemId: null };
+  const prompt = promptRecord(episode, originalPrompt.format, originalPrompt.notes || "", duplicateSource, originalPrompt.preferredScript || "");
+  setStatus("Creating clean duplicate", "Only the latest prompt context and preferred wording will be copied.", "saving");
+  await apiRequest({ action: "create_tracked_prompt", episode, prompt, idempotencyKey: uniqueKey("duplicate", newId) });
+  element("packEpisode").value = newId;
+  element("importEpisode").value = newId;
+  element("reviewEpisode").value = newId;
+  element("packFormat").value = prompt.format;
+  element("preferredScript").value = prompt.preferredScript || "";
+  element("packNotes").value = prompt.notes || "";
+  element("promptOutput").textContent = prompt.text;
+  element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
+  element("copyPrompt").focus({ preventScroll: true });
+  setStatus("Clean draft created", newId + " has prompt version 1. No production or publication history was copied.", "success");
+}
 async function setEpisodeArchived(episodeId, archived) {
   if (archived && !confirm("Archive " + episodeId + "? It will leave the active workflow but its prompts, packs, reviews and analytics will remain recoverable.")) return;
   await apiRequest({ action: "set_episode_archived", episodeId, archived, idempotencyKey: uniqueKey(archived ? "archive" : "restore", episodeId) });
@@ -980,6 +1026,7 @@ async function handleEpisodeClick(event) {
   const editPack = button.dataset.editPack;
   const editEpisode = button.dataset.editEpisode;
   const saveDetails = button.dataset.saveEpisodeDetails;
+  const duplicate = button.dataset.duplicateEpisode;
   const archive = button.dataset.archiveEpisode;
   const advance = button.dataset.advanceEpisode;
   const reviewLink = button.dataset.reviewEpisodeLink;
@@ -1017,6 +1064,7 @@ async function handleEpisodeClick(event) {
       }
     }
     if (saveDetails) await updateEpisodeDetails(saveDetails, button.closest("article"));
+    if (duplicate) await duplicateEpisode(duplicate);
     if (archive) await setEpisodeArchived(archive, button.dataset.archived === "true");
     if (advance) await updateEpisodeStage(advance, button.dataset.advanceStatus);
     if (reviewLink) element("reviewEpisode").value = reviewLink;
@@ -1058,6 +1106,9 @@ element("createSelectedTopics").addEventListener("click", () => {
 });
 element("episodeList").addEventListener("click", handleEpisodeClick);
 element("archivedEpisodeList").addEventListener("click", handleEpisodeClick);
+element("episodeSearch").addEventListener("input", renderEpisodes);
+element("episodeStatusFilter").addEventListener("change", renderEpisodes);
+element("episodeFormatFilter").addEventListener("change", renderEpisodes);
 element("filmingPackSwitcher").addEventListener("click", event => {
   const button = event.target.closest("button[data-view-pack]");
   if (button) renderFilmingPack(button.dataset.viewPack);

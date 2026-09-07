@@ -241,6 +241,14 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeHtml, /Practice Console/);
   assert.match(episodeHtml, /Calm feedback inbox/);
   assert.match(episodeHtml, /archivedEpisodeList/);
+  assert.match(episodeHtml, /id="episodeSearch"/);
+  assert.match(episodeHtml, /id="episodeStatusFilter"/);
+  assert.match(episodeHtml, /id="episodeFormatFilter"/);
+  assert.match(episodeApp, /episodeMatchesFilters/);
+  assert.match(episodeApp, /Duplicate as new draft/);
+  assert.match(episodeApp, /Production packs, approvals, reviews, publications and analytics will not be copied/);
+  assert.match(episodeApp, /sourceType: "episode-duplicate"/);
+  assert.match(episodeApp, /action: "create_tracked_prompt"/);
   assert.match(mainApp, /arrangeContentWorkflowSections/);
   assert.match(mainApp, /already tracks this idea/);
   assert.match(mainHtml, /Publish \+ schedule analytics/);

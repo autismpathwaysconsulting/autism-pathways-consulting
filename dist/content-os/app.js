@@ -71,6 +71,7 @@ const ENDPOINTS = Object.freeze({
   research: "/api/content-os/research",
   history: "/api/content-os/history",
   episodeWorkflow: "/api/content-os/episode-workflow",
+  practiceSummary: "/api/content-os/practice/summary",
 });
 
 const BACKUP_FORMAT = "apc.content-os.backup.v2.3";
@@ -109,6 +110,7 @@ let analyticsRecords = loadAnalyticsCache();
 let analyticsQueue = loadAnalyticsQueue();
 let connectorState = { configuredProviders: {}, connections: [], ingestionEnabled: false, enabledProviders: [] };
 let episodeWorkflowState = { episodes: [], artifacts: [], publications: [], reviews: [] };
+let practiceSummaryState = null;
 let researchConnectionState = "checking";
 let researchCache = loadResearchCache();
 let pendingCloudRecord = null;
@@ -909,6 +911,37 @@ function renderSystemConnections() {
         providerConfigured ? "Use Connect " + label + " once to authorise the account." : "OAuth identifiers and secrets still need one-time Cloudflare setup.";
     grid.appendChild(connectionStatusCard(label, statusLabel, detail, connected || feedEnabled ? "success" : "warning"));
   }
+}
+
+function renderPracticeSummary() {
+  const grid = element("practiceSummaryGrid");
+  if (!grid) return;
+  clearNode(grid);
+  if (!practiceSummaryState) {
+    grid.appendChild(makeNode("div", "empty-state", "Practice summary is unavailable. Open Practice Console for the authoritative view."));
+    return;
+  }
+  const clients = practiceSummaryState.clients || {};
+  for (const [title, value, detail] of [
+    ["Active", Number(clients.active || 0), "client journeys"],
+    ["New", Number(clients.new || 0), "records to review"],
+    ["Finished", Number(clients.finished || 0), "closed records"],
+    ["Actions", Number(practiceSummaryState.actions || 0), "approved packs or exports"],
+  ]) grid.appendChild(connectionStatusCard(title, String(value), detail, value ? "warning" : "neutral"));
+  element("practiceSummaryGuidance").textContent = practiceSummaryState.writesEnabled ?
+    "Cal.com scheduling and private Drive filing remain manual." :
+    "Safe mode is active. Live client writes are disabled and current family records remain local.";
+}
+
+async function readPracticeSummary() {
+  try {
+    const result = await apiFetch(ENDPOINTS.practiceSummary, { method: "GET" });
+    if (!result.response.ok || !isPlainObject(result.body)) throw new Error("Practice summary is unavailable.");
+    practiceSummaryState = result.body;
+  } catch {
+    practiceSummaryState = null;
+  }
+  renderPracticeSummary();
 }
 
 async function readConnectorState() {
@@ -4229,7 +4262,7 @@ async function initialise() {
   }
 
   await syncFromCloud();
-  await Promise.all([readAnalytics(), readResearch(), readHistory(), readConnectorState(), readEpisodeWorkflow()]);
+  await Promise.all([readAnalytics(), readResearch(), readHistory(), readConnectorState(), readEpisodeWorkflow(), readPracticeSummary()]);
   await flushAnalyticsQueue();
   renderAll();
 }

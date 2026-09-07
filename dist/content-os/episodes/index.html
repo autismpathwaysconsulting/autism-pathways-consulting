@@ -87,6 +87,15 @@
         <h3>Cloud record here, video files on your SSD</h3>
         <p class="subtle">Content OS stores episode details, prompt revisions, production packs, reviews and analytics as one canonical cloud record. It does not create duplicate local files automatically. Download the single final HTML only when you want an offline filming copy; original footage and final exports remain in your existing SSD folders.</p>
       </div>
+      <div class="card filter-card" aria-labelledby="episode-filter-title">
+        <div><p class="card-label">Find one record</p><h3 id="episode-filter-title">Search and filter episodes</h3><p class="subtle">Filters change this view only. They never alter the cloud record.</p></div>
+        <div class="field-grid three">
+          <div class="field"><label for="episodeSearch">Search ID, private number or title</label><input id="episodeSearch" type="search" autocomplete="off" placeholder="Episode 8, EP08, anxiety"></div>
+          <div class="field"><label for="episodeStatusFilter">Workflow stage</label><select id="episodeStatusFilter"><option value="ALL">All stages</option><option value="IDEA">Idea</option><option value="APPROVED">Prompt ready</option><option value="SCRIPT_LOCKED">Script locked</option><option value="FILMED">Filmed</option><option value="EDITING">Editing</option><option value="REVIEW">Review</option><option value="READY">Upload ready</option><option value="PUBLISHED">Published</option><option value="ARCHIVED">Archived</option></select></div>
+          <div class="field"><label for="episodeFormatFilter">Content format</label><select id="episodeFormatFilter"><option value="ALL">Videos and carousels</option><option value="VIDEO">Video</option><option value="CAROUSEL">Carousel</option></select></div>
+        </div>
+        <p id="episodeFilterSummary" class="subtle" role="status" aria-live="polite">Showing all episodes.</p>
+      </div>
       <div id="episodeList" class="card-list"><div class="empty-state">No episodes yet.</div></div>
       <details id="archivedEpisodesPanel" class="reference-item" hidden>
         <summary>Archived episodes</summary>

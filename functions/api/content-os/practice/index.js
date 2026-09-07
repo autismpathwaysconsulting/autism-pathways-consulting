@@ -86,8 +86,25 @@ function validateSession(session) {
   if (!SESSION_STATUSES.has(session.status) || !DOCUMENT_STATUSES.has(session.documentStatus)) return "Session status is invalid.";
   if (!OPERATOR_EDITABLE_DOCUMENT_STATUSES.has(session.documentStatus)) return "Export and delivery states must come from the recorded export workflow.";
   if (!validOptionalDate(session.scheduledAt) || !validOptionalDate(session.occurredAt)) return "Session date is invalid.";
+  if (["READY", "IN_SESSION"].includes(session.status) && !session.scheduledAt) return "A planned meeting date is required before this stage can begin.";
+  if (["DOCUMENTATION_DRAFT", "CJ_APPROVED", "DELIVERED", "COMPLETE"].includes(session.status) && !session.occurredAt) return "A completed meeting date is required before documentation or completion.";
   if (!validText(session.preparation, 10000, false) || !validText(session.templateAnswers, 30000, false) || !validText(session.privateNotes, 30000, false) || !validText(session.parentSummary, 20000, false) || !validText(session.actionPlan, 20000, false) || !validText(session.parentMaterials, 10000, false)) return "Session notes are invalid.";
   if (["CJ_APPROVED", "EXPORTED", "DELIVERED"].includes(session.documentStatus) && (!session.parentSummary.trim() || !session.actionPlan.trim())) return "CJ approval requires both a parent summary and an action plan.";
+  if (session.status === "COMPLETE" && (!session.parentSummary.trim() || !session.actionPlan.trim())) return "Completion requires a closure summary and action plan.";
+  return null;
+}
+
+export function clientCompletionGateError(serviceCode, sessions) {
+  const template = journeyStagesForService(serviceCode);
+  if (!template.length) return "Choose a current service before completing the client journey.";
+  const byStage = new Map((sessions || []).map((session) => [session.journey_stage, session]));
+  if (template.some((stage) => !byStage.has(stage.code))) return "Every required journey stage must exist before completion.";
+  if (template.some((stage) => {
+    const session = byStage.get(stage.code);
+    return !["DELIVERED", "COMPLETE"].includes(session.status) && session.document_status !== "DELIVERED";
+  })) return "Every required journey stage must be delivered or completed before closing the client journey.";
+  const finalSession = byStage.get(template[template.length - 1].code);
+  if (!String(finalSession.parent_summary || "").trim() || !String(finalSession.action_plan || "").trim()) return "The final stage needs a closure summary and action plan before completion.";
   return null;
 }
 
@@ -406,6 +423,11 @@ export async function onRequestPost({ request, env }) {
       if (!current) return json({ error: "Client record was not found." }, 404);
       if (Number(current.revision) !== payload.expectedRevision) return json({ error: "Client record changed on another screen. Refresh before saving." }, 409);
       if (current.service_code === "CUSTOM" && !["RM350", "RM1800"].includes(payload.client.serviceCode)) return json({ error: "Legacy CUSTOM cases must be explicitly reclassified as RM350 or RM1,800 before saving." }, 409);
+      if (payload.client.stage === "COMPLETE" && current.stage !== "COMPLETE") {
+        const sessions = await database.prepare("SELECT journey_stage, status, document_status, parent_summary, action_plan FROM practice_sessions WHERE case_id = ? ORDER BY session_number").bind(payload.caseId).all();
+        const completionError = clientCompletionGateError(payload.client.serviceCode, sessions.results || []);
+        if (completionError) return json({ error: completionError }, 409);
+      }
       const existingSessions = await database.prepare("SELECT session_id FROM practice_sessions WHERE case_id = ? LIMIT 1").bind(payload.caseId).all();
       if (current.service_code !== payload.client.serviceCode && (existingSessions.results || []).length) return json({ error: "A service cannot be changed after its journey has started. Create a new case so the RM350 and RM1,800 boundaries remain separate." }, 409);
       const nextRevision = payload.expectedRevision + 1;
