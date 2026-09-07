@@ -1862,7 +1862,7 @@ async function buildTrackingPublication(options) {
     ? canonicalInstagramReelPostRef(rawPostRef)
     : rawPostRef;
   const existingPublication = matchingPublication(platform, postRef);
-  if (existingPublication) return existingPublication;
+  if (existingPublication?.episodeId === episodeId) return existingPublication;
   const promptArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
     return item.episode_id === episodeId && item.artifact_type === "PROMPT";
   }).sort(function (left, right) { return Number(right.version) - Number(left.version); })[0];
@@ -1883,7 +1883,7 @@ async function buildTrackingPublication(options) {
     topic: episode.title.slice(0, 240),
     problemArea: text(topic.name || episode.title).slice(0, 160),
     productFamily: text(topic.family).slice(0, 120),
-    format: element("automaticFormat").value,
+    format: options?.canonicalInstagramReel ? "Reel" : element("automaticFormat").value,
     durationSeconds: null,
     slideCount: null,
     hookType: element("automaticHookType").value,
@@ -3355,6 +3355,7 @@ function renderMasterVideoRulesStatus() {
 
 function episodePackageContractLines(episodeId) {
   return [
+    "PRIVATE TRACKING ONLY: The tracked episode ID and episode number are for CJ inside Content OS. Never place either in spoken words, on-screen text, overlay cards, source pills, public captions, titles, descriptions or viewer-facing filenames.",
     "",
     "MANDATORY FINAL RED-TEAM",
     "Before presenting the final version, run /redteam on factual accuracy, evidence scope, autism-community framing, parent shame, burden framing, overclaiming, production alignment and likely backlash. Correct all fixable issues before the final output.",

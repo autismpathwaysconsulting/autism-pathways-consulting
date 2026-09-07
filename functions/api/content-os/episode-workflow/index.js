@@ -23,6 +23,7 @@ function validMultiline(value, maximum, required = true) {
   return typeof value === "string" && (!required || Boolean(value.trim())) && value.length <= maximum && !/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value);
 }
 function validEpisodeId(value) { return typeof value === "string" && /^EP\d{2,4}$/.test(value); }
+function validDisplayNumber(value) { return Number.isSafeInteger(value) && value >= 1 && value <= 9999; }
 function validResearchItemId(value) {
   return value === null || (typeof value === "string" && value.length <= 260 && /^apc-weekly-topic-review:\d{4}-W\d{2}\|topic:[A-Za-z0-9._-]{4,100}$/.test(value));
 }
@@ -99,8 +100,9 @@ export function validateAction(payload) {
     return null;
   }
   if (payload.action === "update_episode_details") {
-    if (!exactKeys(payload, ["action", "episodeId", "title", "idempotencyKey"]) || !validEpisodeId(payload.episodeId) || !validIdempotencyKey(payload.idempotencyKey)) return "Episode edit request is invalid.";
+    if (!exactKeys(payload, ["action", "episodeId", "title", "idempotencyKey"], ["displayNumber"]) || !validEpisodeId(payload.episodeId) || !validIdempotencyKey(payload.idempotencyKey)) return "Episode edit request is invalid.";
     if (!validText(payload.title, 200) || !deidentifiedTitle(payload.title)) return "Episode title is invalid or not deidentified.";
+    if (Object.hasOwn(payload, "displayNumber") && !validDisplayNumber(payload.displayNumber)) return "Private episode number must be a whole number from 1 to 9999.";
     return null;
   }
   if (payload.action === "set_episode_archived") {
@@ -340,16 +342,26 @@ export async function onRequestPost({ request, env }) {
 
     if (payload.action === "update_episode_details") {
       const title = payload.title.trim();
-      const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, title }));
+      const hasDisplayNumber = Object.hasOwn(payload, "displayNumber");
+      const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, title, ...(hasDisplayNumber ? { displayNumber: payload.displayNumber } : {}) }));
       const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
       if (duplicate) return duplicate;
-      const episode = await database.prepare("SELECT id, title, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      const episode = await database.prepare("SELECT id, title, display_number, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
       if (!episode) return json({ error: "Episode was not found." }, 404);
       if (episode.archived_at) return json({ error: "Restore this episode before editing it." }, 409);
-      if (episode.title === title) return json(await overview(database));
+      const displayNumber = hasDisplayNumber ? payload.displayNumber : episode.display_number;
+      const effectiveDisplayNumber = displayNumber ?? Number(episode.id.slice(2));
+      if (hasDisplayNumber) {
+        const conflict = await database.prepare(`SELECT id FROM episodes
+          WHERE archived_at IS NULL AND id <> ?
+            AND COALESCE(display_number, CAST(SUBSTR(id, 3) AS INTEGER)) = ? LIMIT 1`)
+          .bind(payload.episodeId, effectiveDisplayNumber).first();
+        if (conflict) return json({ error: `Episode ${effectiveDisplayNumber} is already assigned to another active record.` }, 409);
+      }
+      if (episode.title === title && (!hasDisplayNumber || episode.display_number === displayNumber)) return json(await overview(database));
       await database.batch([
-        database.prepare("UPDATE episodes SET title = ?, updated_at = ? WHERE id = ? AND archived_at IS NULL").bind(title, now, payload.episodeId),
-        eventStatement(database, { episodeId: payload.episodeId, eventType: "STATUS_CHANGED", idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { action: "details_updated", title }, now }),
+        database.prepare("UPDATE episodes SET title = ?, display_number = ?, updated_at = ? WHERE id = ? AND archived_at IS NULL").bind(title, displayNumber, now, payload.episodeId),
+        eventStatement(database, { episodeId: payload.episodeId, eventType: "STATUS_CHANGED", idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { action: "details_updated", title, displayNumber: effectiveDisplayNumber }, now }),
       ]);
       return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, eventType: "STATUS_CHANGED" }));
     }
@@ -358,10 +370,18 @@ export async function onRequestPost({ request, env }) {
       const payloadHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, archived: payload.archived }));
       const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
       if (duplicate) return duplicate;
-      const episode = await database.prepare("SELECT id, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      const episode = await database.prepare("SELECT id, display_number, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
       if (!episode) return json({ error: "Episode was not found." }, 404);
       const alreadyArchived = Boolean(episode.archived_at);
       if (alreadyArchived === payload.archived) return json(await overview(database));
+      if (!payload.archived) {
+        const effectiveDisplayNumber = episode.display_number ?? Number(episode.id.slice(2));
+        const conflict = await database.prepare(`SELECT id FROM episodes
+          WHERE archived_at IS NULL AND id <> ?
+            AND COALESCE(display_number, CAST(SUBSTR(id, 3) AS INTEGER)) = ? LIMIT 1`)
+          .bind(payload.episodeId, effectiveDisplayNumber).first();
+        if (conflict) return json({ error: `Episode ${effectiveDisplayNumber} is already assigned to another active record. Change that private number before restoring this episode.` }, 409);
+      }
       await database.batch([
         database.prepare("UPDATE episodes SET archived_at = ?, updated_at = ? WHERE id = ?").bind(payload.archived ? now : null, now, payload.episodeId),
         eventStatement(database, { episodeId: payload.episodeId, eventType: "STATUS_CHANGED", idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { action: payload.archived ? "archived" : "restored" }, now }),

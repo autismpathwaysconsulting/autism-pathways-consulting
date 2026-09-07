@@ -47,6 +47,12 @@ function latestArtifact(episodeId, type) {
 function activeEpisodes() { return workflow.episodes.filter(item => !item.archived_at); }
 function archivedEpisodes() { return workflow.episodes.filter(item => Boolean(item.archived_at)); }
 function episodeById(episodeId) { return workflow.episodes.find(item => item.id === episodeId) || null; }
+function episodeDisplayNumber(episode) {
+  const stored = Number(episode?.display_number);
+  if (Number.isSafeInteger(stored) && stored >= 1) return stored;
+  return Number(/^EP(\d+)$/.exec(episode?.id || "")?.[1] || 0);
+}
+function episodeLabel(episode) { return "Episode " + episodeDisplayNumber(episode); }
 function latestPrompt(episodeId) { return latestArtifact(episodeId, "PROMPT")?.payload || null; }
 function latestPack(episodeId) { return latestArtifact(episodeId, "PRODUCTION_PACK")?.payload || null; }
 function sourceContext(episodeId) { return latestPrompt(episodeId)?.sourceContext || episodeById(episodeId)?.productionPack?.sourceContext || null; }
@@ -92,6 +98,7 @@ function packageContract(episodeId) {
 function productionPrompt(episode, format, notes, evidenceContext) {
   return [
     `Create a complete, filming-ready APC episode pack for ${episode.id}: ${episode.title}.`,
+    `PRIVATE TRACKING ONLY: ${episode.id} is ${episodeLabel(episode)} inside Content OS. Never include the episode ID or episode number in spoken words, on-screen text, overlay cards, source pills, public captions, titles, descriptions or viewer-facing filenames.`,
     "",
     "Format: " + format,
     "Constraints: " + (notes || "Keep the language warm, practical and within APC scope."),
@@ -237,7 +244,7 @@ function appendEpisodeActions(actions, episode, packArtifact) {
   open.dataset.openEpisode = episode.id;
   actions.appendChild(open);
 
-  const edit = node("button", "button secondary compact", "Edit title");
+  const edit = node("button", "button secondary compact", "Edit episode");
   edit.type = "button";
   edit.dataset.editEpisode = episode.id;
   actions.appendChild(edit);
@@ -290,8 +297,20 @@ function appendEpisodeActions(actions, episode, packArtifact) {
 function appendEpisodeTimeline(card, episode) {
   const timeline = node("details", "timeline");
   timeline.dataset.episodeManagement = episode.id;
-  timeline.appendChild(node("summary", "", episode.archived_at ? "Restore and view history" : "Edit title and view history"));
+  timeline.appendChild(node("summary", "", episode.archived_at ? "Restore and view history" : "Edit private number, title and view history"));
   const management = node("div", "episode-management");
+  const numberField = node("label", "field");
+  numberField.appendChild(node("span", "", "Private episode number"));
+  const numberInput = node("input");
+  numberInput.type = "number";
+  numberInput.min = "1";
+  numberInput.max = "9999";
+  numberInput.step = "1";
+  numberInput.value = String(episodeDisplayNumber(episode));
+  numberInput.dataset.episodeNumber = episode.id;
+  numberField.appendChild(numberInput);
+  numberField.appendChild(node("small", "field-help", "Internal organisation only. It is excluded from scripts, overlays and public captions."));
+  management.appendChild(numberField);
   const titleField = node("label", "field");
   titleField.appendChild(node("span", "", "Episode title"));
   const titleInput = node("input");
@@ -301,9 +320,9 @@ function appendEpisodeTimeline(card, episode) {
   titleField.appendChild(titleInput);
   management.appendChild(titleField);
   const controls = node("div", "button-row");
-  const save = node("button", "button secondary compact", "Save title");
+  const save = node("button", "button secondary compact", "Save details");
   save.type = "button";
-  save.dataset.saveEpisodeTitle = episode.id;
+  save.dataset.saveEpisodeDetails = episode.id;
   controls.appendChild(save);
   const prior = previousStatus(episode.status);
   if (prior && !episode.archived_at) {
@@ -341,7 +360,7 @@ function episodeCard(episode) {
   card.id = episode.archived_at ? "archived-" + episode.id : episode.id;
   const heading = node("div", "card-heading");
   const title = node("div");
-  title.appendChild(node("p", "card-label", episode.id + " · Step " + STEP_BY_STATUS[episode.status] + " of 7"));
+  title.appendChild(node("p", "card-label", episodeLabel(episode) + " · Step " + STEP_BY_STATUS[episode.status] + " of 7"));
   title.appendChild(node("h3", "", episode.title));
   heading.appendChild(title);
   heading.appendChild(node("span", "status-badge " + (episode.status === "READY" || episode.status === "PUBLISHED" ? "success" : "neutral"), episode.archived_at ? "ARCHIVED" : episode.status));
@@ -385,7 +404,7 @@ function renderEpisodeOptions() {
     const available = activeEpisodes();
     if (!available.length) { const option = node("option", "", "Create an episode first"); option.value = ""; select.appendChild(option); continue; }
     for (const episode of available) {
-      const option = node("option", "", episode.id + ": " + episode.title);
+      const option = node("option", "", episodeLabel(episode) + ": " + episode.title);
       option.value = episode.id; option.selected = episode.id === selected; select.appendChild(option);
     }
   }
@@ -558,7 +577,8 @@ function renderResults() {
   if (!workflow.reviews.length) reviews.appendChild(node("div", "empty-state", "No video reviews recorded yet."));
   for (const review of workflow.reviews.slice(0, 20)) {
     const card = node("article", "card");
-    card.appendChild(node("p", "card-label", review.episode_id + " · " + review.mode));
+    const reviewEpisode = episodeById(review.episode_id);
+    card.appendChild(node("p", "card-label", (reviewEpisode ? episodeLabel(reviewEpisode) : "Private episode") + " · " + review.mode));
     card.appendChild(node("h3", "", review.result));
     card.appendChild(node("p", "subtle", review.version_label + " · SHA-256 " + review.video_sha256.slice(0, 12) + "..."));
     reviews.appendChild(card);
@@ -569,7 +589,8 @@ function renderResults() {
   if (!linked.length) publications.appendChild(node("div", "empty-state", "No publications with an episode ID are recorded yet."));
   for (const publication of linked.slice(0, 20)) {
     const card = node("article", "card");
-    card.appendChild(node("p", "card-label", publication.episodeId + " · " + publication.platform));
+    const publishedEpisode = episodeById(publication.episodeId);
+    card.appendChild(node("p", "card-label", (publishedEpisode ? episodeLabel(publishedEpisode) : "Private episode") + " · " + publication.platform));
     card.appendChild(node("h3", "", publication.title || publication.topic || publication.postRef));
     card.appendChild(node("p", "subtle", String(publication.snapshotCount) + " analytics checkpoint(s) recorded."));
     publications.appendChild(card);
@@ -667,12 +688,15 @@ async function saveReview() {
   await apiRequest({ action: "save_review", episodeId, manifest });
   setStatus("Video review saved", episodeId + " now points to this exact video export.", "success");
 }
-async function updateEpisodeTitle(episodeId, container) {
-  const input = container.querySelector(`[data-episode-title="${episodeId}"]`);
-  const title = input?.value.trim() || "";
+async function updateEpisodeDetails(episodeId, container) {
+  const titleInput = container.querySelector(`[data-episode-title="${episodeId}"]`);
+  const numberInput = container.querySelector(`[data-episode-number="${episodeId}"]`);
+  const title = titleInput?.value.trim() || "";
+  const displayNumber = Number(numberInput?.value);
   if (!title) throw new Error("Add an episode title.");
-  await apiRequest({ action: "update_episode_details", episodeId, title, idempotencyKey: uniqueKey("episode-edit", episodeId) });
-  setStatus("Episode updated", episodeId + " now uses the revised title. Its prior artifacts remain unchanged.", "success");
+  if (!Number.isSafeInteger(displayNumber) || displayNumber < 1 || displayNumber > 9999) throw new Error("Use a whole private episode number from 1 to 9999.");
+  await apiRequest({ action: "update_episode_details", episodeId, title, displayNumber, idempotencyKey: uniqueKey("episode-edit", episodeId) });
+  setStatus("Episode updated", "Episode " + displayNumber + " now uses the revised private label and title. Its canonical history remains unchanged.", "success");
 }
 async function setEpisodeArchived(episodeId, archived) {
   if (archived && !confirm("Archive " + episodeId + "? It will leave the active workflow but its prompts, packs, reviews and analytics will remain recoverable.")) return;
@@ -692,7 +716,7 @@ async function handleEpisodeClick(event) {
   const editPack = button.dataset.editPack;
   const editEpisode = button.dataset.editEpisode;
   const downloadEpisode = button.dataset.downloadEpisode;
-  const saveTitle = button.dataset.saveEpisodeTitle;
+  const saveDetails = button.dataset.saveEpisodeDetails;
   const archive = button.dataset.archiveEpisode;
   const advance = button.dataset.advanceEpisode;
   const reviewLink = button.dataset.reviewEpisodeLink;
@@ -718,7 +742,7 @@ async function handleEpisodeClick(event) {
     if (editEpisode) {
       const card = button.closest("article");
       const timeline = card?.querySelector(`[data-episode-management="${editEpisode}"]`);
-      const input = card?.querySelector(`[data-episode-title="${editEpisode}"]`);
+      const input = card?.querySelector(`[data-episode-number="${editEpisode}"]`);
       if (timeline) timeline.open = true;
       if (input) {
         input.focus({ preventScroll: true });
@@ -726,7 +750,7 @@ async function handleEpisodeClick(event) {
       }
     }
     if (downloadEpisode) downloadEpisodeArchive(downloadEpisode);
-    if (saveTitle) await updateEpisodeTitle(saveTitle, button.closest("article"));
+    if (saveDetails) await updateEpisodeDetails(saveDetails, button.closest("article"));
     if (archive) await setEpisodeArchived(archive, button.dataset.archived === "true");
     if (advance) await updateEpisodeStage(advance, button.dataset.advanceStatus);
     if (reviewLink) element("reviewEpisode").value = reviewLink;
