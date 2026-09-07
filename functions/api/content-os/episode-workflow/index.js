@@ -551,13 +551,35 @@ export async function onRequestPost({ request, env }) {
       const priorReview = await database.prepare("SELECT id FROM video_reviews WHERE episode_id = ? AND video_sha256 = ? AND mode = ?").bind(payload.episodeId, manifest.video.sha256.toLowerCase(), manifest.mode).first();
       if (priorReview) return json(await overview(database));
       const reviewHash = await sha256Hex(canonicalJson(manifest));
-      await database.batch([
+      const reviewId = crypto.randomUUID();
+      const nextStatus = result === "READY" ? "READY" : "REVIEW";
+      const reviewResults = await database.batch([
         database.prepare(`INSERT INTO video_reviews
           (id, episode_id, version_label, video_sha256, mode, result, score, manifest_json, reviewed_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (episode_id, video_sha256, mode) DO NOTHING`).bind(crypto.randomUUID(), payload.episodeId, manifest.label.trim(), manifest.video.sha256.toLowerCase(), manifest.mode, result, Number.isFinite(manifest.review?.score) ? manifest.review.score : null, JSON.stringify(manifest), now),
-        database.prepare("UPDATE episodes SET status = ?, updated_at = ? WHERE id = ?").bind(result === "READY" ? "READY" : "REVIEW", now, payload.episodeId),
-        eventStatement(database, { episodeId: payload.episodeId, eventType: "VIDEO_REVIEWED", idempotencyKey: "review:" + payload.episodeId + ":" + manifest.video.sha256.toLowerCase() + ":" + manifest.mode, payloadHash: reviewHash, metadata: { label: manifest.label.trim(), mode: manifest.mode, result, score: Number.isFinite(manifest.review?.score) ? manifest.review.score : null }, now }),
+          SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+          WHERE EXISTS (
+            SELECT 1 FROM episodes
+            WHERE id = ? AND status = ? AND archived_at IS NULL
+              AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')
+          )
+          ON CONFLICT (episode_id, video_sha256, mode) DO NOTHING`)
+          .bind(reviewId, payload.episodeId, manifest.label.trim(), manifest.video.sha256.toLowerCase(), manifest.mode, result, Number.isFinite(manifest.review?.score) ? manifest.review.score : null, JSON.stringify(manifest), now, payload.episodeId, episode.status, gated.artifact.artifact_id, gated.artifact.payload_sha256),
+        database.prepare(`UPDATE episodes SET status = ?, updated_at = ?
+          WHERE id = ? AND status = ? AND archived_at IS NULL
+            AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')
+            AND EXISTS (SELECT 1 FROM video_reviews WHERE id = ?)`)
+          .bind(nextStatus, now, payload.episodeId, episode.status, gated.artifact.artifact_id, gated.artifact.payload_sha256, reviewId),
+        eventStatementAfterChange(database, { episodeId: payload.episodeId, eventType: "VIDEO_REVIEWED", artifactId: gated.artifact.artifact_id, idempotencyKey: "review:" + payload.episodeId + ":" + manifest.video.sha256.toLowerCase() + ":" + manifest.mode, payloadHash: reviewHash, metadata: { label: manifest.label.trim(), mode: manifest.mode, result, score: Number.isFinite(manifest.review?.score) ? manifest.review.score : null }, now }),
       ]);
+      if (Number(reviewResults[1]?.meta?.changes || 0) !== 1) {
+        const concurrentReview = await database.prepare("SELECT id FROM video_reviews WHERE episode_id = ? AND video_sha256 = ? AND mode = ?").bind(payload.episodeId, manifest.video.sha256.toLowerCase(), manifest.mode).first();
+        if (concurrentReview) return json(await overview(database));
+        return json({ error: "The prompt, package or episode stage changed while saving the review. Review the current episode state and try again." }, 409);
+      }
     }
     return json(await overview(database));
   } catch (error) {
