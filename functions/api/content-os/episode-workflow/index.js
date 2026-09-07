@@ -1,3 +1,5 @@
+import { MASTER_VIDEO_RULES } from "../../../../content-os/video-rules.js";
+
 const MAX_BODY_BYTES = 128 * 1024;
 const STATUSES = new Set(["IDEA", "APPROVED", "SCRIPT_LOCKED", "FILMED", "EDITING", "REVIEW", "READY", "PUBLISHED"]);
 const MODES = new Set(["full", "delta", "ready"]);
@@ -72,21 +74,37 @@ function validCarousel(carousel) {
     validMultiline(slide.body, 2500, false) && validMultiline(slide.visualDirection, 1500) &&
     validMultiline(slide.sourcePill, 500, false) && validMultiline(slide.action, 1000, false));
 }
+function canonicalPromptMaster(masterRules) {
+  return exactKeys(masterRules, ["version", "sha256", "sourcePath"]) &&
+    masterRules.version === MASTER_VIDEO_RULES.version &&
+    masterRules.sha256 === MASTER_VIDEO_RULES.sha256 &&
+    masterRules.sourcePath === MASTER_VIDEO_RULES.sourcePath;
+}
+function canonicalPackMaster(masterRules) {
+  return exactKeys(masterRules, ["version", "sha256"]) &&
+    masterRules.version === MASTER_VIDEO_RULES.version &&
+    masterRules.sha256 === MASTER_VIDEO_RULES.sha256;
+}
 function validatePrompt(prompt) {
   if (!exactKeys(prompt, ["schemaVersion", "format", "notes", "text", "sourceContext", "masterRules"], ["preferredScript"])) return "Tracked prompt does not match the expected schema.";
   if (prompt.schemaVersion !== "apc.episode_prompt.v1" || !validText(prompt.format, 80) || !validMultiline(prompt.notes, 2000, false) || !validMultiline(prompt.text, 100000)) return "Tracked prompt fields are invalid.";
   if (Object.hasOwn(prompt, "preferredScript") && !validMultiline(prompt.preferredScript, 20000, false)) return "Preferred script is invalid.";
   if (!isObject(prompt.sourceContext) || hasUnsafeKey(prompt.sourceContext)) return "Prompt source context is invalid.";
-  if (!exactKeys(prompt.masterRules, ["version", "sha256", "sourcePath"]) || !validText(prompt.masterRules.version, 40) || !/^[0-9a-f]{64}$/.test(prompt.masterRules.sha256) || !validText(prompt.masterRules.sourcePath, 260)) return "Master rule identity is invalid.";
+  if (!canonicalPromptMaster(prompt.masterRules)) return "Master rule identity does not match the canonical APC master.";
   return null;
 }
-function validateProductionPack(pack) {
+function validPromptBinding(binding) {
+  return exactKeys(binding, ["artifactId", "sha256"]) &&
+    validText(binding.artifactId, 100) && /^[0-9a-f]{64}$/.test(binding.sha256);
+}
+function validateProductionPack(pack, requirePromptBinding = false) {
   const keys = ["schemaVersion", "episodeId", "masterRules", "redteam", "hookGate", "finalDecision", "spokenScript", "filmingBoard", "overlays", "hyperframesPrompt", "visualAssets", "editNotes", "sourceNotes", "platformCopy", "claimCautions"];
-  if (!exactKeys(pack, keys, ["contentType", "carousel"])) return "Imported pack does not match the expected schema.";
+  if (!exactKeys(pack, keys, ["contentType", "carousel", "promptBinding"])) return "Imported pack does not match the expected schema.";
   if (pack.schemaVersion !== PACKAGE_SCHEMA || !validEpisodeId(pack.episodeId)) return "Imported pack identity is invalid.";
+  if ((requirePromptBinding || Object.hasOwn(pack, "promptBinding")) && !validPromptBinding(pack.promptBinding)) return "Imported pack prompt binding is invalid.";
   const contentType = pack.contentType || "VIDEO";
   if (!CONTENT_TYPES.has(contentType)) return "Imported pack content type is invalid.";
-  if (!exactKeys(pack.masterRules, ["version", "sha256"]) || !validText(pack.masterRules.version, 40) || !/^[0-9a-f]{64}$/.test(pack.masterRules.sha256)) return "Imported pack master rule identity is invalid.";
+  if (!canonicalPackMaster(pack.masterRules)) return "Imported pack master rule identity does not match the canonical APC master.";
   if (!exactKeys(pack.redteam, ["result", "score", "risks", "fixes"]) || !["PASS", "FAIL"].includes(pack.redteam.result) || !Number.isFinite(pack.redteam.score) || pack.redteam.score < 0 || pack.redteam.score > 10 || !validStringArray(pack.redteam.risks) || !validStringArray(pack.redteam.fixes)) return "Imported pack red-team result is invalid. Score must be between 0 and 10.";
   if (pack.redteam.result === "PASS" && pack.redteam.score < MINIMUM_REDTEAM_PASS_SCORE) return `A red-team PASS requires a score of at least ${MINIMUM_REDTEAM_PASS_SCORE}/10.`;
   if (!exactKeys(pack.hookGate, ["result", "yesCount", "checks"]) || !HOOK_RESULTS.has(pack.hookGate.result) || !Number.isSafeInteger(pack.hookGate.yesCount) || pack.hookGate.yesCount < 0 || pack.hookGate.yesCount > 5 || !Array.isArray(pack.hookGate.checks) || pack.hookGate.checks.length !== 5 || !pack.hookGate.checks.every(value => typeof value === "boolean") || pack.hookGate.checks.filter(Boolean).length !== pack.hookGate.yesCount) return "Imported pack hook gate is invalid.";
@@ -118,7 +136,7 @@ export function validateAction(payload) {
   }
   if (payload.action === "import_production_pack") {
     if (!exactKeys(payload, ["action", "episodeId", "pack", "idempotencyKey"]) || !validEpisodeId(payload.episodeId) || !validIdempotencyKey(payload.idempotencyKey)) return "Production pack import request is invalid.";
-    const error = validateProductionPack(payload.pack);
+    const error = validateProductionPack(payload.pack, true);
     if (error) return error;
     if (payload.pack.episodeId !== payload.episodeId) return "Imported pack belongs to a different episode.";
     return null;
@@ -139,10 +157,6 @@ export function validateAction(payload) {
   }
   if (payload.action === "update_episode_status") {
     if (!exactKeys(payload, ["action", "episodeId", "status"]) || !validEpisodeId(payload.episodeId) || !STATUSES.has(payload.status)) return "Episode status request is invalid.";
-    return null;
-  }
-  if (payload.action === "save_production_pack") {
-    if (!exactKeys(payload, ["action", "episodeId", "pack"]) || !validEpisodeId(payload.episodeId) || !isObject(payload.pack) || hasUnsafeKey(payload.pack)) return "Production pack request is invalid.";
     return null;
   }
   if (payload.action === "save_review") {
@@ -231,20 +245,35 @@ function eventStatement(database, { episodeId, eventType, artifactId = null, ide
     (event_id, episode_id, event_type, artifact_id, idempotency_key, payload_sha256, metadata_json, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).bind(crypto.randomUUID(), episodeId, eventType, artifactId, idempotencyKey, payloadHash, JSON.stringify(metadata), now);
 }
+function eventStatementAfterChange(database, { episodeId, eventType, artifactId = null, idempotencyKey, payloadHash, metadata, now }) {
+  return database.prepare(`INSERT INTO episode_events
+    (event_id, episode_id, event_type, artifact_id, idempotency_key, payload_sha256, metadata_json, created_at)
+    SELECT ?, ?, ?, ?, ?, ?, ?, ? WHERE changes() = 1`)
+    .bind(crypto.randomUUID(), episodeId, eventType, artifactId, idempotencyKey, payloadHash, JSON.stringify(metadata), now);
+}
 function packGate(pack) {
   const coreHookChecksPass = pack.hookGate.checks.slice(0, 3).every(Boolean);
   const expectedDecision = pack.contentType === "CAROUSEL" ? "PRODUCE" : "FILM";
   return pack.redteam.result === "PASS" && pack.redteam.score >= MINIMUM_REDTEAM_PASS_SCORE && pack.hookGate.result === "PASS" && pack.hookGate.yesCount >= 4 && coreHookChecksPass && pack.finalDecision === expectedDecision;
 }
-async function latestProductionArtifact(database, episodeId) {
-  return database.prepare(`SELECT * FROM episode_artifacts
-    WHERE episode_id = ? AND artifact_type = 'PRODUCTION_PACK'
-    ORDER BY version DESC LIMIT 1`).bind(episodeId).first();
+async function activeProductionArtifact(database, episodeId) {
+  const episode = await database.prepare("SELECT production_pack_json FROM episodes WHERE id = ?").bind(episodeId).first();
+  const record = safeJson(episode?.production_pack_json);
+  const activePrompt = record?.prompt;
+  const activePackage = record?.latestPackage;
+  if (!validText(activePrompt?.sha256, 64) || !/^[0-9a-f]{64}$/.test(activePrompt.sha256) ||
+      !validText(activePackage?.artifactId, 100) || !Number.isSafeInteger(activePackage?.version) || activePackage.version < 1 ||
+      !/^[0-9a-f]{64}$/.test(activePackage?.sha256 || "") || activePackage.promptSha256 !== activePrompt.sha256) return null;
+  const artifact = await database.prepare(`SELECT * FROM episode_artifacts
+    WHERE artifact_id = ? AND episode_id = ? AND artifact_type = 'PRODUCTION_PACK'
+    LIMIT 1`).bind(activePackage.artifactId, episodeId).first();
+  if (!artifact || Number(artifact.version) !== activePackage.version || artifact.payload_sha256 !== activePackage.sha256) return null;
+  return artifact;
 }
 async function requireGatedPack(database, episodeId) {
-  const artifact = await latestProductionArtifact(database, episodeId);
+  const artifact = await activeProductionArtifact(database, episodeId);
   const pack = artifact ? safeJson(artifact.payload_json) : null;
-  return artifact && pack && packGate(pack) ? { artifact, pack } : null;
+  return artifact && pack && validateProductionPack(pack) === null && packGate(pack) ? { artifact, pack } : null;
 }
 
 export async function onRequestGet({ env }) {
@@ -279,7 +308,7 @@ export async function onRequestPost({ request, env }) {
       const artifactId = crypto.randomUUID();
       const promptHash = await sha256Hex(canonicalJson(payload.prompt));
       const packReference = {
-        schemaVersion: "apc.episode_record.v2",
+        schemaVersion: "apc.episode_record.v3",
         episodeId: payload.episode.id,
         sourceContext: payload.prompt.sourceContext,
         masterRules: payload.prompt.masterRules,
@@ -308,13 +337,22 @@ export async function onRequestPost({ request, env }) {
       if (episode.archived_at) return json({ error: "Restore this episode before editing its prompt." }, 409);
       if (!["IDEA", "APPROVED", "SCRIPT_LOCKED"].includes(episode.status)) return json({ error: "This episode has progressed beyond script locking. Create a new episode for a changed prompt." }, 409);
       const promptHash = await sha256Hex(canonicalJson(payload.prompt));
+      const record = safeJson(episode.production_pack_json) || {};
       const samePrompt = await database.prepare("SELECT artifact_id, version FROM episode_artifacts WHERE episode_id = ? AND artifact_type = 'PROMPT' AND payload_sha256 = ?").bind(payload.episodeId, promptHash).first();
-      if (samePrompt) return json(await overview(database, { idempotent: true, episodeId: payload.episodeId, artifactId: samePrompt.artifact_id, eventType: "PROMPT_BUILT" }));
+      if (samePrompt && record.prompt?.sha256 === promptHash) return json(await overview(database, { idempotent: true, episodeId: payload.episodeId, artifactId: samePrompt.artifact_id, eventType: "PROMPT_BUILT" }));
+      if (samePrompt) {
+        const nextRecord = { ...record, schemaVersion: "apc.episode_record.v3", episodeId: payload.episodeId, sourceContext: payload.prompt.sourceContext, masterRules: payload.prompt.masterRules, prompt: { artifactId: samePrompt.artifact_id, version: Number(samePrompt.version), sha256: promptHash }, latestPackage: null };
+        delete nextRecord.package;
+        await database.batch([
+          database.prepare("UPDATE episodes SET status = 'APPROVED', production_pack_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(nextRecord), now, payload.episodeId),
+          eventStatement(database, { episodeId: payload.episodeId, eventType: "PROMPT_BUILT", artifactId: samePrompt.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { version: Number(samePrompt.version), promptSha256: promptHash, format: payload.prompt.format, masterRules: payload.prompt.masterRules, reusedArtifact: true }, now }),
+        ]);
+        return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, artifactId: samePrompt.artifact_id, eventType: "PROMPT_BUILT" }));
+      }
       const latest = await database.prepare("SELECT COALESCE(MAX(version), 0) AS version FROM episode_artifacts WHERE episode_id = ? AND artifact_type = 'PROMPT'").bind(payload.episodeId).first();
       const version = Number(latest?.version || 0) + 1;
       const artifactId = crypto.randomUUID();
-      const record = safeJson(episode.production_pack_json) || {};
-      const nextRecord = { ...record, schemaVersion: "apc.episode_record.v2", episodeId: payload.episodeId, sourceContext: payload.prompt.sourceContext, masterRules: payload.prompt.masterRules, prompt: { artifactId, version, sha256: promptHash }, latestPackage: null };
+      const nextRecord = { ...record, schemaVersion: "apc.episode_record.v3", episodeId: payload.episodeId, sourceContext: payload.prompt.sourceContext, masterRules: payload.prompt.masterRules, prompt: { artifactId, version, sha256: promptHash }, latestPackage: null };
       delete nextRecord.package;
       await database.batch([
         database.prepare(`INSERT INTO episode_artifacts
@@ -336,19 +374,33 @@ export async function onRequestPost({ request, env }) {
       if (!["IDEA", "APPROVED", "SCRIPT_LOCKED"].includes(episode.status)) return json({ error: "This episode has progressed beyond script locking. Create a new episode for a changed script." }, 409);
       const record = safeJson(episode.production_pack_json) || {};
       if (record.masterRules && (record.masterRules.version !== payload.pack.masterRules.version || record.masterRules.sha256 !== payload.pack.masterRules.sha256)) return json({ error: "Imported pack does not match the episode's locked master rules." }, 409);
+      if (!/^[0-9a-f]{64}$/.test(record.prompt?.sha256 || "")) return json({ error: "Save a current tracked prompt before importing its production pack." }, 409);
+      if (payload.pack.promptBinding.artifactId !== record.prompt.artifactId || payload.pack.promptBinding.sha256 !== record.prompt.sha256) return json({ error: "That package was not generated from the current tracked prompt. Copy the current prompt and import its newly audited package." }, 409);
       const packHash = await sha256Hex(canonicalJson(payload.pack));
       const samePack = await database.prepare("SELECT artifact_id, version FROM episode_artifacts WHERE episode_id = ? AND artifact_type = 'PRODUCTION_PACK' AND payload_sha256 = ?").bind(payload.episodeId, packHash).first();
-      if (samePack) return json(await overview(database, { idempotent: true, episodeId: payload.episodeId, artifactId: samePack.artifact_id, eventType: "PACK_IMPORTED" }));
+      if (samePack && record.latestPackage?.artifactId === samePack.artifact_id && record.latestPackage?.promptSha256 === record.prompt.sha256) return json(await overview(database, { idempotent: true, episodeId: payload.episodeId, artifactId: samePack.artifact_id, eventType: "PACK_IMPORTED" }));
+      if (samePack) return json({ error: "That package belongs to an earlier prompt state. Generate and import a newly audited package for the current prompt." }, 409);
       const latest = await database.prepare("SELECT COALESCE(MAX(version), 0) AS version FROM episode_artifacts WHERE episode_id = ? AND artifact_type = 'PRODUCTION_PACK'").bind(payload.episodeId).first();
       const version = Number(latest?.version || 0) + 1;
       const artifactId = crypto.randomUUID();
-      const nextRecord = { ...record, schemaVersion: "apc.episode_record.v2", episodeId: payload.episodeId, masterRules: payload.pack.masterRules, latestPackage: { artifactId, version, sha256: packHash }, package: payload.pack };
+      const nextRecord = { ...record, schemaVersion: "apc.episode_record.v3", episodeId: payload.episodeId, masterRules: payload.pack.masterRules, latestPackage: { artifactId, version, sha256: packHash, promptSha256: record.prompt.sha256 }, package: payload.pack };
       await database.batch([
         database.prepare(`INSERT INTO episode_artifacts
           (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
-          VALUES (?, ?, 'PRODUCTION_PACK', ?, ?, ?, ?, ?, ?, ?)`).bind(artifactId, payload.episodeId, version, packHash, JSON.stringify(payload.pack), payload.pack.redteam.result, payload.pack.hookGate.result, payload.pack.finalDecision, now),
-        database.prepare("UPDATE episodes SET status = 'APPROVED', production_pack_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(nextRecord), now, payload.episodeId),
-        eventStatement(database, { episodeId: payload.episodeId, eventType: "PACK_IMPORTED", artifactId, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { version, packSha256: packHash, redteam: payload.pack.redteam.result, hookGate: payload.pack.hookGate.result, finalDecision: payload.pack.finalDecision }, now }),
+          SELECT ?, ?, 'PRODUCTION_PACK', ?, ?, ?, ?, ?, ?, ?
+          WHERE EXISTS (
+            SELECT 1 FROM episodes
+            WHERE id = ? AND archived_at IS NULL
+              AND json_extract(production_pack_json, '$.prompt.artifactId') = ?
+              AND json_extract(production_pack_json, '$.prompt.sha256') = ?
+          )`).bind(artifactId, payload.episodeId, version, packHash, JSON.stringify(payload.pack), payload.pack.redteam.result, payload.pack.hookGate.result, payload.pack.finalDecision, now, payload.episodeId, record.prompt.artifactId, record.prompt.sha256),
+        database.prepare(`UPDATE episodes SET status = 'APPROVED', production_pack_json = ?, updated_at = ?
+          WHERE id = ? AND archived_at IS NULL
+            AND json_extract(production_pack_json, '$.prompt.artifactId') = ?
+            AND json_extract(production_pack_json, '$.prompt.sha256') = ?
+            AND EXISTS (SELECT 1 FROM episode_artifacts WHERE artifact_id = ?)`)
+          .bind(JSON.stringify(nextRecord), now, payload.episodeId, record.prompt.artifactId, record.prompt.sha256, artifactId),
+        eventStatement(database, { episodeId: payload.episodeId, eventType: "PACK_IMPORTED", artifactId, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { version, packSha256: packHash, promptSha256: record.prompt.sha256, redteam: payload.pack.redteam.result, hookGate: payload.pack.hookGate.result, finalDecision: payload.pack.finalDecision }, now }),
       ]);
       return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, artifactId, eventType: "PACK_IMPORTED" }), 201);
     }
@@ -362,10 +414,16 @@ export async function onRequestPost({ request, env }) {
       if (episode.archived_at) return json({ error: "Restore this episode before locking its script." }, 409);
       const gated = await requireGatedPack(database, payload.episodeId);
       if (!gated) return json({ error: `Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and the correct production decision are required before locking.` }, 409);
-      await database.batch([
-        database.prepare("UPDATE episodes SET status = 'SCRIPT_LOCKED', updated_at = ? WHERE id = ?").bind(now, payload.episodeId),
-        eventStatement(database, { episodeId: payload.episodeId, eventType: "SCRIPT_LOCKED", artifactId: gated.artifact.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { packVersion: gated.artifact.version, packSha256: gated.artifact.payload_sha256 }, now }),
+      const lockResults = await database.batch([
+        database.prepare(`UPDATE episodes SET status = 'SCRIPT_LOCKED', updated_at = ?
+          WHERE id = ? AND archived_at IS NULL AND status IN ('APPROVED', 'SCRIPT_LOCKED')
+            AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')`)
+          .bind(now, payload.episodeId, gated.artifact.artifact_id, gated.artifact.payload_sha256),
+        eventStatementAfterChange(database, { episodeId: payload.episodeId, eventType: "SCRIPT_LOCKED", artifactId: gated.artifact.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { packVersion: gated.artifact.version, packSha256: gated.artifact.payload_sha256 }, now }),
       ]);
+      if (Number(lockResults[0]?.meta?.changes || 0) !== 1) return json({ error: "The prompt or episode stage changed while the script was locking. Review the current episode state and try again." }, 409);
       return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, artifactId: gated.artifact.artifact_id, eventType: "SCRIPT_LOCKED" }));
     }
 
@@ -454,24 +512,33 @@ export async function onRequestPost({ request, env }) {
         PUBLISHED: new Set(["READY"]),
       };
       if (!transitions[episode.status]?.has(payload.status)) return json({ error: "Move the episode one tracked stage at a time." }, 409);
+      let gatedArtifact = null;
       if (["FILMED", "EDITING", "REVIEW", "PUBLISHED"].includes(payload.status)) {
         const gated = await requireGatedPack(database, payload.episodeId);
-        if (!gated) return json({ error: `Import a package with Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and FILM decision before advancing this episode.` }, 409);
+        if (!gated) return json({ error: `Import the current prompt's package with Red-team PASS at ${MINIMUM_REDTEAM_PASS_SCORE}/10 or higher, Hook Gate PASS and the correct production decision before advancing this episode.` }, 409);
+        gatedArtifact = gated.artifact;
       }
       if (payload.status === "PUBLISHED") {
         const publication = await database.prepare("SELECT publication_id FROM content_publications WHERE json_extract(publication_json, '$.episodeId') = ? LIMIT 1").bind(payload.episodeId).first();
         if (!publication) return json({ error: "Connect the published platform post to this episode ID before marking it PUBLISHED." }, 409);
       }
       const statusHash = await sha256Hex(canonicalJson({ episodeId: payload.episodeId, status: payload.status, at: now }));
-      const result = await database.prepare("UPDATE episodes SET status = ?, updated_at = ? WHERE id = ?").bind(payload.status, now, payload.episodeId).run();
-      if (Number(result.meta?.changes || 0) !== 1) return json({ error: "Episode stage was not changed." }, 409);
-      await eventStatement(database, { episodeId: payload.episodeId, eventType: payload.status === "SCRIPT_LOCKED" ? "SCRIPT_LOCKED" : "STATUS_CHANGED", idempotencyKey: "status:" + crypto.randomUUID(), payloadHash: statusHash, metadata: { status: payload.status }, now }).run();
-    } else if (payload.action === "save_production_pack") {
-      const episode = await database.prepare("SELECT id, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
-      if (!episode) return json({ error: "Episode was not found." }, 404);
-      if (episode.archived_at) return json({ error: "Restore this episode before saving its production pack." }, 409);
-      const result = await database.prepare("UPDATE episodes SET production_pack_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(payload.pack), now, payload.episodeId).run();
-      if (Number(result.meta?.changes || 0) !== 1) return json({ error: "Episode pack was not changed." }, 409);
+      const statusEventKey = "status:" + crypto.randomUUID();
+      const statusMetadata = { status: payload.status };
+      const statusUpdate = gatedArtifact
+        ? database.prepare(`UPDATE episodes SET status = ?, updated_at = ?
+            WHERE id = ? AND status = ? AND archived_at IS NULL
+              AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')`)
+          .bind(payload.status, now, payload.episodeId, episode.status, gatedArtifact.artifact_id, gatedArtifact.payload_sha256)
+        : database.prepare("UPDATE episodes SET status = ?, updated_at = ? WHERE id = ? AND status = ? AND archived_at IS NULL")
+          .bind(payload.status, now, payload.episodeId, episode.status);
+      const statusResults = await database.batch([
+        statusUpdate,
+        eventStatementAfterChange(database, { episodeId: payload.episodeId, eventType: "STATUS_CHANGED", artifactId: gatedArtifact?.artifact_id || null, idempotencyKey: statusEventKey, payloadHash: statusHash, metadata: statusMetadata, now }),
+      ]);
+      if (Number(statusResults[0]?.meta?.changes || 0) !== 1) return json({ error: "The prompt or episode stage changed while advancing. Review the current episode state and try again." }, 409);
     } else if (payload.action === "save_review") {
       const manifest = payload.manifest;
       const episode = await database.prepare("SELECT id, status, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
@@ -484,17 +551,42 @@ export async function onRequestPost({ request, env }) {
       const priorReview = await database.prepare("SELECT id FROM video_reviews WHERE episode_id = ? AND video_sha256 = ? AND mode = ?").bind(payload.episodeId, manifest.video.sha256.toLowerCase(), manifest.mode).first();
       if (priorReview) return json(await overview(database));
       const reviewHash = await sha256Hex(canonicalJson(manifest));
-      await database.batch([
+      const reviewId = crypto.randomUUID();
+      const nextStatus = result === "READY" ? "READY" : "REVIEW";
+      const reviewResults = await database.batch([
         database.prepare(`INSERT INTO video_reviews
           (id, episode_id, version_label, video_sha256, mode, result, score, manifest_json, reviewed_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (episode_id, video_sha256, mode) DO NOTHING`).bind(crypto.randomUUID(), payload.episodeId, manifest.label.trim(), manifest.video.sha256.toLowerCase(), manifest.mode, result, Number.isFinite(manifest.review?.score) ? manifest.review.score : null, JSON.stringify(manifest), now),
-        database.prepare("UPDATE episodes SET status = ?, updated_at = ? WHERE id = ?").bind(result === "READY" ? "READY" : "REVIEW", now, payload.episodeId),
-        eventStatement(database, { episodeId: payload.episodeId, eventType: "VIDEO_REVIEWED", idempotencyKey: "review:" + payload.episodeId + ":" + manifest.video.sha256.toLowerCase() + ":" + manifest.mode, payloadHash: reviewHash, metadata: { label: manifest.label.trim(), mode: manifest.mode, result, score: Number.isFinite(manifest.review?.score) ? manifest.review.score : null }, now }),
+          SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+          WHERE EXISTS (
+            SELECT 1 FROM episodes
+            WHERE id = ? AND status = ? AND archived_at IS NULL
+              AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+              AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')
+          )
+          ON CONFLICT (episode_id, video_sha256, mode) DO NOTHING`)
+          .bind(reviewId, payload.episodeId, manifest.label.trim(), manifest.video.sha256.toLowerCase(), manifest.mode, result, Number.isFinite(manifest.review?.score) ? manifest.review.score : null, JSON.stringify(manifest), now, payload.episodeId, episode.status, gated.artifact.artifact_id, gated.artifact.payload_sha256),
+        database.prepare(`UPDATE episodes SET status = ?, updated_at = ?
+          WHERE id = ? AND status = ? AND archived_at IS NULL
+            AND json_extract(production_pack_json, '$.latestPackage.artifactId') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.sha256') = ?
+            AND json_extract(production_pack_json, '$.latestPackage.promptSha256') = json_extract(production_pack_json, '$.prompt.sha256')
+            AND EXISTS (SELECT 1 FROM video_reviews WHERE id = ?)`)
+          .bind(nextStatus, now, payload.episodeId, episode.status, gated.artifact.artifact_id, gated.artifact.payload_sha256, reviewId),
+        eventStatementAfterChange(database, { episodeId: payload.episodeId, eventType: "VIDEO_REVIEWED", artifactId: gated.artifact.artifact_id, idempotencyKey: "review:" + payload.episodeId + ":" + manifest.video.sha256.toLowerCase() + ":" + manifest.mode, payloadHash: reviewHash, metadata: { label: manifest.label.trim(), mode: manifest.mode, result, score: Number.isFinite(manifest.review?.score) ? manifest.review.score : null }, now }),
       ]);
+      if (Number(reviewResults[1]?.meta?.changes || 0) !== 1) {
+        const concurrentReview = await database.prepare("SELECT id FROM video_reviews WHERE episode_id = ? AND video_sha256 = ? AND mode = ?").bind(payload.episodeId, manifest.video.sha256.toLowerCase(), manifest.mode).first();
+        if (concurrentReview) return json(await overview(database));
+        return json({ error: "The prompt, package or episode stage changed while saving the review. Review the current episode state and try again." }, 409);
+      }
     }
     return json(await overview(database));
   } catch (error) {
     console.error(JSON.stringify({ message: "Episode workflow write failed", action: payload.action, error: String(error?.message || error) }));
+    if (payload.action === "import_production_pack" && /FOREIGN KEY constraint failed/i.test(String(error?.message || error))) {
+      return json({ error: "The prompt changed while the package was importing. Copy the current prompt and import its newly audited package." }, 409);
+    }
     return json({ error: "The episode update could not be saved." }, 503);
   }
 }

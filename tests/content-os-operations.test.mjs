@@ -178,20 +178,20 @@ test("journey migration fails closed instead of guessing the meaning of legacy s
 test("all Content OS migrations apply together and keep workflow history append-only", async () => {
   const database = new DatabaseSync(":memory:");
   try {
-    for (let number = 1; number <= 9; number += 1) {
-      const names = [
-        "0001_content_os_state.sql",
-        "0002_content_os_v23_hardening.sql",
-        "0003_episode_workflow.sql",
-        "0004_analytics_connectors.sql",
-        "0005_episode_tracking.sql",
-        "0006_episode_management.sql",
-        "0007_practice_and_feedback_workflows.sql",
-        "0008_workflow_concurrency_hardening.sql",
-        "0009_practice_client_journey.sql",
-      ];
-      database.exec(await readFile(new URL(`../migrations/${names[number - 1]}`, import.meta.url), "utf8"));
-    }
+    const names = [
+      "0001_content_os_state.sql",
+      "0002_content_os_v23_hardening.sql",
+      "0003_episode_workflow.sql",
+      "0004_analytics_connectors.sql",
+      "0005_episode_tracking.sql",
+      "0006_episode_management.sql",
+      "0007_practice_and_feedback_workflows.sql",
+      "0008_workflow_concurrency_hardening.sql",
+      "0009_practice_client_journey.sql",
+      "0010_private_episode_number.sql",
+      "0011_episode_artifact_carousel_decision.sql",
+    ];
+    for (const name of names) database.exec(await readFile(new URL(`../migrations/${name}`, import.meta.url), "utf8"));
     database.prepare(`INSERT INTO practice_clients
       (case_id, display_name, child_age, region, concern, stage, service_code, next_action, source_status,
        known_facts_json, open_questions_json, boundary_flags_json, revision, created_at, updated_at)
