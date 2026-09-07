@@ -2,9 +2,9 @@
 
 ## Coordinated review draft
 
-**Status:** Draft only. Not effective. Not authorised for public use.  
-**Prepared:** 7 September 2026  
-**Surfaces:** Terms, Cancellation Policy, Privacy Policy  
+**Status:** Draft only. Not effective. Not authorised for public use.
+**Prepared:** 7 September 2026
+**Surfaces:** Terms, Cancellation Policy, Privacy Policy
 
 Use this as one controlled legal-review source. Do not paste isolated clauses into the live website. After qualified review, revise this source first, assign one effective version, then update every surface together.
 
@@ -13,6 +13,8 @@ Use this as one controlled legal-review source. Do not paste isolated clauses in
 ### Status and application
 
 These proposed service terms apply only after APC supplies them before payment and records the parent or purchaser's affirmative acceptance. They do not change an existing client's agreement retrospectively. Paid support remains subject to individual Founder suitability, capacity, and availability review.
+
+Autism Pathways Consulting is operated by CJ Special and Inclusive Consultancy, registration 003030209-T / 201903282307. Public business/service address: `[REQUIRED BEFORE ONLINE SALE: CJ'S HOME ADDRESS MUST NOT BE USED OR PUBLISHED]`. Email: cjlim@autismpathwaysconsulting.com. Telephone: 011-7299 8168.
 
 ### APC's role
 
@@ -23,6 +25,10 @@ APC provides parent education, pattern review, and structured parent support. It
 - Free 15-Min First Step Call: a fit-and-routing conversation. It is not a consultation, assessment, diagnosis, therapy, or advice session.
 - One-Concern Parent Session, RM350: one 45-minute online session for one repeated concern, with focused pattern review, one practical next step, and a concise written next-step summary.
 - APC Home Support Programme, RM1,800: four 60-minute online sessions, normally delivered about once every two weeks over approximately six to eight weeks. It includes a personalised Home Support Plan, implementation review and adjustment, bounded weekly parent updates and brief WhatsApp clarification about the agreed plan during the active programme, and a final written plan or summary. It does not include an additional post-programme check-in, crisis support, unrelated case work, or unlimited messaging.
+
+Recommended Home Support payment structure: RM1,800 total, collected as four RM450 milestone payments. APC collects a milestone only when that stage is ready to begin. APC should not collect the full RM1,800 in advance while using a no-change-of-mind-refund policy.
+
+The displayed amount is the total amount APC currently charges. APC does not currently add a separate booking fee or service-tax amount. This is a statement of current charging practice, not a claim that sole proprietors are exempt from tax. If APC becomes legally required to collect a tax or other mandatory charge, the complete revised total must be disclosed and accepted before payment.
 
 ### Information before payment and acceptance
 
@@ -36,7 +42,11 @@ If a programme remains unfinished, APC will confirm the recorded sessions delive
 
 ### Cancellations, early closure, and refunds
 
-The Cancellation Policy forms part of the accepted agreement. No system makes an automatic session-use, programme-closure, credit, refund, or consumer-rights decision. Nothing in these terms excludes or limits a right or remedy that cannot lawfully be excluded or limited under Malaysian law.
+The Cancellation and Refund Policy forms part of the accepted agreement. APC does not provide refunds for parent change of mind, changed priorities, unavailability, inactivity, cancellation, or non-attendance. The detailed policy provides rescheduling and discretionary-credit options and distinguishes those situations from APC non-delivery, service failure, and remedies required by Malaysian law. No system makes an automatic session-use, programme-closure, credit, refund, or consumer-rights decision. Nothing in these terms excludes or limits a right or remedy that cannot lawfully be excluded or limited under Malaysian law.
+
+### Home Support communication boundary
+
+During an active Home Support Programme, one designated parent may send one consolidated implementation update or question per calendar week through the designated WhatsApp number, as up to five short bullet points or one voice note up to three minutes. APC normally provides one substantive response within two business days, Monday to Friday, 10:00 a.m. to 5:00 p.m. Malaysia time, excluding federal and Selangor public holidays and announced closures, plus one brief clarification if needed. New concerns, lengthy histories, file or observation reviews, and urgent or emergency matters are outside this channel.
 
 ### Parent responsibilities
 
@@ -75,9 +85,15 @@ The four-session Home Support Programme is normally delivered about once every t
 
 APC may send a written reactivation message with a seven-day response request and one reminder. The parent may book, agree a dated pause, or discuss early closure. No paid session is automatically forfeited and no refund is automatically decided because the parent does not respond or because the intended period has passed. Active between-session clarification may be paused while the programme is dormant.
 
-### Early closure, unused sessions, credits, and refunds
+### Cancellations, early closure, credits, and required remedies
 
-Any financial outcome must consider the work delivered, unused paid sessions, the reason for closure, exceptional circumstances, the accepted agreement, and applicable Malaysian law. APC will give a written decision. No blanket no-refund rule is proposed.
+For the RM350 session, payment secures the appointment and APC's preparation. With at least 24 hours' notice, the parent may use one reschedule, subject to availability. APC does not provide a cash refund for parent cancellation or non-attendance. A later cancellation or no-show normally uses the session, subject to the exception process and applicable legal rights.
+
+For the RM1,800 programme, the recommended payment structure is four RM450 milestone payments. A milestone begins only when APC sends written confirmation, no earlier than 48 hours before its scheduled session. Once a milestone begins, its payment is non-refundable for parent change of mind, cancellation, non-attendance, inactivity, or early closure. A future milestone that has not begun is not charged. With at least 24 hours' notice, the parent may reschedule the session attached to an active milestone, subject to availability.
+
+If APC cannot deliver a paid service or milestone within 14 calendar days of the original date, the parent may choose another agreed date or the refund or other remedy required for the undelivered work. This is not a parent change-of-mind refund. Where Malaysian law gives the parent a right to correction, repeat performance, cancellation, refund, compensation, or another remedy, this policy does not remove it.
+
+APC manually reviews sudden illness, hospitalisation, bereavement, serious family or safety disruption, material technical failure outside the parent's reasonable control, and comparably serious events. APC may offer a dated service credit or additional reschedule, records the relevant facts and reasons, requests no more sensitive information than necessary, and applies the criteria consistently. A credit does not replace a mandatory legal remedy unless the parent lawfully agrees after the issue arises.
 
 ### Existing clients and legal rights
 
@@ -87,7 +103,7 @@ A new completion window or consequence is not applied retrospectively. For a pro
 
 ### Controller and status
 
-Autism Pathways Consulting is operated by CJ Special and Inclusive Consultancy, registration 003030209-T / 201903282307. Insert the complete operating address before online sale or publication. This candidate notice must not be treated as effective until APC completes the data and vendor review and assigns an approved version and effective date.
+Autism Pathways Consulting is operated by CJ Special and Inclusive Consultancy, registration 003030209-T / 201903282307. Public business/service address: `[REQUIRED BEFORE ONLINE SALE: CJ'S HOME ADDRESS MUST NOT BE USED OR PUBLISHED]`. Privacy enquiries may be sent to cjlim@autismpathwaysconsulting.com or 011-7299 8168. This candidate notice must not be treated as effective until APC completes the data and vendor review and assigns an approved version and effective date.
 
 ### Information collected
 
@@ -126,11 +142,21 @@ An approved generative AI workspace may help organise notes or draft parent-faci
 
 ### Retention and security
 
-APC must approve a record-specific retention and deletion schedule before identifiable Practice Console cloud storage is activated. Access should be restricted, accounts protected with multi-factor authentication where available, exports controlled, backups and deletions governed, and access or deletion actions recorded.
+Unless a longer period is legally required or a documented legal hold applies, APC proposes to keep:
+
+- enquiry records for 12 months after the last meaningful contact;
+- detailed intake, facilitator, session, and child-related working notes for 24 months after service completion or closure;
+- essential agreement, acceptance, invoice, payment, refund, and accounting records for seven years from the applicable tax-return year;
+- material complaint and dispute records for seven years after closure;
+- operational WhatsApp content for 90 days after service completion, after material service decisions have been transferred to the controlled client record;
+- security and access logs for 12 months; and
+- recoverable backups for no more than 90 further days.
+
+When the applicable period ends, APC should delete or irreversibly anonymise the record. A deletion request does not override a legal duty to retain essential records, but APC should explain any refusal or delayed deletion. Access must be restricted, accounts protected with multi-factor authentication where available, exports controlled, and access and deletion actions logged.
 
 ### Data incidents
 
-APC must maintain an incident log and promptly assess suspected loss, unauthorised access, disclosure, alteration, or destruction. Where notification duties apply, APC must follow the current Personal Data Protection Commissioner requirements for notification to the Commissioner and affected people.
+APC must maintain an incident log and immediately contain and assess suspected loss, unauthorised access, disclosure, alteration, or destruction. Where the current notification criteria are met, APC must notify the Personal Data Protection Commissioner as soon as practicable and no later than 72 hours from occurrence, and notify affected people within the applicable current period. APC must preserve evidence, record the decision, and document corrective action.
 
 ### Individual rights
 
@@ -146,14 +172,11 @@ Retain the current reviewed Calm Companion data-flow section only if its databas
 
 ## Required completion fields
 
-1. Full business operating address.
-2. Exact tax status and any other cost included in the displayed full price.
-3. Final refund and unused-session treatment.
-4. Exact between-session support days, response window, volume, and escalation rule.
-5. Record-specific retention periods.
-6. Provider roles, countries or transfer routes, contracts, and deletion controls.
-7. Child and sensitive-data consent wording.
-8. Final limitation-of-liability wording.
-9. Acceptance method and durable-copy implementation.
-10. Qualified Malaysian legal approval reference, final version, and effective date.
-
+1. Obtain and verify a valid public business/service address. CJ's home address is prohibited from publication.
+2. Confirm APC's SST registration and classification with a qualified Malaysian tax adviser or Royal Malaysian Customs; sole-proprietor status alone is not the test.
+3. Obtain Malaysian legal review of the no-change-of-mind-refund policy, milestone billing, late cancellation, APC non-delivery, mandatory remedies, liability wording, and child/sensitive-data consent.
+4. Capacity-test the proposed WhatsApp boundary.
+5. Complete the vendor, transfer, contract, deletion, and incident-control register before identifiable cloud or AI use.
+6. Implement bilingual pre-payment disclosure, separate affirmative checkboxes, versioned acceptance evidence, and immediate durable copies.
+7. Obtain competent Bahasa Malaysia translation and Malaysian legal review.
+8. Assign the approved version and effective date and publish every surface together.
