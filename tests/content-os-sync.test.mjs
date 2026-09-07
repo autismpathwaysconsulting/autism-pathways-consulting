@@ -173,6 +173,26 @@ test("browser login accepts a same-site submission without Origin", async () => 
   assert.match(response.headers.get("Set-Cookie"), /__Host-apc_content_os_session=/);
 });
 
+test("login stylesheet is the only unauthenticated Content OS asset", async () => {
+  const accepted = await authorize({
+    env: {},
+    request: new Request("https://example.com/content-os/login.css"),
+    next: () => new Response("login styles", { headers: { "Content-Type": "text/css" } }),
+  });
+  assert.equal(accepted.status, 200);
+  assert.equal(await accepted.text(), "login styles");
+  assert.equal(accepted.headers.get("Cache-Control"), "private, no-store");
+
+  for (const request of [
+    new Request("https://example.com/content-os/app.css"),
+    new Request("https://example.com/content-os/login.css?copy=1"),
+    new Request("https://example.com/content-os/login.css", { method: "POST" }),
+  ]) {
+    const rejected = await authorize({ env: {}, request, next: () => new Response("must not run") });
+    assert.equal(rejected.status, 503);
+  }
+});
+
 test("preview verifier works only for an explicit preview environment", async () => {
   const kv = new MemoryKV();
   await kv.put("apc-content-os:auth:sha256", "9caf06bb4436cdbfa20af9121a626bc1093c4f54b31c0fa937957856135345b6");
