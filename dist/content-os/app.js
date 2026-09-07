@@ -1850,6 +1850,15 @@ function updateSourceForPlatform() {
   renderConnectorState();
 }
 
+function workflowArtifactByReference(episode, artifactType, reference) {
+  if (!episode?.id || !reference?.artifactId || !reference?.sha256 || !Number.isSafeInteger(Number(reference.version))) return null;
+  return (episodeWorkflowState.artifacts || []).find(function (item) {
+    return item.episode_id === episode.id && item.artifact_type === artifactType &&
+      item.artifact_id === reference.artifactId && Number(item.version) === Number(reference.version) &&
+      item.payload_sha256 === reference.sha256;
+  }) || null;
+}
+
 async function buildTrackingPublication(options) {
   const episodeId = text(element("automaticEpisode").value).trim();
   const episode = activeEpisodeRows().find(function (item) { return item.id === episodeId; });
@@ -1863,12 +1872,12 @@ async function buildTrackingPublication(options) {
     : rawPostRef;
   const existingPublication = matchingPublication(platform, postRef);
   if (existingPublication?.episodeId === episodeId) return existingPublication;
-  const promptArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
-    return item.episode_id === episodeId && item.artifact_type === "PROMPT";
-  }).sort(function (left, right) { return Number(right.version) - Number(left.version); })[0];
-  const packArtifact = (episodeWorkflowState.artifacts || []).filter(function (item) {
-    return item.episode_id === episodeId && item.artifact_type === "PRODUCTION_PACK";
-  }).sort(function (left, right) { return Number(right.version) - Number(left.version); })[0];
+  const promptReference = episode.productionPack?.prompt;
+  const promptArtifact = workflowArtifactByReference(episode, "PROMPT", promptReference);
+  const packageReference = episode.productionPack?.latestPackage;
+  const packArtifact = promptArtifact && packageReference?.promptSha256 === promptReference?.sha256
+    ? workflowArtifactByReference(episode, "PRODUCTION_PACK", packageReference)
+    : null;
   const topic = isPlainObject(promptArtifact?.payload?.sourceContext?.topic) ? promptArtifact.payload.sourceContext.topic : {};
   const publication = {
     schemaVersion: ANALYTICS_SCHEMA_VERSION,

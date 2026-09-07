@@ -131,7 +131,7 @@ test("idea actions build a copy-ready script prompt without another required cli
   assert.match(episodeApp, /async function createEpisodeAndBuildPrompt\(episode, sourceContext, requestedFormat = null, navigate = true\)/);
   assert.match(episodeApp, /element\("packEpisode"\)\.value = episode\.id;/);
   assert.match(episodeApp, /action: "create_tracked_prompt"/);
-  assert.match(episodeApp, /element\("promptOutput"\)\.textContent = prompt\.text/);
+  assert.match(episodeApp, /element\("promptOutput"\)\.textContent = promptTextForCodex\(episode\.id\)/);
   assert.match(episodeApp, /createEpisodeAndBuildPrompt\(\{ id: nextEpisodeId\(\), title: topic\.name, researchItemId: null \}, masterContext\(topic\), button\.dataset\.contentFormat/);
   assert.match(episodeApp, /"Create video episode"/);
   assert.match(episodeApp, /"Create carousel post"/);

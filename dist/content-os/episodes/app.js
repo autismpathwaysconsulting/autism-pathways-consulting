@@ -72,6 +72,18 @@ function activePromptArtifact(episodeId) {
     item.payload_sha256 === activePrompt.sha256) || null;
 }
 function latestPrompt(episodeId) { return activePromptArtifact(episodeId)?.payload || null; }
+function promptTextForCodex(episodeId) {
+  const artifact = activePromptArtifact(episodeId);
+  if (!artifact?.payload?.text) return "No tracked prompt is available for this legacy episode.";
+  const binding = { artifactId: artifact.artifact_id, sha256: artifact.payload_sha256 };
+  return [
+    artifact.payload.text,
+    "",
+    "SERVER-ISSUED PROMPT BINDING",
+    "In the final JSON package, replace the promptBinding placeholders with these exact values. Do not alter them:",
+    JSON.stringify(binding, null, 2),
+  ].join("\n");
+}
 function activePackArtifact(episodeId) {
   const record = episodeById(episodeId)?.productionPack;
   const activePrompt = record?.prompt;
@@ -82,6 +94,11 @@ function activePackArtifact(episodeId) {
     item.payload_sha256 === activePackage.sha256) || null;
 }
 function latestPack(episodeId) { return activePackArtifact(episodeId)?.payload || null; }
+function packWithCurrentPromptBinding(episodeId, pack) {
+  const promptArtifact = activePromptArtifact(episodeId);
+  if (!promptArtifact) throw new Error("Build and save the current prompt before editing its package.");
+  return { ...structuredClone(pack), promptBinding: { artifactId: promptArtifact.artifact_id, sha256: promptArtifact.payload_sha256 } };
+}
 function sourceContext(episodeId) { return latestPrompt(episodeId)?.sourceContext || episodeById(episodeId)?.productionPack?.sourceContext || null; }
 function isCarouselFormat(format) { return format === "Carousel post"; }
 function contentTypeForEpisode(episodeId) {
@@ -105,6 +122,7 @@ function packageContract(episodeId, format) {
   const example = carousel ? {
     schemaVersion: PACKAGE_SCHEMA,
     episodeId,
+    promptBinding: { artifactId: "__SERVER_PROMPT_ARTIFACT_ID__", sha256: "__SERVER_PROMPT_SHA256__" },
     contentType: "CAROUSEL",
     masterRules: { version: MASTER_VIDEO_RULES.version, sha256: MASTER_VIDEO_RULES.sha256 },
     redteam: { result: "PASS", score: 9.5, risks: [], fixes: [] },
@@ -133,6 +151,7 @@ function packageContract(episodeId, format) {
   } : {
     schemaVersion: PACKAGE_SCHEMA,
     episodeId,
+    promptBinding: { artifactId: "__SERVER_PROMPT_ARTIFACT_ID__", sha256: "__SERVER_PROMPT_SHA256__" },
     contentType: "VIDEO",
     masterRules: { version: MASTER_VIDEO_RULES.version, sha256: MASTER_VIDEO_RULES.sha256 },
     redteam: { result: "PASS", score: 9.5, risks: [], fixes: [] },
@@ -249,7 +268,7 @@ async function load() {
     element("importEpisode").value = initial.id;
     element("reviewEpisode").value = initial.id;
     const prompt = latestPrompt(initial.id);
-    element("promptOutput").textContent = prompt?.text || "No tracked prompt is available for this legacy episode.";
+    element("promptOutput").textContent = promptTextForCodex(initial.id);
     if (prompt?.format) element("packFormat").value = prompt.format;
     element("preferredScript").value = prompt?.preferredScript || "";
     element("packNotes").value = prompt?.notes || "";
@@ -344,7 +363,7 @@ async function createSelectedTopicPrompts() {
     element("packEpisode").value = lastEpisodeId;
     element("importEpisode").value = lastEpisodeId;
     const prompt = latestPrompt(lastEpisodeId);
-    element("promptOutput").textContent = prompt?.text || "Prompt saved.";
+    element("promptOutput").textContent = promptTextForCodex(lastEpisodeId);
     element("preferredScript").value = prompt?.preferredScript || "";
     element("packNotes").value = prompt?.notes || "";
   }
@@ -356,8 +375,7 @@ function nextAction(episode, packArtifact, publications) {
   if (!packArtifact) return "Next: copy the saved prompt into Codex, then import the final JSON package.";
   if (episode.status === "APPROVED") {
     if (packArtifact.redteam_status !== "PASS" || Number(packArtifact.payload?.redteam?.score || 0) < 9) return "Next: revise the package until the red-team result is PASS at 9/10 or higher.";
-    const correctDecision = carousel ? "PRODUCE" : "FILM";
-    if (packArtifact.hook_gate_status !== "PASS" || packArtifact.final_decision !== correctDecision) return "Next: rework the hook before production.";
+    if (!packPasses(packArtifact)) return "Next: rework the hook before production. A PASS needs at least 4 checks, including Recognition, Emotional Pull and Tension.";
     return carousel ? "Next: lock the approved carousel for design." : "Next: lock the approved script for filming.";
   }
   if (episode.status === "SCRIPT_LOCKED") return carousel ? "Next: design the locked slides, then mark design complete." : "Next: film the locked script, then mark FILMED.";
@@ -371,7 +389,10 @@ function nextAction(episode, packArtifact, publications) {
 }
 function packPasses(packArtifact) {
   const expectedDecision = packArtifact?.payload?.contentType === "CAROUSEL" ? "PRODUCE" : "FILM";
-  return Boolean(packArtifact && packArtifact.redteam_status === "PASS" && Number(packArtifact.payload?.redteam?.score || 0) >= 9 && packArtifact.hook_gate_status === "PASS" && packArtifact.final_decision === expectedDecision);
+  const hookGate = packArtifact?.payload?.hookGate;
+  return Boolean(packArtifact && packArtifact.redteam_status === "PASS" && Number(packArtifact.payload?.redteam?.score || 0) >= 9 &&
+    packArtifact.hook_gate_status === "PASS" && Number(hookGate?.yesCount) >= 4 && hookGate?.checks?.slice(0, 3).every(Boolean) &&
+    packArtifact.final_decision === expectedDecision);
 }
 function previousStatus(status) {
   return { APPROVED: "IDEA", SCRIPT_LOCKED: "APPROVED", FILMED: "SCRIPT_LOCKED", EDITING: "FILMED", REVIEW: "EDITING", READY: "REVIEW", PUBLISHED: "READY" }[status] || null;
@@ -856,7 +877,7 @@ async function createEpisodeAndBuildPrompt(episode, sourceContext, requestedForm
     element("importEpisode").value = existing.id;
     element("reviewEpisode").value = existing.id;
     const existingPrompt = latestPrompt(existing.id);
-    element("promptOutput").textContent = existingPrompt?.text || "The existing prompt could not be loaded.";
+    element("promptOutput").textContent = promptTextForCodex(existing.id);
     element("preferredScript").value = existingPrompt?.preferredScript || "";
     element("packNotes").value = existingPrompt?.notes || "";
     if (navigate) element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -870,7 +891,7 @@ async function createEpisodeAndBuildPrompt(episode, sourceContext, requestedForm
   const prompt = promptRecord(episode, format, notes, sourceContext, "");
   await apiRequest({ action: "create_tracked_prompt", episode, prompt, idempotencyKey: uniqueKey("prompt", episode.id) });
   element("packEpisode").value = episode.id;
-  element("promptOutput").textContent = prompt.text;
+  element("promptOutput").textContent = promptTextForCodex(episode.id);
   element("preferredScript").value = "";
   element("importEpisode").value = episode.id;
   if (navigate) {
@@ -890,7 +911,7 @@ async function savePromptRevision() {
   const prompt = promptRecord(episode, format, notes, savedSourceContext, preferredScript);
   setStatus("Saving prompt revision", "The new prompt replaces the active draft but keeps earlier versions.", "saving");
   await apiRequest({ action: "save_prompt_revision", episodeId: episode.id, prompt, idempotencyKey: uniqueKey("prompt-revision", episode.id) });
-  element("promptOutput").textContent = prompt.text;
+  element("promptOutput").textContent = promptTextForCodex(episode.id);
   setStatus("Preferred script saved", episode.id + " has a new immutable prompt version ready to send to Codex.", "success");
   return prompt;
 }
@@ -901,7 +922,7 @@ async function saveScriptDraft(episodeId, container) {
   if (episode.status !== "APPROVED") throw new Error("Move this episode back to APPROVED before changing its script.");
   const fields = [...container.querySelectorAll("[data-script-scene]")];
   if (fields.length !== currentPack.filmingBoard.length) throw new Error("The scene editor is incomplete. Refresh and try again.");
-  const revisedPack = structuredClone(currentPack);
+  const revisedPack = packWithCurrentPromptBinding(episodeId, currentPack);
   revisedPack.filmingBoard = revisedPack.filmingBoard.map((scene, index) => ({ ...scene, spokenWords: fields[index].value.trim() }));
   if (revisedPack.filmingBoard.some(scene => !scene.spokenWords && !isTimedPauseScene(scene))) throw new Error("Every scene needs spoken words or an explicit timed-pause direction.");
   revisedPack.spokenScript = revisedPack.filmingBoard.map(scene => scene.spokenWords.trim()).filter(Boolean).join("\n\n");
@@ -918,7 +939,7 @@ async function saveScriptDraft(episodeId, container) {
   await apiRequest({ action: "save_prompt_revision", episodeId, prompt, idempotencyKey: uniqueKey("script-review-prompt", episodeId) });
   element("packEpisode").value = episodeId;
   element("importEpisode").value = episodeId;
-  element("promptOutput").textContent = prompt.text;
+  element("promptOutput").textContent = promptTextForCodex(episodeId);
   renderFilmingPack(episodeId);
   setStatus("Edited draft saved", "A new review prompt is ready in Step 2. The script cannot be locked until the corrected package passes red-team again.", "success");
 }
@@ -1012,13 +1033,13 @@ async function handleEpisodeClick(event) {
       const pack = latestPack(open);
       if (pack) renderFilmingPack(open, true);
       else {
-        element("promptOutput").textContent = prompt?.text || "No tracked prompt is available for this legacy episode.";
+        element("promptOutput").textContent = promptTextForCodex(open);
         element("pack").scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }
     if (editPack) {
       element("importEpisode").value = editPack;
-      element("packageJson").value = JSON.stringify(latestPack(editPack), null, 2);
+      element("packageJson").value = JSON.stringify(packWithCurrentPromptBinding(editPack, latestPack(editPack)), null, 2);
       element("import").scrollIntoView({ behavior: "smooth", block: "start" });
       element("packageJson").focus({ preventScroll: true });
     }
@@ -1087,7 +1108,7 @@ element("packEpisode").addEventListener("change", () => {
   const episodeId = element("packEpisode").value;
   element("importEpisode").value = episodeId;
   const prompt = latestPrompt(episodeId);
-  element("promptOutput").textContent = prompt?.text || "No tracked prompt is available for this legacy episode.";
+  element("promptOutput").textContent = promptTextForCodex(episodeId);
   if (prompt?.format) element("packFormat").value = prompt.format;
   element("preferredScript").value = prompt?.preferredScript || "";
   element("packNotes").value = prompt?.notes || "";
@@ -1104,7 +1125,7 @@ element("copyPrompt").addEventListener("click", async () => {
     const needsSave = !storedPrompt || (storedPrompt.preferredScript || "") !== preferredScript || (storedPrompt.notes || "") !== notes || storedPrompt.format !== format;
     const prompt = needsSave ? await savePromptRevision() : storedPrompt;
     if (!prompt?.text) throw new Error("Build and save the episode prompt first.");
-    await navigator.clipboard.writeText(prompt.text);
+    await navigator.clipboard.writeText(promptTextForCodex(episodeId));
     element("importEpisode").value = episodeId;
     element("import").scrollIntoView({ behavior: "smooth", block: "start" });
     element("pasteAndImportPackage").focus({ preventScroll: true });

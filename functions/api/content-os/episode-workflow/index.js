@@ -93,10 +93,15 @@ function validatePrompt(prompt) {
   if (!canonicalPromptMaster(prompt.masterRules)) return "Master rule identity does not match the canonical APC master.";
   return null;
 }
-function validateProductionPack(pack) {
+function validPromptBinding(binding) {
+  return exactKeys(binding, ["artifactId", "sha256"]) &&
+    validText(binding.artifactId, 100) && /^[0-9a-f]{64}$/.test(binding.sha256);
+}
+function validateProductionPack(pack, requirePromptBinding = false) {
   const keys = ["schemaVersion", "episodeId", "masterRules", "redteam", "hookGate", "finalDecision", "spokenScript", "filmingBoard", "overlays", "hyperframesPrompt", "visualAssets", "editNotes", "sourceNotes", "platformCopy", "claimCautions"];
-  if (!exactKeys(pack, keys, ["contentType", "carousel"])) return "Imported pack does not match the expected schema.";
+  if (!exactKeys(pack, keys, ["contentType", "carousel", "promptBinding"])) return "Imported pack does not match the expected schema.";
   if (pack.schemaVersion !== PACKAGE_SCHEMA || !validEpisodeId(pack.episodeId)) return "Imported pack identity is invalid.";
+  if ((requirePromptBinding || Object.hasOwn(pack, "promptBinding")) && !validPromptBinding(pack.promptBinding)) return "Imported pack prompt binding is invalid.";
   const contentType = pack.contentType || "VIDEO";
   if (!CONTENT_TYPES.has(contentType)) return "Imported pack content type is invalid.";
   if (!canonicalPackMaster(pack.masterRules)) return "Imported pack master rule identity does not match the canonical APC master.";
@@ -131,7 +136,7 @@ export function validateAction(payload) {
   }
   if (payload.action === "import_production_pack") {
     if (!exactKeys(payload, ["action", "episodeId", "pack", "idempotencyKey"]) || !validEpisodeId(payload.episodeId) || !validIdempotencyKey(payload.idempotencyKey)) return "Production pack import request is invalid.";
-    const error = validateProductionPack(payload.pack);
+    const error = validateProductionPack(payload.pack, true);
     if (error) return error;
     if (payload.pack.episodeId !== payload.episodeId) return "Imported pack belongs to a different episode.";
     return null;
@@ -364,17 +369,11 @@ export async function onRequestPost({ request, env }) {
       const record = safeJson(episode.production_pack_json) || {};
       if (record.masterRules && (record.masterRules.version !== payload.pack.masterRules.version || record.masterRules.sha256 !== payload.pack.masterRules.sha256)) return json({ error: "Imported pack does not match the episode's locked master rules." }, 409);
       if (!/^[0-9a-f]{64}$/.test(record.prompt?.sha256 || "")) return json({ error: "Save a current tracked prompt before importing its production pack." }, 409);
+      if (payload.pack.promptBinding.artifactId !== record.prompt.artifactId || payload.pack.promptBinding.sha256 !== record.prompt.sha256) return json({ error: "That package was not generated from the current tracked prompt. Copy the current prompt and import its newly audited package." }, 409);
       const packHash = await sha256Hex(canonicalJson(payload.pack));
       const samePack = await database.prepare("SELECT artifact_id, version FROM episode_artifacts WHERE episode_id = ? AND artifact_type = 'PRODUCTION_PACK' AND payload_sha256 = ?").bind(payload.episodeId, packHash).first();
       if (samePack && record.latestPackage?.artifactId === samePack.artifact_id && record.latestPackage?.promptSha256 === record.prompt.sha256) return json(await overview(database, { idempotent: true, episodeId: payload.episodeId, artifactId: samePack.artifact_id, eventType: "PACK_IMPORTED" }));
-      if (samePack) {
-        const nextRecord = { ...record, schemaVersion: "apc.episode_record.v3", episodeId: payload.episodeId, masterRules: payload.pack.masterRules, latestPackage: { artifactId: samePack.artifact_id, version: Number(samePack.version), sha256: packHash, promptSha256: record.prompt.sha256 }, package: payload.pack };
-        await database.batch([
-          database.prepare("UPDATE episodes SET status = 'APPROVED', production_pack_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(nextRecord), now, payload.episodeId),
-          eventStatement(database, { episodeId: payload.episodeId, eventType: "PACK_IMPORTED", artifactId: samePack.artifact_id, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { version: Number(samePack.version), packSha256: packHash, promptSha256: record.prompt.sha256, redteam: payload.pack.redteam.result, hookGate: payload.pack.hookGate.result, finalDecision: payload.pack.finalDecision, reusedArtifact: true }, now }),
-        ]);
-        return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, artifactId: samePack.artifact_id, eventType: "PACK_IMPORTED" }));
-      }
+      if (samePack) return json({ error: "That package belongs to an earlier prompt state. Generate and import a newly audited package for the current prompt." }, 409);
       const latest = await database.prepare("SELECT COALESCE(MAX(version), 0) AS version FROM episode_artifacts WHERE episode_id = ? AND artifact_type = 'PRODUCTION_PACK'").bind(payload.episodeId).first();
       const version = Number(latest?.version || 0) + 1;
       const artifactId = crypto.randomUUID();
@@ -382,8 +381,19 @@ export async function onRequestPost({ request, env }) {
       await database.batch([
         database.prepare(`INSERT INTO episode_artifacts
           (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
-          VALUES (?, ?, 'PRODUCTION_PACK', ?, ?, ?, ?, ?, ?, ?)`).bind(artifactId, payload.episodeId, version, packHash, JSON.stringify(payload.pack), payload.pack.redteam.result, payload.pack.hookGate.result, payload.pack.finalDecision, now),
-        database.prepare("UPDATE episodes SET status = 'APPROVED', production_pack_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(nextRecord), now, payload.episodeId),
+          SELECT ?, ?, 'PRODUCTION_PACK', ?, ?, ?, ?, ?, ?, ?
+          WHERE EXISTS (
+            SELECT 1 FROM episodes
+            WHERE id = ? AND archived_at IS NULL
+              AND json_extract(production_pack_json, '$.prompt.artifactId') = ?
+              AND json_extract(production_pack_json, '$.prompt.sha256') = ?
+          )`).bind(artifactId, payload.episodeId, version, packHash, JSON.stringify(payload.pack), payload.pack.redteam.result, payload.pack.hookGate.result, payload.pack.finalDecision, now, payload.episodeId, record.prompt.artifactId, record.prompt.sha256),
+        database.prepare(`UPDATE episodes SET status = 'APPROVED', production_pack_json = ?, updated_at = ?
+          WHERE id = ? AND archived_at IS NULL
+            AND json_extract(production_pack_json, '$.prompt.artifactId') = ?
+            AND json_extract(production_pack_json, '$.prompt.sha256') = ?
+            AND EXISTS (SELECT 1 FROM episode_artifacts WHERE artifact_id = ?)`)
+          .bind(JSON.stringify(nextRecord), now, payload.episodeId, record.prompt.artifactId, record.prompt.sha256, artifactId),
         eventStatement(database, { episodeId: payload.episodeId, eventType: "PACK_IMPORTED", artifactId, idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { version, packSha256: packHash, promptSha256: record.prompt.sha256, redteam: payload.pack.redteam.result, hookGate: payload.pack.hookGate.result, finalDecision: payload.pack.finalDecision }, now }),
       ]);
       return json(await overview(database, { idempotent: false, episodeId: payload.episodeId, artifactId, eventType: "PACK_IMPORTED" }), 201);
@@ -525,6 +535,9 @@ export async function onRequestPost({ request, env }) {
     return json(await overview(database));
   } catch (error) {
     console.error(JSON.stringify({ message: "Episode workflow write failed", action: payload.action, error: String(error?.message || error) }));
+    if (payload.action === "import_production_pack" && /FOREIGN KEY constraint failed/i.test(String(error?.message || error))) {
+      return json({ error: "The prompt changed while the package was importing. Copy the current prompt and import its newly audited package." }, 409);
+    }
     return json({ error: "The episode update could not be saved." }, 503);
   }
 }
