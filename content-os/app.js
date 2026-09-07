@@ -3355,6 +3355,7 @@ function renderMasterVideoRulesStatus() {
 
 function episodePackageContractLines(episodeId) {
   return [
+    "PRIVATE TRACKING ONLY: The tracked episode ID and episode number are for CJ inside Content OS. Never place either in spoken words, on-screen text, overlay cards, source pills, public captions, titles, descriptions or viewer-facing filenames.",
     "",
     "MANDATORY FINAL RED-TEAM",
     "Before presenting the final version, run /redteam on factual accuracy, evidence scope, autism-community framing, parent shame, burden framing, overclaiming, production alignment and likely backlash. Correct all fixable issues before the final output.",

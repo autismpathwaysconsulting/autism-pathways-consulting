@@ -41,7 +41,7 @@ test("accepts the governed and tracked episode workflow actions", () => {
     { action: "save_prompt_revision", episodeId: "EP09", prompt: { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Revised prompt", sourceContext: { sourceType: "manual" }, masterRules }, idempotencyKey: "prompt-revision:EP09:12345678" },
     { action: "import_production_pack", episodeId: "EP09", pack: importedPack(), idempotencyKey: "pack:EP09:12345678" },
     { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:12345678" },
-    { action: "update_episode_details", episodeId: "EP09", title: "A revised useful episode", idempotencyKey: "episode-edit:EP09:12345678" },
+    { action: "update_episode_details", episodeId: "EP09", title: "A revised useful episode", displayNumber: 2, idempotencyKey: "episode-edit:EP09:12345678" },
     { action: "set_episode_archived", episodeId: "EP09", archived: true, idempotencyKey: "archive:EP09:12345678" },
     { action: "update_episode_status", episodeId: "EP09", status: "SCRIPT_LOCKED" },
     { action: "save_production_pack", episodeId: "EP09", pack: { prompt: "Create the pack" } },
@@ -55,12 +55,14 @@ test("rejects unknown fields and invalid identities", () => {
   assert.match(validateAction({ action: "update_episode_status", episodeId: "EP09", status: "DONE" }), /invalid/i);
   assert.match(validateAction({ action: "save_review", episodeId: "EP09", manifest: { label: "v1", mode: "full", video: {} } }), /identity/i);
   assert.match(validateAction({ action: "create_episode", episode: { id: "EP09", title: "Test", researchItemId: null }, extra: true }), /schema/i);
+  assert.match(validateAction({ action: "update_episode_details", episodeId: "EP09", title: "Test", displayNumber: 2.5, idempotencyKey: "episode-edit:EP09:12345678" }), /whole number/i);
 });
 
 test("episode schema extends the existing governed research and analytics stores", async () => {
   const migration = await readFile(new URL("../migrations/0003_episode_workflow.sql", import.meta.url), "utf8");
   const trackingMigration = await readFile(new URL("../migrations/0005_episode_tracking.sql", import.meta.url), "utf8");
   const managementMigration = await readFile(new URL("../migrations/0006_episode_management.sql", import.meta.url), "utf8");
+  const privateNumberMigration = await readFile(new URL("../migrations/0010_private_episode_number.sql", import.meta.url), "utf8");
   assert.match(migration, /CREATE TABLE IF NOT EXISTS episodes/);
   assert.match(migration, /REFERENCES research_items\(item_id\)/);
   assert.match(migration, /CREATE TABLE IF NOT EXISTS video_reviews/);
@@ -72,6 +74,9 @@ test("episode schema extends the existing governed research and analytics stores
   assert.doesNotMatch(trackingMigration, /ALTER TABLE content_(?:publications|analytics_snapshots)/);
   assert.match(managementMigration, /ALTER TABLE episodes ADD COLUMN archived_at TEXT/);
   assert.doesNotMatch(managementMigration, /DELETE FROM|DROP TABLE|ALTER TABLE content_(?:publications|analytics_snapshots)/);
+  assert.match(privateNumberMigration, /ALTER TABLE episodes ADD COLUMN display_number INTEGER/);
+  assert.match(privateNumberMigration, /CREATE UNIQUE INDEX IF NOT EXISTS idx_episodes_active_display_number/);
+  assert.doesNotMatch(privateNumberMigration, /DELETE FROM|DROP TABLE|ALTER TABLE content_(?:publications|analytics_snapshots)/);
 });
 
 test("tracked package contract requires the red-team and five-check filming gate", () => {
@@ -120,6 +125,9 @@ test("Episode Studio uses only the synced APC master rules for filming-pack prom
   assert.match(prompt, /Legacy rule sources allowed: NO/);
   assert.match(episodeApp, /masterVideoRulePromptLines\(\)/);
   assert.match(mainApp, /masterVideoRulePromptLines\(\)/);
+  assert.match(episodeApp, /PRIVATE TRACKING ONLY/);
+  assert.match(episodeApp, /Never include the episode ID or episode number/);
+  assert.match(mainApp, /PRIVATE TRACKING ONLY/);
   assert.doesNotMatch(episodeApp, /DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION/);
   assert.doesNotMatch(mainApp, /DEFAULT CREATIVE MODE: WINNER-RECIPE REPLICATION/);
 });
@@ -146,7 +154,8 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /existingEpisodeForSource/);
   assert.match(episodeApp, /Rebuild it as a revision instead of creating a duplicate/);
   assert.match(episodeApp, /arrangeWorkflowSections/);
-  assert.match(episodeApp, /Edit title and view history/);
+  assert.match(episodeApp, /Edit private number, title and view history/);
+  assert.match(episodeApp, /Internal organisation only\. It is excluded from scripts, overlays and public captions/);
   assert.match(episodeApp, /Possible duplicate/);
   assert.match(episodeApp, /Archive duplicate/);
   assert.match(episodeApp, /Download \.md archive/);
