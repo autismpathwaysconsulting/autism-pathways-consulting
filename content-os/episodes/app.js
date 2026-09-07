@@ -64,8 +64,24 @@ function episodeDisplayNumber(episode) {
   return Number(/^EP(\d+)$/.exec(episode?.id || "")?.[1] || 0);
 }
 function episodeLabel(episode) { return "Episode " + episodeDisplayNumber(episode); }
-function latestPrompt(episodeId) { return latestArtifact(episodeId, "PROMPT")?.payload || null; }
-function latestPack(episodeId) { return latestArtifact(episodeId, "PRODUCTION_PACK")?.payload || null; }
+function activePromptArtifact(episodeId) {
+  const activePrompt = episodeById(episodeId)?.productionPack?.prompt;
+  if (!activePrompt?.artifactId || !activePrompt?.sha256) return latestArtifact(episodeId, "PROMPT");
+  return workflow.artifacts.find(item => item.episode_id === episodeId && item.artifact_type === "PROMPT" &&
+    item.artifact_id === activePrompt.artifactId && Number(item.version) === Number(activePrompt.version) &&
+    item.payload_sha256 === activePrompt.sha256) || null;
+}
+function latestPrompt(episodeId) { return activePromptArtifact(episodeId)?.payload || null; }
+function activePackArtifact(episodeId) {
+  const record = episodeById(episodeId)?.productionPack;
+  const activePrompt = record?.prompt;
+  const activePackage = record?.latestPackage;
+  if (!activePrompt?.sha256 || !activePackage?.artifactId || activePackage.promptSha256 !== activePrompt.sha256) return null;
+  return workflow.artifacts.find(item => item.episode_id === episodeId && item.artifact_type === "PRODUCTION_PACK" &&
+    item.artifact_id === activePackage.artifactId && Number(item.version) === Number(activePackage.version) &&
+    item.payload_sha256 === activePackage.sha256) || null;
+}
+function latestPack(episodeId) { return activePackArtifact(episodeId)?.payload || null; }
 function sourceContext(episodeId) { return latestPrompt(episodeId)?.sourceContext || episodeById(episodeId)?.productionPack?.sourceContext || null; }
 function isCarouselFormat(format) { return format === "Carousel post"; }
 function contentTypeForEpisode(episodeId) {
@@ -483,7 +499,7 @@ function appendEpisodeTimeline(card, episode) {
   card.appendChild(timeline);
 }
 function episodeCard(episode) {
-  const packArtifact = latestArtifact(episode.id, "PRODUCTION_PACK");
+  const packArtifact = activePackArtifact(episode.id);
   const publications = workflow.publications.filter(item => item.episodeId === episode.id);
   const card = node("article", "card episode-workflow-card");
   card.id = episode.archived_at ? "archived-" + episode.id : episode.id;
@@ -547,7 +563,7 @@ function renderWorkflowSteps() {
   const steps = [
     { number: 1, title: "Choose idea", detail: MASTER_TOPIC_BANK.length + " master ideas available", href: "#ideas" },
     { number: 2, title: "Send to Codex", detail: active.filter(item => ["IDEA", "APPROVED"].includes(item.status)).length + " prompt(s) ready", href: "#pack" },
-    { number: 3, title: "Import result", detail: active.filter(item => item.status === "APPROVED" && !latestArtifact(item.id, "PRODUCTION_PACK")).length + " awaiting response", href: "#import" },
+    { number: 3, title: "Import result", detail: active.filter(item => item.status === "APPROVED" && !activePackArtifact(item.id)).length + " awaiting response", href: "#import" },
     { number: 4, title: "Produce + edit", detail: active.filter(item => ["SCRIPT_LOCKED", "FILMED", "EDITING"].includes(item.status)).length + " active", href: "#filming-pack" },
     { number: 5, title: "Final review", detail: active.filter(item => item.status === "REVIEW").length + " awaiting readiness", href: "#results" },
     { number: 6, title: "Publish", detail: active.filter(item => item.status === "READY").length + " ready", href: "/content-os/?from=episodes#results" },
@@ -708,7 +724,7 @@ function renderFilmingPack(episodeId, scroll = false) {
   const viewer = element("filmingPackViewer");
   clear(viewer);
   const episode = episodeById(episodeId);
-  const artifact = latestArtifact(episodeId, "PRODUCTION_PACK");
+  const artifact = activePackArtifact(episodeId);
   const pack = artifact?.payload;
   selectedFilmingEpisodeId = pack ? episodeId : null;
   element("downloadFilmingHtml").disabled = !pack || !["SCRIPT_LOCKED", "FILMED", "EDITING", "REVIEW", "READY", "PUBLISHED"].includes(episode?.status);
@@ -769,7 +785,7 @@ function standalonePackHtml(episode, artifact) {
 }
 function downloadFilmingHtml() {
   const episode = episodeById(selectedFilmingEpisodeId);
-  const artifact = latestArtifact(selectedFilmingEpisodeId, "PRODUCTION_PACK");
+  const artifact = activePackArtifact(selectedFilmingEpisodeId);
   if (!episode || !artifact) return;
   const blob = new Blob([standalonePackHtml(episode, artifact)], { type: "text/html;charset=utf-8" });
   const href = URL.createObjectURL(blob);

@@ -1,15 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { DatabaseSync } from "node:sqlite";
 
-import { MINIMUM_REDTEAM_PASS_SCORE, validateAction } from "../functions/api/content-os/episode-workflow/index.js";
+import { MINIMUM_REDTEAM_PASS_SCORE, onRequestPost, validateAction } from "../functions/api/content-os/episode-workflow/index.js";
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "../content-os/video-rules.js";
 
 const masterRules = {
-  version: "2026-09-06.1",
-  sha256: "8".repeat(64),
-  sourcePath: "02_CONTENT_SYSTEM/APC_Video_Rules_and_Winning_Examples.md",
+  version: MASTER_VIDEO_RULES.version,
+  sha256: MASTER_VIDEO_RULES.sha256,
+  sourcePath: MASTER_VIDEO_RULES.sourcePath,
 };
 
 function importedPack(overrides = {}) {
@@ -56,6 +57,75 @@ function carouselPack(overrides = {}) {
   });
 }
 
+async function migrationSql(number) {
+  const names = [
+    "0001_content_os_state.sql",
+    "0002_content_os_v23_hardening.sql",
+    "0003_episode_workflow.sql",
+    "0004_analytics_connectors.sql",
+    "0005_episode_tracking.sql",
+    "0006_episode_management.sql",
+    "0007_practice_and_feedback_workflows.sql",
+    "0008_workflow_concurrency_hardening.sql",
+    "0009_practice_client_journey.sql",
+    "0010_private_episode_number.sql",
+    "0011_episode_artifact_carousel_decision.sql",
+  ];
+  return readFile(new URL(`../migrations/${names[number - 1]}`, import.meta.url), "utf8");
+}
+
+async function applyMigrations(database, through = 11) {
+  for (let number = 1; number <= through; number += 1) {
+    const sql = await migrationSql(number);
+    database.exec(number === 11 ? `BEGIN;\n${sql}\nCOMMIT;` : sql);
+  }
+}
+
+class SqliteD1Statement {
+  constructor(database, sql, parameters = []) {
+    this.database = database;
+    this.sql = sql;
+    this.parameters = parameters;
+  }
+  bind(...parameters) { return new SqliteD1Statement(this.database, this.sql, parameters); }
+  async first() { return this.database.prepare(this.sql).get(...this.parameters) || null; }
+  async all() { return { success: true, results: this.database.prepare(this.sql).all(...this.parameters) }; }
+  async run() {
+    const result = this.database.prepare(this.sql).run(...this.parameters);
+    return { success: true, meta: { changes: Number(result.changes) } };
+  }
+  executeForBatch() {
+    if (/^\s*(?:SELECT|PRAGMA)\b/i.test(this.sql)) return { success: true, results: this.database.prepare(this.sql).all(...this.parameters) };
+    const result = this.database.prepare(this.sql).run(...this.parameters);
+    return { success: true, meta: { changes: Number(result.changes) } };
+  }
+}
+
+class SqliteD1 {
+  constructor(database) { this.database = database; }
+  prepare(sql) { return new SqliteD1Statement(this.database, sql); }
+  async batch(statements) {
+    this.database.exec("BEGIN");
+    try {
+      const results = statements.map(statement => statement.executeForBatch());
+      this.database.exec("COMMIT");
+      return results;
+    } catch (error) {
+      this.database.exec("ROLLBACK");
+      throw error;
+    }
+  }
+}
+
+async function postWorkflow(database, payload) {
+  const request = new Request("https://example.test/api/content-os/episode-workflow", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Origin": "https://example.test", "X-APC-Content-OS": "1" },
+    body: JSON.stringify(payload),
+  });
+  return onRequestPost({ request, env: { APC_CONTENT_OS_DB: new SqliteD1(database) } });
+}
+
 test("accepts the governed and tracked episode workflow actions", () => {
   const hash = "a".repeat(64);
   const valid = [
@@ -67,7 +137,6 @@ test("accepts the governed and tracked episode workflow actions", () => {
     { action: "update_episode_details", episodeId: "EP09", title: "A revised useful episode", displayNumber: 2, idempotencyKey: "episode-edit:EP09:12345678" },
     { action: "set_episode_archived", episodeId: "EP09", archived: true, idempotencyKey: "archive:EP09:12345678" },
     { action: "update_episode_status", episodeId: "EP09", status: "SCRIPT_LOCKED" },
-    { action: "save_production_pack", episodeId: "EP09", pack: { prompt: "Create the pack" } },
     { action: "save_review", episodeId: "EP09", manifest: { label: "v1", mode: "full", video: { sha256: hash }, review: { status: "NOT_READY" } } },
   ];
   for (const payload of valid) assert.equal(validateAction(payload), null, payload.action);
@@ -79,6 +148,7 @@ test("rejects unknown fields and invalid identities", () => {
   assert.match(validateAction({ action: "save_review", episodeId: "EP09", manifest: { label: "v1", mode: "full", video: {} } }), /identity/i);
   assert.match(validateAction({ action: "create_episode", episode: { id: "EP09", title: "Test", researchItemId: null }, extra: true }), /schema/i);
   assert.match(validateAction({ action: "update_episode_details", episodeId: "EP09", title: "Test", displayNumber: 2.5, idempotencyKey: "episode-edit:EP09:12345678" }), /whole number/i);
+  assert.match(validateAction({ action: "save_production_pack", episodeId: "EP09", pack: { latestPackage: {} } }), /not supported/i);
 });
 
 test("episode schema extends the existing governed research and analytics stores", async () => {
@@ -86,6 +156,7 @@ test("episode schema extends the existing governed research and analytics stores
   const trackingMigration = await readFile(new URL("../migrations/0005_episode_tracking.sql", import.meta.url), "utf8");
   const managementMigration = await readFile(new URL("../migrations/0006_episode_management.sql", import.meta.url), "utf8");
   const privateNumberMigration = await readFile(new URL("../migrations/0010_private_episode_number.sql", import.meta.url), "utf8");
+  const carouselDecisionMigration = await readFile(new URL("../migrations/0011_episode_artifact_carousel_decision.sql", import.meta.url), "utf8");
   assert.match(migration, /CREATE TABLE IF NOT EXISTS episodes/);
   assert.match(migration, /REFERENCES research_items\(item_id\)/);
   assert.match(migration, /CREATE TABLE IF NOT EXISTS video_reviews/);
@@ -100,6 +171,55 @@ test("episode schema extends the existing governed research and analytics stores
   assert.match(privateNumberMigration, /ALTER TABLE episodes ADD COLUMN display_number INTEGER/);
   assert.match(privateNumberMigration, /CREATE UNIQUE INDEX IF NOT EXISTS idx_episodes_active_display_number/);
   assert.doesNotMatch(privateNumberMigration, /DELETE FROM|DROP TABLE|ALTER TABLE content_(?:publications|analytics_snapshots)/);
+  assert.match(carouselDecisionMigration, /'FILM', 'PRODUCE', 'REVISE'/);
+  assert.match(carouselDecisionMigration, /PRAGMA defer_foreign_keys = ON/);
+  assert.match(carouselDecisionMigration, /episode_artifacts is append-only/);
+  assert.match(carouselDecisionMigration, /latestPackage\.promptSha256/);
+  assert.doesNotMatch(carouselDecisionMigration, /ALTER TABLE content_(?:publications|analytics_snapshots)/);
+});
+
+test("carousel decision migration preserves episode history, foreign keys and append-only controls", async () => {
+  const database = new DatabaseSync(":memory:");
+  try {
+    await applyMigrations(database, 10);
+    const promptHash = "a".repeat(64);
+    const packHash = "b".repeat(64);
+    const record = JSON.stringify({
+      schemaVersion: "apc.episode_record.v2",
+      episodeId: "EP09",
+      prompt: { artifactId: "prompt-one", version: 1, sha256: promptHash },
+      latestPackage: { artifactId: "pack-one", version: 1, sha256: packHash },
+    });
+    database.prepare(`INSERT INTO episodes
+      (id, title, status, production_pack_json, created_at, updated_at, archived_at, display_number)
+      VALUES ('EP09', 'Synthetic episode', 'APPROVED', ?, '2026-09-07T00:00:00Z', '2026-09-07T00:00:00Z', NULL, 9)`).run(record);
+    database.prepare(`INSERT INTO episode_artifacts
+      (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
+      VALUES ('prompt-one', 'EP09', 'PROMPT', 1, ?, '{}', 'NOT_APPLICABLE', NULL, NULL, '2026-09-07T00:00:00Z')`).run(promptHash);
+    database.prepare(`INSERT INTO episode_artifacts
+      (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
+      VALUES ('pack-one', 'EP09', 'PRODUCTION_PACK', 1, ?, '{}', 'PASS', 'PASS', 'FILM', '2026-09-07T00:01:00Z')`).run(packHash);
+    database.prepare(`INSERT INTO episode_events
+      (event_id, episode_id, event_type, artifact_id, idempotency_key, payload_sha256, metadata_json, created_at)
+      VALUES ('event-one', 'EP09', 'PACK_IMPORTED', 'pack-one', 'event:EP09:12345678', ?, '{}', '2026-09-07T00:01:00Z')`).run(packHash);
+
+    database.exec(`BEGIN;\n${await migrationSql(11)}\nCOMMIT;`);
+
+    assert.equal(database.prepare("SELECT COUNT(*) AS count FROM episode_artifacts").get().count, 2);
+    assert.equal(database.prepare("SELECT artifact_id FROM episode_events WHERE event_id = 'event-one'").get().artifact_id, "pack-one");
+    assert.deepEqual(database.prepare("PRAGMA foreign_key_check").all(), []);
+    const migratedRecord = JSON.parse(database.prepare("SELECT production_pack_json FROM episodes WHERE id = 'EP09'").get().production_pack_json);
+    assert.equal(migratedRecord.latestPackage.promptSha256, promptHash);
+    database.prepare(`INSERT INTO episode_artifacts
+      (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
+      VALUES ('pack-two', 'EP09', 'PRODUCTION_PACK', 2, ?, '{}', 'PASS', 'PASS', 'PRODUCE', '2026-09-07T00:02:00Z')`).run("c".repeat(64));
+    assert.throws(() => database.prepare("UPDATE episode_artifacts SET final_decision = 'REVISE' WHERE artifact_id = 'pack-two'").run(), /append-only/);
+    assert.throws(() => database.prepare(`INSERT INTO episode_artifacts
+      (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
+      VALUES ('pack-three', 'EP09', 'PRODUCTION_PACK', 3, ?, '{}', 'PASS', 'PASS', 'PUBLISH', '2026-09-07T00:03:00Z')`).run("d".repeat(64)), /CHECK constraint failed/);
+  } finally {
+    database.close();
+  }
 });
 
 test("tracked package contract requires the red-team and five-check filming gate", () => {
@@ -138,6 +258,80 @@ test("video packs accept explicit timed pauses but reject accidental blank scene
     filmingBoard: [{ start: "0:00", end: "0:05", spokenWords: "", direction: "Talking head", props: ["None"], actions: ["Hold eye contact"] }],
   });
   assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: accidentalBlank, idempotencyKey: "pack:EP09:blank0001" }), /production content/i);
+});
+
+test("tracked prompts and packs must use the exact canonical master identity", () => {
+  const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Current prompt", sourceContext: { sourceType: "manual" }, masterRules };
+  assert.equal(validateAction({ action: "save_prompt_revision", episodeId: "EP09", prompt, idempotencyKey: "prompt:EP09:canonical1" }), null);
+  assert.match(validateAction({ action: "save_prompt_revision", episodeId: "EP09", prompt: { ...prompt, masterRules: { ...masterRules, sha256: "f".repeat(64) } }, idempotencyKey: "prompt:EP09:forged001" }), /canonical APC master/i);
+  assert.match(validateAction({ action: "save_prompt_revision", episodeId: "EP09", prompt: { ...prompt, masterRules: { ...masterRules, sourcePath: "archive/old-rules.md" } }, idempotencyKey: "prompt:EP09:forged002" }), /canonical APC master/i);
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: importedPack({ masterRules: { version: "2026-09-06.0", sha256: masterRules.sha256 } }), idempotencyKey: "pack:EP09:forged0001" }), /canonical APC master/i);
+});
+
+test("a prompt revision invalidates the prior pack and prevents stale script locking", async () => {
+  const database = new DatabaseSync(":memory:");
+  try {
+    await applyMigrations(database);
+    const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Original prompt", sourceContext: { sourceType: "manual" }, masterRules };
+    let response = await postWorkflow(database, {
+      action: "create_tracked_prompt",
+      episode: { id: "EP09", title: "Synthetic episode", researchItemId: null },
+      prompt,
+      idempotencyKey: "prompt:EP09:integration1",
+    });
+    assert.equal(response.status, 201, await response.text());
+
+    response = await postWorkflow(database, { action: "import_production_pack", episodeId: "EP09", pack: importedPack(), idempotencyKey: "pack:EP09:integration001" });
+    assert.equal(response.status, 201, await response.text());
+    let record = JSON.parse(database.prepare("SELECT production_pack_json FROM episodes WHERE id = 'EP09'").get().production_pack_json);
+    assert.equal(record.latestPackage.promptSha256, record.prompt.sha256);
+
+    response = await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:integration001" });
+    assert.equal(response.status, 200, await response.text());
+
+    response = await postWorkflow(database, {
+      action: "save_prompt_revision",
+      episodeId: "EP09",
+      prompt: { ...prompt, text: "Revised prompt requiring a new result" },
+      idempotencyKey: "prompt-revision:EP09:integration2",
+    });
+    assert.equal(response.status, 201, await response.text());
+    record = JSON.parse(database.prepare("SELECT production_pack_json FROM episodes WHERE id = 'EP09'").get().production_pack_json);
+    assert.equal(record.latestPackage, null);
+    assert.equal(database.prepare("SELECT COUNT(*) AS count FROM episode_artifacts WHERE episode_id = 'EP09' AND artifact_type = 'PRODUCTION_PACK'").get().count, 1, "history remains immutable");
+
+    response = await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:integration002" });
+    assert.equal(response.status, 409);
+    assert.match((await response.json()).error, /required before locking/i);
+
+    const revisedPack = importedPack({ spokenScript: "A newly audited script for the revised prompt." });
+    response = await postWorkflow(database, { action: "import_production_pack", episodeId: "EP09", pack: revisedPack, idempotencyKey: "pack:EP09:integration002" });
+    assert.equal(response.status, 201, await response.text());
+    response = await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:integration003" });
+    assert.equal(response.status, 200, await response.text());
+  } finally {
+    database.close();
+  }
+});
+
+test("a governed carousel pack persists its PRODUCE decision in D1", async () => {
+  const database = new DatabaseSync(":memory:");
+  try {
+    await applyMigrations(database);
+    const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Carousel post", notes: "", text: "Carousel prompt", sourceContext: { sourceType: "manual" }, masterRules };
+    let response = await postWorkflow(database, {
+      action: "create_tracked_prompt",
+      episode: { id: "EP10", title: "Synthetic carousel", researchItemId: null },
+      prompt,
+      idempotencyKey: "prompt:EP10:integration1",
+    });
+    assert.equal(response.status, 201, await response.text());
+    response = await postWorkflow(database, { action: "import_production_pack", episodeId: "EP10", pack: carouselPack({ episodeId: "EP10" }), idempotencyKey: "pack:EP10:integration001" });
+    assert.equal(response.status, 201, await response.text());
+    assert.equal(database.prepare("SELECT final_decision FROM episode_artifacts WHERE episode_id = 'EP10' AND artifact_type = 'PRODUCTION_PACK'").get().final_decision, "PRODUCE");
+  } finally {
+    database.close();
+  }
 });
 
 test("Episode Studio assets are in the public allowlist without exposing operational files", () => {
@@ -225,6 +419,9 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /element\("importEpisode"\)\.value = episodeId/);
   assert.match(episodeApp, /existing item\(s\) skipped/);
   assert.match(episodeApp, /renderFilmingPackSwitcher/);
+  assert.match(episodeApp, /function activePackArtifact/);
+  assert.match(episodeApp, /activePackage\.promptSha256 !== activePrompt\.sha256/);
+  assert.doesNotMatch(episodeApp, /latestArtifact\([^\n]*"PRODUCTION_PACK"/);
   assert.match(episodeApp, /Edit script before finalising/);
   assert.match(episodeApp, /Save draft \+ build review prompt/);
   assert.match(episodeApp, /spoken script changed after the previous audit/);
