@@ -1564,3 +1564,7 @@ button:disabled {
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Long imported reference text must stay within the phone viewport. */
+#learningOutput, #editingPromptOutput { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; max-height: 32rem; overflow: auto; }
+#referenceMarkdown { min-height: 12rem; width: 100%; font-size: 1rem; }

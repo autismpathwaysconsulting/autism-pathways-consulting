@@ -40,6 +40,7 @@
       <a href="#results">5. Review + publish</a>
       <a href="/content-os/?from=episodes#results">6. Analytics</a>
       <a href="#episodes">Manage episodes</a>
+      <a href="#learning">Formats + Claude references</a>
     </div>
   </nav>
 
@@ -53,6 +54,21 @@
         <article class="metric-card"><strong id="publishedCount" class="metric-value">0</strong><span>Published</span></article>
       </div>
       <div id="workflowSteps" class="workflow-step-grid" aria-label="Episode workflow steps"></div>
+    </section>
+
+    <section id="learning" class="page-section" aria-labelledby="learning-title">
+      <div class="section-heading"><div><h2 id="learning-title">Formats and reference scripts</h2><p class="section-summary">Title + question → recognisable situation → explanation → direct payoff. Test the format before treating it as a winning rule.</p></div></div>
+      <div class="card stack">
+        <p>Choose discovery and meaning, practical demonstration, or parent information. Keep the same example through the payoff and finish with one relevant invitation.</p>
+        <details><summary>Learn from Claude Markdown</summary><div class="stack">
+          <p>Load reference scripts or a Claude analysis, then copy the extraction prompt into Claude or Codex. Files stay in this page session and are not saved to an episode. Download before leaving if needed.</p>
+          <div class="field"><label for="referenceMarkdownFile">Reference Markdown (up to 100 KB)</label><input id="referenceMarkdownFile" type="file" accept=".md,text/markdown"></div>
+          <div class="field"><label for="referenceMarkdown">Original reference text</label><textarea id="referenceMarkdown" rows="8" maxlength="100000"></textarea></div>
+          <div class="button-row"><button id="buildReferencePrompt" class="button" type="button">Build extraction prompt</button><button id="copyReferencePrompt" class="button secondary" type="button">Copy prompt</button><button id="downloadLearningPrompt" class="button secondary" type="button">Download Markdown</button></div>
+          <p id="learningFeedback" role="status" aria-live="polite"></p><pre id="learningOutput" class="card"></pre>
+        </div></details>
+        <p>Editorial ratings, source verification and performance results are separate. Track publication results at 24h, 7d and 28d in <a href="/content-os/#results">Content OS analytics</a>.</p>
+      </div>
     </section>
 
     <section id="ideas" class="page-section" aria-labelledby="ideas-title">
@@ -151,6 +167,9 @@
         <h3>Import video review</h3>
         <p class="subtle">Paste the review manifest returned after a full, delta or final video audit. The video SHA-256 prevents findings from an older export being mistaken for the latest cut.</p>
         <div class="field"><label for="reviewEpisode">Episode</label><select id="reviewEpisode"></select></div>
+        <div class="button-row"><button id="buildEditingPrompt" class="button secondary" type="button">Build editing-only review prompt</button><button id="copyEditingPrompt" class="button secondary" type="button">Copy review prompt</button></div>
+        <p id="editingFeedback" role="status" aria-live="polite">Attach your existing export. Review focuses on cuts, sequencing, overlays and captions, with no additional recording.</p>
+        <details><summary>Editing-only review prompt</summary><pre id="editingPromptOutput" class="card"></pre></details>
         <div class="field"><label for="reviewManifest">Review manifest JSON</label><textarea id="reviewManifest" class="package-json" maxlength="120000" placeholder='Paste the review-manifest.json content here'></textarea></div>
         <div class="button-row"><button id="saveReview" class="button" type="button">Validate + save review</button></div>
       </div>
