@@ -144,7 +144,10 @@ test("practice and Calm workflows are private build assets with durable schemas"
 
   const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
   const productionBindings = config.env.production.d1_databases.map((item) => item.binding);
-  assert.deepEqual(productionBindings, ["APC_CONTENT_OS_DB", "APC_CALM_FEEDBACK_DB"]);
+  assert.deepEqual(productionBindings, ["APC_CONTENT_OS_DB", "APC_CALM_FEEDBACK_DB", "APC_SITE_METRICS_DB"]);
+  const metrics = config.env.production.d1_databases.find(item => item.binding === "APC_SITE_METRICS_DB");
+  assert.equal(metrics.migrations_dir, "site-metrics-migrations");
+  assert.equal(new Set(config.env.production.d1_databases.map(item => item.database_id)).size, 3);
   assert.equal(config.env.production.vars.APC_PRACTICE_LIVE_WRITES_ENABLED, "false");
 });
 

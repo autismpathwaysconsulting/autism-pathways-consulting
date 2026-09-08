@@ -3,7 +3,8 @@
   "include": [
     "/content-os",
     "/content-os/*",
-    "/api/content-os/*"
+    "/api/content-os/*",
+    "/api/site-metrics"
   ],
   "exclude": []
 }
