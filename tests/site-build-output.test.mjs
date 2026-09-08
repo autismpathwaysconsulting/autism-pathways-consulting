@@ -215,3 +215,15 @@ test("shared asset query versions match their content hashes", async () => {
     assert.ok(count >= 25, `Expected shared ${asset} references across public pages`);
   }
 });
+
+test("public pages preserve audited contrast, narrow-screen wrapping, and security headers", async () => {
+  const css = await readFile(new URL("../apc-design-system.css", import.meta.url), "utf8");
+  const headers = await readFile(new URL("../_headers", import.meta.url), "utf8");
+
+  assert.match(css, /\.apc-about-page :where\(\.work-panel, \.final-card\) > \.eyebrow\s*{[^}]*color: #8fe8dc !important;/s);
+  assert.match(css, /\.apc-legal-page :where\([^)]*\.legal-contact[^)]*\) a\s*{[^}]*overflow-wrap: anywhere;/s);
+  assert.match(headers, /^\/\*\n(?:  .+\n)*  Content-Security-Policy: .*frame-ancestors 'none';/m);
+  assert.match(headers, /Strict-Transport-Security: max-age=31536000; includeSubDomains/);
+  assert.match(headers, /Permissions-Policy: camera=\(\), microphone=\(\), geolocation=\(\), usb=\(\)/);
+  assert.match(headers, /X-Frame-Options: DENY/);
+});

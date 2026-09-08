@@ -2162,6 +2162,16 @@ html.apc-home-snap {
   }
 }
 
+/* Public-site accessibility audit corrections */
+.apc-about-page :where(.work-panel, .final-card) > .eyebrow {
+  color: #8fe8dc !important;
+}
+
+.apc-legal-page :where(.legal-card, .legal-contact, .apc-footer) a {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
 /* Homepage premium visual layer */
 .apc-home-page .site-nav {
   background: rgba(251, 248, 242, .9) !important;
