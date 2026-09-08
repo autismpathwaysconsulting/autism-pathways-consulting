@@ -12,6 +12,56 @@ import {
 } from "./lib/security.js";
 import { acceptInvitation, authenticateSession, configuredPreview } from "./lib/pathway-store.js";
 
+function sameOrigin(request) {
+  const requestUrl = new URL(request.url);
+  return request.headers.get("Origin") === requestUrl.origin;
+}
+
+function urlEncoded(request) {
+  return /^application\/x-www-form-urlencoded(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get("Content-Type") || "");
+}
+
+async function boundedForm(request) {
+  const declared = request.headers.get("Content-Length");
+  if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > MAX_FORM_BYTES)) return null;
+  if (!request.body) return new URLSearchParams();
+
+  const reader = request.body.getReader();
+  const chunks = [];
+  let length = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      length += value.byteLength;
+      if (length > MAX_FORM_BYTES) {
+        await reader.cancel("request body too large");
+        return null;
+      }
+      chunks.push(value);
+    }
+    const bytes = new Uint8Array(length);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return new URLSearchParams(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+  } catch {
+    return null;
+  }
+}
+
+function exactLoginForm(form) {
+  const keys = [...form.keys()];
+  return keys.length === 2 && keys.every(key => key === "csrf" || key === "invite") &&
+    form.getAll("csrf").length === 1 && form.getAll("invite").length === 1;
+}
+
+function methodNotAllowed(allow) {
+  return secure(new Response("Method not allowed", { status: 405, headers: { Allow: allow } }));
+}
+
 async function csrfToken(secret, nonce) {
   return `${nonce}.${await signature(secret, nonce)}`;
 }

@@ -12,6 +12,7 @@ import { createTestD1 } from "./helpers/d1-test-db.mjs";
 const baseEnv = {
   CF_PAGES_BRANCH: "codex-client-pathway-production-readiness",
   APC_PATHWAY_ENVIRONMENT: "preview",
+  APC_PATHWAY_PREVIEW_BRANCH: "codex-client-pathway-preview",
   APC_PATHWAY_PRODUCTION_ENABLED: "false",
   APC_PATHWAY_REAL_CLIENT_DATA_ENABLED: "false",
   APC_PATHWAY_D1_MODE: "synthetic-preview",

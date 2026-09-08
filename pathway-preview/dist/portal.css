@@ -13,6 +13,7 @@ button { min-height:44px; }
 .brand strong,.brand small { display:block; }.brand small { color:var(--teal); }
 .profile-chip { display:flex; align-items:center; gap:9px; border:0; background:var(--mint); color:var(--deep); border-radius:999px; padding:6px 14px 6px 7px; font-weight:700; }
 .profile-chip span { width:34px; height:34px; display:grid; place-items:center; border-radius:50%; background:var(--teal); color:#fff; }
+.logout-form { margin:0; }
 .portal-shell { width:min(1180px,calc(100% - 36px)); margin:0 auto; }
 .portal-nav { display:grid; grid-template-columns:repeat(5,1fr); gap:7px; padding:14px 0; position:sticky; top:0; z-index:5; background:rgba(250,249,247,.94); backdrop-filter:blur(12px); }
 .portal-nav button { border:0; border-radius:12px; background:transparent; color:var(--body); font-weight:700; cursor:pointer; }
