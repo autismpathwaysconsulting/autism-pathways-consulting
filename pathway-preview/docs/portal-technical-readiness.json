@@ -1,0 +1,53 @@
+{
+  "artifactId": "APC-PORTAL-TECHNICAL-READINESS-V0-2",
+  "reviewedAt": "2026-09-08",
+  "scope": "SYNTHETIC_PREVIEW_ONLY",
+  "syntheticTechnicalReadinessScore": 9.5,
+  "productionReadinessScore": null,
+  "productionAuthorized": false,
+  "realClientDataAuthorized": false,
+  "controls": [
+    {
+      "id": "PREVIEW-ISOLATION",
+      "status": "PASS",
+      "evidence": ["pathway-preview/wrangler.jsonc", "pathway-preview/tests/pathway-preview.test.mjs"],
+      "note": "One approved preview branch, synthetic client only, production branch 404, no D1 or R2 bindings."
+    },
+    {
+      "id": "REQUEST-BOUNDARY",
+      "status": "PASS",
+      "evidence": ["pathway-preview/functions/_middleware.js", "pathway-preview/tests/pathway-preview.test.mjs"],
+      "note": "Same-origin URL-encoded form posts, streamed 4096-byte limit, exact fields and fail-closed methods."
+    },
+    {
+      "id": "SYNTHETIC-SESSION",
+      "status": "PASS",
+      "evidence": ["pathway-preview/functions/_middleware.js", "pathway-preview/tests/pathway-preview.test.mjs"],
+      "note": "Signed one-hour scoped cookie, expiry and tamper checks, logout and deployment-configured version revocation."
+    },
+    {
+      "id": "CLIENT-DATA-CONTAINMENT",
+      "status": "PASS",
+      "evidence": ["pathway-preview/docs/client-profile.schema.json", "pathway-preview/tests/pathway-preview.test.mjs"],
+      "note": "Synthetic-only projection, no browser persistence, production storage, uploads or public booking route."
+    },
+    {
+      "id": "PRODUCTION-IDENTITY-AND-OBJECT-AUTHORIZATION",
+      "status": "EXTERNAL_BLOCKED",
+      "evidence": ["pathway-preview/docs/portal-release-gates.json", "pathway-preview/docs/PORTAL_BACKEND_CONTRACT.md"],
+      "note": "Requires approved identity/recovery service, adult-authority workflow and multi-account object authorization implementation."
+    },
+    {
+      "id": "PRIVACY-RECORD-LIFECYCLE",
+      "status": "EXTERNAL_BLOCKED",
+      "evidence": ["pathway-preview/docs/portal-release-gates.json", "pathway-preview/docs/PORTAL_BACKEND_CONTRACT.md"],
+      "note": "Requires Founder and qualified review of data location, subprocessors, transfers, retention, export, deletion and AI use."
+    },
+    {
+      "id": "UPLOAD-AND-INCIDENT-OPERATIONS",
+      "status": "EXTERNAL_BLOCKED",
+      "evidence": ["pathway-preview/docs/portal-release-gates.json", "pathway-preview/docs/PORTAL_BACKEND_CONTRACT.md"],
+      "note": "Requires approved private storage/scanning services and a rehearsed incident process with named human ownership."
+    }
+  ]
+}

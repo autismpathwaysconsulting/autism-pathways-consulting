@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>APC Client Pathway Portal | Protected Preview</title>
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#portal-main">Skip to your pathway</a>
+  <div class="prototype-banner" role="status">Protected preview · synthetic information only · nothing is saved</div>
+  <header class="site-header">
+    <a class="brand" href="#today" aria-label="Autism Pathways Consulting client portal home">
+      <span class="brand-mark">APC</span>
+      <span><strong>Autism Pathways Consulting</strong><small>Client Pathway Portal</small></span>
+    </a>
+    <div class="header-actions">
+      <button class="icon-action" type="button" data-secure-upload aria-label="Open secure upload information"><span aria-hidden="true">↗</span><small>Upload</small></button>
+      <button class="icon-action" type="button" data-share-kind="report" aria-label="Notify CJ about a report"><span aria-hidden="true">▤</span><small>Notify CJ</small></button>
+      <form class="logout-form" method="post" action="/logout"><input type="hidden" name="action" value="logout"><button class="profile-chip" type="submit" aria-label="Sign out of the protected preview"><span>SL</span> Sign out</button></form>
+    </div>
+  </header>
+  <div class="portal-shell">
+    <nav class="portal-nav" aria-label="Client portal">
+      <button type="button" data-view="today" aria-current="page">Today</button>
+      <button type="button" data-view="pathway">My pathway</button>
+      <button type="button" data-view="resources">Resources</button>
+      <button type="button" data-view="progress">Journal</button>
+      <button type="button" data-view="session">Next session</button>
+    </nav>
+    <main id="portal-main" tabindex="-1"></main>
+  </div>
+  <footer>
+    <p>This portal supports your agreed APC plan. It is not emergency support, diagnosis, therapy or a substitute for medical care.</p>
+    <button type="button" data-privacy>Privacy and boundaries</button>
+  </footer>
+  <dialog id="privacy-dialog" aria-labelledby="privacy-title">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+    <p class="eyebrow">YOUR INFORMATION</p>
+    <h2 id="privacy-title">Clear boundaries, before anything is saved</h2>
+    <p>This prototype uses fictional information and does not save entries. A live version must use approved sign-in, access, retention and deletion controls before any client information is added.</p>
+    <p>Only information needed for your agreed service should appear here. You choose what to share with CJ.</p>
+  </dialog>
+  <dialog id="journal-dialog" aria-labelledby="journal-title">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+    <p class="eyebrow">JOURNAL</p>
+    <h2 id="journal-title">Add an entry</h2>
+    <form id="journal-form" class="journal-form">
+      <div class="date-time-row"><label>Date<input type="date" name="date" required></label><label>Time <small>Optional</small><input type="time" name="time"></label></div>
+      <label>Title <small>Optional</small><input type="text" name="title" maxlength="80" placeholder="A short label"></label>
+      <label>What happened?<textarea name="entry" rows="5" maxlength="1200" required placeholder="A few words are enough"></textarea></label>
+      <button class="primary-button full-button" type="submit">Add entry</button>
+    </form>
+  </dialog>
+  <dialog id="upload-dialog" aria-labelledby="upload-title">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+    <p class="eyebrow">SECURE UPLOAD</p>
+    <h2 id="upload-title">Uploads are locked in this prototype</h2>
+    <p>A live portal must scan files, remove unnecessary metadata, use private storage and confirm who can access each file before uploads are enabled.</p>
+    <p>Do not send child or family media through this synthetic demonstration.</p>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="portal-data.js"></script>
+  <script src="portal.js"></script>
+</body>
+</html>
