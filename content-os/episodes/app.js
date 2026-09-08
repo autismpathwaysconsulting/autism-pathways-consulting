@@ -1,3 +1,4 @@
+import { FORMAT_GUIDANCE, referencePrompt, editingPrompt, overlapPrompt } from "../episode-learning.js";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "../video-rules.js";
 import { MASTER_TOPIC_BANK, MASTER_TOPIC_BANK_VERSION } from "../topic-bank.js";
 
@@ -881,7 +882,7 @@ function promptRecord(episode, format, notes, sourceContext, preferredScript = "
     format,
     notes,
     preferredScript,
-    text: productionPrompt(episode, format, notes, sourceContext, preferredScript),
+    text: productionPrompt(episode, format, notes, sourceContext, preferredScript) + (isCarouselFormat(format) ? "" : "\n\n" + FORMAT_GUIDANCE + "\n\n" + overlapPrompt(episode, workflow.episodes.map(item => ({ ...item, spokenScript: latestPack(item.id)?.spokenScript || "" })))),
     sourceContext,
     masterRules: masterIdentity(),
   };
@@ -1220,3 +1221,45 @@ element("packageFile").addEventListener("change", async event => {
 element("downloadFilmingHtml").addEventListener("click", downloadFilmingHtml);
 
 load().catch(error => setStatus("Episode Studio unavailable", error.message, "error"));
+
+// Source imports are deliberately transient. Originals are never rendered as HTML.
+element("referenceMarkdownFile").addEventListener("change", async event => {
+  try {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!/\.md$/i.test(file.name) || file.size > 100000) throw new Error("Choose a Markdown (.md) file smaller than 100 KB.");
+    element("referenceMarkdown").value = await file.text();
+    element("learningOutput").textContent = referencePrompt(element("referenceMarkdown").value);
+    element("learningFeedback").textContent = "Reference loaded for this session. Copy or download the extraction prompt; no episode or approval was changed.";
+  } catch (error) { element("learningFeedback").textContent = error.message; }
+  finally { event.target.value = ""; }
+});
+element("buildReferencePrompt").addEventListener("click", () => {
+  try {
+    element("learningOutput").textContent = referencePrompt(element("referenceMarkdown").value);
+    element("learningFeedback").textContent = "Extraction prompt ready for Claude or Codex. Attach original scripts and captions where available.";
+  } catch (error) { element("learningFeedback").textContent = error.message; }
+});
+element("buildEditingPrompt").addEventListener("click", () => {
+  try {
+    const episode = episodeById(element("reviewEpisode").value);
+    const pack = episode ? latestPack(episode.id) : null;
+    if (pack?.contentType === "CAROUSEL") throw new Error("This editing prompt is for a recorded video. Select a video episode.");
+    element("editingPromptOutput").textContent = editingPrompt({ episode, script: pack?.spokenScript || "", sources: pack?.sourceNotes || [], priorReviews: workflow.reviews.filter(item => item.episode_id === episode?.id).slice(0, 5).map(item => ({ label: item.version_label, mode: item.mode, result: item.result, manifest: item.manifest })) });
+    element("editingFeedback").textContent = "Review prompt ready. Attach the current video export and any accepted changes. This does not change episode status.";
+  } catch (error) { element("editingFeedback").textContent = error.message; }
+});
+for (const [buttonId, outputId, feedbackId] of [["copyReferencePrompt", "learningOutput", "learningFeedback"], ["copyEditingPrompt", "editingPromptOutput", "editingFeedback"]]) {
+  element(buttonId).addEventListener("click", async () => {
+    const text = element(outputId).textContent;
+    if (!text.trim()) { element(feedbackId).textContent = "Build the prompt first."; return; }
+    try { await navigator.clipboard.writeText(text); element(feedbackId).textContent = "Prompt copied."; }
+    catch { element(feedbackId).textContent = "Clipboard unavailable. Select and copy the visible prompt manually."; }
+  });
+}
+element("downloadLearningPrompt").addEventListener("click", () => {
+  const text = element("learningOutput").textContent;
+  if (!text.trim()) { element("learningFeedback").textContent = "Build the prompt first."; return; }
+  const url = URL.createObjectURL(new Blob([text], { type: "text/markdown;charset=utf-8" }));
+  const link = document.createElement("a"); link.href = url; link.download = "APC-Reference-Extraction-Prompt.md"; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
