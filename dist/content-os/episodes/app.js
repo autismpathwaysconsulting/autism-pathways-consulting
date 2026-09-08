@@ -1,4 +1,4 @@
-import { FORMAT_GUIDANCE, referencePrompt, editingPrompt } from "../episode-learning.js";
+import { FORMAT_GUIDANCE, referencePrompt, editingPrompt, overlapPrompt } from "../episode-learning.js";
 import { MASTER_VIDEO_RULES, masterVideoRulePromptLines } from "../video-rules.js";
 import { MASTER_TOPIC_BANK, MASTER_TOPIC_BANK_VERSION } from "../topic-bank.js";
 
@@ -882,7 +882,7 @@ function promptRecord(episode, format, notes, sourceContext, preferredScript = "
     format,
     notes,
     preferredScript,
-    text: productionPrompt(episode, format, notes, sourceContext, preferredScript) + (isCarouselFormat(format) ? "" : "\n\n" + FORMAT_GUIDANCE),
+    text: productionPrompt(episode, format, notes, sourceContext, preferredScript) + (isCarouselFormat(format) ? "" : "\n\n" + FORMAT_GUIDANCE + "\n\n" + overlapPrompt(episode, workflow.episodes.map(item => ({ ...item, spokenScript: latestPack(item.id)?.spokenScript || "" })))),
     sourceContext,
     masterRules: masterIdentity(),
   };
