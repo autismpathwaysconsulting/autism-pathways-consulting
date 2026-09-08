@@ -9,7 +9,7 @@
 </head>
 <body>
   <a class="skip-link" href="#portal-main">Skip to your pathway</a>
-  <div class="prototype-banner" role="status">Protected preview · synthetic information only · nothing is saved</div>
+  <div class="prototype-banner" role="status">Protected preview · synthetic information only · saved only to isolated preview storage</div>
   <header class="site-header">
     <a class="brand" href="#today" aria-label="Autism Pathways Consulting client portal home">
       <span class="brand-mark">APC</span>
@@ -18,7 +18,7 @@
     <div class="header-actions">
       <button class="icon-action" type="button" data-secure-upload aria-label="Open secure upload information"><span aria-hidden="true">↗</span><small>Upload</small></button>
       <button class="icon-action" type="button" data-share-kind="report" aria-label="Notify CJ about a report"><span aria-hidden="true">▤</span><small>Notify CJ</small></button>
-      <form class="logout-form" method="post" action="/logout"><input type="hidden" name="action" value="logout"><button class="profile-chip" type="submit" aria-label="Sign out of the protected preview"><span>SL</span> Sign out</button></form>
+      <button class="profile-chip" type="button" data-logout aria-label="Sign out of the protected preview"><span>SL</span> Sign out</button>
     </div>
   </header>
   <div class="portal-shell">
@@ -38,8 +38,8 @@
   <dialog id="privacy-dialog" aria-labelledby="privacy-title">
     <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
     <p class="eyebrow">YOUR INFORMATION</p>
-    <h2 id="privacy-title">Clear boundaries, before anything is saved</h2>
-    <p>This prototype uses fictional information and does not save entries. A live version must use approved sign-in, access, retention and deletion controls before any client information is added.</p>
+    <h2 id="privacy-title">Clear boundaries for synthetic preview data</h2>
+    <p>This preview uses fictional information and stores entries only in a separate synthetic D1 database. A live version still requires approved sign-in, access, retention and deletion controls before any client information is added.</p>
     <p>Only information needed for your agreed service should appear here. You choose what to share with CJ.</p>
   </dialog>
   <dialog id="journal-dialog" aria-labelledby="journal-title">
