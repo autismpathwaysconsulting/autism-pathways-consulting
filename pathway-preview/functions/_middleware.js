@@ -65,30 +65,83 @@ function cookieValue(request, name) {
   return match ? match[1] : "";
 }
 
-async function sessionToken(secret, clientId, expires) {
-  const payload = `${clientId}.${expires}`;
+async function sessionToken(secret, clientId, expires, version) {
+  const payload = `${clientId}.${expires}.${version}`;
   return `${payload}.${await signature(secret, payload)}`;
 }
 
 async function authenticatedClient(request, env) {
   const token = cookieValue(request, SESSION_COOKIE);
-  const match = /^([A-Z0-9-]{8,64})\.(\d{13})\.([a-f0-9]{64})$/.exec(token);
-  if (!match || match[1] !== env.APC_PATHWAY_ALLOWED_CLIENT_ID) return null;
+  const match = /^([A-Z0-9-]{8,64})\.(\d{13})\.(\d{1,9})\.([a-f0-9]{64})$/.exec(token);
+  if (!match || match[1] !== env.APC_PATHWAY_ALLOWED_CLIENT_ID || match[3] !== env.APC_PATHWAY_PREVIEW_SESSION_VERSION) return null;
   const expires = Number(match[2]);
   if (!Number.isSafeInteger(expires) || expires <= Date.now() || expires > Date.now() + SESSION_SECONDS * 1000) return null;
-  const expected = await sessionToken(env.APC_PATHWAY_PREVIEW_SESSION_SECRET, match[1], expires);
+  const expected = await sessionToken(env.APC_PATHWAY_PREVIEW_SESSION_SECRET, match[1], expires, match[3]);
   return await sameValue(token, expected) ? match[1] : null;
 }
 
 function configuredPreview(env) {
   return env.APC_PATHWAY_ENVIRONMENT === "preview" &&
+    env.CF_PAGES_BRANCH === env.APC_PATHWAY_PREVIEW_BRANCH &&
+    /^[a-z0-9-]{8,80}$/.test(env.APC_PATHWAY_PREVIEW_BRANCH || "") &&
     env.APC_PATHWAY_PRODUCTION_ENABLED === "false" &&
     env.APC_PATHWAY_D1_MODE === "synthetic-stub" &&
     env.APC_PATHWAY_R2_MODE === "synthetic-stub" &&
     /^DEMO-[A-Z0-9-]{6,48}$/.test(env.APC_PATHWAY_ALLOWED_CLIENT_ID || "") &&
     /^[a-f0-9]{64}$/.test(env.APC_PATHWAY_PREVIEW_INVITE_SHA256 || "") &&
+    /^\d{1,9}$/.test(env.APC_PATHWAY_PREVIEW_SESSION_VERSION || "") &&
     typeof env.APC_PATHWAY_PREVIEW_SESSION_SECRET === "string" &&
     env.APC_PATHWAY_PREVIEW_SESSION_SECRET.length >= 32;
+}
+
+function sameOrigin(request) {
+  const requestUrl = new URL(request.url);
+  return request.headers.get("Origin") === requestUrl.origin;
+}
+
+function urlEncoded(request) {
+  return /^application\/x-www-form-urlencoded(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get("Content-Type") || "");
+}
+
+async function boundedForm(request) {
+  const declared = request.headers.get("Content-Length");
+  if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > MAX_FORM_BYTES)) return null;
+  if (!request.body) return new URLSearchParams();
+
+  const reader = request.body.getReader();
+  const chunks = [];
+  let length = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      length += value.byteLength;
+      if (length > MAX_FORM_BYTES) {
+        await reader.cancel("request body too large");
+        return null;
+      }
+      chunks.push(value);
+    }
+    const bytes = new Uint8Array(length);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return new URLSearchParams(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+  } catch {
+    return null;
+  }
+}
+
+function exactLoginForm(form) {
+  const keys = [...form.keys()];
+  return keys.length === 2 && keys.every(key => key === "csrf" || key === "invite") &&
+    form.getAll("csrf").length === 1 && form.getAll("invite").length === 1;
+}
+
+function methodNotAllowed(allow) {
+  return secure(new Response("Method not allowed", { status: 405, headers: { Allow: allow } }));
 }
 
 async function csrfToken(secret, nonce) {
@@ -107,14 +160,13 @@ async function loginPage(env, error = false) {
 
 async function handleLogin(context) {
   if (context.request.method === "GET") return loginPage(context.env);
-  if (context.request.method !== "POST" || Number(context.request.headers.get("Content-Length") || 0) > MAX_FORM_BYTES) {
-    return secure(new Response("Method not allowed", { status: 405, headers: { Allow: "GET, POST" } }));
-  }
+  if (context.request.method !== "POST") return methodNotAllowed("GET, POST");
+  if (!sameOrigin(context.request)) return secure(new Response("Forbidden", { status: 403 }));
+  if (!urlEncoded(context.request)) return secure(new Response("Unsupported media type", { status: 415 }));
+  const form = await boundedForm(context.request);
+  if (!form) return secure(new Response("Request body too large or invalid", { status: 413 }));
+  if (!exactLoginForm(form)) return loginPage(context.env, true);
   const requestUrl = new URL(context.request.url);
-  const origin = context.request.headers.get("Origin");
-  if (origin && origin !== requestUrl.origin) return loginPage(context.env, true);
-  let form;
-  try { form = await context.request.formData(); } catch { return loginPage(context.env, true); }
   const suppliedCsrf = String(form.get("csrf") || "");
   const cookieCsrf = cookieValue(context.request, CSRF_COOKIE);
   const nonce = suppliedCsrf.split(".", 1)[0];
@@ -126,8 +178,21 @@ async function handleLogin(context) {
 
   const expires = Date.now() + SESSION_SECONDS * 1000;
   const response = secure(new Response(null, { status: 303, headers: { Location: new URL("/", requestUrl).toString() } }));
-  response.headers.append("Set-Cookie", `${SESSION_COOKIE}=${await sessionToken(context.env.APC_PATHWAY_PREVIEW_SESSION_SECRET, context.env.APC_PATHWAY_ALLOWED_CLIENT_ID, expires)}; Path=/; Max-Age=${SESSION_SECONDS}; Secure; HttpOnly; SameSite=Strict`);
+  response.headers.append("Set-Cookie", `${SESSION_COOKIE}=${await sessionToken(context.env.APC_PATHWAY_PREVIEW_SESSION_SECRET, context.env.APC_PATHWAY_ALLOWED_CLIENT_ID, expires, context.env.APC_PATHWAY_PREVIEW_SESSION_VERSION)}; Path=/; Max-Age=${SESSION_SECONDS}; Secure; HttpOnly; SameSite=Strict`);
   response.headers.append("Set-Cookie", `${CSRF_COOKIE}=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Strict`);
+  return response;
+}
+
+async function handleLogout(context) {
+  if (context.request.method !== "POST") return methodNotAllowed("POST");
+  if (!sameOrigin(context.request)) return secure(new Response("Forbidden", { status: 403 }));
+  if (!urlEncoded(context.request)) return secure(new Response("Unsupported media type", { status: 415 }));
+  const form = await boundedForm(context.request);
+  if (!form || form.getAll("action").length !== 1 || form.get("action") !== "logout" || [...form.keys()].length !== 1) {
+    return secure(new Response("Invalid request", { status: 400 }));
+  }
+  const response = secure(new Response(null, { status: 303, headers: { Location: new URL("/login", context.request.url).toString() } }));
+  response.headers.append("Set-Cookie", `${SESSION_COOKIE}=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Strict`);
   return response;
 }
 
@@ -137,15 +202,19 @@ export async function onRequest(context) {
     return secure(new Response("Not found", { status: 404 }));
   }
   if (!configuredPreview(context.env)) return secure(new Response("Pathway preview is not configured.", { status: 503 }));
-  if (url.pathname === "/login.css" && context.request.method === "GET") return secure(await context.next());
+  if (url.pathname === "/login.css") {
+    if (context.request.method !== "GET" && context.request.method !== "HEAD") return methodNotAllowed("GET, HEAD");
+    return secure(await context.next());
+  }
   if (url.pathname === "/login" || url.pathname === "/login/") return handleLogin(context);
 
   let clientId;
   try { clientId = await authenticatedClient(context.request, context.env); } catch { return secure(new Response("Pathway authentication is unavailable.", { status: 503 })); }
   if (!clientId) return secure(Response.redirect(new URL("/login", url), 302));
+  if (url.pathname === "/logout" || url.pathname === "/logout/") return handleLogout(context);
+  if (context.request.method !== "GET" && context.request.method !== "HEAD") return methodNotAllowed("GET, HEAD");
 
   const response = await context.next();
   response.headers.set("X-APC-Pathway-Scope", clientId);
   return secure(response);
 }
-

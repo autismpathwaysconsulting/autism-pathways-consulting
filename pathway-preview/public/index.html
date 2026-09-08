@@ -18,7 +18,7 @@
     <div class="header-actions">
       <button class="icon-action" type="button" data-secure-upload aria-label="Open secure upload information"><span aria-hidden="true">↗</span><small>Upload</small></button>
       <button class="icon-action" type="button" data-share-kind="report" aria-label="Notify CJ about a report"><span aria-hidden="true">▤</span><small>Notify CJ</small></button>
-      <button class="profile-chip" type="button" aria-label="Open profile options"><span>SL</span> Sam Lee</button>
+      <form class="logout-form" method="post" action="/logout"><input type="hidden" name="action" value="logout"><button class="profile-chip" type="submit" aria-label="Sign out of the protected preview"><span>SL</span> Sign out</button></form>
     </div>
   </header>
   <div class="portal-shell">
