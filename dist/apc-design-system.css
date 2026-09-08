@@ -4967,7 +4967,7 @@ html.apc-site-snap {
 
 .apc-inline-booking [data-cal-inline]:empty { display: none; }
 .apc-booking-load { font: inherit; cursor: pointer; }
-.apc-booking-load[hidden] { display: none; }
+.apc-booking-load[hidden] { display: none !important; }
 .apc-booking-status { margin-block: 12px; }
 
 .section-rail a {
