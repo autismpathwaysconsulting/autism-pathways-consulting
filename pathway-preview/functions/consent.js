@@ -1,4 +1,4 @@
-import { readFormData, requestOriginIsValid, sameValue, secure, signature } from "./lib/security.js";
+import { hasExactFormFields, readFormData, requestOriginIsValid, sameValue, secure, signature } from "./lib/security.js";
 
 function htmlEscape(value) {
   return String(value).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
@@ -27,6 +27,9 @@ export async function onRequest(context) {
   if (!requestOriginIsValid(context.request)) return consentPage(context, await consentCsrf(context.env, identity), "The request could not be verified.");
   let form;
   try { form = await readFormData(context.request); } catch { return consentPage(context, await consentCsrf(context.env, identity), "The form could not be read."); }
+  if (!hasExactFormFields(form, ["csrf", "noticeVersion", "termsVersion", "accept"])) {
+    return consentPage(context, await consentCsrf(context.env, identity), "The form fields could not be verified.");
+  }
   const suppliedCsrf = String(form.get("csrf") || "");
   const expectedCsrf = await consentCsrf(context.env, identity);
   const exactVersions = form.get("noticeVersion") === context.env.APC_PATHWAY_NOTICE_VERSION &&

@@ -11,7 +11,7 @@
       "id": "PREVIEW-ISOLATION",
       "status": "PASS",
       "evidence": ["pathway-preview/wrangler.jsonc", "pathway-preview/tests/pathway-preview.test.mjs"],
-      "note": "One approved preview branch, synthetic client only, production branch 404, no D1 or R2 bindings."
+      "note": "One approved preview branch, synthetic client only, production branch 404, dedicated synthetic D1 only and no R2 binding."
     },
     {
       "id": "REQUEST-BOUNDARY",
@@ -23,13 +23,13 @@
       "id": "SYNTHETIC-SESSION",
       "status": "PASS",
       "evidence": ["pathway-preview/functions/_middleware.js", "pathway-preview/tests/pathway-preview.test.mjs"],
-      "note": "Signed one-hour scoped cookie, expiry and tamper checks, logout and deployment-configured version revocation."
+      "note": "Random one-hour scoped sessions are hash-stored in synthetic D1 and checked against invitation, account and grant state on every request; logout, recovery and revocation invalidate them immediately."
     },
     {
       "id": "CLIENT-DATA-CONTAINMENT",
       "status": "PASS",
       "evidence": ["pathway-preview/docs/client-profile.schema.json", "pathway-preview/tests/pathway-preview.test.mjs"],
-      "note": "Synthetic-only projection, no browser persistence, production storage, uploads or public booking route."
+      "note": "Synthetic-only projection with a dedicated preview database; no real-client or production storage, uploads or public booking route."
     },
     {
       "id": "PRODUCTION-IDENTITY-AND-OBJECT-AUTHORIZATION",

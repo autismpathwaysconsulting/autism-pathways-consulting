@@ -9,7 +9,7 @@ This runbook is for the separate protected review environment only. Commands mus
 3. Confirm the Wrangler variables keep both production and real-client-data flags `false`.
 4. Set `APC_PATHWAY_PREVIEW_SESSION_SECRET` and `APC_PATHWAY_PREVIEW_OPERATOR_SECRET` as independent random Cloudflare secrets of at least 32 characters.
 5. Apply migrations to the synthetic database by immutable database name, not a production binding alias.
-6. Deploy `pathway-preview/dist` only to a non-main branch.
+6. Set `APC_PATHWAY_PREVIEW_BRANCH` to the exact review branch and deploy `pathway-preview/dist` only to that branch.
 7. Confirm the main-branch URL returns `404`, the review URL is access-protected, and no custom domain is attached.
 
 ## Synthetic invitation rehearsal

@@ -4,12 +4,13 @@ This Cloudflare Pages project is an isolated, non-production review surface deri
 
 ## Enforced boundary
 
-- A `main` Pages deployment returns `404` before it reads D1.
+- Only the configured review branch is accepted; `main` returns `404` before it reads D1 and other branches fail closed.
 - `APC_PATHWAY_PRODUCTION_ENABLED` and `APC_PATHWAY_REAL_CLIENT_DATA_ENABLED` must both remain `false`.
 - `PATHWAY_DB` must point only to `apc-client-pathway-preview-synthetic`; no APC production database is referenced.
 - Client IDs must match `DEMO-*`, and the runtime allows only `DEMO-CLIENT-001`.
 - R2 and file uploads are disabled. No Content OS, Practice Console, Meta, Calm Companion or canonical client-record binding exists.
 - Invitation and session tokens are random; D1 stores SHA-256 hashes only. Operator and session secrets are Cloudflare secrets, never repository variables.
+- Login and consent accept only exact same-origin form posts with streamed body limits and exact fields. JSON routes require exact media types, origins, keys and paths.
 - Every client object query derives `client_id` and `account_id` from the server-side session and repeats both predicates in SQL.
 - Audit rows are insert-only. SQLite triggers reject updates and deletes, including during deletion rehearsal.
 - Cal.com remains the only booking source. Only an operator-authenticated CJ assignment can expose one private follow-up event URL; the preview stores no availability or appointments.
@@ -26,6 +27,8 @@ This Cloudflare Pages project is an isolated, non-production review surface deri
 - connection-failure recovery UI, keyboard focus, skip links, live status and narrow-screen layouts.
 
 These controls are preview evidence only. They do not close `OPS-HOLD-003`, approve legal wording, authorise real client data or establish the production client-record system.
+
+The machine-readable [`portal-technical-readiness.json`](docs/portal-technical-readiness.json) records a 9.5 score for this bounded synthetic evidence scope only. Production readiness is deliberately unscored while every gate in [`portal-release-gates.json`](docs/portal-release-gates.json) remains blocked.
 
 ## Local verification
 

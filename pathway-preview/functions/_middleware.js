@@ -1,9 +1,11 @@
 import {
   LOGIN_CSRF_COOKIE,
+  RequestError,
   SESSION_COOKIE,
   SESSION_SECONDS,
   cookieValue,
   expireCookie,
+  hasExactFormFields,
   readFormData,
   requestOriginIsValid,
   sameValue,
@@ -11,52 +13,6 @@ import {
   signature,
 } from "./lib/security.js";
 import { acceptInvitation, authenticateSession, configuredPreview } from "./lib/pathway-store.js";
-
-function sameOrigin(request) {
-  const requestUrl = new URL(request.url);
-  return request.headers.get("Origin") === requestUrl.origin;
-}
-
-function urlEncoded(request) {
-  return /^application\/x-www-form-urlencoded(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get("Content-Type") || "");
-}
-
-async function boundedForm(request) {
-  const declared = request.headers.get("Content-Length");
-  if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > MAX_FORM_BYTES)) return null;
-  if (!request.body) return new URLSearchParams();
-
-  const reader = request.body.getReader();
-  const chunks = [];
-  let length = 0;
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      length += value.byteLength;
-      if (length > MAX_FORM_BYTES) {
-        await reader.cancel("request body too large");
-        return null;
-      }
-      chunks.push(value);
-    }
-    const bytes = new Uint8Array(length);
-    let offset = 0;
-    for (const chunk of chunks) {
-      bytes.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-    return new URLSearchParams(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
-  } catch {
-    return null;
-  }
-}
-
-function exactLoginForm(form) {
-  const keys = [...form.keys()];
-  return keys.length === 2 && keys.every(key => key === "csrf" || key === "invite") &&
-    form.getAll("csrf").length === 1 && form.getAll("invite").length === 1;
-}
 
 function methodNotAllowed(allow) {
   return secure(new Response("Method not allowed", { status: 405, headers: { Allow: allow } }));
@@ -82,10 +38,15 @@ async function loginPage(env, reason = "") {
 
 async function handleLogin(context) {
   if (context.request.method === "GET") return loginPage(context.env);
-  if (context.request.method !== "POST") return secure(new Response("Method not allowed", { status: 405, headers: { Allow: "GET, POST" } }));
-  if (!requestOriginIsValid(context.request)) return loginPage(context.env, "invalid");
+  if (context.request.method !== "POST") return methodNotAllowed("GET, POST");
+  if (!requestOriginIsValid(context.request)) return secure(new Response("Forbidden", { status: 403 }));
   let form;
-  try { form = await readFormData(context.request); } catch { return loginPage(context.env, "invalid"); }
+  try { form = await readFormData(context.request); }
+  catch (error) {
+    if (error instanceof RequestError) return secure(new Response(error.message, { status: error.status }));
+    return secure(new Response("Invalid request", { status: 400 }));
+  }
+  if (!hasExactFormFields(form, ["csrf", "invite"])) return loginPage(context.env, "invalid");
   const suppliedCsrf = String(form.get("csrf") || "");
   const cookieCsrf = cookieValue(context.request, LOGIN_CSRF_COOKIE);
   const nonce = suppliedCsrf.split(".", 1)[0];
@@ -113,7 +74,14 @@ export async function onRequest(context) {
   const url = new URL(context.request.url);
   if (context.env.CF_PAGES_BRANCH === "main" || context.env.APC_PATHWAY_PRODUCTION_ENABLED !== "false") return failClosed();
   if (!configuredPreview(context.env)) return secure(new Response("Pathway preview is not configured.", { status: 503 }));
-  if ((url.pathname === "/login.css" || url.pathname === "/health") && context.request.method === "GET") return secure(await context.next());
+  if (url.pathname === "/login.css") {
+    if (context.request.method !== "GET" && context.request.method !== "HEAD") return methodNotAllowed("GET, HEAD");
+    return secure(await context.next());
+  }
+  if (url.pathname === "/health") {
+    if (context.request.method !== "GET") return methodNotAllowed("GET");
+    return secure(await context.next());
+  }
   if (url.pathname === "/login" || url.pathname === "/login/") return handleLogin(context);
   if (url.pathname.startsWith("/api/operator/")) return secure(await context.next());
 
@@ -129,6 +97,9 @@ export async function onRequest(context) {
   if (!identity.consent && !consentRoute) {
     if (url.pathname.startsWith("/api/")) return secure(Response.json({ error: "Current consent acceptance is required." }, { status: 428 }));
     return secure(Response.redirect(new URL("/consent", url), 302));
+  }
+  if (!url.pathname.startsWith("/api/") && !consentRoute && context.request.method !== "GET" && context.request.method !== "HEAD") {
+    return methodNotAllowed("GET, HEAD");
   }
   const response = await context.next();
   response.headers.set("X-APC-Pathway-Scope", identity.client_id);

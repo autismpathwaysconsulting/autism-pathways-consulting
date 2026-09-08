@@ -5,7 +5,8 @@ export const SYNTHETIC_ACCOUNT_PATTERN = /^ACCOUNT-DEMO-[A-Z0-9-]{4,48}$/;
 export const OPERATOR_ID = "OPERATOR-CJ-SYNTHETIC";
 
 export function configuredPreview(env) {
-  return env.CF_PAGES_BRANCH !== "main" &&
+  return env.CF_PAGES_BRANCH === env.APC_PATHWAY_PREVIEW_BRANCH &&
+    /^[a-z0-9][a-z0-9._\/-]{7,79}$/i.test(env.APC_PATHWAY_PREVIEW_BRANCH || "") &&
     env.APC_PATHWAY_ENVIRONMENT === "preview" &&
     env.APC_PATHWAY_PRODUCTION_ENABLED === "false" &&
     env.APC_PATHWAY_REAL_CLIENT_DATA_ENABLED === "false" &&

@@ -6,7 +6,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
     "APC_PATHWAY_ENVIRONMENT": "preview",
-    "APC_PATHWAY_PREVIEW_BRANCH": "codex-client-pathway-preview",
+    "APC_PATHWAY_PREVIEW_BRANCH": "codex/client-pathway-production-readiness",
     "APC_PATHWAY_PRODUCTION_ENABLED": "false",
     "APC_PATHWAY_REAL_CLIENT_DATA_ENABLED": "false",
     "APC_PATHWAY_D1_MODE": "synthetic-preview",
@@ -29,6 +29,7 @@
     "preview": {
       "vars": {
         "APC_PATHWAY_ENVIRONMENT": "preview",
+        "APC_PATHWAY_PREVIEW_BRANCH": "codex/client-pathway-production-readiness",
         "APC_PATHWAY_PRODUCTION_ENABLED": "false",
         "APC_PATHWAY_REAL_CLIENT_DATA_ENABLED": "false",
         "APC_PATHWAY_D1_MODE": "synthetic-preview",

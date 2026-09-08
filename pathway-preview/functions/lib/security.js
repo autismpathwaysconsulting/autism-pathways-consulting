@@ -83,11 +83,11 @@ export function isoNow() {
 
 export function requestOriginIsValid(request) {
   const origin = request.headers.get("Origin");
-  return !origin || origin === new URL(request.url).origin;
+  return origin === new URL(request.url).origin;
 }
 
 export async function readJson(request) {
-  if (!(request.headers.get("Content-Type") || "").toLowerCase().startsWith("application/json")) {
+  if (!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get("Content-Type") || "")) {
     throw new RequestError(415, "Expected application/json.");
   }
   try {
@@ -102,7 +102,7 @@ export async function readJson(request) {
 
 export async function readFormData(request, maximumBytes = 4096) {
   const contentType = request.headers.get("Content-Type") || "";
-  if (!contentType.toLowerCase().startsWith("application/x-www-form-urlencoded")) {
+  if (!/^application\/x-www-form-urlencoded(?:\s*;\s*charset=utf-8)?$/i.test(contentType)) {
     throw new RequestError(415, "Expected a form submission.");
   }
   const text = await readBoundedText(request, maximumBytes);
@@ -110,7 +110,9 @@ export async function readFormData(request, maximumBytes = 4096) {
 }
 
 async function readBoundedText(request, maximumBytes) {
-  const declared = Number(request.headers.get("Content-Length") || 0);
+  const declaredHeader = request.headers.get("Content-Length");
+  if (declaredHeader !== null && !/^\d+$/.test(declaredHeader)) throw new RequestError(400, "Content-Length is invalid.");
+  const declared = Number(declaredHeader || 0);
   if (declared > maximumBytes) throw new RequestError(413, "Request body is too large.");
   if (!request.body) return "";
   const reader = request.body.getReader();
@@ -134,6 +136,12 @@ async function readBoundedText(request, maximumBytes) {
   }
   try { return new TextDecoder("utf-8", { fatal: true }).decode(bytes); }
   catch { throw new RequestError(400, "Request body is invalid."); }
+}
+
+export function hasExactFormFields(form, expected) {
+  const keys = [...form.keys()];
+  return keys.length === expected.length && keys.every(key => expected.includes(key)) &&
+    expected.every(key => form.getAll(key).length === 1);
 }
 
 export class RequestError extends Error {

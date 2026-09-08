@@ -19,6 +19,14 @@ import {
 
 const asText = (value, max) => typeof value === "string" && value.trim().length > 0 && value.trim().length <= max ? value.trim() : null;
 
+function requireExactKeys(body, required, optional = []) {
+  const allowed = new Set([...required, ...optional]);
+  const keys = Object.keys(body);
+  if (required.some(key => !Object.hasOwn(body, key)) || keys.some(key => !allowed.has(key))) {
+    throw new RequestError(400, "Request fields are invalid.");
+  }
+}
+
 async function operatorAuthorized(request, env) {
   const supplied = request.headers.get("X-APC-Preview-Operator") || "";
   return supplied.length >= 32 && await sameValue(supplied, env.APC_PATHWAY_PREVIEW_OPERATOR_SECRET);
@@ -69,6 +77,7 @@ async function portalProjection(context) {
 async function createJournal(context) {
   requirePost(context);
   const body = await readJson(context.request);
+  requireExactKeys(body, ["date", "entry"], ["time", "title"]);
   const date = /^\d{4}-\d{2}-\d{2}$/.test(body.date || "") ? body.date : null;
   const time = body.time === "" || body.time == null ? null : (/^([01]\d|2[0-3]):[0-5]\d$/.test(body.time) ? body.time : undefined);
   const title = body.title === "" || body.title == null ? null : asText(body.title, 80);
@@ -135,14 +144,9 @@ async function issue(context, recovery = false) {
   await requireOperator(context);
   requirePost(context);
   const body = await readJson(context.request);
+  requireExactKeys(body, recovery ? ["clientId", "accountId", "expiresInSeconds", "previousInvitationId"] :
+    ["clientId", "accountId", "expiresInSeconds"]);
   if (recovery && !asText(body.previousInvitationId, 80)) throw new RequestError(400, "A previous invitation is required.");
-  if (recovery) {
-    assertAllowedSyntheticClient(context.env, body.clientId);
-    const previous = await context.env.PATHWAY_DB.prepare(`SELECT invitation_id FROM invitations
-      WHERE invitation_id = ? AND client_id = ? AND account_id = ? LIMIT 1`)
-      .bind(body.previousInvitationId, body.clientId, body.accountId).first();
-    if (!previous) throw new RequestError(404, "Previous synthetic invitation not found.");
-  }
   if (recovery) {
     assertAllowedSyntheticClient(context.env, body.clientId);
     const previous = await context.env.PATHWAY_DB.prepare(`SELECT invitation_id FROM invitations
@@ -169,6 +173,7 @@ async function revokeInvitation(context) {
   await requireOperator(context);
   requirePost(context);
   const body = await readJson(context.request);
+  requireExactKeys(body, ["clientId", "invitationId"]);
   assertAllowedSyntheticClient(context.env, body.clientId);
   const invitationId = asText(body.invitationId, 80);
   if (!invitationId) throw new RequestError(400, "Invitation ID is required.");
@@ -190,6 +195,7 @@ async function assignBooking(context) {
   await requireOperator(context);
   requirePost(context);
   const body = await readJson(context.request);
+  requireExactKeys(body, ["clientId", "accountId", "calUrl"], ["expiresAt"]);
   assertAllowedSyntheticClient(context.env, body.clientId);
   if (!validCalLink(body.calUrl)) throw new RequestError(400, "Only an assigned private Cal.com event URL is allowed.");
   const expiresAt = body.expiresAt == null ? null : (Number.isFinite(Date.parse(body.expiresAt)) ? new Date(body.expiresAt).toISOString() : undefined);
@@ -220,6 +226,7 @@ async function revokeBooking(context) {
   await requireOperator(context);
   requirePost(context);
   const body = await readJson(context.request);
+  requireExactKeys(body, ["clientId", "bookingLinkId"]);
   assertAllowedSyntheticClient(context.env, body.clientId);
   const id = asText(body.bookingLinkId, 80);
   if (!id) throw new RequestError(400, "Booking link ID is required.");
@@ -239,6 +246,7 @@ async function retentionRehearsal(context) {
   await requireOperator(context);
   requirePost(context);
   const body = await readJson(context.request);
+  requireExactKeys(body, ["clientId", "mode", "cutoff"]);
   assertAllowedSyntheticClient(context.env, body.clientId);
   if (body.mode !== "dry-run") throw new RequestError(400, "Retention rehearsal is dry-run only.");
   const cutoff = Number.isFinite(Date.parse(body.cutoff)) ? new Date(body.cutoff).toISOString() : null;
@@ -264,6 +272,7 @@ async function deletionRehearsal(context) {
   await requireOperator(context);
   requirePost(context);
   const body = await readJson(context.request);
+  requireExactKeys(body, ["clientId", "confirmSynthetic"]);
   assertAllowedSyntheticClient(context.env, body.clientId);
   if (body.confirmSynthetic !== `DELETE ${body.clientId}`) throw new RequestError(400, "Synthetic deletion confirmation did not match.");
   const snapshot = await context.env.PATHWAY_DB.prepare(`SELECT
@@ -294,6 +303,7 @@ async function deletionRehearsal(context) {
 export async function onRequest(context) {
   const path = Array.isArray(context.params.path) ? context.params.path.join("/") : String(context.params.path || "");
   try {
+    if (new URL(context.request.url).search) throw new RequestError(400, "Query parameters are not accepted.");
     if (path === "portal" && context.request.method === "GET") return json(await portalProjection(context));
     if (path === "journals") return await createJournal(context);
     if (path.startsWith("journals/")) return await getJournal(context, path.slice("journals/".length));

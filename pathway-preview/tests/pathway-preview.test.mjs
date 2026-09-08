@@ -10,9 +10,9 @@ import { buildPathwayPreview, PUBLIC_FILES } from "../scripts/build.mjs";
 import { createTestD1 } from "./helpers/d1-test-db.mjs";
 
 const baseEnv = {
-  CF_PAGES_BRANCH: "codex-client-pathway-production-readiness",
+  CF_PAGES_BRANCH: "codex/client-pathway-production-readiness",
   APC_PATHWAY_ENVIRONMENT: "preview",
-  APC_PATHWAY_PREVIEW_BRANCH: "codex-client-pathway-preview",
+  APC_PATHWAY_PREVIEW_BRANCH: "codex/client-pathway-production-readiness",
   APC_PATHWAY_PRODUCTION_ENABLED: "false",
   APC_PATHWAY_REAL_CLIENT_DATA_ENABLED: "false",
   APC_PATHWAY_D1_MODE: "synthetic-preview",
@@ -120,6 +120,41 @@ test("production and incomplete preview configurations fail closed", async () =>
   assert.equal((await noDatabase.request("/")).status, 503);
   const realData = await fixture({ APC_PATHWAY_REAL_CLIENT_DATA_ENABLED: "true" });
   assert.equal((await realData.request("/")).status, 503);
+  const unapprovedBranch = await fixture({ CF_PAGES_BRANCH: "unreviewed-branch" });
+  assert.equal((await unapprovedBranch.request("/")).status, 503);
+});
+
+test("login requires exact same-origin bounded form submissions", async () => {
+  const app = await fixture();
+  const missingOrigin = await app.request("/login", {
+    method: "POST",
+    body: new URLSearchParams({ csrf: "x", invite: "x" }),
+  });
+  assert.equal(missingOrigin.status, 403);
+
+  const wrongType = await app.request("/login", {
+    method: "POST",
+    headers: { Origin: "https://pathway.example", "Content-Type": "application/json" },
+    body: "{}",
+  });
+  assert.equal(wrongType.status, 415);
+
+  const oversized = await app.request("/login", {
+    method: "POST",
+    headers: { Origin: "https://pathway.example", "Content-Type": "application/x-www-form-urlencoded", "Content-Length": "12" },
+    body: `invite=${"x".repeat(5000)}`,
+  });
+  assert.equal(oversized.status, 413);
+
+  const invitation = await app.issue();
+  const page = await app.request("/login");
+  const csrf = (await page.text()).match(/name="csrf" value="([^"]+)"/)?.[1];
+  const duplicate = await app.request("/login", {
+    method: "POST",
+    headers: { Cookie: `__Host-apc_pathway_login_csrf=${csrf}`, Origin: "https://pathway.example" },
+    body: new URLSearchParams([["csrf", csrf], ["invite", invitation.invitationToken], ["invite", invitation.invitationToken]]),
+  });
+  assert.equal(duplicate.status, 401);
 });
 
 test("single-use invitation, consent version acceptance and session access work end to end", async () => {
@@ -179,7 +214,7 @@ test("all client objects are authorized from the server session scope", async ()
     INSERT INTO journals VALUES ('JOURNAL-OTHER','DEMO-OTHER-999','ACCOUNT-DEMO-9999','2026-09-01',NULL,NULL,'Other record','2026-09-01T00:00:00Z',NULL);`);
   const own = await app.request("/api/journals", {
     method: "POST",
-    headers: { Cookie: `__Host-apc_pathway_session=${sessionCookie}`, "Content-Type": "application/json" },
+    headers: { Cookie: `__Host-apc_pathway_session=${sessionCookie}`, "Content-Type": "application/json", Origin: "https://pathway.example" },
     body: JSON.stringify({ date: "2026-09-07", time: "09:30", title: "Synthetic note", entry: "A bounded synthetic entry." }),
   });
   assert.equal(own.status, 201);
@@ -188,6 +223,43 @@ test("all client objects are authorized from the server session scope", async ()
   const exported = await (await app.request("/api/export", { headers: { Cookie: `__Host-apc_pathway_session=${sessionCookie}` } })).json();
   assert.equal(exported.clientId, "DEMO-CLIENT-001");
   assert.ok(exported.journals.every(row => row.id !== "JOURNAL-OTHER"));
+});
+
+test("authenticated writes require origin, exact JSON fields and clean routes", async () => {
+  const app = await fixture();
+  const { sessionCookie } = await app.authenticated();
+  const cookie = { Cookie: `__Host-apc_pathway_session=${sessionCookie}`, "Content-Type": "application/json" };
+  const missingOrigin = await app.request("/api/journals", {
+    method: "POST",
+    headers: cookie,
+    body: JSON.stringify({ date: "2026-09-08", entry: "Synthetic entry." }),
+  });
+  assert.equal(missingOrigin.status, 403);
+
+  const unexpectedField = await app.request("/api/journals", {
+    method: "POST",
+    headers: { ...cookie, Origin: "https://pathway.example" },
+    body: JSON.stringify({ date: "2026-09-08", entry: "Synthetic entry.", privateNote: "must not be accepted" }),
+  });
+  assert.equal(unexpectedField.status, 400);
+
+  const query = await app.request("/api/portal?client=DEMO-OTHER-999", { headers: { Cookie: cookie.Cookie } });
+  assert.equal(query.status, 400);
+  const staticWrite = await app.request("/portal.js", { method: "POST", headers: { Cookie: cookie.Cookie } });
+  assert.equal(staticWrite.status, 405);
+  assert.equal(staticWrite.headers.get("allow"), "GET, HEAD");
+});
+
+test("operator payloads reject unknown fields before any invitation is issued", async () => {
+  const app = await fixture();
+  const response = await app.operator("/api/operator/invitations/issue", {
+    clientId: "DEMO-CLIENT-001",
+    accountId: "ACCOUNT-DEMO-0001",
+    expiresInSeconds: 3600,
+    realClientData: true,
+  });
+  assert.equal(response.status, 400);
+  assert.equal(await app.env.PATHWAY_DB.prepare("SELECT COUNT(*) AS count FROM invitations").first("count"), 0);
 });
 
 test("CJ-only private Cal.com assignment has no public booking or availability surface", async () => {
@@ -245,12 +317,14 @@ test("preview build, recovery UI and responsive accessibility controls remain is
   const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
   assert.equal(config.vars.APC_PATHWAY_PRODUCTION_ENABLED, "false");
   assert.equal(config.vars.APC_PATHWAY_REAL_CLIENT_DATA_ENABLED, "false");
+  assert.equal(config.vars.APC_PATHWAY_PREVIEW_BRANCH, "codex/client-pathway-production-readiness");
   assert.equal(config.vars.APC_PATHWAY_D1_MODE, "synthetic-preview");
   assert.equal(config.d1_databases.length, 1);
   assert.equal(config.d1_databases[0].binding, "PATHWAY_DB");
   assert.equal(config.d1_databases[0].database_name, "apc-client-pathway-preview-synthetic");
   assert.deepEqual(config.r2_buckets, []);
   assert.equal(config.env.preview.vars.APC_PATHWAY_REAL_CLIENT_DATA_ENABLED, "false");
+  assert.equal(config.env.preview.vars.APC_PATHWAY_PREVIEW_BRANCH, "codex/client-pathway-production-readiness");
   assert.equal(config.env.preview.d1_databases[0].database_id, config.d1_databases[0].database_id);
   assert.equal(config.env.production.vars.APC_PATHWAY_ENVIRONMENT, "disabled");
   assert.deepEqual(config.env.production.d1_databases, []);
@@ -266,6 +340,29 @@ test("preview build, recovery UI and responsive accessibility controls remain is
   assert.match(publicSource.join("\n"), /@media\(max-width:/);
   assert.match(publicSource.join("\n"), /focus-visible/);
   assert.match(publicSource.join("\n"), /aria-live="polite"/);
+});
+
+test("readiness evidence separates synthetic controls from blocked production decisions", async () => {
+  const evidence = JSON.parse(await readFile(new URL("../docs/portal-technical-readiness.json", import.meta.url), "utf8"));
+  assert.equal(evidence.scope, "SYNTHETIC_PREVIEW_ONLY");
+  assert.equal(evidence.syntheticTechnicalReadinessScore, 9.5);
+  assert.equal(evidence.productionReadinessScore, null);
+  assert.equal(evidence.productionAuthorized, false);
+  assert.equal(evidence.realClientDataAuthorized, false);
+  assert.ok(evidence.controls.every(control => ["PASS", "EXTERNAL_BLOCKED"].includes(control.status)));
+  assert.ok(evidence.controls.some(control => control.status === "EXTERNAL_BLOCKED"));
+
+  const gates = JSON.parse(await readFile(new URL("../docs/portal-release-gates.json", import.meta.url), "utf8"));
+  assert.ok(gates.mandatoryGates.every(gate => gate.state === "BLOCKED"));
+  assert.equal(gates.mandatoryGates.find(gate => gate.id === "OPS-HOLD-003")?.state, "BLOCKED");
+  assert.equal(gates.mandatoryGates.find(gate => gate.id === "SECURITY-001")?.state, "BLOCKED");
+});
+
+test("client profile contract excludes diagnostic and internal case fields", async () => {
+  const schema = await readFile(new URL("../docs/client-profile.schema.json", import.meta.url), "utf8");
+  for (const forbidden of ["diagnosis", "private_notes", "full_child_name", "case_history"]) {
+    assert.doesNotMatch(schema.toLowerCase(), new RegExp(forbidden));
+  }
 });
 
 test("actual JSON body bytes are bounded even without a Content-Length header", async () => {
