@@ -6,8 +6,9 @@
     "build": "node scripts/build-site.mjs",
     "sync:video-rules": "node scripts/sync-video-rules.mjs",
     "test:site-build": "node --test tests/site-build-output.test.mjs",
+    "test:site-metrics": "node --test tests/site-metrics.test.mjs",
     "test:content-os": "node --test tests/content-os*.test.mjs",
     "test:episode-workflow": "node --test tests/content-os-episode-workflow.test.mjs",
-    "test": "npm run test:content-os && npm run test:episode-workflow"
+    "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics"
   }
 }

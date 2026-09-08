@@ -46,7 +46,7 @@ test("preview cannot share the production D1 database", async () => {
   assert.equal(preview?.vars?.APC_CONTENT_OS_ENVIRONMENT, "preview");
   assert.equal(production?.vars?.APC_CONTENT_OS_PREVIEW_AUTH_ENABLED, "false");
   assert.equal(preview?.vars?.APC_CONTENT_OS_AUTOMATION_ENABLED, "false");
-  assert.equal(production?.d1_databases?.length, 2);
+  assert.equal(production?.d1_databases?.length, 3);
 
   for (const productionBinding of production.d1_databases) {
     assert.ok(productionBinding.database_id);

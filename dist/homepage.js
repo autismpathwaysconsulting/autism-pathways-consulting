@@ -109,11 +109,40 @@ document.querySelectorAll("[data-apc-carousel]").forEach(carousel => {
 
 const calInline = document.querySelector("[data-cal-inline]");
 
+// Only broad page categories and action names leave the browser.
+const metricPage = ({ "/": "home", "/services": "services", "/start": "start", "/about": "about", "/resources": "resources" })[window.location.pathname.replace(/\/$/, "") || "/"];
+const recordedMetrics = new Set();
+function recordSiteMetric(event) {
+  if (!metricPage || window.location.origin !== "https://autismpathwaysconsulting.com" ||
+      navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true || recordedMetrics.has(event)) return;
+  recordedMetrics.add(event);
+  fetch("/api/site-metrics", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ page: metricPage, event }),
+    credentials: "omit", referrerPolicy: "no-referrer", keepalive: true,
+  }).catch(() => {});
+}
+function recordPageView() {
+  if (document.visibilityState === "visible") recordSiteMetric("page_view");
+}
+recordPageView();
+document.addEventListener("visibilitychange", recordPageView);
+document.addEventListener("click", event => {
+  const link = event.target.closest?.("a[href]");
+  if (!link) return;
+  const target = new URL(link.href, window.location.href);
+  if ((target.origin === window.location.origin && target.hash === "#book-first-step") ||
+      (target.origin === "https://cal.com" && target.pathname === "/autismpathwaysconsulting/first-step-call")) {
+    recordSiteMetric("booking_click");
+  }
+});
+
 const bookingLoad = document.querySelector("[data-booking-load]");
 if (calInline && bookingLoad) bookingLoad.hidden = false;
 
 bookingLoad?.addEventListener("click", () => {
   if (bookingLoad.disabled) return;
+  recordSiteMetric("calendar_open");
   bookingLoad.disabled = true;
   bookingLoad.textContent = "Calendar requested below";
   const status = document.querySelector("[data-booking-status]");
@@ -149,6 +178,10 @@ bookingLoad?.addEventListener("click", () => {
   })(window, "https://app.cal.com/embed/embed.js", "init");
 
   window.Cal("init", "first-step-call", { origin: "https://cal.com" });
+  window.Cal.ns["first-step-call"]("on", {
+    action: "bookingSuccessfulV2",
+    callback: () => recordSiteMetric("booking_submitted"),
+  });
   window.Cal.ns["first-step-call"]("inline", {
     elementOrSelector: calInline,
     config: { layout: "month_view" },

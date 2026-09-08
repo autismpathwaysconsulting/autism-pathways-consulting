@@ -83,6 +83,8 @@ export const PUBLIC_FILES = Object.freeze([
   "content-os/practice/app.js",
   "content-os/calm-feedback/index.html",
   "content-os/calm-feedback/app.js",
+  "content-os/website/index.html",
+  "content-os/website/app.js",
 ]);
 
 const DENIED_FIRST_SEGMENTS = new Set([
