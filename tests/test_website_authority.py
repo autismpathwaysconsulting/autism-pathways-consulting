@@ -927,7 +927,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         self.assertEqual(1800, home["price"]["value"])
         self.assertEqual([6, 8], home["window_weeks"])
         self.assertEqual(7, len(home["deliverables"]))
-        self.assertTrue(home["additional_post_programme_checkin"])
+        self.assertFalse(home["additional_post_programme_checkin"])
         self.assertFalse(AUTHORITY["first_step_call"]["compulsory_before_rm350"])
         self.assertEqual("NON_AUTHORITATIVE_DERIVED_MIRROR", AUTHORITY["authority_role"])
         self.assertEqual("autismpathwaysconsulting/APC-AI-OS", AUTHORITY["provenance"]["source_repository"])

@@ -52,14 +52,14 @@ EXPECTED_SEQUENCE = [
 ]
 EXPECTED_PROVENANCE = {
     "apc_ai_os_repository": "autismpathwaysconsulting/APC-AI-OS",
-    "apc_ai_os_main_commit": "b4d2820334be9a3e12f5a4c827bfc4e4ad1a8893",
-    "canonical_audited_ancestor": "b7206744965929ce1469295129661a863bbdf733",
+    "apc_ai_os_main_commit": "e575b805b51c1574ed98e90a7658dbc2970d7554",
+    "canonical_audited_ancestor": "e575b805b51c1574ed98e90a7658dbc2970d7554",
     "authority_version": "1.2",
     "canonical_state": "CANDIDATE",
-    "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
+    "canonical_source_sha256": "sha256:c9ae9376c5187b38585b6ca52b80d8cf681e0bf940fa5ea53815c92f32964752",
+    "governed_projection_sha256": "sha256:49f962f73d44fc6fd8481bf6f8f1b78d99aa316f83260ddfebeb53f300ffbf8c",
     "website_repository": "autismpathwaysconsulting/autism-pathways-consulting",
-    "website_main_commit": "01b9565fc2891dd9354985c1acd4fd43adabe1b9",
+    "website_main_commit": "a084b8f8c5a62eefebfe8f5f529126cd4758555a",
     "website_pr14_candidate_commit": "7e62a470db496942e640267b52acaf6c3c312ece",
 }
 
