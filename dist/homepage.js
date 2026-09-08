@@ -109,7 +109,15 @@ document.querySelectorAll("[data-apc-carousel]").forEach(carousel => {
 
 const calInline = document.querySelector("[data-cal-inline]");
 
-if (calInline) {
+const bookingLoad = document.querySelector("[data-booking-load]");
+if (calInline && bookingLoad) bookingLoad.hidden = false;
+
+bookingLoad?.addEventListener("click", () => {
+  if (bookingLoad.disabled) return;
+  bookingLoad.disabled = true;
+  bookingLoad.textContent = "Calendar requested below";
+  const status = document.querySelector("[data-booking-status]");
+  status.textContent = "Loading Cal.com. If the calendar does not appear, use the direct booking link.";
   ((root, source, namespace) => {
     const enqueue = (api, args) => api.q.push(args);
     const documentRef = root.document;
@@ -150,7 +158,7 @@ if (calInline) {
     hideEventTypeDetails: false,
     layout: "month_view",
   });
-}
+});
 
 function sectionLabel(target, index) {
   const targetHeading = target.matches?.("h1, h2, h3") ? target.textContent : "";
@@ -264,7 +272,12 @@ if (sectionLinks.length && sections.length && "IntersectionObserver" in window) 
   sections.forEach(section => observer.observe(section));
 }
 
-const revealItems = [...document.querySelectorAll("[data-reveal]")];
+// The first screen must paint immediately. Reveal only offscreen content.
+const revealItems = [...document.querySelectorAll("[data-reveal]")].filter(item => {
+  if (item.getBoundingClientRect().top >= window.innerHeight) return true;
+  item.removeAttribute("data-reveal");
+  return false;
+});
 
 if (revealItems.length && !reducedMotion && "IntersectionObserver" in window) {
   document.documentElement.classList.add("apc-motion-ready");
