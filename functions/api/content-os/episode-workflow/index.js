@@ -8,7 +8,7 @@ const HOOK_RESULTS = new Set(["PASS", "REWORK", "FAIL"]);
 const FINAL_DECISIONS = new Set(["FILM", "PRODUCE", "REVISE"]);
 const CONTENT_TYPES = new Set(["VIDEO", "CAROUSEL"]);
 const PACKAGE_SCHEMA = "apc.episode_pack.v2";
-export const MINIMUM_REDTEAM_PASS_SCORE = 9;
+export const MINIMUM_REDTEAM_PASS_SCORE = 9.5;
 
 function json(body, status = 200, headers = {}) {
   return Response.json(body, { status, headers: { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", ...headers } });
@@ -107,6 +107,7 @@ function validateProductionPack(pack, requirePromptBinding = false) {
   if (!canonicalPackMaster(pack.masterRules)) return "Imported pack master rule identity does not match the canonical APC master.";
   if (!exactKeys(pack.redteam, ["result", "score", "risks", "fixes"]) || !["PASS", "FAIL"].includes(pack.redteam.result) || !Number.isFinite(pack.redteam.score) || pack.redteam.score < 0 || pack.redteam.score > 10 || !validStringArray(pack.redteam.risks) || !validStringArray(pack.redteam.fixes)) return "Imported pack red-team result is invalid. Score must be between 0 and 10.";
   if (pack.redteam.result === "PASS" && pack.redteam.score < MINIMUM_REDTEAM_PASS_SCORE) return `A red-team PASS requires a score of at least ${MINIMUM_REDTEAM_PASS_SCORE}/10.`;
+  if (pack.redteam.result === "PASS" && pack.redteam.risks.length) return "Resolve all red-team risks before returning PASS; use FAIL and REVISE while blockers remain.";
   if (!exactKeys(pack.hookGate, ["result", "yesCount", "checks"]) || !HOOK_RESULTS.has(pack.hookGate.result) || !Number.isSafeInteger(pack.hookGate.yesCount) || pack.hookGate.yesCount < 0 || pack.hookGate.yesCount > 5 || !Array.isArray(pack.hookGate.checks) || pack.hookGate.checks.length !== 5 || !pack.hookGate.checks.every(value => typeof value === "boolean") || pack.hookGate.checks.filter(Boolean).length !== pack.hookGate.yesCount) return "Imported pack hook gate is invalid.";
   if (!FINAL_DECISIONS.has(pack.finalDecision) || !validMultiline(pack.spokenScript, 20000, contentType === "VIDEO") || !Array.isArray(pack.filmingBoard) || pack.filmingBoard.length > 80 || !pack.filmingBoard.every(validFilmingScene) || !Array.isArray(pack.overlays) || pack.overlays.length > 80 || !validMultiline(pack.hyperframesPrompt, 30000, false)) return "Imported pack production content is invalid.";
   if (contentType === "VIDEO" && (!pack.filmingBoard.length || pack.finalDecision === "PRODUCE" || Object.hasOwn(pack, "carousel"))) return "A video pack requires filming scenes and a FILM or REVISE decision.";
@@ -117,6 +118,19 @@ function validateProductionPack(pack, requirePromptBinding = false) {
 
 export function validateAction(payload) {
   if (!isObject(payload) || typeof payload.action !== "string") return "Request must be a workflow action.";
+  if (payload.action === "save_recorded_materials") {
+    if (!exactKeys(payload, ["action", "episodeId", "expectedTitle", "materials", "idempotencyKey"]) || !validEpisodeId(payload.episodeId) || !validText(payload.expectedTitle, 200) || !validIdempotencyKey(payload.idempotencyKey)) return "Recorded intake identity is invalid.";
+    const m = payload.materials;
+    if (!exactKeys(m, ["videoName", "videoSha256", "publicationState", "publicationUrls", "publishedAt", "transcript", "transcriptStatus", "caption", "provenance"]) || hasUnsafeKey(m)) return "Recorded materials schema is invalid.";
+    if (!validText(m.videoName, 240) || !(m.videoSha256 === null || /^[a-f0-9]{64}$/.test(m.videoSha256)) || !["UNPUBLISHED", "FOUNDER_REPORTED_PUBLISHED"].includes(m.publicationState)) return "Recorded video identity is invalid.";
+    if (!Array.isArray(m.publicationUrls) || m.publicationUrls.length > 5 || !m.publicationUrls.every(value => { try { const u = new URL(value); return value.length <= 2000 && u.protocol === "https:" && !u.username && !u.password && ["www.instagram.com", "instagram.com", "www.tiktok.com", "tiktok.com"].includes(u.hostname); } catch { return false; } })) return "Publication URLs are invalid.";
+    if (m.publicationState === "FOUNDER_REPORTED_PUBLISHED" && !m.publicationUrls.length || m.publicationState === "UNPUBLISHED" && m.publicationUrls.length) return "Publication evidence contradicts the selected state.";
+    if (m.publishedAt !== null && (!validText(m.publishedAt, 40) || !/^\d{4}-\d{2}-\d{2}T/.test(m.publishedAt) || !Number.isFinite(Date.parse(m.publishedAt)))) return "Publication time is invalid.";
+    if (m.publicationState === "UNPUBLISHED" && m.publishedAt !== null) return "Unpublished video cannot have a publication date.";
+    if (!["UNVERIFIED", "AUTOMATED_UNVERIFIED", "AUDIO_VERIFIED"].includes(m.transcriptStatus) || !validMultiline(m.transcript, 20000, false) || !validMultiline(m.caption, 10000, false) || !validMultiline(m.provenance, 5000)) return "Transcript or provenance is invalid.";
+    if (m.transcriptStatus === "AUDIO_VERIFIED" && !m.transcript.trim()) return "Verified transcript cannot be empty.";
+    return null;
+  }
   if (payload.action === "create_episode") {
     if (!exactKeys(payload, ["action", "episode"]) || !exactKeys(payload.episode, ["id", "title", "researchItemId"])) return "Episode request does not match the expected schema.";
     if (!validEpisodeId(payload.episode.id)) return "Episode id must use EP followed by 2 to 4 digits.";
@@ -254,7 +268,7 @@ function eventStatementAfterChange(database, { episodeId, eventType, artifactId 
 function packGate(pack) {
   const coreHookChecksPass = pack.hookGate.checks.slice(0, 3).every(Boolean);
   const expectedDecision = pack.contentType === "CAROUSEL" ? "PRODUCE" : "FILM";
-  return pack.redteam.result === "PASS" && pack.redteam.score >= MINIMUM_REDTEAM_PASS_SCORE && pack.hookGate.result === "PASS" && pack.hookGate.yesCount >= 4 && coreHookChecksPass && pack.finalDecision === expectedDecision;
+  return pack.redteam.result === "PASS" && pack.redteam.score >= MINIMUM_REDTEAM_PASS_SCORE && pack.redteam.risks.length === 0 && pack.hookGate.result === "PASS" && pack.hookGate.yesCount >= 4 && coreHookChecksPass && pack.finalDecision === expectedDecision;
 }
 async function activeProductionArtifact(database, episodeId) {
   const episode = await database.prepare("SELECT production_pack_json FROM episodes WHERE id = ?").bind(episodeId).first();
@@ -292,6 +306,17 @@ export async function onRequestPost({ request, env }) {
   const database = env.APC_CONTENT_OS_DB;
   const now = new Date().toISOString();
   try {
+    if (payload.action === "save_recorded_materials") {
+      const payloadHash = await sha256Hex(canonicalJson(payload));
+      const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);
+      if (duplicate) return duplicate;
+      const episode = await database.prepare("SELECT id, title, archived_at FROM episodes WHERE id = ?").bind(payload.episodeId).first();
+      if (!episode) return json({ error: "Episode was not found." }, 404);
+      if (episode.archived_at || episode.title !== payload.expectedTitle) return json({ error: "Episode identity changed. Reload and match the title before saving." }, 409);
+      // Existing append-only metadata event envelope. No status, prompt or approval mutation.
+      await eventStatement(database, { episodeId: episode.id, eventType: "STATUS_CHANGED", idempotencyKey: payload.idempotencyKey, payloadHash, metadata: { action: "recorded_materials_saved", statusChanged: false, materials: payload.materials }, now }).run();
+      return json(await overview(database, { episodeId: episode.id, statusChanged: false }));
+    }
     if (payload.action === "create_tracked_prompt") {
       const payloadHash = await sha256Hex(canonicalJson({ episode: payload.episode, prompt: payload.prompt }));
       const duplicate = await idempotentOverview(database, payload.idempotencyKey, payloadHash);

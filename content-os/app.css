@@ -51,6 +51,12 @@ img,
 svg { max-width: 100%; }
 
 [hidden] { display: none !important; }
+.local-preview-notice { padding: 12px 20px; background: #FFF9F1; color: #073734; border-bottom: 1px solid #6B9E7A; font-size: 14px; }
+.studio-start-actions { display: grid; gap: 12px; max-width: 520px; }
+#masterIdeas:not(.show-batch-tools) .topic-selector,
+#masterIdeas:not(.show-batch-tools) [data-content-format="Carousel post"] { display: none; }
+.studio-start-actions .button { min-height: 48px; white-space: normal; text-align: center; }
+.episode-studio .page-section:focus { outline-offset: 6px; }
 
 .shell {
   width: min(100% - 32px, 1180px);
@@ -203,11 +209,15 @@ h3 {
 .nav-scroll a:hover,
 .nav-scroll a:focus-visible { background: var(--teal-pale); }
 
-.nav-scroll a[aria-current="location"] {
+.nav-scroll a[aria-current="location"],
+.nav-scroll a[aria-current="page"] {
   background: var(--teal-pale);
   box-shadow: inset 0 -3px var(--teal);
   color: var(--navy);
 }
+.episode-studio .nav-scroll a[aria-current="page"]::before { content: "● "; }
+.current-section-label { margin-block: 12px 0; color: var(--navy); font-weight: 850; }
+.episode-studio button[aria-pressed="true"] { background: var(--teal); color: white; border-color: var(--teal); }
 
 .main-content {
   display: flex;
@@ -1564,3 +1574,6 @@ button:disabled {
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+/* Recorded references may include long platform URLs; keep the phone layout contained. */
+#latestMaterials { min-width: 0; overflow-wrap: anywhere; }
+#latestMaterials textarea { width: 100%; box-sizing: border-box; }

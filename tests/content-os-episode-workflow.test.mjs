@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { DatabaseSync } from "node:sqlite";
+import { runInNewContext } from "node:vm";
 
 import { MINIMUM_REDTEAM_PASS_SCORE, onRequestPost, validateAction } from "../functions/api/content-os/episode-workflow/index.js";
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
@@ -12,6 +13,34 @@ const masterRules = {
   sha256: MASTER_VIDEO_RULES.sha256,
   sourcePath: MASTER_VIDEO_RULES.sourcePath,
 };
+
+test("Studio stage navigation reveals one stage and preserves keyboard and deep-link navigation", async () => {
+  const source = await readFile(new URL("../content-os/episodes/app.js", import.meta.url), "utf8");
+  const stageCode = source.slice(source.indexOf("const studioStages ="), source.indexOf("function arrangeWorkflowSections"));
+  const ids = ["overview", "ideas", "pack", "import", "filming-pack", "results", "episodes"];
+  let focused = null;
+  const sections = Object.fromEntries(ids.map(id => [id, {
+    hidden: false, scrollIntoView() {},
+    querySelector() { return { focus() { focused = id; } }; },
+  }]));
+  const links = ids.map(id => ({
+    current: null, getAttribute() { return "#" + id; },
+    setAttribute(name, value) { this.current = value; }, removeAttribute() { this.current = null; },
+  }));
+  const location = { hash: "" };
+  const context = { element: id => sections[id], document: { querySelectorAll: () => links }, location,
+    history: { pushState(state, title, hash) { location.hash = hash; } } };
+  runInNewContext(stageCode + ';showStudioStage("unknown", false);', context);
+  assert.deepEqual(ids.filter(id => !sections[id].hidden), ["ideas"]);
+  assert.equal(focused, null);
+  for (const stage of ["pack", "import", "filming-pack", "results", "episodes", "ideas"]) {
+    runInNewContext(`goToStudioStage(${JSON.stringify(stage)});`, context);
+    assert.deepEqual(ids.filter(id => !sections[id].hidden), [stage]);
+    assert.equal(location.hash, "#" + stage);
+    assert.equal(focused, stage);
+    assert.equal(links.filter(link => link.current === "page").length, 1);
+  }
+});
 
 function importedPack(overrides = {}) {
   return {
@@ -164,6 +193,26 @@ test("accepts the governed and tracked episode workflow actions", () => {
   for (const payload of valid) assert.equal(validateAction(payload), null, payload.action);
 });
 
+test("recorded intake preserves status and scripts, is idempotent and refuses identity conflicts", async () => {
+  const database = new DatabaseSync(":memory:");
+  try {
+    await applyMigrations(database);
+    await postWorkflow(database, {action:"create_episode",episode:{id:"EP09",title:"Synthetic recorded topic",researchItemId:null}});
+    const before = database.prepare("SELECT * FROM episodes WHERE id='EP09'").get();
+    const payload = {action:"save_recorded_materials",episodeId:"EP09",expectedTitle:before.title,idempotencyKey:"recorded:synthetic:0001",materials:{videoName:"different-file-number.mp4",videoSha256:"a".repeat(64),publicationState:"UNPUBLISHED",publicationUrls:[],publishedAt:null,transcript:"",transcriptStatus:"UNVERIFIED",caption:"Separate caption",provenance:"Founder confirms latest export; old private label retained."}};
+    let response = await postWorkflow(database,payload);
+    assert.equal(response.status,200,await response.text());
+    response = await postWorkflow(database,payload);
+    assert.equal(response.status,200);
+    assert.deepEqual(database.prepare("SELECT * FROM episodes WHERE id='EP09'").get(),before);
+    assert.equal(database.prepare("SELECT count(*) n FROM episode_events WHERE json_extract(metadata_json,'$.action')='recorded_materials_saved'").get().n,1);
+    assert.equal((await postWorkflow(database,{...payload,expectedTitle:"Other topic",idempotencyKey:"recorded:synthetic:0002"})).status,409);
+    assert.equal((await postWorkflow(database,{...payload,materials:{...payload.materials,caption:"Changed"}})).status,409);
+    for (const materials of [{...payload.materials,videoSha256:"unknown"},{...payload.materials,publicationState:"FOUNDER_REPORTED_PUBLISHED"},{...payload.materials,publicationUrls:["javascript:alert(1)"]},{...payload.materials,transcriptStatus:"AUDIO_VERIFIED"},{...payload.materials,score:9.5}]) assert.notEqual(validateAction({...payload,materials}),null);
+    assert.equal(validateAction({...payload,materials:{...payload.materials,publicationState:"FOUNDER_REPORTED_PUBLISHED",publicationUrls:["https://www.instagram.com/reel/example/"]}}),null);
+  } finally { database.close(); }
+});
+
 test("rejects unknown fields and invalid identities", () => {
   assert.match(validateAction({ action: "create_episode", episode: { id: "bad", title: "Test", researchItemId: null } }), /episode id/i);
   assert.match(validateAction({ action: "update_episode_status", episodeId: "EP09", status: "DONE" }), /invalid/i);
@@ -248,7 +297,7 @@ test("carousel decision migration preserves episode history, foreign keys and ap
 });
 
 test("tracked package contract requires the red-team and five-check filming gate", () => {
-  assert.equal(MINIMUM_REDTEAM_PASS_SCORE, 9);
+  assert.equal(MINIMUM_REDTEAM_PASS_SCORE, 9.5);
   const failedRedTeam = importedPack({ redteam: { result: "FAIL", score: 4, risks: ["Overclaim"], fixes: [] }, finalDecision: "REVISE" });
   assert.equal(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: failedRedTeam, idempotencyKey: "pack:EP09:failed001" }), null);
 
@@ -259,7 +308,14 @@ test("tracked package contract requires the red-team and five-check filming gate
   assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: wrongScoreScale, idempotencyKey: "pack:EP09:badscore1" }), /between 0 and 10/i);
 
   const weakPass = importedPack({ redteam: { result: "PASS", score: 8.9, risks: [], fixes: [] } });
-  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: weakPass, idempotencyKey: "pack:EP09:weakpass1" }), /at least 9\/10/i);
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: weakPass, idempotencyKey: "pack:EP09:weakpass1" }), /at least 9\.5\/10/i);
+  for (const score of [9, 9.49, 9.5, 10]) {
+    const pack = importedPack({redteam:{result:"PASS",score,risks:[],fixes:[]}});
+    const result = validateAction({action:"import_production_pack",episodeId:"EP09",pack,idempotencyKey:"pack:EP09:threshold"});
+    if (score < 9.5) assert.match(result, /at least 9\.5/); else assert.equal(result,null);
+  }
+  const unresolved = importedPack({redteam:{result:"PASS",score:10,risks:["Unverified claim"],fixes:[]}});
+  assert.match(validateAction({action:"import_production_pack",episodeId:"EP09",pack:unresolved,idempotencyKey:"pack:EP09:unresolved"}),/Resolve all red-team risks/);
 });
 
 test("tracked package contract supports backward-compatible scene preparation and carousel packs", () => {
@@ -555,15 +611,15 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeHtml, /id="import"/);
   assert.match(episodeHtml, /Paste Codex result \+ import/);
   assert.match(episodeHtml, /You do not need to isolate or edit the JSON yourself/);
-  assert.match(episodeHtml, /red-team score of at least 9\/10/);
+  assert.match(episodeHtml, /red-team score of at least 9\.5\/10/);
   assert.match(episodeHtml, /My preferred script or wording/);
   assert.match(episodeHtml, /Save edits \+ copy prompt/);
   assert.match(episodeHtml, /Save draft only/);
   assert.match(episodeApp, /CJ'S PREFERRED SCRIPT OR WORDING/);
-  assert.match(episodeApp, /final red-team score of at least 9\/10/);
+  assert.match(episodeApp, /final red-team score of at least 9\.5\/10/);
   assert.match(episodeApp, /const needsSave =/);
-  assert.match(episodeHtml, /Produce and edit from one page/);
-  assert.match(episodeHtml, /Download final HTML/);
+  assert.match(episodeHtml, /Script &amp; HTML/);
+  assert.match(episodeHtml, /Download HTML/);
   assert.match(episodeApp, /standalonePackHtml/);
   assert.match(episodeApp, /existingEpisodeForSource/);
   assert.match(episodeApp, /Rebuild it as a revision instead of creating a duplicate/);
@@ -578,7 +634,7 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /pasteAndImportPackage/);
   assert.match(episodeHtml, /id="importFeedback"/);
   assert.match(episodeHtml, /Choose JSON file \+ import/);
-  assert.match(episodeApp, /Package imported successfully\. Step 4 is ready below\./);
+  assert.match(episodeApp, /Package imported\. Read the script in Prepare your script before approving it\./);
   assert.match(episodeApp, /await importPackage\(\)/);
   assert.match(episodeApp, /Silent beat\. Do not speak\./);
   assert.match(episodeApp, /explicit timed-pause direction/);
@@ -594,7 +650,7 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeApp, /hookGate\?\.checks\?\.slice\(0, 3\)\.every\(Boolean\)/);
   assert.doesNotMatch(episodeApp, /latestArtifact\([^\n]*"PRODUCTION_PACK"/);
   assert.match(episodeApp, /Edit script before finalising/);
-  assert.match(episodeApp, /Save draft \+ build review prompt/);
+  assert.match(episodeApp, /Save draft \+ copy recheck request/);
   assert.match(episodeApp, /spoken script changed after the previous audit/);
   assert.match(episodeHtml, /It does not create duplicate local files automatically/);
   assert.match(episodeApp, /Create carousel post/);
@@ -605,7 +661,7 @@ test("Episode Studio tracks prompt and package versions before filming", async (
   assert.match(episodeHtml, /Cloud record here, video files on your SSD/);
   assert.match(episodeHtml, /Select several topics once/);
   assert.match(episodeHtml, /Create selected prompts/);
-  assert.match(episodeHtml, /Download final HTML/);
+  assert.match(episodeHtml, /Download HTML/);
   assert.match(episodeHtml, /Practice Console/);
   assert.match(episodeHtml, /Calm feedback inbox/);
   assert.match(episodeHtml, /archivedEpisodeList/);

@@ -18,9 +18,7 @@
         <p class="header-summary">Turn one useful idea into a video or carousel, then review, publish and learn from it.</p>
         <div class="button-row quick-launch-row" aria-label="Quick launch links">
           <a class="button compact" href="/content-os/">Content OS</a>
-          <a class="button secondary compact" href="/content-os/episodes/">Episode Studio</a>
-          <a class="button secondary compact" href="/content-os/practice/">Practice Console</a>
-          <a class="button secondary compact" href="/content-os/calm-feedback/">Calm feedback inbox</a>
+          <details><summary>Other tools</summary><a href="/content-os/practice/">Practice Console</a> · <a href="/content-os/calm-feedback/">Calm feedback inbox</a></details>
         </div>
       </div>
       <div class="sync-panel" role="status" aria-live="polite" aria-atomic="true">
@@ -32,20 +30,27 @@
 
   <nav class="section-nav" aria-label="Episode Studio sections">
     <div class="shell nav-scroll">
-      <a href="#overview" aria-current="location">Workflow</a>
-      <a href="#ideas">1. Choose idea</a>
-      <a href="#pack">2. Send to Codex</a>
-      <a href="#import">3. Import result</a>
-      <a href="#filming-pack">4. Produce + edit</a>
-      <a href="#results">5. Review + publish</a>
-      <a href="/content-os/?from=episodes#results">6. Analytics</a>
-      <a href="#episodes">Manage episodes</a>
+      <a href="#overview">Start</a>
+      <a href="#ideas">Topic bank</a>
+      <a href="#episodes">Episode log</a>
+      <a href="#pack">Prepare your script</a>
+      <a href="#import">Save generated result</a>
+      <a href="#filming-pack">Script &amp; HTML</a>
+      <a href="#results">Audit video</a>
     </div>
   </nav>
+  <p id="currentSectionLabel" class="shell current-section-label" aria-live="polite">You are here: Topic bank</p>
 
   <main id="main-content" class="shell main-content">
     <section id="overview" class="page-section" aria-labelledby="overview-title">
-      <div class="section-heading"><div><p class="section-kicker">Start here</p><h2 id="overview-title">One guided workflow</h2><p class="section-summary">Choose one episode and follow the numbered steps. Content OS and Episode Studio use the same cloud record.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Start here</p><h2 id="overview-title">Start</h2><p class="section-summary">Work on one episode from its first idea to the final video check.</p></div></div>
+      <div class="studio-start-actions">
+        <a class="button" href="#ideas">Create an episode</a>
+        <a id="continueEpisode" class="button secondary" href="#episodes">Continue an episode</a>
+        <a class="button secondary" href="#results">Audit a video</a>
+      </div>
+      <p id="continueEpisodeDetail" class="subtle">Your saved episodes are under My episodes.</p>
+      <details class="reference-item"><summary>Progress and workflow details</summary>
       <div class="metric-grid" aria-label="Episode progress">
         <article class="metric-card"><strong id="episodeCount" class="metric-value">0</strong><span>Episodes</span></article>
         <article class="metric-card"><strong id="filmingCount" class="metric-value">0</strong><span>Ready to film</span></article>
@@ -53,35 +58,44 @@
         <article class="metric-card"><strong id="publishedCount" class="metric-value">0</strong><span>Published</span></article>
       </div>
       <div id="workflowSteps" class="workflow-step-grid" aria-label="Episode workflow steps"></div>
+      </details>
     </section>
 
     <section id="ideas" class="page-section" aria-labelledby="ideas-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 1</p><h2 id="ideas-title">Choose an idea and format</h2><p class="section-summary">Create either a video episode or carousel from a topic. The prompt is saved to the cloud before it appears, so every content item is tracked from its first draft.</p></div></div>
-      <div class="subsection-heading"><div><h3>Master-aligned ideas</h3><p class="subtle">These replace the previous built-in idea list for future episodes.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Choose a topic</p><h2 id="ideas-title">Topic bank</h2><p class="section-summary">Pick a topic. Its parent situation, evidence, payoff and v0.5 formula are already included. Codex writes and audits; Content OS keeps the log.</p></div></div>
+      <div id="topicTools">
+      <div class="button-row"><button id="newTopicCategory" class="button secondary" type="button" aria-pressed="true">New topics</button><button id="existingTopicCategory" class="button secondary" type="button" aria-pressed="false">Existing episodes</button></div>
+      <div class="field"><label for="topicSearch">Find a topic</label><input id="topicSearch" type="search" placeholder="Search anxiety, school, instructions..." autocomplete="off"></div>
+      <p id="topicSearchSummary" class="subtle" role="status"></p>
+      <details id="batchTools" class="reference-item"><summary>Batch and carousel options</summary>
       <div class="card batch-toolbar" aria-labelledby="batch-title">
         <div><p class="card-label">Batch create</p><h3 id="batch-title">Select several topics once</h3><p class="subtle">Content OS creates and saves every tracked prompt automatically. Existing items are skipped.</p></div>
         <div class="field"><label for="batchFormat">Create as</label><select id="batchFormat"><option value="Talking head">Video episodes</option><option value="Carousel post">Carousel posts</option></select></div>
         <div class="button-row"><button id="selectAllTopics" class="button secondary compact" type="button">Select all</button><button id="clearTopicSelection" class="button secondary compact" type="button">Clear</button><button id="createSelectedTopics" class="button compact" type="button">Create selected prompts</button></div>
         <p id="batchSelectionCount" class="subtle" aria-live="polite">0 topics selected.</p>
       </div>
-      <div id="masterIdeas" class="card-list"><div class="empty-state">Loading master-aligned ideas.</div></div>
+      </details>
+      <div id="masterIdeas" class="card-list"><div class="empty-state">Loading stored topics.</div></div>
+      <details class="reference-item"><summary>Additional research suggestions</summary>
       <div class="subsection-heading"><div><h3>Weekly research candidates</h3><p class="subtle">New governed research may suggest another topic, but the master filming rules still apply.</p></div><a class="button secondary" href="/content-os/#research">Open full research inbox</a></div>
       <div id="researchIdeas" class="card-list"><div class="empty-state">No research candidates loaded.</div></div>
-      <div class="card form-card">
-        <h3>Create a manual episode</h3>
+      </details>
+      </div>
+      <details class="reference-item"><summary>Add my own topic instead</summary><div class="card form-card">
+        <h3>Create one episode</h3>
         <form id="episodeForm" class="stack">
           <div class="field-grid three">
-            <div class="field"><label for="episodeId">Episode ID</label><input id="episodeId" required maxlength="6" placeholder="EP09"></div>
+            <input id="episodeId" type="hidden">
             <div class="field"><label for="episodeTitle">Topic or parent problem</label><input id="episodeTitle" required maxlength="200"></div>
             <div class="field"><label for="manualFormat">Content format</label><select id="manualFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option><option>Carousel post</option></select></div>
           </div>
-          <div class="form-actions"><button class="button" type="submit">Create content + build prompt</button></div>
+          <div class="form-actions"><button class="button" type="submit">Continue to script</button></div>
         </form>
-      </div>
+      </div></details>
     </section>
 
     <section id="episodes" class="page-section" aria-labelledby="episodes-title">
-      <div class="section-heading"><div><p class="section-kicker">Manage</p><h2 id="episodes-title">Episodes</h2><p class="section-summary">Continue the next action, revise the title or script, or archive an unwanted episode without deleting its audit history.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Manage</p><h2 id="episodes-title">Episode log</h2><p class="section-summary">Continue the next action, revise the title or script, or archive an unwanted episode without deleting its audit history.</p></div></div>
       <div class="card storage-card" role="note">
         <p class="card-label">File storage</p>
         <h3>Cloud record here, video files on your SSD</h3>
@@ -104,28 +118,32 @@
     </section>
 
     <section id="pack" class="page-section" aria-labelledby="pack-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 2</p><h2 id="pack-title">Send the episode to Codex</h2><p class="section-summary">The prompt is already built and saved. Copy it to Codex, then return here with the completed response.</p></div></div>
-      <div class="hook-gate rework" role="status" aria-live="polite">
+      <div class="section-heading"><div><p class="section-kicker">Write and review</p><h2 id="pack-title">Prepare your script</h2><p class="section-summary">Read the saved script here before approving it. Importing a result does not approve or lock it.</p></div></div>
+      <details class="reference-item"><summary>Script rules and source</summary><div class="hook-gate rework" role="status" aria-live="polite">
         <strong id="masterRulesStatus">Loading master video rules</strong>
         <span id="masterRulesDetail" class="subtle">Checking the current APC-AI-OS source and version.</span>
-      </div>
+      </div></details>
       <div class="card form-card stack">
         <div class="field-grid two">
           <div class="field"><label for="packEpisode">Episode</label><select id="packEpisode"></select></div>
           <div class="field"><label for="packFormat">Format</label><select id="packFormat"><option>Talking head</option><option>Talking head with overlays</option><option>Voiceover</option><option>Carousel post</option></select></div>
         </div>
-        <div class="field"><label for="preferredScript">My preferred script or wording <span class="subtle">(optional)</span></label><textarea id="preferredScript" maxlength="20000" rows="12" placeholder="Paste or write your preferred script here before sending it to Codex."></textarea><p class="field-help">Codex must preserve your voice and structure where safe, correct only what is needed for accuracy and alignment, then return a filming-ready version scoring at least 9/10.</p></div>
+        <div id="prepareNextStep" class="handoff-card" aria-live="polite"></div>
+        <details id="prepareMaterialsDetails" class="reference-item"><summary>Saved files, recorded video and storage</summary><div id="latestMaterials" class="stack" aria-live="polite"></div></details>
+        <div id="prepareScriptViewer" class="stack" aria-live="polite"></div>
+        <div class="button-row" hidden><button id="preparePasteResult" class="button secondary" type="button">Paste result + show script</button></div>
+        <details class="reference-item"><summary>Optional: add my wording or constraints</summary><div class="field"><label for="preferredScript">My preferred script or wording <span class="subtle">(optional)</span></label><textarea id="preferredScript" maxlength="20000" rows="12" placeholder="Paste or write your preferred script here before sending it to Codex."></textarea><p class="field-help">Codex preserves your voice, corrects material issues and reports an honest audit. A requested score is not an automatic pass.</p></div>
         <div class="field"><label for="packNotes">Constraints or notes</label><textarea id="packNotes" maxlength="2000" placeholder="Keep under 75 seconds. Include one practical action."></textarea></div>
-        <div class="button-row"><button id="copyPrompt" class="button" type="button">Save edits + copy prompt</button><button id="rebuildPrompt" class="button secondary" type="button">Save draft only</button></div>
+        <div class="button-row"><button id="copyPrompt" class="button" type="button">Save edits + copy prompt</button><button id="rebuildPrompt" class="button secondary" type="button">Save draft only</button></div></details>
         <details class="prompt-preview"><summary>View saved prompt</summary><pre id="promptOutput" class="card" aria-live="polite">Choose an episode and generate the prompt.</pre></details>
       </div>
     </section>
 
     <section id="import" class="page-section" aria-labelledby="import-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 3</p><h2 id="import-title">Bring the finished response back</h2><p class="section-summary">Copy the complete Codex response. One click pastes it, finds the final JSON package and imports it into the same episode.</p></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Log the result</p><h2 id="import-title">Save generated result</h2><p class="section-summary">Generated in Codex is not saved here yet. Paste the completed result below. After a successful import, find the saved script and downloadable HTML in Prepare your script or Script &amp; HTML. Importing does not approve it.</p></div></div>
       <div class="card form-card stack">
         <div class="field"><label for="importEpisode">Episode</label><select id="importEpisode"></select></div>
-        <div class="handoff-card" role="note"><strong>Return from Codex</strong><span>Copy its complete answer. You do not need to isolate or edit the JSON yourself.</span><span>Before saving, Content OS verifies the episode ID, master-rule hash, red-team score of at least 9/10, ready-to-film decision and five hook checks.</span></div>
+        <div class="handoff-card" role="note"><strong>Return from Codex</strong><span>Copy its complete answer. You do not need to isolate or edit the JSON yourself.</span><span>Before saving, Content OS verifies the episode ID, master-rule hash, red-team score of at least 9.5/10, ready-to-film decision and five hook checks.</span></div>
         <div class="button-row"><button id="pasteAndImportPackage" class="button" type="button">Paste Codex result + import</button><button id="showManualImport" class="button secondary" type="button">Manual fallback</button></div>
         <p id="importFeedback" class="subtle" role="status" aria-live="polite">No production package has been imported yet.</p>
         <details id="manualImportPanel" class="manual-import-panel">
@@ -140,15 +158,20 @@
     </section>
 
     <section id="filming-pack" class="page-section" aria-labelledby="filming-pack-title">
-      <div class="section-heading"><div><p class="section-kicker">Step 4</p><h2 id="filming-pack-title">Produce and edit from one page</h2><p class="section-summary">Switch between every prepared item below. Content OS keeps one canonical cloud copy; download a single HTML file only after the content is locked.</p></div><div class="button-row"><button id="downloadFilmingHtml" class="button secondary" type="button" disabled>Download final HTML</button></div></div>
+      <div class="section-heading"><div><p class="section-kicker">Saved filming sheet</p><h2 id="filming-pack-title">Script &amp; HTML</h2><p class="section-summary">Imported scripts and filming sheets persist in the episode record. HTML is generated from that saved version when you download it; no HTML file is automatically placed in a folder. Unapproved downloads are labelled DRAFT.</p></div><div class="button-row"><button id="downloadFilmingHtml" class="button secondary" type="button" disabled>Download HTML</button></div></div>
       <div id="filmingPackSwitcher" class="pack-switcher" aria-label="Prepared content"></div>
       <div id="filmingPackViewer" class="card filming-pack-viewer"><div class="empty-state">Open imported content to see its script or slides, preparation list, exact actions, visual direction and edit notes.</div></div>
     </section>
 
     <section id="results" class="page-section" aria-labelledby="results-title">
-      <div class="section-heading"><div><p class="section-kicker">Steps 5 to 7</p><h2 id="results-title">Review, publish and learn</h2><p class="section-summary">Save the hash-based final review, then send the same episode ID to Content OS when you publish. The 24h, 7d and 28d analytics stay attached automatically.</p></div><a id="publicationLink" class="button" href="/content-os/?from=episodes#results">Publish + start analytics</a></div>
+      <div class="section-heading"><div><p class="section-kicker">Audit and log</p><h2 id="results-title">Audit video</h2><p class="section-summary">Audit the edited export in Codex, then save the review here. After uploading, record the post link. Analytics are follow-up records, not extra creation steps.</p></div><a id="publicationLink" class="button" href="/content-os/?from=episodes#results">Record published post</a></div>
       <div class="card form-card stack">
-        <h3>Import video review</h3>
+        <h3>Get your edited video audited</h3>
+        <p>You can audit an existing video even if you did not create it here. No episode record is needed to start.</p>
+        <button id="copyAuditBrief" class="button" type="button">Copy video audit request for Codex</button>
+        <p id="auditHandoffFeedback" role="status" class="subtle">Copy the request, then attach your video in Codex or give its local file path.</p>
+        <p>In Codex, attach your final video or give its local file path and ask: “Audit this APC video before upload. Give timestamped blockers, optional polish and a final READY or NOT READY decision.” Keep the video on your device.</p>
+        <p>This page saves the completed audit. It does not inspect or upload your video. Return here with the review manifest from Codex.</p>
         <p class="subtle">Paste the review manifest returned after a full, delta or final video audit. The video SHA-256 prevents findings from an older export being mistaken for the latest cut.</p>
         <div class="field"><label for="reviewEpisode">Episode</label><select id="reviewEpisode"></select></div>
         <div class="field"><label for="reviewManifest">Review manifest JSON</label><textarea id="reviewManifest" class="package-json" maxlength="120000" placeholder='Paste the review-manifest.json content here'></textarea></div>
@@ -156,6 +179,7 @@
       </div>
       <div id="reviewList" class="card-list"><div class="empty-state">No video reviews recorded yet.</div></div>
       <div id="publicationList" class="card-list"><div class="empty-state">No linked publications yet.</div></div>
+      <div class="card stack"><h3>What worked? Performance learning</h3><p>Compare like platforms and checkpoints using existing analytics. A strong script score is not proof of a winning post.</p><button id="copyPerformanceBrief" class="button secondary" type="button">Copy performance review request</button><p id="performanceFeedback" class="subtle" role="status">Uses the selected episode and linked publication summaries. Missing snapshots remain unknown. A winner-library save control is not connected yet.</p></div>
     </section>
   </main>
 </body>

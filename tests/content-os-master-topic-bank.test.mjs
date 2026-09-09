@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { runInNewContext } from "node:vm";
 
 import { PUBLIC_FILES } from "../scripts/build-site.mjs";
 import {
@@ -8,6 +10,7 @@ import {
   CJ_IDEA_BACKLOG_VERSION,
   MASTER_TOPIC_BANK,
   MASTER_TOPIC_BANK_VERSION,
+  SCRIPT_PLAYBOOK,
 } from "../content-os/topic-bank.js";
 
 async function source(relativePath) {
@@ -15,14 +18,18 @@ async function source(relativePath) {
 }
 
 test("future idea bank is rebuilt for the current master and teenage audience", () => {
-  assert.equal(MASTER_TOPIC_BANK_VERSION, "2026-09-06.1");
+  assert.equal(MASTER_TOPIC_BANK_VERSION, "2026-09-09.2");
   assert.ok(MASTER_TOPIC_BANK.length >= 12);
   assert.equal(new Set(MASTER_TOPIC_BANK.map(topic => topic.id)).size, MASTER_TOPIC_BANK.length);
 
   for (const topic of MASTER_TOPIC_BANK) {
     assert.match(topic.id, /^[a-z0-9-]+$/);
-    assert.ok(topic.hook.startsWith("Can I tell you something?"), topic.id);
-    assert.match(topic.hook, /\d/, topic.id);
+    assert.equal(topic.hook, topic.parentMoment, topic.id);
+    assert.match(topic.coverQuestion, /\?$/, topic.id);
+    assert.equal(topic.scriptBrief.question, topic.coverQuestion);
+    assert.equal(topic.scriptBrief.payoff, topic.practicalPayoff);
+    assert.equal(topic.scriptPlaybook, SCRIPT_PLAYBOOK);
+    assert.doesNotMatch(topic.hook, /Can I tell you something/);
     assert.ok(["Puberty / early adolescence", "Teen years", "Preparing to leave school"].includes(topic.stage), topic.id);
     assert.ok(topic.overlay.length > 10, topic.id);
     assert.ok(topic.parentMoment.length > 20, topic.id);
@@ -57,8 +64,8 @@ test("selecting a master idea carries its evidence into the production prompt", 
   assert.match(html, /Selected evidence context/);
   assert.match(episodeApp, /function renderMasterIdeas\(\)/);
   assert.match(episodeApp, /sourceType: "master-topic-bank"/);
-  assert.match(episodeApp, /JSON\.stringify\(evidenceContext, null, 2\)/);
-  assert.match(episodeHtml, /Master-aligned ideas/);
+  assert.match(episodeApp, /JSON\.stringify\(evidenceContext\)/);
+  assert.match(episodeHtml, /Topic bank/);
 });
 
 test("master topic bank is published with Content OS", () => {
@@ -66,7 +73,7 @@ test("master topic bank is published with Content OS", () => {
 });
 
 test("CJ idea backlog preserves new ideas as unverified inspiration", () => {
-  assert.equal(CJ_IDEA_BACKLOG_VERSION, "2026-09-06.1");
+  assert.equal(CJ_IDEA_BACKLOG_VERSION, "2026-09-09.2");
   assert.ok(CJ_IDEA_BACKLOG.length >= 40);
   assert.equal(new Set(CJ_IDEA_BACKLOG.map(topic => topic.id)).size, CJ_IDEA_BACKLOG.length);
 
@@ -93,6 +100,8 @@ test("CJ idea backlog preserves new ideas as unverified inspiration", () => {
     assert.ok(Array.isArray(topic.references), topic.id);
     assert.ok(topic.references.every(url => /^https:\/\//.test(url)), topic.id);
     assert.equal(Object.hasOwn(topic, "source"), false, topic.id);
+    assert.equal(topic.scriptPlaybook, SCRIPT_PLAYBOOK);
+    assert.match(topic.developmentInstruction, /research gate first/);
   }
 });
 
@@ -133,8 +142,44 @@ test("idea actions build a copy-ready script prompt without another required cli
   assert.match(episodeApp, /action: "create_tracked_prompt"/);
   assert.match(episodeApp, /element\("promptOutput"\)\.textContent = promptTextForCodex\(episode\.id\)/);
   assert.match(episodeApp, /createEpisodeAndBuildPrompt\(\{ id: nextEpisodeId\(\), title: topic\.name, researchItemId: null \}, masterContext\(topic\), button\.dataset\.contentFormat/);
-  assert.match(episodeApp, /"Create video episode"/);
+  assert.match(episodeApp, /"Use topic \+ copy prompt"/);
   assert.match(episodeApp, /"Create carousel post"/);
-  assert.match(episodeHtml, />Create content \+ build prompt</);
+  assert.match(episodeHtml, />Continue to script</);
   assert.match(episodeHtml, />Save edits \+ copy prompt</);
+});
+
+test("playbook migration preserves every topic, evidence record and backlog research gate", async () => {
+  const preserved = {
+    ready: MASTER_TOPIC_BANK.map(({ hook, coverQuestion, scriptPlaybook, scriptBrief, ...topic }) => topic),
+    backlog: CJ_IDEA_BACKLOG.map(({ scriptPlaybook, developmentInstruction, ...topic }) => topic),
+  };
+  assert.equal(createHash("sha256").update(JSON.stringify(preserved)).digest("hex"), "33cdd18dd31975e1465ebebd850e7ede1a038d335934f578b375c106710bfc11");
+  const markdown = await source("docs/APC-Script-Formats-and-Editing-Playbook.md");
+  assert.equal(createHash("sha256").update(markdown).digest("hex"), SCRIPT_PLAYBOOK.sha256);
+});
+
+test("draft revision refreshes saved bank context without rewriting locked or recorded episodes", async () => {
+  const app = await source("content-os/episodes/app.js");
+  const code = app.slice(app.indexOf("async function savePromptRevision()"), app.indexOf("async function saveScriptDraft("));
+  for (const status of ["IDEA", "APPROVED", "SCRIPT_LOCKED", "FILMED", "EDITING", "REVIEW", "READY", "PUBLISHED"]) {
+    const episode = { id: "EP01", status };
+    const old = { sourceType: "master-topic-bank", topicBankVersion: "old", topic: { id: MASTER_TOPIC_BANK[0].id } };
+    let saved = null;
+    const fields = { packEpisode: { value: "EP01" }, packFormat: { value: "Talking head" }, packNotes: { value: "My note" }, preferredScript: { value: "My wording" }, promptOutput: {} };
+    const context = { workflow: { episodes: [episode] }, element: id => fields[id], sourceContext: () => old,
+      MASTER_TOPIC_BANK, masterContext: topic => ({ topic, topicBankVersion: MASTER_TOPIC_BANK_VERSION }),
+      promptRecord: (episode, format, notes, sourceContext, preferredScript) => ({ sourceContext, notes, preferredScript }),
+      setStatus() {}, selectStudioEpisode(id) { assert.equal(id, "EP01"); }, uniqueKey: () => "test", apiRequest: async payload => { saved = payload; }, promptTextForCodex: () => "saved" };
+    const call = runInNewContext(code + "\nsavePromptRevision()", context);
+    if (["IDEA", "APPROVED"].includes(status)) {
+      await call;
+      assert.equal(saved.prompt.sourceContext.topicBankVersion, MASTER_TOPIC_BANK_VERSION);
+      assert.equal(saved.prompt.preferredScript, "My wording");
+      assert.equal(saved.prompt.notes, "My note");
+    } else {
+      await assert.rejects(call, /locked or recorded/);
+      assert.equal(saved, null);
+    }
+    assert.equal(old.topicBankVersion, "old");
+  }
 });

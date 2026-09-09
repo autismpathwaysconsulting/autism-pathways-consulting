@@ -1,6 +1,15 @@
-export const MASTER_TOPIC_BANK_VERSION = "2026-09-06.1";
+export const MASTER_TOPIC_BANK_VERSION = "2026-09-09.2";
+export const SCRIPT_PLAYBOOK = Object.freeze({
+  version: "0.5",
+  sha256: "5e16f366ba6abcb02b9eb11484e78024b92da927170b90aa801ec63717b50ac6",
+  formula: "Title + specific question → recognisable situation → connected explanation → visible support → payoff answering the question → one purposeful ending",
+  formatSelection: "Choose discovery/meaning, practical demonstration or information/navigation to fit the topic. Do not stack formats or require a statistic, catchphrase or three-tip list.",
+  evidenceStatus: "Stored sources retain their original scope; applying this playbook is not fresh evidence verification.",
+});
 
-export const MASTER_TOPIC_BANK = Object.freeze([
+// Original evidence records are retained; their old statistic-first hooks are
+// deliberately excluded from the active exported briefs below.
+const EVIDENCE_TOPICS = [
   {
     id: "teen-anxiety-freeze",
     name: "Anxiety can look like refusal",
@@ -267,11 +276,44 @@ export const MASTER_TOPIC_BANK = Object.freeze([
       scope: "Nationally representative US survey with historical cohort data covering the first six years after high school. It does not predict an individual outcome or current Malaysian rates."
     }
   }
-]);
+];
 
-export const CJ_IDEA_BACKLOG_VERSION = "2026-09-06.1";
+const COVER_QUESTIONS = Object.freeze({
+  "teen-anxiety-freeze": "What can you check when your teenager cannot get out the door?",
+  "teen-adhd-overlap": "How can you make one instruction easier to follow?",
+  "teen-bullying-change": "What can you ask when a familiar school routine suddenly changes?",
+  "teen-friendship-belonging": "How can you support a connection beyond being classmates?",
+  "teen-daily-living-gap": "How can you make one daily routine easier to do independently?",
+  "teen-motor-hidden": "Which physical step is making this task harder?",
+  "teen-motor-support-gap": "What should you note before asking about motor support?",
+  "teen-sleep-demand": "What can you record before seeking help with sleep?",
+  "teen-masking-school-home": "What can you check when school and home look very different?",
+  "teen-health-transition": "How can your teenager take part in their next health appointment?",
+  "teen-private-appointment": "How can you support one answer without taking over?",
+  "teen-living-goal-gap": "Does the transition plan include a daily living goal?",
+  "teen-first-two-years": "What is one routine you can prepare before school ends?",
+  "teen-pathway-not-potential": "What is the first real step towards your teenager's chosen pathway?",
+});
 
-export const CJ_IDEA_BACKLOG = Object.freeze([
+export const MASTER_TOPIC_BANK = Object.freeze(EVIDENCE_TOPICS.map(({ hook: oldHook, ...topic }) => Object.freeze({
+  ...topic,
+  hook: topic.parentMoment,
+  coverQuestion: COVER_QUESTIONS[topic.id],
+  scriptPlaybook: SCRIPT_PLAYBOOK,
+  scriptBrief: Object.freeze({
+    title: topic.name,
+    question: COVER_QUESTIONS[topic.id],
+    openingSituation: topic.parentMoment,
+    explanationToVerify: topic.tension,
+    payoff: topic.practicalPayoff,
+    visualPlan: "Demonstrate this payoff using the same situation as the opening. Specify props, exact actions and minimal overlay text before filming.",
+    ending: "One purposeful ending linked to this question; no additional promise or stacked CTA.",
+  }),
+})));
+
+export const CJ_IDEA_BACKLOG_VERSION = "2026-09-09.2";
+
+const BACKLOG_IDEAS = [
   {
     id: "stem-cells-autism",
     name: "Stem cells and autism",
@@ -608,4 +650,10 @@ export const CJ_IDEA_BACKLOG = Object.freeze([
     gate: "Current Malaysian legal, safeguarding and privacy review required", keywords: "security cameras special education classroom safeguarding privacy Malaysia",
     references: []
   }
-]);
+];
+
+export const CJ_IDEA_BACKLOG = Object.freeze(BACKLOG_IDEAS.map(topic => Object.freeze({
+  ...topic,
+  scriptPlaybook: SCRIPT_PLAYBOOK,
+  developmentInstruction: "Verify the saved research gate first. Then choose one specific parent question, one recognisable situation, one connected explanation and one visible payoff from this brief. Return the completed script and audit, not another form for CJ. Unresolved claims block filming.",
+})));
