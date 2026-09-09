@@ -15,4 +15,5 @@ dist/content-os/*
 !dist/content-os/practice/
 !dist/content-os/calm-feedback/
 node_modules/
+.local-episode-preview/
 __pycache__/

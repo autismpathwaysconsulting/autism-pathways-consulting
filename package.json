@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "preview:episodes": "node scripts/episode-preview.mjs",
     "build": "node scripts/build-site.mjs",
     "sync:video-rules": "node scripts/sync-video-rules.mjs",
     "test:site-build": "node --test tests/site-build-output.test.mjs",
