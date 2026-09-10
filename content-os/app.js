@@ -139,6 +139,17 @@ function arrangeContentWorkflowSections() {
     const section = element(id);
     if (section) main.appendChild(section);
   });
+  const legacy = document.createElement("details");
+  legacy.className = "reference-item";
+  legacy.id = "legacyCreationTools";
+  const summary = document.createElement("summary");
+  summary.textContent = "Earlier planning tools (retained for reference)";
+  legacy.appendChild(summary);
+  for (const id of ["topics", "prompts"]) legacy.appendChild(element(id));
+  element("reference").appendChild(legacy);
+  const revealLegacy = () => { if (["#topics", "#prompts"].includes(location.hash)) legacy.open = true; };
+  revealLegacy();
+  window.addEventListener("hashchange", revealLegacy);
 }
 
 function text(value) {
@@ -992,12 +1003,8 @@ function renderContentWorkflow() {
   clearNode(target);
   const episodes = activeEpisodeRows();
   const steps = [
-    ["1", "Choose idea", MASTER_TOPIC_BANK.length + " master ideas", "#topics"],
-    ["2", "Build episode", episodes.filter(function (item) { return ["IDEA", "APPROVED"].includes(item.status); }).length + " developing", "#prompts"],
-    ["3", "Film + edit", episodes.filter(function (item) { return ["SCRIPT_LOCKED", "FILMED", "EDITING"].includes(item.status); }).length + " active", "/content-os/episodes/#filming-pack"],
-    ["4", "Final review", episodes.filter(function (item) { return item.status === "REVIEW"; }).length + " in review", "/content-os/episodes/#results"],
-    ["5", "Publish", episodes.filter(function (item) { return item.status === "READY"; }).length + " ready", "#results"],
-    ["6", "Learn", episodes.filter(function (item) { return item.status === "PUBLISHED"; }).length + " published", "#results"],
+    ["", "Record publication", episodes.filter(function (item) { return item.status === "READY"; }).length + " ready", "#results"],
+    ["", "Review performance", episodes.filter(function (item) { return item.status === "PUBLISHED"; }).length + " published", "#results"],
   ];
   steps.forEach(function (step) {
     const link = makeNode("a", "workflow-step");
@@ -4034,6 +4041,7 @@ function handleClick(event) {
   const action = control.dataset.action;
 
   if (action === "scroll-prompts") {
+    element("legacyCreationTools").open = true;
     scrollToNode(element("prompts"), "start");
   } else if (action === "scroll-results") {
     scrollToNode(element("results"), "start");

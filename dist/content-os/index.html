@@ -18,7 +18,6 @@
         <p class="header-summary">Choose a useful problem, make the content, then learn from the same checkpoints.</p>
         <div class="button-row quick-launch-row" aria-label="Quick launch links">
           <a class="button compact" href="/content-os/">Content OS</a>
-          <a class="button secondary compact" href="/content-os/episodes/">Episode Studio</a>
           <a class="button secondary compact" href="/content-os/practice/">Practice Console</a>
           <a class="button secondary compact" href="/content-os/website/">Website enquiries</a>
           <a class="button secondary compact" href="/content-os/calm-feedback/">Calm feedback inbox</a>
@@ -39,12 +38,8 @@
 
   <nav class="section-nav" aria-label="Content OS sections">
     <div class="shell nav-scroll">
-      <a href="#dashboard" aria-current="location">Workflow</a>
-      <a href="#topics">1. Choose idea</a>
-      <a href="#prompts">2. Build episode</a>
-      <a href="/content-os/episodes/#filming-pack">3. Film + edit</a>
-      <a href="/content-os/episodes/#results">4. Final review</a>
-      <a href="#results">5. Publish + analytics</a>
+      <a href="#dashboard" aria-current="location">Overview</a>
+      <a href="#results">Published posts + analytics</a>
       <a href="#research">Research feed</a>
       <a href="#reference">Settings + recovery</a>
     </div>
@@ -58,14 +53,13 @@
           <h2 id="dashboard-title">Today</h2>
         </div>
         <div class="button-row">
-          <button class="button" type="button" data-action="scroll-prompts">Build a prompt</button>
           <button class="button secondary" type="button" data-action="scroll-results">Add analytics</button>
         </div>
       </div>
 
       <aside class="workflow-guide" aria-label="Workflow and help">
-        <p><strong>Your workflow:</strong> Choose topic → Prepare script → Film &amp; edit → Audit → Publish &amp; learn</p>
-        <div class="button-row"><a class="button" href="/content-os/episodes/#ideas">Create an episode</a><a class="button secondary" href="/content-os/episodes/#episodes">Continue an episode</a><a class="button secondary" href="/content-os/episodes/#results">Audit a video</a><a class="button secondary" href="#results">Review performance</a></div>
+        <p><strong>Content OS:</strong> Your overview, published posts and performance. Create and edit episodes in Episode Studio.</p>
+        <div class="button-row"><a class="button" href="/content-os/episodes/#overview">Open Episode Studio</a></div>
         <details><summary>Show me how — which tool should I use?</summary><p>Use Episode Studio to choose a topic, prepare the script and request an audit. Use this dashboard to log publication and analytics. Keep using the same episode when revising or reviewing.</p><p><a href="/content-os/episodes/?help=workflow#overview">Open the scenario tutorial table</a> for new episodes, script changes, filming, uploaded posts and performance reviews.</p><p>Saving is not filming approval or publication. Review prompts still require a Codex handoff; they do not run an audit automatically.</p></details>
       </aside>
 
@@ -74,7 +68,7 @@
         <p id="nextAction" class="next-action">Choose the next planned topic, publish it, then return at the correct checkpoint.</p>
       </div>
 
-      <div id="contentWorkflowSteps" class="workflow-step-grid" aria-label="Content workflow steps"></div>
+      <div id="contentWorkflowSteps" class="workflow-step-grid" aria-label="Publication and performance summary"></div>
 
       <section class="card connection-centre" aria-labelledby="system-connections-title">
         <div class="card-heading"><div><p class="card-label">Live system status</p><h3 id="system-connections-title">Connections</h3><p class="subtle">Connected and empty are shown separately so an empty feed is not mistaken for an outage.</p></div><button class="button secondary compact" type="button" data-action="refresh-connections">Refresh status</button></div>

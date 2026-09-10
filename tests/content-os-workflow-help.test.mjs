@@ -12,5 +12,8 @@ test("workflow help is collapsed, accessible and covers all six situations", () 
 });
 test("dashboard links to the existing Studio tutorial and workflows", () => {
   assert.match(home, /episodes\/\?help=workflow#overview/);
-  for (const stage of ["ideas", "episodes", "results"]) assert.ok(home.includes("/content-os/episodes/#" + stage));
+  assert.match(home, /Open Episode Studio/);
+  const nav = home.match(/<nav class="section-nav"[\s\S]*?<\/nav>/)[0];
+  assert.doesNotMatch(nav, /Choose idea|Build episode|Film \+ edit|Final review/);
+  assert.match(nav, /Published posts \+ analytics/);
 });
