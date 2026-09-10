@@ -55,9 +55,13 @@ async function validSession(secret, cookieHeader) {
   return sameCredential(match[1], await sessionToken(secret, expires));
 }
 
-async function loginPage(secret, error = false) {
+function safeReturnPath(url) {
+  const value = url.searchParams.get("next") || "/content-os/episodes/";
+  try { const target = new URL(value, url); return target.origin === url.origin && target.pathname.startsWith("/content-os/") && !target.pathname.startsWith("/content-os/login") ? target.pathname + target.search + target.hash : "/content-os/episodes/"; } catch { return "/content-os/episodes/"; }
+}
+async function loginPage(secret, error = false, returnPath = "/content-os/episodes/") {
   const csrf = crypto.randomUUID();
-  const signedCsrf = await sessionToken(secret, csrf);
+  const signedCsrf = await sessionToken(secret, csrf) + (returnPath === "/content-os/episodes/" ? "" : "&amp;next=" + encodeURIComponent(returnPath));
   const message = error ? '<p role="alert">The password was not accepted. Please try again.</p>' : "";
   return securityHeaders(new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in | APC Content OS</title><link rel="stylesheet" href="/content-os/login.css"></head><body><main class="shell"><section class="panel"><p class="eyebrow">AUTISM PATHWAYS CONSULTING</p><h1>Sign in to Content OS</h1>${message}<form method="post" action="/content-os/login/?csrf=${signedCsrf}"><label for="password">Content OS password</label><input id="password" name="password" type="password" required autocomplete="current-password"><button type="submit">Sign in</button></form></section></main></body></html>`, { status: error ? 401 : 200, headers: { "Content-Type": "text/html; charset=utf-8" } }), true);
 }
@@ -223,13 +227,13 @@ export async function onRequest(context) {
   const secret = context.env.APC_CONTENT_OS_AUTH;
   if (typeof secret === "string" && secret.length > 0) {
     if (url.pathname === "/content-os/login/" || url.pathname === "/content-os/login") {
-      if (context.request.method === "GET") return loginPage(secret, false);
+      if (context.request.method === "GET") return loginPage(secret, false, safeReturnPath(url));
       if (context.request.method !== "POST" || Number(context.request.headers.get("Content-Length") || 0) > 4096) return loginPage(secret, true);
       let form;
       try { form = await context.request.formData(); } catch { return loginPage(secret, true); }
-      if (!await validLoginCsrf(secret, url) || !await sameCredential(String(form.get("password") || ""), secret)) return loginPage(secret, true);
+      if (!await validLoginCsrf(secret, url) || !await sameCredential(String(form.get("password") || ""), secret)) return loginPage(secret, true, safeReturnPath(url));
       const expires = Date.now() + SESSION_SECONDS * 1000;
-      const response = new Response(null, { status: 303, headers: { Location: new URL("/content-os/episodes/", url).toString() } });
+      const response = new Response(null, { status: 303, headers: { Location: new URL(safeReturnPath(url), url).toString() } });
       response.headers.set("Set-Cookie", `${SESSION_COOKIE}=${await sessionToken(secret, expires)}; Path=/; Max-Age=${SESSION_SECONDS}; Secure; HttpOnly; SameSite=Strict`);
       return securityHeaders(response);
     }
@@ -240,7 +244,11 @@ export async function onRequest(context) {
       return authBackendFailure(error);
     }
     if (!valid) {
-      if (isContentOsPage && context.request.method === "GET") return securityHeaders(Response.redirect(new URL("/content-os/login/", url), 302));
+      if (isContentOsPage && context.request.method === "GET") {
+        const login = new URL("/content-os/login/", url);
+        if (url.search) login.searchParams.set("next", url.pathname + url.search);
+        return securityHeaders(Response.redirect(login, 302));
+      }
       return authResponse(401, "Authentication required.");
     }
     return continueWithSecurityHeaders(context);

@@ -54,6 +54,7 @@ function goToStudioStage(id) {
 }
 function selectStudioEpisode(id) {
   if (!episodeById(id) || episodeById(id).archived_at) return;
+  element("historicalPublicationLink").href = "/content-os/?section=results&publication=historical&episode=" + encodeURIComponent(id) + "#results";
   for (const name of ["packEpisode", "importEpisode", "reviewEpisode"]) element(name).value = id;
   const prompt = latestPrompt(id);
   element("promptOutput").textContent = promptTextForCodex(id);
@@ -70,6 +71,7 @@ function selectStudioEpisode(id) {
 function arrangeWorkflowSections() {
   const main = element("main-content");
   if (!main) return;
+  if (new URLSearchParams(location.search).get("help") === "workflow") element("workflowHelp").open = true;
   const topicTools = element("topicTools");
   // The stored topic bank is the primary path. Manual entry stays optional.
   ["overview", "ideas", "pack", "import", "filming-pack", "results", "episodes"].forEach(id => {
@@ -371,7 +373,22 @@ function renderResearch() {
 }
 function renderMasterIdeas() {
   const list = element("masterIdeas");
+  const openGroups = new Set([...list.querySelectorAll("details[data-topic-family][open]")].map(group => group.dataset.topicFamily));
   clear(list);
+  const groups = new Map();
+  function appendTopic(card, family) {
+    const label = family || "Other topics";
+    if (!groups.has(label)) {
+      const group = node("details", "reference-item topic-family");
+      group.dataset.topicFamily = label;
+      group.open = openGroups.has(label);
+      group.appendChild(node("summary", "", label));
+      group.appendChild(node("div", "card-list"));
+      groups.set(label, group);
+      list.appendChild(group);
+    }
+    groups.get(label).lastElementChild.appendChild(card);
+  }
   for (const topic of MASTER_TOPIC_BANK) {
     const card = node("article", "card");
     card.dataset.topicSearch = [topic.name, topic.parentMoment, topic.practicalPayoff, topic.keywords].join(" ").toLowerCase();
@@ -410,7 +427,7 @@ function renderMasterIdeas() {
     carouselButton.dataset.contentFormat = "Carousel post";
     actions.appendChild(carouselButton);
     card.appendChild(actions);
-    list.appendChild(card);
+    appendTopic(card, topic.family);
   }
   for (const episode of activeEpisodes()) {
     const card = node("article", "card");
@@ -423,16 +440,28 @@ function renderMasterIdeas() {
     open.type = "button";
     open.dataset.openEpisode = episode.id;
     card.appendChild(open);
-    list.appendChild(card);
+    appendTopic(card, sourceContext(episode.id)?.topic?.family);
   }
   filterTopicBank();
 }
 function filterTopicBank() {
   const query = element("topicSearch").value.trim().toLowerCase();
   let count = 0;
-  for (const card of element("masterIdeas").children) {
+  for (const card of element("masterIdeas").querySelectorAll("[data-topic-category]")) {
     card.hidden = card.dataset.topicCategory !== topicCategory || !card.dataset.topicSearch?.includes(query);
     if (!card.hidden) count++;
+  }
+  for (const group of element("masterIdeas").querySelectorAll("[data-topic-family]")) {
+    const visible = [...group.querySelectorAll("[data-topic-category]")].filter(card => !card.hidden).length;
+    group.hidden = visible === 0;
+    group.querySelector("summary").textContent = group.dataset.topicFamily + " (" + visible + ")";
+    if (query) {
+      if (!group.hasAttribute("data-before-search")) group.dataset.beforeSearch = String(group.open);
+      group.open = visible > 0;
+    } else if (group.hasAttribute("data-before-search")) {
+      group.open = group.dataset.beforeSearch === "true";
+      delete group.dataset.beforeSearch;
+    }
   }
   element("topicSearchSummary").textContent = count + (topicCategory === "new" ? " new stored topics." : " existing episodes.") + " Search or switch category. Archived records remain in Episode log.";
   element("newTopicCategory").setAttribute("aria-pressed", String(topicCategory === "new"));
@@ -570,7 +599,7 @@ function appendEpisodeActions(actions, episode, packArtifact) {
   }
   if (["READY", "PUBLISHED"].includes(episode.status)) {
     const publish = node("a", "button compact", episode.status === "READY" ? "Publish + start analytics" : "View analytics");
-    publish.href = "/content-os/?episode=" + encodeURIComponent(episode.id) + "#results";
+    publish.href = "/content-os/?section=results&episode=" + encodeURIComponent(episode.id) + "#results";
     actions.appendChild(publish);
   }
 
@@ -1173,7 +1202,9 @@ function render() {
   element("masterRulesDetail").textContent = "Synced from APC-AI-OS at SHA-256 " + MASTER_VIDEO_RULES.sha256.slice(0, 12) + ". Every new prompt is saved before it is shown. A red-team PASS at 9.5/10 or higher, Hook Gate PASS and a ready-to-film decision are required before filming.";
   element("episodeId").value = nextEpisodeId();
   const readyEpisode = active.find(item => item.status === "READY");
-  element("publicationLink").href = readyEpisode ? "/content-os/?episode=" + encodeURIComponent(readyEpisode.id) + "#results" : "/content-os/?from=episodes#results";
+  const requestedEpisode = new URL(location.href).searchParams.get("episode");
+  element("publicationLink").href = "/content-os/?section=results&episode=" + encodeURIComponent(requestedEpisode || readyEpisode?.id || "") + "#results";
+  element("historicalPublicationLink").href = "/content-os/?section=results&publication=historical&episode=" + encodeURIComponent(requestedEpisode || "") + "#results";
 }
 
 function promptRecord(episode, format, notes, sourceContext, preferredScript = "") {

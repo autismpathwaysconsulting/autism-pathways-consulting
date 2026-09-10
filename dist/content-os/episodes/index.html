@@ -42,12 +42,35 @@
   <p id="currentSectionLabel" class="shell current-section-label" aria-live="polite">You are here: Topic bank</p>
 
   <main id="main-content" class="shell main-content">
+    <aside class="workflow-guide" aria-label="Workflow and help">
+      <p><strong>Your workflow:</strong> Choose topic → Prepare script → Film &amp; edit → Audit → Publish &amp; learn</p>
+      <details id="workflowHelp">
+        <summary>Show me how — instructions for my situation</summary>
+        <p>Content OS is your overview and log. Episode Studio is where you work on one episode. Choose the row that matches today’s task.</p>
+        <div class="tutorial-scroll" role="region" aria-label="Episode tutorial table" tabindex="0">
+          <table class="tutorial-table">
+            <caption>Quick reference: what to do next</caption>
+            <thead><tr><th scope="col">My situation</th><th scope="col">Where and what to do</th><th scope="col">Before moving on</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Create a new episode</th><td><a href="#ideas">Topic bank</a> → New topics. Choose a topic, copy its request into Codex, then bring the completed answer to <a href="#import">Save generated result</a>.</td><td>Read the imported script in Prepare your script. A copied prompt is not a completed script.</td></tr>
+              <tr><th scope="row">Change my script</th><td><a href="#pack">Prepare your script</a> → Edit script before finalising → Complete spoken script. Edit the whole text and save for recheck.</td><td>Stay in the same episode. Changed wording needs a fresh check; earlier versions remain in history.</td></tr>
+              <tr><th scope="row">Get ready to film</th><td>Read the checked script aloud once. Resolve substantive issues, then approve the checked version and open <a href="#filming-pack">Script &amp; HTML</a>.</td><td>Saved does not mean approved for filming. Download HTML if you want an offline copy.</td></tr>
+              <tr><th scope="row">Audit an edited video</th><td><a href="#results">Audit video</a> → Copy video audit request for Codex. Send it with one current export.</td><td>Work with recorded speech. The page does not inspect video itself. Recorded-first review import remains unverified.</td></tr>
+              <tr><th scope="row">Only have an Instagram or TikTok post</th><td>Send the post link and episode title in the audit chat. Use the existing episode, not a new one.</td><td>Review only accessible material; audio may need an export. Dedicated link-only audit saving is not implemented.</td></tr>
+              <tr><th scope="row">See what worked</th><td><a href="/content-os/#results">Publish + analytics</a>: record the publication link and insights. In Audit video, use Copy performance review request with insights screenshots.</td><td>Compare the same platform and checkpoint. Missing metrics stay unknown; script scores do not establish a winner. Winner-library saving is not connected.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Storage:</strong> Episode records belong in the console; footage and exports stay in your folders or SSD. Confirm a successful save before leaving. This guide does not change any record or approval.</p>
+      </details>
+    </aside>
     <section id="overview" class="page-section" aria-labelledby="overview-title">
       <div class="section-heading"><div><p class="section-kicker">Start here</p><h2 id="overview-title">Start</h2><p class="section-summary">Work on one episode from its first idea to the final video check.</p></div></div>
       <div class="studio-start-actions">
         <a class="button" href="#ideas">Create an episode</a>
         <a id="continueEpisode" class="button secondary" href="#episodes">Continue an episode</a>
         <a class="button secondary" href="#results">Audit a video</a>
+        <a class="button secondary" href="/content-os/#results">Review performance</a>
       </div>
       <p id="continueEpisodeDetail" class="subtle">Your saved episodes are under My episodes.</p>
       <details class="reference-item"><summary>Progress and workflow details</summary>
@@ -119,6 +142,7 @@
 
     <section id="pack" class="page-section" aria-labelledby="pack-title">
       <div class="section-heading"><div><p class="section-kicker">Write and review</p><h2 id="pack-title">Prepare your script</h2><p class="section-summary">Read the saved script here before approving it. Importing a result does not approve or lock it.</p></div></div>
+      <details class="reference-item"><summary>Show me how — prepare or change my script</summary><ol><li>Select your episode below. Follow its next-action message.</li><li>No script yet? Copy the request to Codex, then return its complete answer through Save generated result.</li><li>Have a script? Read it below. Use the complete-script editor to change it in one place, then save for recheck.</li><li>Approve only the checked version you want to film. Open Script &amp; HTML for your filming copy.</li></ol><p>Already recorded? Use Audit video instead; do not rewrite the recording to satisfy a pre-film check.</p></details>
       <details class="reference-item"><summary>Script rules and source</summary><div class="hook-gate rework" role="status" aria-live="polite">
         <strong id="masterRulesStatus">Loading master video rules</strong>
         <span id="masterRulesDetail" class="subtle">Checking the current APC-AI-OS source and version.</span>
@@ -171,7 +195,7 @@
         <button id="copyAuditBrief" class="button" type="button">Copy video audit request for Codex</button>
         <p id="auditHandoffFeedback" role="status" class="subtle">Copy the request, then attach your video in Codex or give its local file path.</p>
         <p>In Codex, attach your final video or give its local file path and ask: “Audit this APC video before upload. Give timestamped blockers, optional polish and a final READY or NOT READY decision.” Keep the video on your device.</p>
-        <p>This page saves the completed audit. It does not inspect or upload your video. Return here with the review manifest from Codex.</p>
+        <p>This page does not inspect or upload your video. Audit requests run in Codex; only a validated review manifest is saved here. Saving a review requires the existing filming-pack checks. For a historical upload without an export, use “Record an already-published video” below; that does not approve a video review.</p>
         <p class="subtle">Paste the review manifest returned after a full, delta or final video audit. The video SHA-256 prevents findings from an older export being mistaken for the latest cut.</p>
         <div class="field"><label for="reviewEpisode">Episode</label><select id="reviewEpisode"></select></div>
         <div class="field"><label for="reviewManifest">Review manifest JSON</label><textarea id="reviewManifest" class="package-json" maxlength="120000" placeholder='Paste the review-manifest.json content here'></textarea></div>
@@ -179,6 +203,7 @@
       </div>
       <div id="reviewList" class="card-list"><div class="empty-state">No video reviews recorded yet.</div></div>
       <div id="publicationList" class="card-list"><div class="empty-state">No linked publications yet.</div></div>
+      <p><a id="historicalPublicationLink" class="button secondary" href="/content-os/?section=results&amp;publication=historical#results">Record an already-published video</a> — no local export required; review approval stays unchanged.</p>
       <div class="card stack"><h3>What worked? Performance learning</h3><p>Compare like platforms and checkpoints using existing analytics. A strong script score is not proof of a winning post.</p><button id="copyPerformanceBrief" class="button secondary" type="button">Copy performance review request</button><p id="performanceFeedback" class="subtle" role="status">Uses the selected episode and linked publication summaries. Missing snapshots remain unknown. A winner-library save control is not connected yet.</p></div>
     </section>
   </main>

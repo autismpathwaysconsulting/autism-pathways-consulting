@@ -63,6 +63,12 @@
         </div>
       </div>
 
+      <aside class="workflow-guide" aria-label="Workflow and help">
+        <p><strong>Your workflow:</strong> Choose topic → Prepare script → Film &amp; edit → Audit → Publish &amp; learn</p>
+        <div class="button-row"><a class="button" href="/content-os/episodes/#ideas">Create an episode</a><a class="button secondary" href="/content-os/episodes/#episodes">Continue an episode</a><a class="button secondary" href="/content-os/episodes/#results">Audit a video</a><a class="button secondary" href="#results">Review performance</a></div>
+        <details><summary>Show me how — which tool should I use?</summary><p>Use Episode Studio to choose a topic, prepare the script and request an audit. Use this dashboard to log publication and analytics. Keep using the same episode when revising or reviewing.</p><p><a href="/content-os/episodes/?help=workflow#overview">Open the scenario tutorial table</a> for new episodes, script changes, filming, uploaded posts and performance reviews.</p><p>Saving is not filming approval or publication. Review prompts still require a Codex handoff; they do not run an audit automatically.</p></details>
+      </aside>
+
       <div class="card next-card">
         <p class="card-label">Next best action</p>
         <p id="nextAction" class="next-action">Choose the next planned topic, publish it, then return at the correct checkpoint.</p>
@@ -192,6 +198,7 @@
         </div>
         <div id="connectionList" class="connection-list" aria-live="polite"></div>
         <form id="automaticAnalyticsForm" class="connector-link-form stack">
+          <div class="field"><label for="publicationMode">What are you recording?</label><select id="publicationMode"><option value="new">New video — final READY review required</option><option value="historical">Record an already-published video</option></select><p class="field-help">Historical uploads need a platform URL and actual publication time, not a local export or new review. This records a post; it never uploads to social media.</p></div>
           <div class="field-grid four">
             <div class="field"><label for="automaticEpisode">Episode</label><select id="automaticEpisode"></select></div>
             <div class="field"><label for="connectorConnection">Connected account</label><select id="connectorConnection"><option value="">Choose a connected account</option></select></div>
