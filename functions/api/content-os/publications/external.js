@@ -47,7 +47,7 @@ async function sha256Hex(value) {
   return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
 }
 
-async function readBody(request) {
+export async function readBody(request) {
   if (request.headers.get("X-APC-Content-OS") !== "1") {
     throw json({ error: "Missing Content OS request header.", code: "missing_intent_header" }, 400);
   }

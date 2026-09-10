@@ -867,7 +867,8 @@ function renderConnectorState() {
     const hasDirectConnection = connectorState.ingestionEnabled && active.some(function (connection) { return connectorMatchesPlatform(connection.provider, platform); });
     const hasExternalConnection = external.meta === true && platform === "Instagram";
     const hasMatchingConnection = hasDirectConnection || hasExternalConnection;
-    trackButton.disabled = !hasMatchingConnection;
+    trackButton.disabled = element("publicationMode").value !== "historical" && !hasMatchingConnection;
+    trackButton.textContent = element("publicationMode").value === "historical" ? "Record already-published video" : "Publish + schedule analytics";
     trackButton.title = trackButton.disabled ? "Connect the matching platform account once before publishing from this workflow." : "Link this post and schedule its checkpoints.";
   }
   renderSystemConnections();
@@ -976,7 +977,7 @@ function renderAutomaticEpisodeOptions() {
   if (!select) return;
   const requested = new URL(location.href).searchParams.get("episode") || select.value;
   clearNode(select);
-  const ready = activeEpisodeRows().filter(function (episode) { return ["READY", "PUBLISHED"].includes(episode.status); });
+  const ready = activeEpisodeRows().filter(function (episode) { return element("publicationMode").value === "historical" || ["READY", "PUBLISHED"].includes(episode.status); });
   if (!ready.length) {
     select.appendChild(new Option("Complete a final READY review first", ""));
     return;
@@ -1901,15 +1902,16 @@ function workflowArtifactByReference(episode, artifactType, reference) {
 async function buildTrackingPublication(options) {
   const episodeId = text(element("automaticEpisode").value).trim();
   const episode = activeEpisodeRows().find(function (item) { return item.id === episodeId; });
-  if (!episode || !["READY", "PUBLISHED"].includes(episode.status)) throw new Error("Complete the final READY video review before publishing.");
+  if (!episode || (!options?.historical && !["READY", "PUBLISHED"].includes(episode.status))) throw new Error("Complete the final READY video review before publishing.");
   const platform = element("automaticPlatform").value;
   const rawPostRef = text(element("automaticPostRef").value).trim();
   const publishedAt = toUtcIso(element("automaticPublishedAt").value);
   if (!rawPostRef || !publishedAt) throw new Error("Add the published post link or stable ID and publication time.");
   const postRef = options?.canonicalInstagramReel
-    ? canonicalInstagramReelPostRef(rawPostRef)
+    ? canonicalInstagramReelPostRef(options?.historical ? rawPostRef.replace(/(instagram\.com)\/p\//, "$1/reel/") : rawPostRef)
     : rawPostRef;
   const existingPublication = matchingPublication(platform, postRef);
+  if (existingPublication?.episodeId === episodeId && options?.historical && Date.parse(existingPublication.publishedAt) !== Date.parse(publishedAt)) throw new Error("This post is already recorded with a different publication time. Review its existing record before changing it.");
   if (existingPublication?.episodeId === episodeId) return existingPublication;
   const promptReference = episode.productionPack?.prompt;
   const promptArtifact = workflowArtifactByReference(episode, "PROMPT", promptReference);
@@ -1945,6 +1947,15 @@ async function buildTrackingPublication(options) {
 
 async function trackPublicationAutomatically() {
   const status = element("connectorFormStatus");
+  if (element("publicationMode").value === "historical") {
+    status.textContent = "Recording the existing upload; review approval will not change…";
+    const publication = await buildTrackingPublication({historical:true, canonicalInstagramReel:element("automaticPlatform").value === "Instagram"});
+    const result = await apiFetch("/api/content-os/publications/historical", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({publication})});
+    if (!result.response.ok) throw new Error(result.body?.error || "Could not record this upload.");
+    await readEpisodeWorkflow();
+    status.textContent = result.body.message + " " + result.body.checkpointNotice;
+    return;
+  }
   const connectionId = element("connectorConnection").value;
   const remoteMediaId = text(element("automaticRemoteMediaId").value).trim();
   if (!connectionId) throw new Error("Choose the matching analytics connection first.");
@@ -4259,10 +4270,34 @@ async function initialise() {
   });
   element("automaticAnalyticsForm").addEventListener("submit", function (event) {
     event.preventDefault();
+    if (this.dataset.submitting === "true") return;
+    this.dataset.submitting = "true";
+    element("trackPublicationButton").disabled = true;
     trackPublicationAutomatically().catch(function (error) {
       element("connectorFormStatus").textContent = text(error && error.message);
+    }).finally(() => {
+      delete this.dataset.submitting;
+      renderConnectorState();
     });
   });
+  const publicationParams = new URL(location.href).searchParams;
+  if (publicationParams.get("publication") === "historical") element("publicationMode").value = "historical";
+  renderAutomaticEpisodeOptions(); renderConnectorState();
+  element("publicationMode").addEventListener("change", function () {
+    const url = new URL(location.href);
+    url.searchParams.set("publication", element("publicationMode").value);
+    url.searchParams.set("section", "results");
+    url.hash = "results";
+    history.replaceState(null, "", url);
+    renderAutomaticEpisodeOptions(); renderConnectorState();
+  });
+  element("automaticEpisode").addEventListener("change", function () {
+    const url = new URL(location.href); url.searchParams.set("episode", this.value); history.replaceState(null, "", url);
+  });
+  if (publicationParams.get("section") === "results") {
+    location.hash = "results";
+    requestAnimationFrame(function () { element("results").scrollIntoView(); });
+  }
   element("automaticPostRef").addEventListener("input", function () {
     const inferred = mediaIdFromPostReference(element("automaticPostRef").value.trim(), element("automaticPlatform").value);
     if (inferred) element("automaticRemoteMediaId").value = inferred;
@@ -4283,6 +4318,8 @@ async function initialise() {
   await Promise.all([readAnalytics(), readResearch(), readHistory(), readConnectorState(), readEpisodeWorkflow(), readPracticeSummary()]);
   await flushAnalyticsQueue();
   renderAll();
+  // Loading records changes page height; honour the handoff after the final render.
+  if (new URL(location.href).searchParams.get("section") === "results") element("results").scrollIntoView({behavior:"instant"});
 }
 
 initialise().catch(function (error) {

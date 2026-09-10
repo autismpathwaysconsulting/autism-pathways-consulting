@@ -61,12 +61,13 @@ export async function onRequestGet({ request, env }) {
     const result = await env.APC_CONTENT_OS_DB.prepare(`SELECT p.publication_id, p.platform, p.post_ref, p.published_at,
       p.payload_hash, p.publication_json FROM content_publications p
       JOIN episodes e ON e.id = json_extract(p.publication_json, '$.episodeId')
-      WHERE p.platform = 'Instagram' AND e.status = 'PUBLISHED' AND e.archived_at IS NULL
+      WHERE p.platform = 'Instagram' AND e.archived_at IS NULL
         AND EXISTS (
           SELECT 1 FROM episode_events event
           WHERE event.episode_id = e.id AND event.event_type = 'PUBLICATION_LINKED'
             AND json_extract(event.metadata_json, '$.publicationId') = p.publication_id
             AND json_extract(event.metadata_json, '$.trackingMode') = 'meta_github_sync'
+            AND (e.status = 'PUBLISHED' OR json_extract(event.metadata_json, '$.publicationStatus') = 'FOUNDER_REPORTED_PUBLISHED')
         )
       ORDER BY p.created_at DESC LIMIT 500`).all();
     const mappings = [];

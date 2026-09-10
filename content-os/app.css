@@ -1577,3 +1577,23 @@ button:disabled {
 /* Recorded references may include long platform URLs; keep the phone layout contained. */
 #latestMaterials { min-width: 0; overflow-wrap: anywhere; }
 #latestMaterials textarea { width: 100%; box-sizing: border-box; }
+.workflow-guide { margin-bottom: 28px; padding-block: 16px; border-block: 1px solid var(--line); }
+.workflow-guide > p { margin-top: 0; }
+.workflow-guide details { margin-top: 12px; }
+.workflow-guide summary { cursor: pointer; min-height: 44px; padding-block: 10px; color: var(--teal); font-weight: 700; }
+.workflow-guide summary:focus-visible, .tutorial-scroll:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+.tutorial-scroll { overflow-x: auto; }
+.topic-family > summary { min-height: 44px; padding-block: 12px; cursor: pointer; font-weight: 700; }
+.topic-family > .card-list { margin-top: 12px; }
+.tutorial-table { width: 100%; border-collapse: collapse; text-align: left; }
+.tutorial-table caption { text-align: left; font-weight: 700; padding-block: 16px; }
+.tutorial-table th, .tutorial-table td { padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tutorial-table th:first-child { width: 22%; }
+@media (max-width: 619px) {
+  .tutorial-table, .tutorial-table tbody, .tutorial-table tr, .tutorial-table th, .tutorial-table td { display: block; width: 100%; }
+  .tutorial-table thead { display: none; }
+  .tutorial-table tr { padding-block: 16px; border-bottom: 1px solid var(--line); }
+  .tutorial-table th:first-child { width: 100%; }
+  .tutorial-table th, .tutorial-table td { padding: 6px 0; border: 0; }
+  .tutorial-table td:last-child::before { content: "Before moving on: "; font-weight: 700; }
+}
