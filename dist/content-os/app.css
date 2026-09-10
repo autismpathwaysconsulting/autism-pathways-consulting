@@ -1583,6 +1583,22 @@ button:disabled {
 .workflow-guide summary { cursor: pointer; min-height: 44px; padding-block: 10px; color: var(--teal); font-weight: 700; }
 .workflow-guide summary:focus-visible, .tutorial-scroll:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
 .tutorial-scroll { overflow-x: auto; }
+.dashboard-clear #dashboard { max-width: 1080px; }
+.dashboard-clear .dashboard-priority { background: var(--navy); color: var(--cream); border: 0; padding: 28px; margin-block: 24px; }
+.dashboard-clear .dashboard-priority h3 { color: var(--cream); font-size: 18px; margin: 0 0 12px; }
+.dashboard-clear .dashboard-priority .next-action { color: var(--cream); font-size: clamp(20px, 2.5vw, 28px); max-width: 42ch; line-height: 1.35; }
+.dashboard-clear #contentWorkflowSteps { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 28px; }
+.dashboard-clear #contentWorkflowSteps .workflow-step-number { display: none; }
+.dashboard-clear #contentWorkflowSteps .workflow-step { grid-template-columns: 1fr; }
+.dashboard-clear .dashboard-detail { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 0; margin: 0; background: transparent; }
+.dashboard-clear .dashboard-detail > summary { cursor: pointer; min-height: 52px; padding-block: 16px; font-weight: 600; }
+.dashboard-clear .dashboard-detail > .card { border: 0; padding-inline: 0; background: transparent; }
+.dashboard-clear .dashboard-studio-entry { border: 0; padding: 0; }
+.dashboard-clear .dashboard-studio-entry > p { max-width: 65ch; }
+@media (max-width: 619px) {
+  .dashboard-clear .dashboard-priority { padding: 20px; }
+  .dashboard-clear #contentWorkflowSteps { grid-template-columns: 1fr; gap: 8px; }
+}
 .topic-family > summary { min-height: 44px; padding-block: 12px; cursor: pointer; font-weight: 700; }
 .topic-family > .card-list { margin-top: 12px; }
 .tutorial-table { width: 100%; border-collapse: collapse; text-align: left; }

@@ -8,14 +8,14 @@
   <link rel="stylesheet" href="/content-os/app.css">
   <script type="module" src="/content-os/app.js"></script>
 </head>
-<body class="content-os-home">
+<body class="content-os-home dashboard-clear">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="app-header">
     <div class="shell header-layout">
       <div>
         <p class="eyebrow">Autism Pathways Consulting</p>
         <h1>Content OS <span class="version-mark">v2.3</span></h1>
-        <p class="header-summary">Choose a useful problem, make the content, then learn from the same checkpoints.</p>
+        <p class="header-summary">Your content, publication records and performance in one place.</p>
         <div class="button-row quick-launch-row" aria-label="Quick launch links">
           <a class="button compact" href="/content-os/">Content OS</a>
           <a class="button secondary compact" href="/content-os/practice/">Practice Console</a>
@@ -49,38 +49,42 @@
     <section id="dashboard" class="page-section" aria-labelledby="dashboard-title">
       <div class="section-heading">
         <div>
-          <p class="section-kicker">Start here</p>
-          <h2 id="dashboard-title">Today</h2>
+          <h2 id="dashboard-title">Your content at a glance</h2>
         </div>
         <div class="button-row">
           <button class="button secondary" type="button" data-action="scroll-results">Add analytics</button>
         </div>
       </div>
 
-      <aside class="workflow-guide" aria-label="Workflow and help">
+      <aside class="workflow-guide dashboard-studio-entry" aria-label="Workflow and help">
         <p><strong>Content OS:</strong> Your overview, published posts and performance. Create and edit episodes in Episode Studio.</p>
         <div class="button-row"><a class="button" href="/content-os/episodes/#overview">Open Episode Studio</a></div>
         <details><summary>Show me how — which tool should I use?</summary><p>Use Episode Studio to choose a topic, prepare the script and request an audit. Use this dashboard to log publication and analytics. Keep using the same episode when revising or reviewing.</p><p><a href="/content-os/episodes/?help=workflow#overview">Open the scenario tutorial table</a> for new episodes, script changes, filming, uploaded posts and performance reviews.</p><p>Saving is not filming approval or publication. Review prompts still require a Codex handoff; they do not run an audit automatically.</p></details>
       </aside>
 
-      <div class="card next-card">
-        <p class="card-label">Next best action</p>
+      <div class="card next-card dashboard-priority">
+        <h3>Next up</h3>
         <p id="nextAction" class="next-action">Choose the next planned topic, publish it, then return at the correct checkpoint.</p>
       </div>
 
       <div id="contentWorkflowSteps" class="workflow-step-grid" aria-label="Publication and performance summary"></div>
 
+      <details class="reference-item dashboard-detail"><summary>Connections and collection status</summary>
       <section class="card connection-centre" aria-labelledby="system-connections-title">
         <div class="card-heading"><div><p class="card-label">Live system status</p><h3 id="system-connections-title">Connections</h3><p class="subtle">Connected and empty are shown separately so an empty feed is not mistaken for an outage.</p></div><button class="button secondary compact" type="button" data-action="refresh-connections">Refresh status</button></div>
         <div id="systemConnectionGrid" class="connection-status-grid" aria-live="polite"></div>
       </section>
+      </details>
 
+      <details class="reference-item dashboard-detail"><summary>Other workspace: Practice Console</summary>
       <section class="card connection-centre" aria-labelledby="practice-summary-title">
         <div class="card-heading"><div><p class="card-label">Protected practice</p><h3 id="practice-summary-title">Client workflow summary</h3><p class="subtle">Counts and actions only. Names and client details remain inside Practice Console.</p></div><a class="button secondary compact" href="/content-os/practice/">Open Practice Console</a></div>
         <div id="practiceSummaryGrid" class="connection-status-grid" aria-live="polite"><div class="empty-state">Checking the protected practice workflow.</div></div>
         <p id="practiceSummaryGuidance" class="subtle">Cal.com scheduling and private Drive filing remain manual.</p>
       </section>
+      </details>
 
+      <details class="reference-item dashboard-detail"><summary>Learning progress and comparison rules</summary>
       <div class="metric-grid" aria-label="Content progress">
         <article class="metric-card"><strong id="postsDone" class="metric-value">0</strong><span>Posts completed</span></article>
         <article class="metric-card"><strong id="topicsTested" class="metric-value">0</strong><span>Problems tested</span></article>
@@ -99,7 +103,9 @@
         <progress id="monthProgress" class="progress" max="1" value="0" aria-label="Monthly content plan progress" aria-describedby="monthProgressText">No plan items</progress>
         <p id="monthProgressText" class="subtle">No plan items in this month.</p>
       </div>
+      </details>
 
+      <details class="reference-item dashboard-detail" id="contentPlanDetails"><summary>Content calendar and plan</summary>
       <div id="month" class="card">
         <div class="card-heading">
           <div><p class="card-label">Content plan</p><h3 id="calendarMonthLabel">Selected month</h3></div>
@@ -128,6 +134,7 @@
         </details>
         <div id="calendarGrid" class="calendar-grid"></div>
       </div>
+      </details>
     </section>
 
     <section id="research" class="page-section" aria-labelledby="research-title">
