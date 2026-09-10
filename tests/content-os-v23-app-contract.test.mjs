@@ -110,9 +110,10 @@ test("section navigation stays compact without capturing vertical page scroll", 
   assert.doesNotMatch(css, /overscroll-behavior-inline: contain/);
   assert.match(css, /\.page-section \+ \.page-section/);
   assert.match(app, /function initialiseSectionNavigation\(\)/);
-  assert.match(app, /new IntersectionObserver/);
-  assert.match(app, /setAttribute\("aria-current", "location"\)/);
-  assert.match(app, /nav\.scrollTo\(\{ left:/);
+  assert.match(app, /function revealContentView/);
+  assert.match(app, /child.hidden = child !== section/);
+  assert.match(app, /setAttribute\("aria-current", "page"\)/);
+  assert.match(app, /window.addEventListener\("hashchange", show\)/);
   assert.doesNotMatch(app, /current\.scrollIntoView/);
 });
 

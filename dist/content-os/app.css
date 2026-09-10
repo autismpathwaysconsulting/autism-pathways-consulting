@@ -1583,6 +1583,29 @@ button:disabled {
 .workflow-guide summary { cursor: pointer; min-height: 44px; padding-block: 10px; color: var(--teal); font-weight: 700; }
 .workflow-guide summary:focus-visible, .tutorial-scroll:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
 .tutorial-scroll { overflow-x: auto; }
+.dashboard-clear .overview-columns { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; margin-block: 24px; align-items: start; }
+.dashboard-clear .overview-sidebar .dashboard-priority { margin: 0 0 16px; padding: 20px; }
+.dashboard-clear .overview-sidebar .dashboard-priority .next-action { font-size: 20px; }
+.dashboard-clear .overview-sidebar .sync-panel { color: var(--ink); border: 1px solid var(--line); background: transparent; min-width: 0; }
+.dashboard-clear .overview-sidebar .sync-detail { color: var(--muted); }
+.dashboard-clear .overview-sidebar .sync-panel { grid-template-columns: 1fr; }
+.dashboard-clear .app-header { padding-block: 0; }
+.dashboard-clear .header-layout { grid-template-columns: 1fr; }
+.overview-workspace { min-width: 0; }
+.overview-workspace h3 { margin: 0 0 12px; }
+.overview-episode-row { display: grid; grid-template-columns: 50px minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+.episode-row-id { color: var(--muted); font-size: 13px; }
+.overview-episode-row strong { font-size: 16px; overflow-wrap: anywhere; }
+.overview-episode-row:hover strong { color: var(--teal); text-decoration: underline; }
+.overview-all { display: inline-block; padding-block: 16px; }
+.dashboard-clear .app-header .header-summary, .dashboard-clear .dashboard-studio-entry > p { display: none; }
+.dashboard-clear .app-header h1 { font-size: 36px; }
+.dashboard-clear .app-header .header-layout { padding-block: 20px; }
+@media(max-width:800px) {
+  .dashboard-clear .overview-columns { grid-template-columns: 1fr; }
+  .overview-episode-row { grid-template-columns: 42px minmax(0,1fr); gap: 8px; }
+  .overview-episode-row .status-badge { grid-column: 2; justify-self: start; }
+}
 .dashboard-clear #dashboard { max-width: 1080px; }
 .dashboard-clear .dashboard-priority { background: var(--navy); color: var(--cream); border: 0; padding: 28px; margin-block: 24px; }
 .dashboard-clear .dashboard-priority h3 { color: var(--cream); font-size: 18px; margin: 0 0 12px; }

@@ -150,6 +150,34 @@ function arrangeContentWorkflowSections() {
   const revealLegacy = () => { if (["#topics", "#prompts"].includes(location.hash)) legacy.open = true; };
   revealLegacy();
   window.addEventListener("hashchange", revealLegacy);
+  const dashboard = element("dashboard");
+  const layout = document.createElement("div"); layout.className = "overview-columns";
+  const workspace = document.createElement("div"); workspace.className = "overview-workspace";
+  const heading = document.createElement("h3"); heading.textContent = "Episodes";
+  const rows = document.createElement("div"); rows.id = "overviewEpisodeRows";
+  rows.textContent = "Loading saved episodes…";
+  workspace.append(heading, rows);
+  const sidebar = document.createElement("aside"); sidebar.className = "overview-sidebar"; sidebar.setAttribute("aria-label", "Next action and save status");
+  sidebar.append(dashboard.querySelector(".dashboard-priority"), document.querySelector(".sync-panel"));
+  layout.append(workspace, sidebar);
+  dashboard.querySelector(".dashboard-studio-entry").after(layout);
+  for (const details of dashboard.querySelectorAll(".dashboard-detail")) element("reference").appendChild(details);
+  element("reference").append(element("products"), element("book"));
+}
+
+function revealContentView(id) {
+  const target = element(id);
+  const main = element("main-content");
+  if (!target || !main.contains(target)) return;
+  const section = [...main.children].find(child => child === target || child.contains(target));
+  if (!section) return;
+  for (const child of main.children) child.hidden = child !== section;
+  let parent = target.parentElement;
+  while (parent && parent !== main) { if (parent.tagName === "DETAILS") parent.open = true; parent = parent.parentElement; }
+  document.querySelectorAll('.section-nav a[href^="#"]').forEach(link => {
+    if (link.getAttribute("href") === "#" + section.id) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
 }
 
 function text(value) {
@@ -220,51 +248,15 @@ function normaliseMultilineText(value) {
 
 function scrollToNode(node, block) {
   if (!node) return;
+  if (node.id) revealContentView(node.id);
   const reduceMotion = globalThis.matchMedia && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
   node.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: block || "start" });
 }
 
 function initialiseSectionNavigation() {
-  const nav = document.querySelector(".nav-scroll");
-  if (!nav) return;
-  const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
-  const sections = links.map(function (link) {
-    return document.getElementById(link.getAttribute("href").slice(1));
-  }).filter(Boolean);
-
-  function showCurrentSection(sectionId) {
-    links.forEach(function (link) {
-      if (link.getAttribute("href") === "#" + sectionId) link.setAttribute("aria-current", "location");
-      else link.removeAttribute("aria-current");
-    });
-    const current = links.find(function (link) {
-      return link.getAttribute("href") === "#" + sectionId;
-    });
-    if (current) {
-      const targetLeft = current.offsetLeft - (nav.clientWidth - current.offsetWidth) / 2;
-      nav.scrollTo({ left: Math.max(0, targetLeft), behavior: "auto" });
-    }
-  }
-
-  links.forEach(function (link) {
-    link.addEventListener("click", function () {
-      showCurrentSection(link.getAttribute("href").slice(1));
-    });
-  });
-
-  if ("IntersectionObserver" in globalThis) {
-    const observer = new IntersectionObserver(function (entries) {
-      const visible = entries.filter(function (entry) { return entry.isIntersecting; })
-        .sort(function (left, right) { return right.intersectionRatio - left.intersectionRatio; });
-      if (visible[0]) showCurrentSection(visible[0].target.id);
-    }, { rootMargin: "-15% 0px -70% 0px", threshold: [0, 0.01, 0.25] });
-    sections.forEach(function (section) { observer.observe(section); });
-  }
-
-  const initialId = location.hash && document.getElementById(location.hash.slice(1))
-    ? location.hash.slice(1)
-    : sections[0]?.id;
-  if (initialId) showCurrentSection(initialId);
+  const show = () => revealContentView(location.hash.slice(1) || "dashboard");
+  window.addEventListener("hashchange", show);
+  show();
 }
 
 function starterPlanningState() {
@@ -1002,6 +994,19 @@ function renderContentWorkflow() {
   if (!target) return;
   clearNode(target);
   const episodes = activeEpisodeRows();
+  const rows = element("overviewEpisodeRows");
+  if (rows) {
+    clearNode(rows);
+    const labels = {IDEA:"Idea", APPROVED:"Draft", SCRIPT_LOCKED:"Ready to film", FILMED:"Filmed", EDITING:"Editing", REVIEW:"Review", READY:"Ready to upload", PUBLISHED:"Published"};
+    for (const episode of episodes.slice().sort((a,b)=>String(b.updated_at || "").localeCompare(String(a.updated_at || ""))).slice(0,8)) {
+      const row = makeNode("a", "overview-episode-row");
+      row.href = "/content-os/episodes/?episode=" + encodeURIComponent(episode.id) + "#pack";
+      row.append(makeNode("span", "episode-row-id", episode.id), makeNode("strong", "", episode.title), makeNode("span", "status-badge neutral", labels[episode.status] || episode.status));
+      rows.appendChild(row);
+    }
+    if (!episodes.length) rows.appendChild(makeNode("p", "subtle", "No episodes loaded. Check the connection status or open Episode Studio."));
+    const all = makeNode("a", "overview-all", "View all episodes →"); all.href = "/content-os/episodes/#episodes"; rows.appendChild(all);
+  }
   const steps = [
     ["", "Record publication", episodes.filter(function (item) { return item.status === "READY"; }).length + " ready", "#results"],
     ["", "Review performance", episodes.filter(function (item) { return item.status === "PUBLISHED"; }).length + " published", "#results"],
