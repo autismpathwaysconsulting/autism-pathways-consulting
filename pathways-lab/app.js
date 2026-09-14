@@ -1,57 +1,90 @@
-const TIMETABLE={Monday:[['08:00–08:55','LEDU'],['09:00–09:55','EAL'],['10:00–10:30','Tutor / Assembly'],['10:30–10:55','Break'],['10:55–11:50','Science'],['11:55–12:50','Computer Science'],['12:50–13:25','Lunch'],['13:30–14:25','Music'],['14:30–15:25','Mandarin']],Tuesday:[['08:00–08:55','Art'],['09:00–09:55','Physical Education'],['10:00–10:30','Tutor / Assembly'],['10:30–10:55','Break'],['10:55–11:50','Mandarin'],['11:55–12:50','Mathematics'],['12:50–13:25','Lunch'],['13:30–14:25','Design Technology'],['14:30–15:25','Design Technology']],Wednesday:[['08:00–08:55','Bahasa Malaysia'],['09:00–09:55','EAL'],['10:00–10:30','Tutor / Assembly'],['10:30–10:55','Break'],['10:55–11:50','Mandarin'],['11:55–12:50','Humanities'],['12:50–13:25','Lunch'],['13:30–14:25','Mathematics'],['14:30–15:25','Science']],Thursday:[['08:00–08:55','Mathematics'],['09:00–09:55','EAL'],['10:00–10:30','Tutor / Assembly'],['10:30–10:55','Break'],['10:55–11:50','Science'],['11:55–12:50','Bahasa Malaysia'],['12:50–13:25','Lunch'],['13:30–14:25','Humanities'],['14:30–15:25','PSHCE']],Friday:[['08:00–08:55','EAL'],['09:00–09:55','Physical Education'],['10:00–10:30','Tutor / Assembly'],['10:30–10:55','Break'],['10:55–11:50','Drama'],['11:55–12:50','Mathematics'],['12:50–13:25','Lunch'],['13:30–14:25','Humanities'],['14:30–15:25','Science']]};
-const DOMAINS=[['COM','Communication & Self-Advocacy','#2563eb'],['PAR','Participation & Access','#0f766e'],['AUT','Autonomy & Self-Management','#7c3aed'],['LRN','Learning & Executive Function','#4338ca'],['REG','Regulation & Sensory Access','#b45309'],['SOC','Social Connection & Belonging','#be185d'],['SUP','Support & Environment','#475569'],['TRN','Transition & Future Readiness','#0e7490']];
-const STATUS=[['routine','Routine / nothing notable'],['noAide','No direct aide support'],['support','Additional support used'],['voice','Communication / autonomy worth noting'],['event','Important event']];
-const PARTICIPATION=['Fully participating with available support','Partially participating','Unable to participate at that time','Unclear / not observed'];
-const AUTONOMY=['Initiated','Made a choice','Asked for help','Requested clarification','Communicated a need','Self-advocated','Accepted support','Declined support','Used known support independently'];
-const QUICK_NOTES=['Participated steadily and followed the teacher’s instruction.','Worked independently using the teacher’s examples / notes.','No direct aide support was needed in this lesson.','Needed light support to get started, then continued with less support.','Needed an additional explanation to understand the task.','Asked the teacher for clarification and then continued.','Used written notes / visual information to complete the task.','Re-engaged with the lesson after brief support.'];
-const OVERVIEW=[['steady','Overall, good efforts to display focus and participate across lessons today.'],['variable','Participation and focus varied across lessons today.'],['support','Some lessons required additional support, while others were managed with teacher or classroom supports.'],['reengaged','There were moments of reduced engagement, with successful re-engagement after support.']];
-const TASK_TYPES=['Teacher instruction / explanation','Warm-up','Independent work','Worksheet','Note-taking','Reading / comprehension','Writing','Quiz','Group work','Discussion','Practical activity','Transition','Assessment','Review / reflection','Other'];
-const TASK_OUTCOMES=['Completed / accessed','Partially completed / accessed','Ongoing','Not completed / not accessed','Student declined / opted out','Not required','Unclear'];
-const OBJECTIVE_RESULTS=['Criterion met','Partly / emerging','Criterion not met','Not measured / insufficient opportunity'];
-const STORE='pathways-web-pilot-v04';
-let state=load();let day=preferredDay();let view='parent';let editingKey=null;let formData=null;
-const $=id=>document.getElementById(id);
-function load(){try{const v=JSON.parse(localStorage.getItem(STORE))||{};return{subjects:v.subjects||{},overview:v.overview||{},pins:v.pins||[],objectives:v.objectives||[]}}catch{return{subjects:{},overview:{},pins:[],objectives:[]}}}
-function save(){localStorage.setItem(STORE,JSON.stringify(state))}
-function preferredDay(){const names=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];const n=names[new Date().getDay()];return TIMETABLE[n]?n:'Monday'}
-function key(d,t,s){return`${d}|${t}|${s}`}
-function uid(prefix){return`${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`}
-function fmtDate(v){if(!v)return'';const d=new Date(`${v}T12:00:00`);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'})}
-function reportDate(){const d=new Date();return`${d.getDate()}/${d.getMonth()+1}/${String(d.getFullYear()).slice(-2)}`}
-function domain(code){return DOMAINS.find(x=>x[0]===code)}
-function escapeText(s=''){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function renderAll(){renderDays();renderSubjects();renderOverview();renderPins();renderObjectives();renderOutput()}
-function renderDays(){const root=$('days');root.innerHTML='';Object.keys(TIMETABLE).forEach(d=>{const b=document.createElement('button');b.className=`day ${d===day?'active':''}`;b.textContent=d;b.onclick=()=>{day=d;renderAll()};root.appendChild(b)})}
-function renderSubjects(){ $('dayTitle').textContent=day;const root=$('subjects');root.innerHTML='';let saved=0;TIMETABLE[day].forEach(([time,subject])=>{const k=key(day,time,subject),data=state.subjects[k];if(data?.saved)saved++;const node=$('subjectTemplate').content.cloneNode(true);node.querySelector('.time').textContent=time;node.querySelector('.name').textContent=subject;const pill=node.querySelector('.pill');pill.textContent=data?.saved?statusName(data.status):data?.skipped?'Not reported':'Not saved';if(data?.saved)pill.classList.add('saved');node.querySelector('.preview').textContent=data?.narrative||data?.skipped?'Not reported today':'Tap Open to add the normal subject report.';if(data?.narrative)node.querySelector('.preview').textContent=data.narrative;const badges=node.querySelector('.badges');(data?.domains||[]).forEach(code=>{const d=domain(code);if(!d)return;const s=document.createElement('span');s.className='badge';s.style.background=d[2];s.textContent=code;badges.appendChild(s)});node.querySelector('.open').onclick=()=>openSubject(k,time,subject);root.appendChild(node)});$('savedCount').textContent=`${saved} saved`}
-function statusName(v){return STATUS.find(x=>x[0]===v)?.[1]||'Saved'}
-function renderOverview(){const data=state.overview[day]||{};const root=$('overviewChoices');root.innerHTML='';OVERVIEW.forEach(([id,label])=>{const b=document.createElement('button');b.className=`choice ${data.choice===id?'selected':''}`;b.textContent=label;b.onclick=()=>{state.overview[day]={...data,choice:id};save();renderOverview();renderOutput()};root.appendChild(b)});$('overviewNote').value=data.note||''}
-$('saveOverview').onclick=()=>{const old=state.overview[day]||{};state.overview[day]={...old,note:$('overviewNote').value.trim()};save();renderOutput()}
-function renderPins(){archiveExpiredAnnouncements();const root=$('pinList');root.innerHTML='';const open=state.pins.filter(p=>p.status!=='Done'&&p.status!=='Archived');if(!open.length){root.innerHTML='<div class="muted-box">No open homework, upcoming tasks or announcements.</div>';return}open.sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999')).forEach(p=>{const today=new Date().toISOString().slice(0,10);const overdue=p.due&&p.due<today&&p.type!=='Announcement';const div=document.createElement('div');div.className=`pin ${overdue?'overdue':''}`;div.innerHTML=`<strong>${escapeText(p.title)}</strong><div class="meta"><span class="mini">${escapeText(p.type)}</span>${p.subject?`<span>${escapeText(p.subject)}</span>`:''}${p.due?`<span>${overdue?'Overdue · ':''}${fmtDate(p.due)}</span>`:''}</div>${p.details?`<div class="subtle" style="margin-top:5px;font-size:.8rem">${escapeText(p.details)}</div>`:''}`;const row=document.createElement('div');row.className='row';row.innerHTML='<button class="btn secondary small">Done</button>';row.querySelector('button').onclick=()=>{p.status='Done';save();renderPins();renderOutput()};div.appendChild(row);root.appendChild(div)})}
-function archiveExpiredAnnouncements(){const today=new Date().toISOString().slice(0,10);let changed=false;state.pins.forEach(p=>{if(p.status!=='Done'&&p.status!=='Archived'&&p.type==='Announcement'&&p.due&&p.due<today){p.status='Archived';changed=true}});if(changed)save()}
-$('addPin').onclick=()=>{$('pinDialog').showModal()};$('savePin').onclick=()=>{const title=$('pinTitle').value.trim();if(!title)return alert('Add a short title.');state.pins.push({id:uid('pin'),type:$('pinType').value,subject:$('pinSubject').value.trim(),title,details:$('pinDetails').value.trim(),due:$('pinDue').value,parent:$('pinParent').value==='yes',status:'Open'});save();$('pinDialog').close();$('pinDialog').querySelector('form').reset();renderPins();renderOutput()}
-function renderObjectives(){const root=$('objectiveList');root.innerHTML='';if(!state.objectives.length){root.innerHTML='<div class="muted-box">No active objectives yet. Add only objectives you genuinely want to measure.</div>';return}state.objectives.forEach(o=>{const d=domain(o.domain),stats=objectiveStats(o.id);const div=document.createElement('div');div.className='objective';div.innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px"><strong>${escapeText(o.target)}</strong><span class="badge" style="background:${d?.[2]||'#475569'}">${o.domain}</span></div><div class="subtle" style="font-size:.79rem;margin-top:5px">${escapeText(objectiveSentence(o))}</div><div class="meta"><span>${stats.measured} measured</span><span>${stats.met} met</span>${o.review?`<span>Review ${fmtDate(o.review)}</span>`:''}</div>`;root.appendChild(div)})}
-function objectiveSentence(o){return`${o.condition?o.condition+', ':''}${o.target}${o.support?' with '+o.support:''}${o.criterion?' · '+o.criterion:''}`}
-function objectiveStats(id){let measured=0,met=0,partial=0,notMet=0;Object.values(state.subjects).forEach(s=>(s.tasks||[]).forEach(t=>{if(t.objectiveId!==id||!t.objectiveResult||t.objectiveResult==='Not measured / insufficient opportunity')return;measured++;if(t.objectiveResult==='Criterion met')met++;else if(t.objectiveResult==='Partly / emerging')partial++;else notMet++}));return{measured,met,partial,notMet}}
-$('addObjective').onclick=()=>{const select=$('objDomain');select.innerHTML=DOMAINS.map(d=>`<option value="${d[0]}">${d[0]} · ${d[1]}</option>`).join('');$('objectiveDialog').showModal()};$('saveObjective').onclick=()=>{const target=$('objTarget').value.trim();if(!target)return alert('Add an observable target.');state.objectives.push({id:uid('obj'),domain:$('objDomain').value,target,condition:$('objCondition').value.trim(),support:$('objSupport').value.trim(),criterion:$('objCriterion').value.trim(),review:$('objReview').value});save();$('objectiveDialog').close();$('objectiveDialog').querySelector('form').reset();renderObjectives()}
-function openSubject(k,time,subject){editingKey=k;const existing=state.subjects[k]||{};formData={status:existing.status||'routine',narrative:existing.narrative||'',participation:existing.participation||'',aideLevel:existing.aideLevel||'None',supportSource:existing.supportSource||'Teacher',supportPurpose:existing.supportPurpose||'Understanding / clarification',autonomy:[...(existing.autonomy||[])],domains:[...(existing.domains||[])],eventObservation:existing.eventObservation||'',eventUncertainty:existing.eventUncertainty||'',tasks:JSON.parse(JSON.stringify(existing.tasks||[]))};$('subjectKey').value=k;$('subjectTime').textContent=time;$('subjectName').textContent=subject;$('narrative').value=formData.narrative;$('aideLevel').value=formData.aideLevel;$('supportSource').value=formData.supportSource;$('supportPurpose').value=formData.supportPurpose;$('eventObservation').value=formData.eventObservation;$('eventUncertainty').value=formData.eventUncertainty;renderSubjectForm();$('subjectDialog').showModal()}
-function renderSubjectForm(){renderStatus();renderQuickNotes();renderParticipation();renderAutonomy();renderDomains();renderTasks();updateDynamic()}
-function renderStatus(){const root=$('statusChoices');root.innerHTML='';STATUS.forEach(([id,label])=>{const b=document.createElement('button');b.type='button';b.className=`choice ${formData.status===id?'selected':''}`;b.textContent=label;b.onclick=()=>{formData.status=id;if(id==='noAide')formData.aideLevel='None';renderStatus();updateDynamic()};root.appendChild(b)})}
-function renderQuickNotes(){const root=$('quickNotes');root.innerHTML='';QUICK_NOTES.forEach(q=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=q;b.onclick=()=>{const ta=$('narrative');ta.value=[ta.value.trim(),q].filter(Boolean).join(' ');formData.narrative=ta.value};root.appendChild(b)})}
-function renderParticipation(){const root=$('participationChoices');root.innerHTML='';PARTICIPATION.forEach(p=>{const b=document.createElement('button');b.type='button';b.className=`choice ${formData.participation===p?'selected':''}`;b.textContent=p;b.onclick=()=>{formData.participation=p;renderParticipation()};root.appendChild(b)})}
-function renderAutonomy(){const root=$('autonomyChoices');root.innerHTML='';AUTONOMY.forEach(a=>{const b=document.createElement('button');b.type='button';b.className=`chip ${formData.autonomy.includes(a)?'selected':''}`;b.textContent=a;b.onclick=()=>{formData.autonomy=formData.autonomy.includes(a)?formData.autonomy.filter(x=>x!==a):[...formData.autonomy,a];renderAutonomy()};root.appendChild(b)})}
-function renderDomains(){const root=$('domainChoices');root.innerHTML='';DOMAINS.forEach(([code,label,color])=>{const b=document.createElement('button');b.type='button';b.className=`domain ${formData.domains.includes(code)?'selected':''}`;b.style.setProperty('--c',color);b.innerHTML=`<strong>${code}</strong><small>${label}</small>`;b.onclick=()=>{if(formData.domains.includes(code))formData.domains=formData.domains.filter(x=>x!==code);else if(formData.domains.length<3)formData.domains.push(code);else return alert('Use up to 3 domains only when clearly relevant.');renderDomains()};root.appendChild(b)})}
-function updateDynamic(){const support=formData.status==='support'||formData.status==='event';$('supportSection').classList.toggle('hidden',!support);$('autonomySection').classList.toggle('hidden',!(formData.status==='voice'||formData.status==='event'));$('eventSection').classList.toggle('hidden',formData.status!=='event')}
-function renderTasks(){const root=$('taskList');root.innerHTML='';if(!formData.tasks.length){root.innerHTML='<div class="muted-box">No task breakdown needed unless it helps clarify the lesson or measure an objective.</div>';return}formData.tasks.forEach((t,i)=>{const div=document.createElement('div');div.className='task';const objectiveOptions=['<option value="">No objective measurement</option>',...state.objectives.map(o=>`<option value="${o.id}" ${t.objectiveId===o.id?'selected':''}>${o.domain} · ${escapeText(o.target)}</option>`)].join('');div.innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>Task ${i+1}</strong><button type="button" class="btn ghost small remove">Remove</button></div><div class="task-grid"><input class="task-label" value="${escapeText(t.label||'')}" placeholder="e.g. Questions 1–5"><select class="task-type">${TASK_TYPES.map(x=>`<option ${t.type===x?'selected':''}>${x}</option>`).join('')}</select><select class="task-outcome">${TASK_OUTCOMES.map(x=>`<option ${t.outcome===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="task-more"><select class="task-objective">${objectiveOptions}</select><select class="task-result ${t.objectiveId?'':'hidden'}">${OBJECTIVE_RESULTS.map(x=>`<option ${t.objectiveResult===x?'selected':''}>${x}</option>`).join('')}</select></div>`;div.querySelector('.remove').onclick=()=>{formData.tasks.splice(i,1);renderTasks()};div.querySelector('.task-label').oninput=e=>t.label=e.target.value;div.querySelector('.task-type').onchange=e=>t.type=e.target.value;div.querySelector('.task-outcome').onchange=e=>t.outcome=e.target.value;const os=div.querySelector('.task-objective'),rs=div.querySelector('.task-result');os.onchange=e=>{t.objectiveId=e.target.value;t.objectiveResult=t.objectiveId?(t.objectiveResult||'Not measured / insufficient opportunity'):'';renderTasks()};rs.onchange=e=>t.objectiveResult=e.target.value;root.appendChild(div)})}
-$('addTask').onclick=()=>{formData.tasks.push({id:uid('task'),label:'',type:'Independent work',outcome:'Completed / accessed',objectiveId:'',objectiveResult:''});renderTasks()}
-$('saveSubject').onclick=()=>{formData.narrative=$('narrative').value.trim();formData.aideLevel=$('aideLevel').value;formData.supportSource=$('supportSource').value;formData.supportPurpose=$('supportPurpose').value;formData.eventObservation=$('eventObservation').value.trim();formData.eventUncertainty=$('eventUncertainty').value.trim();if(!formData.participation)formData.participation='Unclear / not observed';state.subjects[editingKey]={...formData,saved:true,skipped:false};save();$('subjectDialog').close();renderAll()}
-$('notReported').onclick=()=>{state.subjects[editingKey]={saved:false,skipped:true};save();$('subjectDialog').close();renderAll()}
-function currentSubjects(){return TIMETABLE[day].map(([time,subject])=>({time,subject,data:state.subjects[key(day,time,subject)]})).filter(x=>x.data?.saved)}
-function parentReport(){const ov=state.overview[day]||{};const phrase=OVERVIEW.find(x=>x[0]===ov.choice)?.[1]||'';const lines=[reportDate(),''];if(phrase||ov.note){lines.push('*Behaviour and Focus:*');if(phrase)lines.push(phrase);if(ov.note)lines.push(ov.note);lines.push('')}currentSubjects().forEach(({subject,data})=>{if(!data.narrative)return;lines.push(`*${subject}:*`);lines.push(data.narrative);lines.push('')});const pins=state.pins.filter(p=>p.parent&&p.status!=='Done'&&p.status!=='Archived');if(pins.length){lines.push('*Homework / Upcoming:*');pins.forEach(p=>lines.push(`• ${p.subject?`${p.subject}: `:''}${p.title}${p.due?` (due ${fmtDate(p.due)})`:''}${p.details?` — ${p.details}`:''}`));lines.push('')}return lines.join('\n').trim()||'No parent report has been entered for this day yet.'}
-function teacherReport(){const lines=[`${day} support view`,''];currentSubjects().forEach(({subject,data})=>{lines.push(`${subject}`);lines.push(`Participation: ${data.participation||'Unclear'}`);lines.push(`Aide involvement: ${data.aideLevel||'None'}`);lines.push(`Primary support: ${data.supportSource||'Unclear'}`);if(data.supportPurpose&&data.aideLevel!=='None')lines.push(`Support purpose: ${data.supportPurpose}`);if(data.autonomy?.length)lines.push(`Communication/autonomy: ${data.autonomy.join(', ')}`);if(data.tasks?.length)lines.push(`Tasks captured: ${data.tasks.length}`);lines.push('')});return lines.join('\n').trim()||'No subject data saved yet.'}
-function iepReport(){const counts={};currentSubjects().forEach(({data})=>(data.domains||[]).forEach(c=>counts[c]=(counts[c]||0)+1));const lines=[`${day} IEP / SEN evidence view`,'','Domain evidence'];if(!Object.keys(counts).length)lines.push('No domain tags confirmed today.');Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([c,n])=>lines.push(`${c} · ${domain(c)?.[1]||c}: ${n} subject entr${n===1?'y':'ies'}`));if(state.objectives.length){lines.push('','Objective evidence');state.objectives.forEach(o=>{const s=objectiveStats(o.id);lines.push(`${o.domain} · ${o.target}: ${s.met}/${s.measured||0} measured opportunities met criterion${s.partial?`, ${s.partial} partly/emerging`:''}${s.notMet?`, ${s.notMet} not met`:''}.`)})}lines.push('','Reminder: domain colors classify topic only, not performance. One day of evidence is not enough to establish a stable pattern.');return lines.join('\n')}
-function renderOutput(){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===view));$('output').textContent=view==='parent'?parentReport():view==='teacher'?teacherReport():iepReport()}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{view=b.dataset.view;renderOutput()});
-$('copyReport').onclick=async()=>{const text=view==='parent'?parentReport():view==='teacher'?teacherReport():iepReport();try{await navigator.clipboard.writeText(text);$('copyReport').textContent='Copied';setTimeout(()=>$('copyReport').textContent='Copy',1200)}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}}
-$('openWhatsApp').onclick=()=>{const text=parentReport();const url=`https://wa.me/?text=${encodeURIComponent(text)}`;const w=window.open(url,'_blank','noopener');if(!w)window.location.href=url}
-$('reset').onclick=()=>{if(!confirm('Reset all prototype data stored in this browser?'))return;localStorage.removeItem(STORE);location.reload()}
-document.addEventListener('DOMContentLoaded',()=>renderAll());
+(() => {
+  function installEnhancements() {
+    if (typeof renderTasks !== 'function' || typeof parentReport !== 'function') return;
+
+    renderTasks = function () {
+      const root = $('taskList');
+      const helper = root.closest('.section')?.querySelector('.section-copy');
+      if (helper) helper.textContent = 'Optional. Add one task or several when the lesson had distinct activities. Saved tasks appear automatically in the WhatsApp parent report.';
+      $('addTask').textContent = formData.tasks.length ? '+ Add another task' : '+ Add task';
+      root.innerHTML = '';
+      if (!formData.tasks.length) {
+        root.innerHTML = '<div class="muted-box">No task breakdown needed. Add tasks only when they help explain what happened in class.</div>';
+        return;
+      }
+      formData.tasks.forEach((t, i) => {
+        const div = document.createElement('div');
+        div.className = 'task';
+        const objectiveOptions = ['<option value="">No objective measurement</option>', ...state.objectives.map(o => `<option value="${o.id}" ${t.objectiveId === o.id ? 'selected' : ''}>${o.domain} · ${escapeText(o.target)}</option>`)].join('');
+        div.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>Task ${i + 1}</strong><button type="button" class="btn ghost small remove">Remove</button></div><div class="task-grid"><label class="field"><span>Task</span><input class="task-label" value="${escapeText(t.label || '')}" placeholder="e.g. Questions 1-5"></label><label class="field"><span>Type</span><select class="task-type">${TASK_TYPES.map(x => `<option ${t.type === x ? 'selected' : ''}>${x}</option>`).join('')}</select></label><label class="field"><span>Outcome</span><select class="task-outcome">${TASK_OUTCOMES.map(x => `<option ${t.outcome === x ? 'selected' : ''}>${x}</option>`).join('')}</select></label></div><label class="field"><span>Parent detail (optional)</span><textarea class="task-detail" rows="2" placeholder="e.g. Needed one prompt to start, then completed independently.">${escapeText(t.detail || '')}</textarea></label><div class="task-more"><select class="task-objective">${objectiveOptions}</select><select class="task-result ${t.objectiveId ? '' : 'hidden'}">${OBJECTIVE_RESULTS.map(x => `<option ${t.objectiveResult === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>`;
+        div.querySelector('.remove').onclick = () => { formData.tasks.splice(i, 1); renderTasks(); };
+        div.querySelector('.task-label').oninput = e => t.label = e.target.value;
+        div.querySelector('.task-type').onchange = e => t.type = e.target.value;
+        div.querySelector('.task-outcome').onchange = e => t.outcome = e.target.value;
+        div.querySelector('.task-detail').oninput = e => t.detail = e.target.value;
+        const os = div.querySelector('.task-objective');
+        const rs = div.querySelector('.task-result');
+        os.onchange = e => {
+          t.objectiveId = e.target.value;
+          t.objectiveResult = t.objectiveId ? (t.objectiveResult || 'Not measured / insufficient opportunity') : '';
+          renderTasks();
+        };
+        rs.onchange = e => t.objectiveResult = e.target.value;
+        root.appendChild(div);
+      });
+    };
+
+    $('addTask').onclick = () => {
+      formData.tasks.push({ id: uid('task'), label: '', type: 'Independent work', outcome: 'Completed / accessed', detail: '', objectiveId: '', objectiveResult: '' });
+      renderTasks();
+    };
+
+    parentReport = function () {
+      const ov = state.overview[day] || {};
+      const phrase = OVERVIEW.find(x => x[0] === ov.choice)?.[1] || '';
+      const lines = [reportDate(), ''];
+      if (phrase || ov.note) {
+        lines.push('*Behaviour and Focus:*');
+        if (phrase) lines.push(phrase);
+        if (ov.note) lines.push(ov.note);
+        lines.push('');
+      }
+      currentSubjects().forEach(({ subject, data }) => {
+        const tasks = data.tasks || [];
+        if (!data.narrative && !tasks.length) return;
+        lines.push(`*${subject}:*`);
+        if (data.narrative) lines.push(data.narrative);
+        if (tasks.length) {
+          if (data.narrative) lines.push('Tasks:');
+          tasks.forEach((t, i) => {
+            const label = (t.label || '').trim();
+            const type = (t.type || '').trim();
+            const taskName = label ? `${label}${type && type !== 'Other' ? ` (${type})` : ''}` : (type || `Task ${i + 1}`);
+            const outcome = (t.outcome || '').trim();
+            const detail = (t.detail || '').trim();
+            lines.push(`• ${taskName}${outcome ? `: ${outcome}` : ''}${detail ? `. ${detail}` : ''}`);
+          });
+        }
+        lines.push('');
+      });
+      const pins = state.pins.filter(p => p.parent && p.status !== 'Done' && p.status !== 'Archived');
+      if (pins.length) {
+        lines.push('*Homework / Upcoming:*');
+        pins.forEach(p => lines.push(`• ${p.subject ? `${p.subject}: ` : ''}${p.title}${p.due ? ` (due ${fmtDate(p.due)})` : ''}${p.details ? ` - ${p.details}` : ''}`));
+        lines.push('');
+      }
+      return lines.join('\n').trim() || 'No parent report has been entered for this day yet.';
+    };
+
+    renderTasks();
+    renderOutput();
+  }
+
+  const core = document.createElement('script');
+  core.src = '/pathways-lab/app-core.js';
+  core.onload = () => {
+    installEnhancements();
+    if (typeof renderAll === 'function') renderAll();
+  };
+  document.head.appendChild(core);
+})();
