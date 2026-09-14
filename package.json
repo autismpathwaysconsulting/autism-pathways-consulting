@@ -10,6 +10,7 @@
     "test:site-metrics": "node --test tests/site-metrics.test.mjs",
     "test:content-os": "node --test tests/content-os*.test.mjs",
     "test:episode-workflow": "node --test tests/content-os-episode-workflow.test.mjs",
-    "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics"
+    "test:pathways-lab": "node --test tests/pathways-lab.test.mjs",
+    "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics && npm run test:pathways-lab"
   }
 }
