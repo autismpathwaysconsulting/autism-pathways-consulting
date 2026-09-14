@@ -53,6 +53,29 @@
       renderOutput();
     };
 
+    $('saveObjective').onclick = () => {
+      const objective = {
+        id: uid('obj'),
+        domain: $('objDomain').value,
+        target: $('objTarget').value.trim(),
+        condition: $('objCondition').value.trim(),
+        support: $('objSupport').value.trim(),
+        criterion: $('objCriterion').value.trim(),
+        review: $('objReview').value,
+      };
+      const validation = M.validateObjectiveDraft(objective);
+      if (!validation.valid) {
+        alert(`Add the missing objective details: ${validation.missing.join(', ')}.`);
+        return;
+      }
+      state.objectives.push(objective);
+      save();
+      $('objectiveDialog').close();
+      $('objectiveDialog').querySelector('form').reset();
+      renderObjectives();
+      renderOutput();
+    };
+
     archiveExpiredAnnouncements = function () {
       let changed = false;
       state.pins.forEach(pin => {
@@ -142,6 +165,16 @@
         overviewNote: overview.note || '',
         subjects: currentSubjects(),
         pins: state.pins,
+      });
+    };
+
+    iepReport = function () {
+      return M.buildIepEvidence({
+        dayName: day,
+        currentSubjects: currentSubjects(),
+        objectives: state.objectives,
+        allSubjects: state.subjects,
+        domains: DOMAINS,
       });
     };
 
