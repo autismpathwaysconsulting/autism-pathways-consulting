@@ -157,6 +157,50 @@ test('objective measurement excludes insufficient opportunities from the denomin
   });
 });
 
+test('objective drafts must be observable, contextual, measurable and reviewable', () => {
+  assert.deepEqual(
+    M.validateObjectiveDraft({ target: 'Be more independent' }),
+    {
+      valid: false,
+      missing: ['context / condition', 'measurable criterion', 'review date'],
+    },
+  );
+
+  assert.deepEqual(
+    M.validateObjectiveDraft({
+      target: 'Begin a familiar written task',
+      condition: 'Following teacher instruction during familiar written work',
+      criterion: 'within 2 minutes in 4 of 5 observed opportunities',
+      review: '2026-11-30',
+    }),
+    { valid: true, missing: [] },
+  );
+});
+
+test('IEP evidence labels daily domains separately from cumulative dated objective evidence', () => {
+  const allSubjects = datedSubjectsFromFixture();
+  allSubjects['legacy|Monday|09:00–09:55|EAL'] = {
+    tasks: [{ objectiveId: 'obj-task-initiation', objectiveResult: 'Criterion met' }],
+  };
+
+  const output = M.buildIepEvidence({
+    dayName: 'Monday',
+    currentSubjects: fixture.subjects.Monday.map(entry => ({ subject: entry.subject, data: { ...entry, domains: entry.subject === 'EAL' ? ['AUT', 'LRN'] : ['LRN'] } })),
+    objectives: [{ ...fixture.objectives[0], review: '2026-11-30' }],
+    allSubjects,
+    domains: [
+      ['AUT', 'Autonomy & Self-Management'],
+      ['LRN', 'Learning & Executive Function'],
+    ],
+  });
+
+  assert.match(output, /Today's domain evidence/);
+  assert.match(output, /Cumulative dated objective evidence/);
+  assert.match(output, /3\/5 measured opportunities met criterion/);
+  assert.match(output, /Undated legacy records and not-measured opportunities are excluded/);
+  assert.match(output, /Candidate objectives require student\/team review before use in a formal IEP/);
+});
+
 test('WhatsApp output keeps internal task data out unless explicitly shared', () => {
   const monday = fixture.subjects.Monday;
   const report = M.buildParentReport({
@@ -177,6 +221,21 @@ test('WhatsApp output keeps internal task data out unless explicitly shared', ()
   assert.match(report, /\*Homework \/ Upcoming:\*/);
   assert.match(report, /Mathematics: Complete Questions 6-10/);
   assert.doesNotMatch(report, /Check visual examples before next lesson/);
+});
+
+test('navigation colors avoid red grading cues for routine support and access states', async () => {
+  const app = await readFile(new URL('../pathways-lab/app.js', import.meta.url), 'utf8');
+  assert.match(app, /Indigo = important event/);
+  assert.match(app, /Amber = support \/ access change/);
+  assert.doesNotMatch(app, /Red = important event/);
+  assert.match(app, /title === 'Important'[\s\S]*classList\.remove\('cog-coral'\)[\s\S]*classList\.add\('cog-indigo'\)/);
+  assert.match(app, /title === 'Unable now'[\s\S]*classList\.remove\('cog-coral'\)[\s\S]*classList\.add\('cog-amber'\)/);
+});
+
+test('saved lesson records require confirmation before Not reported can replace them', async () => {
+  const fixes = await readFile(new URL('../pathways-lab/app-fixes.js', import.meta.url), 'utf8');
+  assert.match(fixes, /existing\?\.saved && !confirm\(/);
+  assert.match(fixes, /replace the saved report for this lesson/);
 });
 
 test('synthetic fixture covers a full school week and balanced support contexts', () => {
