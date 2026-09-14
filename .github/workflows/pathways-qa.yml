@@ -28,6 +28,8 @@ jobs:
   pathways-qa:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      TZ: Asia/Kuala_Lumpur
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
