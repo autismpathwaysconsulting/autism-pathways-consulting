@@ -10,9 +10,11 @@
       TIMETABLE[dayName].splice(0, TIMETABLE[dayName].length, ...collapsed);
     });
 
-    const migrated = M.migrateLegacySubjects(state.subjects || {}, new Date());
-    if (migrated.migrated) {
-      state.subjects = migrated.subjects;
+    const migratedSubjects = M.migrateLegacySubjects(state.subjects || {});
+    const migratedOverview = M.migrateLegacyOverview(state.overview || {});
+    if (migratedSubjects.migrated || migratedOverview.migrated) {
+      state.subjects = migratedSubjects.subjects;
+      state.overview = migratedOverview.overview;
       save();
     }
 
@@ -20,6 +22,36 @@
     reportDate = () => M.formatReportDate(day, new Date());
     objectiveStats = objectiveId => M.objectiveStats(state.subjects || {}, objectiveId);
     escapeText = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const currentOverviewKey = () => M.datedDayKey(day, new Date());
+
+    renderOverview = function () {
+      const recordKey = currentOverviewKey();
+      const data = state.overview[recordKey] || {};
+      const root = $('overviewChoices');
+      root.innerHTML = '';
+      OVERVIEW.forEach(([id, label]) => {
+        const button = document.createElement('button');
+        button.className = `choice ${data.choice === id ? 'selected' : ''}`;
+        button.textContent = label;
+        button.onclick = () => {
+          state.overview[recordKey] = { ...data, choice: id };
+          save();
+          renderOverview();
+          renderOutput();
+        };
+        root.appendChild(button);
+      });
+      $('overviewNote').value = data.note || '';
+    };
+
+    $('saveOverview').onclick = () => {
+      const recordKey = currentOverviewKey();
+      const old = state.overview[recordKey] || {};
+      state.overview[recordKey] = { ...old, note: $('overviewNote').value.trim() };
+      save();
+      renderOutput();
+    };
 
     archiveExpiredAnnouncements = function () {
       let changed = false;
@@ -101,7 +133,7 @@
     };
 
     parentReport = function () {
-      const overview = state.overview[day] || {};
+      const overview = state.overview[currentOverviewKey()] || {};
       const overviewPhrase = OVERVIEW.find(item => item[0] === overview.choice)?.[1] || '';
       return M.buildParentReport({
         dayName: day,

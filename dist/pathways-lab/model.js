@@ -24,8 +24,12 @@
     return date;
   }
 
+  function datedDayKey(dayName, baseDate = new Date()) {
+    return localDateKey(dateForDay(dayName, baseDate));
+  }
+
   function datedLessonKey(dayName, time, subject, baseDate = new Date()) {
-    return `${localDateKey(dateForDay(dayName, baseDate))}|${time}|${subject}`;
+    return `${datedDayKey(dayName, baseDate)}|${time}|${subject}`;
   }
 
   function formatReportDate(dayName, baseDate = new Date()) {
@@ -69,6 +73,19 @@
       migrated += 1;
     }
     return { subjects: next, migrated };
+  }
+
+  function migrateLegacyOverview(overview = {}) {
+    const next = { ...overview };
+    let migrated = 0;
+    for (const dayName of DAY_ORDER) {
+      if (!(dayName in next)) continue;
+      const legacyKey = `legacy|${dayName}`;
+      if (!(legacyKey in next)) next[legacyKey] = next[dayName];
+      delete next[dayName];
+      migrated += 1;
+    }
+    return { overview: next, migrated };
   }
 
   function effectivePinStatus(pin, baseDate = new Date()) {
@@ -157,11 +174,13 @@
     localDateKey,
     startOfWeek,
     dateForDay,
+    datedDayKey,
     datedLessonKey,
     formatReportDate,
     formatDueDate,
     collapseConsecutiveSlots,
     migrateLegacySubjects,
+    migrateLegacyOverview,
     effectivePinStatus,
     objectiveStats,
     parentVisibleTasks,
