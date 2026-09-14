@@ -155,6 +155,15 @@
       renderTasks();
     };
 
+    $('notReported').onclick = () => {
+      const existing = state.subjects[editingKey];
+      if (existing?.saved && !confirm('This will replace the saved report for this lesson with “Not reported today.” Continue?')) return;
+      state.subjects[editingKey] = { saved: false, skipped: true };
+      save();
+      $('subjectDialog').close();
+      renderAll();
+    };
+
     parentReport = function () {
       const overview = state.overview[currentOverviewKey()] || {};
       const overviewPhrase = OVERVIEW.find(item => item[0] === overview.choice)?.[1] || '';

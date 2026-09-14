@@ -19,6 +19,7 @@
         style.textContent = `
           .cog-choice{background:#fff!important;transition:background .14s ease,border-color .14s ease,outline-color .14s ease}
           .cog-choice.selected{background:var(--cue-bg)!important}
+          .cog-indigo{--cue-line:#4338ca!important;--cue-bg:#eef2ff!important}
           #quickNotes{display:block!important}
           .quick-group{margin-top:13px}
           .quick-group:first-child{margin-top:0}
@@ -79,11 +80,30 @@
           button.classList.add('cog-teal');
         }
       });
+
       const overview = document.getElementById('overviewChoices');
       overview?.querySelectorAll('.cog-choice').forEach(button => {
         const title = button.querySelector('.cog-copy strong')?.textContent.trim();
         if (title === 'More support') {
           button.classList.remove('cog-blue');
+          button.classList.add('cog-amber');
+        }
+      });
+
+      const status = document.getElementById('statusChoices');
+      status?.querySelectorAll('.cog-choice').forEach(button => {
+        const title = button.querySelector('.cog-copy strong')?.textContent.trim();
+        if (title === 'Important') {
+          button.classList.remove('cog-coral');
+          button.classList.add('cog-indigo');
+        }
+      });
+
+      const participation = document.getElementById('participationChoices');
+      participation?.querySelectorAll('.cog-choice').forEach(button => {
+        const title = button.querySelector('.cog-copy strong')?.textContent.trim();
+        if (title === 'Unable now') {
+          button.classList.remove('cog-coral');
           button.classList.add('cog-amber');
         }
       });
@@ -134,7 +154,7 @@
 
     function updateCueCopy() {
       const statusHint = document.getElementById('colorCueHint');
-      const statusText = 'Colour guide: Teal = routine / independent · Amber = support · Blue = communication · Red = important event · Grey = unclear. Colours are navigation cues, not ratings.';
+      const statusText = 'Colour guide: Teal = routine / independent · Amber = support / access change · Blue = communication · Indigo = important event · Grey = unclear. Colours are navigation cues, not ratings.';
       if (statusHint && statusHint.textContent !== statusText) statusHint.textContent = statusText;
       const quickHint = document.getElementById('quickCueHint');
       const quickHtml = '<strong>Faster entry:</strong> choose the short cue. The full parent-ready sentence is still inserted into the report.';
