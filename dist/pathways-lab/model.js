@@ -56,15 +56,15 @@
     return output;
   }
 
-  function migrateLegacySubjects(subjects = {}, baseDate = new Date()) {
+  function migrateLegacySubjects(subjects = {}) {
     const next = { ...subjects };
     let migrated = 0;
     for (const [oldKey, value] of Object.entries(subjects)) {
       const match = /^(Monday|Tuesday|Wednesday|Thursday|Friday)\|([^|]+)\|(.+)$/.exec(oldKey);
       if (!match) continue;
       const [, dayName, time, subject] = match;
-      const newKey = datedLessonKey(dayName, time, subject, baseDate);
-      if (!(newKey in next)) next[newKey] = value;
+      const legacyKey = `legacy|${dayName}|${time}|${subject}`;
+      if (!(legacyKey in next)) next[legacyKey] = value;
       delete next[oldKey];
       migrated += 1;
     }
@@ -85,7 +85,8 @@
     let met = 0;
     let partial = 0;
     let notMet = 0;
-    Object.values(subjects).forEach(subject => {
+    Object.entries(subjects).forEach(([recordKey, subject]) => {
+      if (recordKey.startsWith('legacy|')) return;
       (subject?.tasks || []).forEach(task => {
         if (task.objectiveId !== objectiveId) return;
         if (!task.objectiveResult || task.objectiveResult === 'Not measured / insufficient opportunity') return;
