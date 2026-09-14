@@ -3,75 +3,161 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFile } from 'node:fs/promises';
 
-const appSource = await readFile(new URL('../pathways-lab/app.js', import.meta.url), 'utf8');
+const sources = new Map([
+  ['/pathways-lab/app.js', await readFile(new URL('../pathways-lab/app.js', import.meta.url), 'utf8')],
+  ['/pathways-lab/app-core.js', await readFile(new URL('../pathways-lab/app-core.js', import.meta.url), 'utf8')],
+  ['/pathways-lab/model.js', await readFile(new URL('../pathways-lab/model.js', import.meta.url), 'utf8')],
+  ['/pathways-lab/app-fixes.js', await readFile(new URL('../pathways-lab/app-fixes.js', import.meta.url), 'utf8')],
+]);
 
-function createElement(tagName) {
+function createClassList() {
+  const values = new Set();
   return {
+    add(...names) { names.forEach(name => values.add(name)); },
+    remove(...names) { names.forEach(name => values.delete(name)); },
+    toggle(name, force) {
+      if (force === true) values.add(name);
+      else if (force === false) values.delete(name);
+      else if (values.has(name)) values.delete(name);
+      else values.add(name);
+    },
+    contains(name) { return values.has(name); },
+  };
+}
+
+function createElement(tagName = 'div') {
+  const element = {
     tagName,
     src: '',
     onload: null,
     onerror: null,
-    style: {},
+    onclick: null,
+    onchange: null,
+    oninput: null,
+    value: '',
+    checked: false,
+    style: { setProperty() {} },
     className: '',
     innerHTML: '',
     textContent: '',
-    classList: {
-      add() {},
-      remove() {},
-      toggle() {},
-    },
+    dataset: {},
+    classList: createClassList(),
+    parentNode: null,
+    parentElement: null,
     append() {},
     appendChild() {},
+    insertBefore() {},
+    remove() {},
+    close() {},
+    showModal() {},
+    reset() {},
+    select() {},
+    addEventListener() {},
     querySelector() { return null; },
     querySelectorAll() { return []; },
+    closest() { return element; },
+    cloneNode() { return createElement(tagName); },
   };
+  element.parentNode = element;
+  element.parentElement = element;
+  return element;
 }
 
-test('Pathways initial bootstrap loads core, model and fixes before calm UI without a subject form', async () => {
+test('Pathways bootstrap executes the real core, model and fixes without a subject open', async () => {
   const loaded = [];
-  const errors = [];
-  let renderCount = 0;
+  const runtimeErrors = [];
+  const consoleErrors = [];
+  const elements = new Map();
+  let context;
 
+  function elementFor(id) {
+    if (!elements.has(id)) elements.set(id, createElement(id === 'subjectTemplate' ? 'template' : 'div'));
+    return elements.get(id);
+  }
+
+  const localStore = new Map();
   const sandbox = {
     Promise,
     Set,
+    Map,
+    Date,
     Error,
+    Math,
+    JSON,
+    String,
+    Array,
+    Object,
+    encodeURIComponent,
+    setTimeout,
+    clearTimeout,
+    setInterval,
+    clearInterval,
+    queueMicrotask,
+    __renderCount: 0,
     console: {
       log() {},
       warn() {},
-      error(...args) { errors.push(args.map(String).join(' ')); },
+      error(...args) { consoleErrors.push(args.map(String).join(' ')); },
     },
+    alert() {},
+    confirm() { return true; },
     requestAnimationFrame(callback) { callback(); },
     MutationObserver: class {
       constructor() {}
       observe() {}
       disconnect() {}
     },
+    localStorage: {
+      getItem(key) { return localStore.has(key) ? localStore.get(key) : null; },
+      setItem(key, value) { localStore.set(key, String(value)); },
+      removeItem(key) { localStore.delete(key); },
+    },
+    navigator: { clipboard: { async writeText() {} } },
+    location: { href: '', reload() {} },
+    window: { open() { return {}; } },
     document: {
-      getElementById() { return null; },
+      documentElement: createElement('html'),
+      body: createElement('body'),
+      getElementById(id) {
+        if (id === 'pathwaysCalmUi' || id === 'moreDetail') return null;
+        return elementFor(id);
+      },
+      querySelectorAll() { return []; },
+      addEventListener() {},
+      execCommand() { return true; },
       createElement,
       head: {
         appendChild(node) {
           if (!node.src) return node;
           loaded.push(node.src);
-          if (node.src.endsWith('/app-core.js')) {
-            sandbox.renderSubjectForm = () => {};
-            sandbox.renderAll = () => { renderCount += 1; };
-            // Deliberately do not provide formData or renderTasks here. The
-            // bootstrap must remain safe before any subject has been opened.
-          } else if (node.src.endsWith('/model.js')) {
-            sandbox.PathwaysModel = Object.freeze({ loaded: true });
-          } else if (node.src.endsWith('/app-fixes.js')) {
-            sandbox.pathwaysFixesLoaded = true;
+          const source = sources.get(node.src);
+          if (!source) {
+            queueMicrotask(() => node.onerror?.());
+            return node;
           }
+          try {
+            vm.runInContext(source, context, { filename: node.src });
+            if (node.src.endsWith('/app-core.js')) {
+              // Keep the runtime bootstrap realistic while avoiding a full DOM
+              // render. app-fixes and the loader must still execute for real.
+              vm.runInContext('renderAll = () => { globalThis.__renderCount += 1; };', context);
+            }
+          } catch (error) {
+            runtimeErrors.push(error);
+          }
+          // Browsers fire load for a successfully fetched script even when its
+          // code throws. Keeping that behavior makes runtimeErrors essential.
           queueMicrotask(() => node.onload?.());
           return node;
         },
       },
     },
   };
+  sandbox.window.document = sandbox.document;
+  sandbox.window.location = sandbox.location;
+  context = vm.createContext(sandbox);
 
-  vm.runInNewContext(appSource, sandbox, { filename: 'pathways-lab/app.js' });
+  vm.runInContext(sources.get('/pathways-lab/app.js'), context, { filename: '/pathways-lab/app.js' });
   await new Promise(resolve => setImmediate(resolve));
 
   assert.deepEqual(loaded, [
@@ -79,10 +165,12 @@ test('Pathways initial bootstrap loads core, model and fixes before calm UI with
     '/pathways-lab/model.js',
     '/pathways-lab/app-fixes.js',
   ]);
-  assert.equal(sandbox.PathwaysModel.loaded, true);
-  assert.equal(sandbox.pathwaysFixesLoaded, true);
-  assert.equal(renderCount, 1);
-  assert.deepEqual(errors, []);
+  assert.deepEqual(runtimeErrors, [], runtimeErrors.map(error => error.stack || String(error)).join('\n'));
+  assert.deepEqual(consoleErrors, []);
+  assert.equal(vm.runInContext('typeof PathwaysModel.validateObjectiveDraft', context), 'function');
+  assert.match(vm.runInContext('renderTasks.toString()', context), /includeParent/);
+  assert.match(vm.runInContext('parentReport.toString()', context), /buildParentReport/);
+  assert.ok(sandbox.__renderCount >= 2, 'app-fixes and final bootstrap should both complete their render step');
 });
 
 test('checked-in Pathways Pages assets exactly match their source files', async () => {
