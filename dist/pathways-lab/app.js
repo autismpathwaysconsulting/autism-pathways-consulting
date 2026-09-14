@@ -261,11 +261,20 @@
     requestAnimationFrame(refreshCalmUi);
   }
 
-  const core = document.createElement('script');
-  core.src = '/pathways-lab/app-core.js';
-  core.onload = () => {
+  function loadScript(src, onload) {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = onload;
+    script.onerror = () => console.error(`Pathways Lab failed to load ${src}`);
+    document.head.appendChild(script);
+  }
+
+  loadScript('/pathways-lab/app-core.js', () => {
     installEnhancements();
-    if (typeof renderAll === 'function') renderAll();
-  };
-  document.head.appendChild(core);
+    loadScript('/pathways-lab/model.js', () => {
+      loadScript('/pathways-lab/app-fixes.js', () => {
+        if (typeof renderAll === 'function') renderAll();
+      });
+    });
+  });
 })();
