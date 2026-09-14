@@ -2,6 +2,8 @@
   function installEnhancements() {
     if (typeof renderTasks !== 'function' || typeof parentReport !== 'function') return;
 
+    escapeText = (s = '') => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
     renderTasks = function () {
       const root = $('taskList');
       const helper = root.closest('.section')?.querySelector('.section-copy');
