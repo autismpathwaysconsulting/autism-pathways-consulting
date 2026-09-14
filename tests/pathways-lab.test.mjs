@@ -2,11 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
 import { PUBLIC_FILES } from '../scripts/build-site.mjs';
 
 const execFileAsync = promisify(execFile);
+const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 await import('../pathways-lab/model.js');
 const M = globalThis.PathwaysModel;
 
@@ -42,9 +44,7 @@ test('Pathways browser JavaScript passes Node syntax checks', async () => {
     'pathways-lab/model.js',
     'pathways-lab/app-fixes.js',
   ]) {
-    await execFileAsync(process.execPath, ['--check', path], {
-      cwd: new URL('../', import.meta.url),
-    });
+    await execFileAsync(process.execPath, ['--check', path], { cwd: projectRoot });
   }
 });
 
@@ -76,16 +76,29 @@ test('lesson keys include the actual school date so next week cannot overwrite t
   assert.notEqual(first, second);
 });
 
-test('legacy weekday-only records migrate into the current week without duplication', () => {
+test('weekday-only legacy records remain explicitly undated instead of gaining a false date', () => {
   const old = {
-    'Monday|09:00–09:55|EAL': { narrative: 'Example' },
-    '2026-09-14|10:55–11:50|Science': { narrative: 'Already dated' },
+    'Monday|09:00–09:55|EAL': {
+      narrative: 'Example',
+      tasks: [{ objectiveId: 'obj-task-initiation', objectiveResult: 'Criterion met' }],
+    },
+    '2026-09-14|10:55–11:50|Science': {
+      narrative: 'Already dated',
+      tasks: [{ objectiveId: 'obj-task-initiation', objectiveResult: 'Criterion not met' }],
+    },
   };
-  const result = M.migrateLegacySubjects(old, fixedDate);
+  const result = M.migrateLegacySubjects(old);
   assert.equal(result.migrated, 1);
-  assert.equal(result.subjects['2026-09-14|09:00–09:55|EAL'].narrative, 'Example');
+  assert.equal(result.subjects['legacy|Monday|09:00–09:55|EAL'].narrative, 'Example');
   assert.equal(result.subjects['2026-09-14|10:55–11:50|Science'].narrative, 'Already dated');
   assert.equal(result.subjects['Monday|09:00–09:55|EAL'], undefined);
+
+  assert.deepEqual(M.objectiveStats(result.subjects, 'obj-task-initiation'), {
+    measured: 1,
+    met: 0,
+    partial: 0,
+    notMet: 1,
+  });
 });
 
 test('consecutive double periods collapse into one reporting block', () => {
