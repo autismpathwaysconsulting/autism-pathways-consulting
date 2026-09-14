@@ -69,6 +69,7 @@ export const PUBLIC_FILES = Object.freeze([
   "pay/index.html",
   "pathways-lab/index.html",
   "pathways-lab/app.js",
+  "pathways-lab/app-core.js",
   "content-os/index.html",
   "content-os/login.css",
   "content-os/app.css",
