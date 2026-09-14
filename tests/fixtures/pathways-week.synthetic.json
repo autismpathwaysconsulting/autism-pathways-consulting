@@ -1,0 +1,202 @@
+{
+  "baseDate": "2026-09-14T08:00:00+08:00",
+  "overview": {
+    "Monday": {
+      "phrase": "Overall, good efforts to display focus and participate across lessons today.",
+      "note": ""
+    }
+  },
+  "objectives": [
+    {
+      "id": "obj-task-initiation",
+      "domain": "AUT",
+      "target": "Begin a familiar written task",
+      "condition": "Following teacher instruction during familiar written work",
+      "support": "first-step visual and no more than one indirect cue",
+      "criterion": "within 2 minutes in 4 of 5 observed opportunities"
+    }
+  ],
+  "subjects": {
+    "Monday": [
+      {
+        "subject": "EAL",
+        "narrative": "The class began with a word-search activity before moving into comprehension questions. The student answered the first three questions with reminders to read each sentence carefully, and prompts were reduced as the task continued.",
+        "tasks": [
+          {
+            "label": "Word-search warm-up",
+            "type": "Warm-up",
+            "outcome": "Completed / accessed",
+            "detail": "",
+            "includeParent": false,
+            "objectiveId": "",
+            "objectiveResult": ""
+          },
+          {
+            "label": "Questions 1-5",
+            "type": "Independent work",
+            "outcome": "Partially completed / accessed",
+            "detail": "Prompts were faded after the first questions.",
+            "includeParent": true,
+            "objectiveId": "obj-task-initiation",
+            "objectiveResult": "Criterion met"
+          }
+        ]
+      },
+      {
+        "subject": "Science",
+        "narrative": "The lesson introduced selective breeding using teacher examples. An additional visual explanation helped clarify the concept, after which the student attempted to write an example.",
+        "tasks": [
+          {
+            "label": "Write own example",
+            "type": "Writing",
+            "outcome": "Partially completed / accessed",
+            "detail": "",
+            "includeParent": false,
+            "objectiveId": "obj-task-initiation",
+            "objectiveResult": "Partly / emerging"
+          }
+        ]
+      },
+      {
+        "subject": "Mathematics",
+        "narrative": "The student listened to the teacher explain the worked examples, took notes and completed the questions without direct aide guidance.",
+        "tasks": []
+      }
+    ],
+    "Tuesday": [
+      {
+        "subject": "Physical Education",
+        "narrative": "The student joined the lesson routines and followed teacher directions without direct aide support.",
+        "tasks": []
+      },
+      {
+        "subject": "Mathematics",
+        "narrative": "The student began the familiar written task after teacher instruction and the agreed first-step visual.",
+        "tasks": [
+          {
+            "label": "Independent questions",
+            "type": "Independent work",
+            "outcome": "Completed / accessed",
+            "detail": "",
+            "includeParent": false,
+            "objectiveId": "obj-task-initiation",
+            "objectiveResult": "Criterion met"
+          }
+        ]
+      },
+      {
+        "subject": "Design Technology",
+        "narrative": "The double lesson included teacher demonstration, practical work and review. The student completed the practical task with teacher and material supports.",
+        "tasks": [
+          {
+            "label": "Practical build",
+            "type": "Practical activity",
+            "outcome": "Completed / accessed",
+            "detail": "",
+            "includeParent": false,
+            "objectiveId": "",
+            "objectiveResult": ""
+          }
+        ]
+      }
+    ],
+    "Wednesday": [
+      {
+        "subject": "Bahasa Malaysia",
+        "narrative": "The student used written notes during independent work and returned to the task after a brief check-in.",
+        "tasks": [
+          {
+            "label": "Sentence writing",
+            "type": "Writing",
+            "outcome": "Completed / accessed",
+            "detail": "",
+            "includeParent": false,
+            "objectiveId": "obj-task-initiation",
+            "objectiveResult": "Criterion not met"
+          }
+        ]
+      },
+      {
+        "subject": "Science",
+        "narrative": "The student asked the teacher for clarification during the task and then continued.",
+        "tasks": []
+      }
+    ],
+    "Thursday": [
+      {
+        "subject": "EAL",
+        "narrative": "The student accessed the lesson using teacher instruction and classroom materials.",
+        "tasks": [
+          {
+            "label": "Written response",
+            "type": "Writing",
+            "outcome": "Ongoing",
+            "detail": "",
+            "includeParent": false,
+            "objectiveId": "obj-task-initiation",
+            "objectiveResult": "Not measured / insufficient opportunity"
+          }
+        ]
+      },
+      {
+        "subject": "Humanities",
+        "narrative": "The student took notes from the teacher model and completed the assigned section with no direct aide support.",
+        "tasks": []
+      }
+    ],
+    "Friday": [
+      {
+        "subject": "Drama",
+        "narrative": "The student joined the group activity and followed the shared routine with peers and teacher support.",
+        "tasks": []
+      },
+      {
+        "subject": "Mathematics",
+        "narrative": "The student began the familiar task after teacher instruction with no direct aide prompt.",
+        "tasks": [
+          {
+            "label": "Independent practice",
+            "type": "Independent work",
+            "outcome": "Completed / accessed",
+            "detail": "",
+            "includeParent": false,
+            "objectiveId": "obj-task-initiation",
+            "objectiveResult": "Criterion met"
+          }
+        ]
+      }
+    ]
+  },
+  "pins": [
+    {
+      "id": "pin-homework",
+      "type": "Homework",
+      "subject": "Mathematics",
+      "title": "Complete Questions 6-10",
+      "details": "Bring the completed worksheet to the next lesson.",
+      "due": "2026-09-18",
+      "parent": true,
+      "status": "Open"
+    },
+    {
+      "id": "pin-announcement",
+      "type": "Announcement",
+      "subject": "Whole school",
+      "title": "Friday assembly in the hall",
+      "details": "",
+      "due": "2026-09-18",
+      "parent": true,
+      "status": "Open"
+    },
+    {
+      "id": "pin-internal",
+      "type": "Reminder",
+      "subject": "Science",
+      "title": "Check visual examples before next lesson",
+      "details": "Internal support note only.",
+      "due": "2026-09-17",
+      "parent": false,
+      "status": "Open"
+    }
+  ]
+}
