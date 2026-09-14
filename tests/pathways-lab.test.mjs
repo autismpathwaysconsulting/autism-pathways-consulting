@@ -66,14 +66,20 @@ test('Pathways route remains a clearly bounded local-only pilot', async () => {
   assert.doesNotMatch(core, /XMLHttpRequest|WebSocket/);
 });
 
-test('lesson keys include the actual school date so next week cannot overwrite this week', () => {
+test('lesson and daily overview keys include the actual school date', () => {
   const weekOne = new Date('2026-09-14T08:00:00+08:00');
   const weekTwo = new Date('2026-09-21T08:00:00+08:00');
-  const first = M.datedLessonKey('Monday', '09:00–09:55', 'EAL', weekOne);
-  const second = M.datedLessonKey('Monday', '09:00–09:55', 'EAL', weekTwo);
-  assert.equal(first, '2026-09-14|09:00–09:55|EAL');
-  assert.equal(second, '2026-09-21|09:00–09:55|EAL');
-  assert.notEqual(first, second);
+  const firstLesson = M.datedLessonKey('Monday', '09:00–09:55', 'EAL', weekOne);
+  const secondLesson = M.datedLessonKey('Monday', '09:00–09:55', 'EAL', weekTwo);
+  const firstOverview = M.datedDayKey('Monday', weekOne);
+  const secondOverview = M.datedDayKey('Monday', weekTwo);
+
+  assert.equal(firstLesson, '2026-09-14|09:00–09:55|EAL');
+  assert.equal(secondLesson, '2026-09-21|09:00–09:55|EAL');
+  assert.equal(firstOverview, '2026-09-14');
+  assert.equal(secondOverview, '2026-09-21');
+  assert.notEqual(firstLesson, secondLesson);
+  assert.notEqual(firstOverview, secondOverview);
 });
 
 test('weekday-only legacy records remain explicitly undated instead of gaining a false date', () => {
@@ -99,6 +105,17 @@ test('weekday-only legacy records remain explicitly undated instead of gaining a
     partial: 0,
     notMet: 1,
   });
+});
+
+test('weekday-only legacy daily overviews remain explicitly undated', () => {
+  const result = M.migrateLegacyOverview({
+    Monday: { choice: 'steady', note: 'Old pilot overview' },
+    '2026-09-14': { choice: 'support', note: 'Dated overview' },
+  });
+  assert.equal(result.migrated, 1);
+  assert.equal(result.overview['legacy|Monday'].note, 'Old pilot overview');
+  assert.equal(result.overview['2026-09-14'].note, 'Dated overview');
+  assert.equal(result.overview.Monday, undefined);
 });
 
 test('consecutive double periods collapse into one reporting block', () => {
