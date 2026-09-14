@@ -110,7 +110,7 @@
 
       const taskSection = document.getElementById('taskList')?.closest('.section');
       const taskHeading = taskSection?.querySelector('h3');
-      if (taskHeading) taskHeading.textContent = '3. Tasks in this lesson';
+      if (taskHeading && taskHeading.textContent !== '3. Tasks in this lesson') taskHeading.textContent = '3. Tasks in this lesson';
 
       if (!document.getElementById('moreDetail')) {
         const participation = document.getElementById('participationChoices')?.closest('.section');
@@ -129,7 +129,7 @@
           [participation, support, autonomy, domains, event].forEach(section => details.appendChild(section));
           const headings = details.querySelectorAll('.section h3');
           const labels = ['Participation', 'Support used', 'Communication / autonomy', 'Pathways domains', 'Important event'];
-          headings.forEach((heading, index) => { if (labels[index]) heading.textContent = labels[index]; });
+          headings.forEach((heading, index) => { if (labels[index] && heading.textContent !== labels[index]) heading.textContent = labels[index]; });
         }
       }
     }
@@ -195,9 +195,11 @@
 
     function updateCueCopy() {
       const statusHint = document.getElementById('colorCueHint');
-      if (statusHint) statusHint.textContent = 'Colour guide: Teal = routine / independent · Amber = support · Blue = communication · Red = important event · Grey = unclear. Colours are navigation cues, not ratings.';
+      const statusText = 'Colour guide: Teal = routine / independent · Amber = support · Blue = communication · Red = important event · Grey = unclear. Colours are navigation cues, not ratings.';
+      if (statusHint && statusHint.textContent !== statusText) statusHint.textContent = statusText;
       const quickHint = document.getElementById('quickCueHint');
-      if (quickHint) quickHint.innerHTML = '<strong>Faster entry:</strong> choose the short cue. The full parent-ready sentence is still inserted into the report.';
+      const quickHtml = '<strong>Faster entry:</strong> choose the short cue. The full parent-ready sentence is still inserted into the report.';
+      if (quickHint && quickHint.innerHTML !== quickHtml) quickHint.innerHTML = quickHtml;
     }
 
     function syncMoreDetail() {
@@ -213,7 +215,8 @@
       const needsDetail = status === 'support' || status === 'voice' || status === 'event';
       if (needsDetail) details.open = true;
       if (status === 'routine' || status === 'noAide') details.open = false;
-      reason.textContent = labels[status] || '';
+      const nextReason = labels[status] || '';
+      if (reason.textContent !== nextReason) reason.textContent = nextReason;
       reason.classList.toggle('hidden', !needsDetail);
     }
 
