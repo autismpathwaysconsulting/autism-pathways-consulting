@@ -13,7 +13,14 @@ await import('../pathways-lab/model.js');
 const M = globalThis.PathwaysModel;
 
 const fixture = JSON.parse(await readFile(new URL('./fixtures/pathways-week.synthetic.json', import.meta.url), 'utf8'));
-const fixedDate = new Date(fixture.baseDate);
+
+function localDateFromIsoDateTime(value, hour = 8, minute = 0) {
+  const [datePart] = String(value).split('T');
+  const [year, month, day] = datePart.split('-').map(Number);
+  return new Date(year, month - 1, day, hour, minute, 0, 0);
+}
+
+const fixedDate = localDateFromIsoDateTime(fixture.baseDate);
 
 function datedSubjectsFromFixture() {
   const subjects = {};
@@ -67,8 +74,8 @@ test('Pathways route remains a clearly bounded local-only pilot', async () => {
 });
 
 test('lesson and daily overview keys include the actual school date', () => {
-  const weekOne = new Date('2026-09-14T08:00:00+08:00');
-  const weekTwo = new Date('2026-09-21T08:00:00+08:00');
+  const weekOne = new Date(2026, 8, 14, 8, 0, 0, 0);
+  const weekTwo = new Date(2026, 8, 21, 8, 0, 0, 0);
   const firstLesson = M.datedLessonKey('Monday', '09:00–09:55', 'EAL', weekOne);
   const secondLesson = M.datedLessonKey('Monday', '09:00–09:55', 'EAL', weekTwo);
   const firstOverview = M.datedDayKey('Monday', weekOne);
@@ -129,8 +136,8 @@ test('consecutive double periods collapse into one reporting block', () => {
 });
 
 test('deadline logic uses local calendar dates and does not silently remove overdue homework', () => {
-  const beforeDue = new Date('2026-09-17T00:30:00+08:00');
-  const afterDue = new Date('2026-09-19T00:30:00+08:00');
+  const beforeDue = new Date(2026, 8, 17, 0, 30, 0, 0);
+  const afterDue = new Date(2026, 8, 19, 0, 30, 0, 0);
   const homework = fixture.pins.find(pin => pin.id === 'pin-homework');
   const announcement = fixture.pins.find(pin => pin.id === 'pin-announcement');
 
