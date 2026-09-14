@@ -116,6 +116,19 @@
     return { measured, met, partial, notMet };
   }
 
+  function validateObjectiveDraft(draft = {}) {
+    const required = [
+      ['target', 'observable target'],
+      ['condition', 'context / condition'],
+      ['criterion', 'measurable criterion'],
+      ['review', 'review date'],
+    ];
+    const missing = required
+      .filter(([key]) => !String(draft[key] || '').trim())
+      .map(([, label]) => label);
+    return { valid: missing.length === 0, missing };
+  }
+
   function parentVisibleTasks(tasks = []) {
     return tasks.filter(task => task?.includeParent === true);
   }
@@ -169,6 +182,35 @@
     return lines.join('\n').trim() || 'No parent report has been entered for this day yet.';
   }
 
+  function buildIepEvidence({ dayName, currentSubjects = [], objectives = [], allSubjects = {}, domains = [] }) {
+    const domainName = code => domains.find(item => item[0] === code)?.[1] || code;
+    const counts = {};
+    currentSubjects.forEach(({ data }) => {
+      (data?.domains || []).forEach(code => {
+        counts[code] = (counts[code] || 0) + 1;
+      });
+    });
+
+    const lines = [`${dayName} IEP / SEN evidence view`, '', "Today's domain evidence"];
+    if (!Object.keys(counts).length) lines.push('No domain tags confirmed today.');
+    Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([code, count]) => lines.push(`${code} · ${domainName(code)}: ${count} subject entr${count === 1 ? 'y' : 'ies'}`));
+
+    if (objectives.length) {
+      lines.push('', 'Cumulative dated objective evidence');
+      objectives.forEach(objective => {
+        const stats = objectiveStats(allSubjects, objective.id);
+        const review = objective.review ? ` Review ${formatDueDate(objective.review)}.` : '';
+        lines.push(`${objective.domain} · ${objective.target}: ${stats.met}/${stats.measured} measured opportunities met criterion${stats.partial ? `, ${stats.partial} partly/emerging` : ''}${stats.notMet ? `, ${stats.notMet} not met` : ''}.${review}`);
+      });
+    }
+
+    lines.push('', 'Scope: objective counts include dated pilot records saved in this browser. Undated legacy records and not-measured opportunities are excluded.');
+    lines.push('Candidate objectives require student/team review before use in a formal IEP. Domain colors classify topic only, not performance.');
+    return lines.join('\n');
+  }
+
   globalThis.PathwaysModel = Object.freeze({
     DAY_ORDER,
     localDateKey,
@@ -183,7 +225,9 @@
     migrateLegacyOverview,
     effectivePinStatus,
     objectiveStats,
+    validateObjectiveDraft,
     parentVisibleTasks,
     buildParentReport,
+    buildIepEvidence,
   });
 })();
