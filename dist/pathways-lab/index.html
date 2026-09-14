@@ -44,5 +44,120 @@
 
 <template id="subjectTemplate"><article class="subject card"><div class="time"></div><div><div><h3 class="name" style="display:inline"></h3><span class="pill"></span></div><p class="preview"></p><div class="badges"></div></div><button class="btn secondary open">Open</button></article></template>
 <script src="/pathways-lab/app.js" defer></script>
+<script>
+(() => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .cog-choice{--cue-line:#667085;--cue-bg:#f6f7f8;display:grid!important;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center;min-height:54px;border:1px solid #dfe3e8!important;border-left:4px solid var(--cue-line)!important;background:var(--cue-bg)!important;padding:8px 10px!important;text-align:left!important}
+    .cog-choice.selected{border-color:var(--cue-line)!important;outline:2px solid var(--cue-line);outline-offset:0;box-shadow:none!important}
+    .cog-icon{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#fff;color:var(--cue-line);font-weight:900;font-size:.78rem;border:1px solid color-mix(in srgb,var(--cue-line) 28%,#fff)}
+    .cog-copy{min-width:0}.cog-copy strong{display:block;font-size:.82rem;line-height:1.18;color:#1f2933}.cog-copy small{display:block;margin-top:2px;color:#667085;font-size:.69rem;line-height:1.22;font-weight:500}
+    .cog-teal{--cue-line:#0f766e;--cue-bg:#eef8f6}.cog-blue{--cue-line:#2563eb;--cue-bg:#eff6ff}.cog-amber{--cue-line:#b45309;--cue-bg:#fff7ed}.cog-coral{--cue-line:#be3455;--cue-bg:#fff1f2}.cog-gray{--cue-line:#667085;--cue-bg:#f6f7f8}
+    #quickNotes .cog-choice{flex:1 1 145px;min-height:50px}.cog-hint{margin:7px 0 0;padding:7px 9px;border-radius:9px;background:#f7f8f8;color:#667085;font-size:.72rem;line-height:1.35}.cog-hint strong{color:#344054}
+    #autonomyChoices .chip.cog-teal,#autonomyChoices .chip.cog-blue,#autonomyChoices .chip.cog-amber{border-left-width:4px;background:var(--cue-bg)}
+    @media(max-width:620px){.cog-choice{min-height:50px}.cog-copy strong{font-size:.8rem}.cog-copy small{font-size:.67rem}}
+  `;
+  document.head.appendChild(style);
+
+  const maps = {
+    statusChoices: new Map([
+      ['Routine / nothing notable',['teal','✓','Routine','Nothing notable']],
+      ['No direct aide support',['teal','○','No aide','Managed without direct aide support']],
+      ['Additional support used',['amber','+','Support','Additional support used']],
+      ['Communication / autonomy worth noting',['blue','C','Communication','Autonomy or self-advocacy']],
+      ['Important event',['coral','!','Important','Event worth recording']]
+    ]),
+    overviewChoices: new Map([
+      ['Overall, good efforts to display focus and participate across lessons today.',['teal','✓','Steady day','Good focus and participation']],
+      ['Participation and focus varied across lessons today.',['amber','↕','Variable','Focus or participation changed']],
+      ['Some lessons required additional support, while others were managed with teacher or classroom supports.',['blue','+','More support','Some lessons needed extra support']],
+      ['There were moments of reduced engagement, with successful re-engagement after support.',['amber','↺','Re-engaged','Returned after support']]
+    ]),
+    participationChoices: new Map([
+      ['Fully participating with available support',['teal','✓','Full participation','With available support']],
+      ['Partially participating',['amber','½','Partial','Some participation']],
+      ['Unable to participate at that time',['coral','×','Unable now','Could not participate at that time']],
+      ['Unclear / not observed',['gray','?','Unclear','Not observed']]
+    ]),
+    quickNotes: new Map([
+      ['Participated steadily and followed the teacher’s instruction.',['teal','✓','Steady participation','Followed teacher instruction']],
+      ['Worked independently using the teacher’s examples / notes.',['teal','I','Worked independently','Used examples or notes']],
+      ['No direct aide support was needed in this lesson.',['teal','○','No aide support','Managed without direct aide help']],
+      ['Needed light support to get started, then continued with less support.',['amber','+','Light start support','Then continued with less support']],
+      ['Needed an additional explanation to understand the task.',['amber','+','Extra explanation','Needed help understanding the task']],
+      ['Asked the teacher for clarification and then continued.',['blue','C','Asked teacher','Clarified, then continued']],
+      ['Used written notes / visual information to complete the task.',['blue','V','Used visual / notes','Used written or visual information']],
+      ['Re-engaged with the lesson after brief support.',['amber','↺','Re-engaged','Returned after brief support']]
+    ])
+  };
+
+  function applyCue(button, config){
+    if(!button || button.dataset.cogEnhanced==='1') return;
+    const [tone,icon,title,detail]=config;
+    button.dataset.cogEnhanced='1';
+    button.classList.add('cog-choice',`cog-${tone}`);
+    button.innerHTML=`<span class="cog-icon" aria-hidden="true">${icon}</span><span class="cog-copy"><strong>${title}</strong><small>${detail}</small></span>`;
+  }
+
+  function enhanceMapped(rootId){
+    const root=document.getElementById(rootId), map=maps[rootId];
+    if(!root || !map) return;
+    [...root.querySelectorAll('button')].forEach(button=>{
+      const key=button.textContent.trim();
+      const config=map.get(key);
+      if(config) applyCue(button,config);
+    });
+  }
+
+  function enhanceAutonomy(){
+    const root=document.getElementById('autonomyChoices');
+    if(!root) return;
+    const teal=new Set(['Initiated','Made a choice','Used known support independently']);
+    const amber=new Set(['Accepted support']);
+    [...root.querySelectorAll('button')].forEach(button=>{
+      if(button.dataset.cogTone==='1') return;
+      const text=button.textContent.trim();
+      const tone=teal.has(text)?'teal':amber.has(text)?'amber':'blue';
+      button.dataset.cogTone='1';
+      button.classList.add(`cog-${tone}`);
+    });
+  }
+
+  function addHints(){
+    const quick=document.getElementById('quickNotes');
+    if(quick && !document.getElementById('quickCueHint')){
+      const hint=document.createElement('p');
+      hint.id='quickCueHint';hint.className='cog-hint';
+      hint.innerHTML='<strong>Faster entry:</strong> choose the short cue. The full parent-ready sentence is still inserted into the note.';
+      quick.parentElement.insertBefore(hint,quick.nextSibling);
+    }
+    const status=document.getElementById('statusChoices');
+    if(status && !document.getElementById('colorCueHint')){
+      const hint=document.createElement('p');
+      hint.id='colorCueHint';hint.className='cog-hint';
+      hint.textContent='Color and symbols are navigation cues only. They are not ratings of the student.';
+      status.parentElement.insertBefore(hint,status.nextSibling);
+    }
+  }
+
+  function enhance(){
+    enhanceMapped('statusChoices');
+    enhanceMapped('overviewChoices');
+    enhanceMapped('participationChoices');
+    enhanceMapped('quickNotes');
+    enhanceAutonomy();
+    addHints();
+  }
+
+  let scheduled=false;
+  const observer=new MutationObserver(()=>{
+    if(scheduled) return;
+    scheduled=true;
+    requestAnimationFrame(()=>{scheduled=false;enhance()});
+  });
+  observer.observe(document.documentElement,{subtree:true,childList:true});
+  window.addEventListener('DOMContentLoaded',()=>setTimeout(enhance,0));
+})();
+</script>
 </body>
 </html>
