@@ -1,0 +1,53 @@
+name: Pathways Lab QA
+
+on:
+  pull_request:
+    paths:
+      - 'pathways-lab/**'
+      - 'dist/pathways-lab/**'
+      - 'scripts/build-site.mjs'
+      - 'tests/pathways-*.test.mjs'
+      - 'tests/fixtures/pathways-week.synthetic.json'
+      - 'package.json'
+      - '.github/workflows/pathways-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'pathways-lab/**'
+      - 'dist/pathways-lab/**'
+      - 'scripts/build-site.mjs'
+      - 'tests/pathways-*.test.mjs'
+      - 'tests/fixtures/pathways-week.synthetic.json'
+      - 'package.json'
+      - '.github/workflows/pathways-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  pathways-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TZ: Asia/Kuala_Lumpur
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build public site
+        run: npm run build
+
+      - name: Test public build allowlist
+        run: npm run test:site-build
+
+      - name: Test Pathways Lab
+        run: npm run test:pathways-lab
