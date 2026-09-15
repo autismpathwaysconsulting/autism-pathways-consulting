@@ -22,6 +22,7 @@ import {
   derivePasswordHash,
   validatePassword,
 } from '../functions/lib/pathways/auth.js';
+import { hasUseAuthority } from '../functions/api/pathways/state.js';
 
 const execFileAsync=promisify(execFile);
 const projectRoot=fileURLToPath(new URL('../',import.meta.url));
@@ -47,6 +48,18 @@ function sampleState(){
   return {state,week};
 }
 
+function authorityDb(row){
+  return {
+    prepare(){
+      return {
+        bind(){
+          return { first:async()=>row };
+        },
+      };
+    },
+  };
+}
+
 test('production Pathways assets are explicitly allowlisted',()=>{
   for(const path of ['pathways/index.html','pathways/app.css','pathways/app.js','pathways/model.js','pathways/schema.js']){
     assert.ok(PUBLIC_FILES.includes(path),`${path} must ship in the public build`);
@@ -63,6 +76,12 @@ test('production browser app never uses localStorage for student records',async(
   assert.doesNotMatch(app,/\blocalStorage\b/);
   assert.match(app,/\/api\/pathways\/state/);
   assert.match(app,/expectedRevision/);
+});
+
+test('saved lesson previews preserve the narrative instead of saying not reported',async()=>{
+  const app=await readFile(new URL('../pathways/app.js',import.meta.url),'utf8');
+  assert.doesNotMatch(app,/data\?\.narrative\s*\|\|\s*data\?\.skipped\s*\?/);
+  assert.match(app,/data\?\.narrative\s*\|\|\s*\(data\?\.skipped\s*\?/);
 });
 
 test('Pathways production JavaScript passes Node syntax checks',async()=>{
@@ -94,6 +113,14 @@ test('shared state schema requires structurally measurable objectives',()=>{
   assert.throws(()=>assertValidPathwaysState(state),/must include target, condition, criterion and review date/);
 });
 
+test('task parent visibility rejects non-boolean values but absence remains backward compatible',()=>{
+  const {state}=sampleState();
+  state.subjects[Object.keys(state.subjects)[0]].tasks[0].includeParent='false';
+  assert.throws(()=>assertValidPathwaysState(state),/parent visibility/);
+  delete state.subjects[Object.keys(state.subjects)[0]].tasks[0].includeParent;
+  assert.equal(assertValidPathwaysState(state),true);
+});
+
 test('valid state preserves explicit Not measured exclusion and parent privacy',()=>{
   const {state,week}=sampleState();
   assert.equal(assertValidPathwaysState(state),true);
@@ -113,13 +140,47 @@ test('dated keys separate school weeks',()=>{
   assert.notEqual(datedLessonKey('Monday','09:00–09:55','EAL',week1),datedLessonKey('Monday','09:00–09:55','EAL',week2));
 });
 
-test('migration contains roles, sessions, state history, consent, audit and erasure controls',async()=>{
+test('latest use-authority record is decisive and revocation/expiry blocks writes',async()=>{
+  const student={student_id:'stu-test',external_ref:null};
+  assert.equal(await hasUseAuthority(authorityDb({status:'withdrawn',expires_at:null}),student,new Date('2026-09-15T00:00:00Z')),false);
+  assert.equal(await hasUseAuthority(authorityDb({status:'declined',expires_at:null}),student,new Date('2026-09-15T00:00:00Z')),false);
+  assert.equal(await hasUseAuthority(authorityDb({status:'granted',expires_at:'2026-09-14'}),student,new Date('2026-09-15T00:00:00Z')),false);
+  assert.equal(await hasUseAuthority(authorityDb({status:'granted',expires_at:'2026-09-16'}),student,new Date('2026-09-15T00:00:00Z')),true);
+  assert.equal(await hasUseAuthority(authorityDb(null),student,new Date('2026-09-15T00:00:00Z')),false);
+  assert.equal(await hasUseAuthority(authorityDb(null),{student_id:'stu-demo',external_ref:'SYNTHETIC-DEMO'}),true);
+});
+
+test('organisation admins cannot reset global credentials',async()=>{
+  const users=await readFile(new URL('../functions/api/pathways/users.js',import.meta.url),'utf8');
+  assert.match(users,/Organisation administrators cannot reset global user credentials/);
+  assert.match(users,/if \(!auth\.user\.platformAdmin\)/);
+});
+
+test('migration makes canonical state history atomic and audit request-idempotent',async()=>{
   const schema=await readFile(new URL('../migrations/0012_pathways_production_beta.sql',import.meta.url),'utf8');
   for(const table of ['pathways_organizations','pathways_users','pathways_memberships','pathways_students','pathways_student_assignments','pathways_consents','pathways_student_state','pathways_state_revisions','pathways_sessions','pathways_audit_log'])assert.match(schema,new RegExp(`CREATE TABLE IF NOT EXISTS ${table}`));
   assert.match(schema,/pathways_state_revisions is append-only/);
+  assert.match(schema,/CREATE TRIGGER IF NOT EXISTS pathways_state_history_after_insert/);
+  assert.match(schema,/CREATE TRIGGER IF NOT EXISTS pathways_state_history_after_update/);
+  assert.match(schema,/AFTER UPDATE OF revision ON pathways_student_state/);
+  assert.match(schema,/CREATE UNIQUE INDEX IF NOT EXISTS pathways_audit_request_idx/);
+  assert.doesNotMatch(schema,/student_id TEXT REFERENCES pathways_students\(student_id\) ON DELETE SET NULL/);
+  const stateLib=await readFile(new URL('../functions/lib/pathways/state.js',import.meta.url),'utf8');
+  assert.match(stateLib,/inside the UPDATE transaction/);
+  assert.doesNotMatch(stateLib,/revision insert failed after canonical write/);
+});
+
+test('erasure is atomic and retains only hashed non-content evidence',async()=>{
   const erasure=await readFile(new URL('../migrations/0013_pathways_privacy_erasure.sql',import.meta.url),'utf8');
-  assert.match(erasure,/DROP TRIGGER IF EXISTS pathways_state_revisions_no_delete/);
-  assert.match(erasure,/CREATE TABLE IF NOT EXISTS pathways_erasure_log/);
+  assert.match(erasure,/erased_student_hash TEXT NOT NULL/);
+  assert.doesNotMatch(erasure,/erased_student_id TEXT/);
+  const privacy=await readFile(new URL('../functions/api/pathways/privacy.js',import.meta.url),'utf8');
+  assert.match(privacy,/auth\.db\.batch\(\[/);
+  assert.match(privacy,/sha256Hex\(studentId\)/);
+  assert.doesNotMatch(privacy,/erasedStudentId/);
+  assert.doesNotMatch(privacy,/display_name|external_ref|year_group/);
+  const students=await readFile(new URL('../functions/api/pathways/students.js',import.meta.url),'utf8');
+  assert.doesNotMatch(students,/metadata:\s*\{\s*externalRef/);
 });
 
 test('AI suggestion boundary requires human confirmation and never assigns objective results',async()=>{
