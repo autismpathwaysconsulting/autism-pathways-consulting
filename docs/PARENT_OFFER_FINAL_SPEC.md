@@ -1,18 +1,18 @@
 # APC Parent Offers — Final Specification
 
-Status: FINAL BUSINESS SPECIFICATION. Public website migration remains a separate coordinated release. Until that migration is deployed, existing live-site pricing remains in force.
+Status: FINAL BUSINESS SPECIFICATION FOR CURRENT PRICING. Public website copy can be strengthened without changing the current Malaysia prices.
 
-Effective-date rule: the revised pricing becomes effective for new, unquoted enquiries when the coordinated website/terms/payment migration is deployed to production. Existing clients and previously accepted written quotes are protected as set out below.
+Decision recorded 15 September 2026: keep the existing Malaysia prices for now. Do not add instalments, BNPL/Atome, supported-rate administration, or a new payment service until real payment friction justifies the extra operational complexity.
 
-## 1. Final parent offer ladder
+## 1. Parent offer ladder
 
 APC keeps exactly three parent routes:
 
 1. Free 15-Min First Step Call
-2. APC One-Concern Parent Session
-3. APC Home Implementation Programme
+2. APC One-Concern Parent Session — RM350
+3. APC Home Implementation Programme — RM1,800
 
-Do not add Bronze/Silver/Gold tiers, subscriptions or extra package variants before real post-launch data justify them.
+Do not add Bronze/Silver/Gold tiers, subscriptions, annual packages, or additional price variants before real client data justify them.
 
 ---
 
@@ -44,29 +44,28 @@ This remains a fit-and-routing call.
 
 ## 3. APC One-Concern Parent Session
 
-### Final standard price
-- Malaysia: **RM450**
-- Singapore: **S$200** for new, unquoted online clients
-
-### Malaysia Supported Access Rate
-**RM350**, subject to the supported-access policy below.
+### Price
+**RM350**
 
 ### Duration
-60-minute private online session.
+**45-minute private online session**
 
 ### Problem solved
 “One repeated situation keeps happening and I do not know what matters most or what to try first.”
 
+### Package promise
+Slow one recurring situation down, identify the most useful working explanation to test, choose one priority, and leave with a practical next step rather than a long list of advice.
+
 ### Standard inclusions
-- structured pre-session intake,
-- CJ reviews intake before the session,
+- short structured pre-session concern form,
+- CJ reviews the submitted concern before the session,
 - one clearly bounded recurring concern,
 - focused pattern review,
 - one cautious working explanation/hypothesis, labelled as a working hypothesis rather than fact,
 - one agreed priority,
 - 1–2 practical changes to test,
 - guidance on what to observe next,
-- APC One-Concern Action Note,
+- concise APC One-Concern Action Note,
 - one clarification message within 7 calendar days about the agreed concern/plan only.
 
 ### Service standard
@@ -82,9 +81,9 @@ This remains a fit-and-routing call.
 
 ### Not included
 - a second/new concern,
-- unlimited WhatsApp,
+- ongoing or unlimited WhatsApp support,
 - school observation,
-- formal report for diagnosis/therapy,
+- formal diagnostic/therapy report,
 - diagnosis,
 - regulated clinical treatment,
 - Hanen/Teacher Talk/LLLI/ABC delivery,
@@ -94,41 +93,32 @@ This remains a fit-and-routing call.
 
 ## 4. APC Home Implementation Programme
 
-### Final standard price
-- Malaysia: **RM2,400**
-- Singapore: **S$980** for new, unquoted online clients
-
-### Malaysia payment option
-- RM2,400 upfront, or
-- **2 × RM1,200** instalments: first before Session 1, second before Session 3.
-
-### Malaysia Supported Access Rate
-**RM1,800**, subject to the supported-access policy below.
-
-Supported-rate instalment option where needed:
-- **2 × RM900**, first before Session 1 and second before Session 3.
+### Price
+**RM1,800**
 
 ### Duration
-Four 60-minute online sessions across approximately 6–8 weeks, plus a 20–30 minute maintenance check approximately one month after Session 4.
+**Four 60-minute online sessions across approximately 6–8 weeks**, followed by a brief maintenance check approximately one month after Session 4.
 
 ### Problem solved
-“We know some of the advice, but we need help making a plan work consistently in real life and changing it when it does not fit.”
+“We have advice, but we need help making a plan work in real family life, checking what actually happens, and changing direction when the first idea does not fit.”
+
+### Package promise
+Turn advice into a manageable home plan, test it in real routines, review what happens, and adjust rather than repeatedly starting over with new strategies.
 
 ### Standard inclusions
-- structured baseline intake before Session 1,
+- structured baseline before Session 1,
 - 1–2 agreed family priorities,
 - four 60-minute implementation-focused sessions,
 - personalised APC Home Support Plan,
-- What We're Testing card after implementation decisions,
+- a simple “What We're Testing” summary after major implementation decisions,
 - brief between-session implementation checks,
-- bounded WhatsApp clarification during the active programme,
+- bounded WhatsApp clarification about the agreed plan during the active programme,
 - Keep / Adjust / Stop review,
-- minimum-version strategy where useful,
 - selected APC implementation tools where useful,
 - plan review and adjustment across sessions,
 - progress snapshot,
 - final APC Maintenance Summary,
-- 20–30 minute maintenance check approximately one month after Session 4.
+- brief maintenance check approximately one month after Session 4.
 
 ### Service standards
 - Initial Home Support Plan target: within 2 working days after Session 1.
@@ -137,6 +127,7 @@ Four 60-minute online sessions across approximately 6–8 weeks, plus a 20–30 
 - WhatsApp clarification-response target: within 2 working days during the active programme.
 
 ### Optional only when relevant
+- minimum-version strategy for difficult/busy days,
 - Who Does What consistency plan,
 - Routine Change Planner,
 - prompting/independence reflection,
@@ -163,60 +154,59 @@ This is a process commitment, not a guarantee of child or family outcomes.
 
 ---
 
-## 5. Supported Access Policy — Malaysia
+## 5. No-change / limited-change protocol
 
-Purpose: reduce the risk that APC's standard 1-to-1 pricing becomes an absolute access barrier while keeping the service sustainable.
+The Home Implementation Programme must remain useful even when the original strategy does not produce the hoped-for change.
 
-### Same service
-Supported-rate clients receive the same core service and quality. The supported rate is not a reduced-content package.
+At every review distinguish:
+1. Was the agreed plan actually used?
+2. Was it practical enough to use consistently?
+3. When it was used, what changed or did not change?
+4. Does the original working hypothesis still fit?
 
-### Supported prices
-- One-Concern Parent Session: **RM350**
-- Home Implementation Programme: **RM1,800**
+Possible decisions:
+- KEEP — enough evidence to continue,
+- ADJUST — the plan is partly useful but needs modification,
+- SIMPLIFY — implementation burden is the main barrier,
+- CHANGE DIRECTION — the working hypothesis no longer fits,
+- COORDINATE/REFER — another professional, school team or medical/clinical route is more appropriate.
 
-### Capacity cap
-- up to **2 supported One-Concern places per calendar month**,
-- up to **1 supported Home Implementation family active at a time**.
+APC must not keep adding strategies solely to justify completion of the programme.
 
-CJ may temporarily pause supported places when the cap is reached; this is a capacity limit, not a judgement about family need.
+No guarantee is made that a particular behaviour, developmental skill, communication ability, academic outcome or family outcome will improve.
 
-### Eligibility
-Simple self-attestation only:
-
-“The standard fee would prevent my family from accessing this support at present.”
-
-No payslips, bank statements or proof of diagnosis are required.
-
-### Public transparency
-APC should publicly state that supported-rate places exist and publish the supported rates so families do not have to negotiate privately or disclose unnecessary financial information merely to learn the price.
-
-Recommended wording:
-
-“A small number of supported-rate places are available for Malaysian families when the standard fee would otherwise prevent access. The supported rate is RM350 for a One-Concern Parent Session and RM1,800 for the Home Implementation Programme. The service itself is the same; availability is limited by monthly capacity.”
-
-### If supported places are full
-The First Step Call should still provide routing and relevant free/lower-cost resource signposting. APC should not imply that a family has no next step simply because a supported place is unavailable.
-
-### Singapore
-No fixed Singapore supported rate is launched at this stage. Singapore pricing begins at S$200 / S$980 and should be reviewed after real Singapore demand data. Exceptional affordability concerns can be handled case by case without advertising a second Singapore tariff yet.
+A legitimate programme outcome may be clearer understanding, a more usable plan, identification that a strategy is not helping, or a justified decision to seek another professional route.
 
 ---
 
-## 6. Existing clients and prior quotes
+## 6. Payment model
 
-- Existing fully paid clients keep the package and price already agreed.
-- Active RM1,800 clients are not repriced or re-scoped mid-programme.
-- A written quote already issued remains valid for its stated validity period.
-- If a Singapore client has already been quoted or has accepted a lower amount, honour that quote unless the scope materially changes.
-- No fake urgency, fake “normal price”, or artificial discount countdowns.
+For now, keep the existing manual payment structure.
+
+Do not introduce:
+- instalment plans,
+- Atome/BNPL,
+- card processor/payment service,
+- supported-rate administration,
+until there is evidence that payment mechanics or affordability are materially reducing appropriate uptake.
+
+Any future payment service must be assessed for merchant fees, settlement timing, refunds, disputes/chargebacks, consumer terms, bookkeeping and data/privacy implications before launch.
 
 ---
 
-## 7. Scope and programme-owner boundaries
+## 7. International clients
+
+International support remains individually quoted/confirmed rather than adding multiple public currencies to the Malaysia parent-services page.
+
+Existing accepted quotes are honoured unless scope materially changes.
+
+---
+
+## 8. Scope and programme-owner boundaries
 
 APC parent services are APC-owned parent education, pattern review, practical support planning and implementation guidance.
 
-The parent prices do **not** include delivery of:
+The parent prices do not include delivery of:
 - Learning Language and Loving It™,
 - Teacher Talk™,
 - ABC and Beyond™,
@@ -228,15 +218,16 @@ APC does not provide diagnosis, speech-language therapy, psychological treatment
 
 ---
 
-## 8. Outcome/impact discipline
+## 9. Outcome/impact discipline
 
-Measure what APC can legitimately influence and learn from:
+Track:
 - whether the parent understood the agreed priority,
 - whether the plan was practical enough to use,
 - whether the agreed strategy was actually implemented,
 - implementation barriers,
 - adult consistency,
 - what needed adjustment,
+- whether the target concern changed,
 - parent clarity about the next step,
 - whether written tools were used,
 - whether referral/other professional input became necessary.
@@ -245,18 +236,17 @@ Do not convert these into pseudo-clinical outcome claims or guarantees.
 
 ---
 
-## 9. Post-launch review trigger
+## 10. Review trigger
 
-Do not add another parent package or raise prices again until APC has at least 5–10 new qualified enquiries/paid cases under the revised structure.
+Do not change the price or add another parent package until APC has enough new qualified cases to learn from actual demand and delivery load.
 
-Review:
+Review after approximately 5–10 new qualified enquiries/paid cases:
 - conversion,
-- standard vs supported demand,
 - price objections,
-- instalment uptake,
+- payment-method objections,
 - between-session workload,
 - use of client deliverables,
-- referrals/repeat demand,
-- whether supported-place capacity is sufficient.
+- no-change / referral rates,
+- repeat/referral demand.
 
-Possible later decisions: higher standard pricing, more supported capacity, lower-cost APC-owned group education, a focused Progress Review product, or no change.
+Only then consider a price increase, payment service, instalments, supported access, lower-cost group education, Progress Review product, or no change.
