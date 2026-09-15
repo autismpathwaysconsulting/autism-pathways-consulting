@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 test('production Pathways source and checked-in browser artifacts remain identical', async () => {
-  for (const file of ['index.html','app.css','app.js','model.js','schema.js']) {
+  for (const file of ['index.html','app.css','app.js','model.js','schema.js','account.html','account.js']) {
     assert.equal(await read(`pathways/${file}`), await read(`dist/pathways/${file}`), `${file} source/dist drift`);
   }
 });
@@ -54,9 +54,20 @@ test('AI assistance is deployment opt-in and remains human-confirmed', async () 
   assert.match(source, /Never decide an IEP objective result/);
 });
 
+test('self-service password change verifies current credentials and revokes sessions', async () => {
+  const source = await read('functions/api/pathways/password.js');
+  assert.match(source, /verifyLogin\(auth\.db, auth\.user\.email, currentPassword\)/);
+  assert.match(source, /DELETE FROM pathways_sessions WHERE user_id = \?/);
+  assert.match(source, /clearSessionCookie\(\)/);
+  const account = await read('pathways/account.js');
+  assert.match(account, /X-Pathways-CSRF/);
+  assert.match(account, /\/api\/pathways\/password/);
+});
+
 test('meeting frontend has keyboard focus, mobile target sizing, no indexing and accessible close controls', async () => {
-  const [html, css, app] = await Promise.all([read('pathways/index.html'), read('pathways/app.css'), read('pathways/app.js')]);
+  const [html, css, app, account] = await Promise.all([read('pathways/index.html'), read('pathways/app.css'), read('pathways/app.js'), read('pathways/account.html')]);
   assert.match(html, /noindex,nofollow,noarchive/);
+  assert.match(account, /noindex,nofollow,noarchive/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /min-height:44px/);
   assert.match(app, /aria-label=\"Close\"/);
