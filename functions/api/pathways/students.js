@@ -27,7 +27,7 @@ export async function onRequestGet({ request, env }) {
     const where = organizationId ? 'WHERE s.organization_id = ?' : '';
     const statusClause = requestedInactive ? '' : `${where ? ' AND' : ' WHERE'} s.status = 'active'`;
     const query = `SELECT s.student_id, s.organization_id, s.display_name, s.external_ref, s.year_group,
-        s.status, s.created_at, s.updated_at, o.name AS organization_name
+        s.status, s.is_synthetic_demo, s.created_at, s.updated_at, o.name AS organization_name
       FROM pathways_students s
       JOIN pathways_organizations o ON o.organization_id = s.organization_id
       ${where}${statusClause}
@@ -48,14 +48,15 @@ export async function onRequestGet({ request, env }) {
       const role = membershipFor(auth.user, orgId)?.role;
       const privileged = role === 'admin' || role === 'senco';
       if (privileged) {
-        const query = `SELECT student_id, organization_id, display_name, external_ref, year_group, status, created_at, updated_at
+        const query = `SELECT student_id, organization_id, display_name, external_ref, year_group, status,
+            is_synthetic_demo, created_at, updated_at
           FROM pathways_students WHERE organization_id = ? ${requestedInactive ? '' : "AND status = 'active'"}
           ORDER BY display_name COLLATE NOCASE`;
         const found = await auth.db.prepare(query).bind(orgId).all();
         rows.push(...(found?.results || []));
       } else {
         const query = `SELECT s.student_id, s.organization_id, s.display_name, s.external_ref, s.year_group,
-            s.status, s.created_at, s.updated_at, a.permission
+            s.status, s.is_synthetic_demo, s.created_at, s.updated_at, a.permission
           FROM pathways_student_assignments a
           JOIN pathways_students s ON s.student_id = a.student_id
           WHERE a.user_id = ? AND s.organization_id = ? AND s.status = 'active'
@@ -110,21 +111,10 @@ export async function onRequestPost({ request, env }) {
         .bind(studentId, PATHWAYS_SCHEMA_VERSION, stateJson, stateHash, now, auth.user.id, stateRequestId),
       auth.db.prepare(`INSERT INTO pathways_audit_log
         (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
-        VALUES (?, ?, ?, 'create', 'student', ?, ?, NULL, ?)`)
-        .bind(organizationId, studentId, auth.user.id, studentId, auditRequestId, now),
+        VALUES (?, ?, ?, 'create-student', 'student', ?, ?, ?, ?)`)
+        .bind(organizationId, studentId, auth.user.id, studentId, auditRequestId, JSON.stringify({}), now),
     ]);
-    const student = { student_id: studentId, organization_id: organizationId, display_name: displayName };
-    const stateRecord = {
-      schemaVersion: PATHWAYS_SCHEMA_VERSION,
-      revision: 0,
-      updatedAt: now,
-      updatedBy: auth.user.id,
-      stateHash,
-      lastAction: 'create',
-      lastRequestId: stateRequestId,
-      state: initialState,
-    };
-    return json({ student: { ...student, external_ref: externalRef || null, year_group: yearGroup || null, status: 'active', created_at: now, updated_at: now }, state: stateRecord }, 201);
+    return json({ student: { student_id: studentId, organization_id: organizationId, display_name: displayName, external_ref: externalRef || null, year_group: yearGroup || null, status: 'active', is_synthetic_demo: 0, created_at: now, updated_at: now } }, 201);
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways student creation failed', errorType: String(error?.name || 'Error') }));
     return json({ error: 'Student workspace could not be created.' }, 500);
@@ -136,7 +126,7 @@ export async function onRequestPatch({ request, env }) {
   if (!auth.ok) return json({ error: auth.error }, auth.status);
   const writeFailure = requireWriteRequest(request, auth);
   if (writeFailure) return writeFailure;
-  const parsed = await readJson(request, { maxBytes: 32 * 1024 });
+  const parsed = await readJson(request, { maxBytes: 256 * 1024 });
   if (!parsed.ok) return parsed.response;
   const payload = parsed.value;
   const studentId = String(payload.studentId || '');
@@ -168,7 +158,7 @@ export async function onRequestPatch({ request, env }) {
     const changed = Number(results?.[0]?.meta?.changes ?? results?.[0]?.meta?.rows_written ?? 0);
     const audited = Number(results?.[1]?.meta?.changes ?? results?.[1]?.meta?.rows_written ?? 0);
     if (changed !== 1 || audited !== 1) return json({ error: 'Student record was changed or erased before this update could commit.' }, 409);
-    return json({ ok: true, student: { student_id: studentId, organization_id: access.student.organization_id, display_name: displayName, external_ref: externalRef || null, year_group: yearGroup || null, status, updated_at: now } });
+    return json({ ok: true, student: { student_id: studentId, organization_id: access.student.organization_id, display_name: displayName, external_ref: externalRef || null, year_group: yearGroup || null, status, is_synthetic_demo: access.student.is_synthetic_demo, updated_at: now } });
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways student update failed', errorType: String(error?.name || 'Error') }));
     return json({ error: 'Student workspace could not be updated.' }, 500);
