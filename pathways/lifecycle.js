@@ -24,7 +24,7 @@ async function api(path,{method='GET',body=null}={}){
   const type=response.headers.get('Content-Type')||'';
   const data=type.includes('application/json')?await response.json().catch(()=>({})):{};
   if(response.status===401){location.assign('/pathways/');throw new Error('Session expired.')}
-  if(!response.ok){const error=new Error(data.error||`Request failed (${response.status}).`);error.status=response.status;throw error}
+  if(!response.ok){const error=new Error(data.error||`Request failed (${response.status}).`);error.status=response.status;error.data=data;throw error}
   return data;
 }
 
@@ -86,9 +86,61 @@ async function saveStatus(){
   }catch(error){showError(error.message)}
 }
 
-function exportStudent(history=false){
+function exportCurrentStudent(){
   const student=selectedStudent();if(!student)return;
-  window.open(`/api/pathways/export?studentId=${encodeURIComponent(student.student_id)}${history?'&history=1':''}`,'_blank','noopener');
+  window.open(`/api/pathways/export?studentId=${encodeURIComponent(student.student_id)}`,'_blank','noopener');
+}
+
+function downloadJson(payload,studentId){
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;
+  link.download=`pathways-${studentId}-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),0);
+}
+
+async function exportStudentHistory(){
+  const student=selectedStudent();if(!student)return;
+  clearError();clearStatus();
+  $('exportLifecycleHistory').disabled=true;
+  showStatus('Preparing complete history export…');
+  try{
+    const history=[];
+    let afterRevision=-1;
+    let snapshotRevision=null;
+    let first=null;
+    for(let pageNumber=0;pageNumber<10000;pageNumber+=1){
+      const params=new URLSearchParams({studentId:student.student_id,history:'1',afterRevision:String(afterRevision),pageSize:'50'});
+      if(snapshotRevision!==null)params.set('snapshotRevision',String(snapshotRevision));
+      const page=await api(`/api/pathways/export?${params.toString()}`);
+      if(first===null){first=page;snapshotRevision=page.snapshotRevision}
+      else if(page.snapshotRevision!==snapshotRevision)throw new Error('The record changed during export. Please start the export again.');
+      history.push(...(page.history||[]));
+      if(page.historyComplete){
+        downloadJson({
+          exportVersion:page.exportVersion||first.exportVersion||'1.1',
+          generatedAt:new Date().toISOString(),
+          historyComplete:true,
+          snapshotRevision,
+          student:first.student,
+          consents:first.consents||[],
+          current:first.current,
+          history,
+        },student.student_id);
+        showStatus(`Complete history exported through revision ${snapshotRevision}.`);
+        return;
+      }
+      if(!Number.isSafeInteger(page.nextAfterRevision)||page.nextAfterRevision<=afterRevision)throw new Error('History export pagination did not advance safely.');
+      afterRevision=page.nextAfterRevision;
+    }
+    throw new Error('History export exceeded the safe page limit. Please contact support.');
+  }catch(error){
+    showError(error?.status===409?'The record changed while it was being exported. Please try again.':error.message);
+  }finally{
+    $('exportLifecycleHistory').disabled=false;
+  }
 }
 
 async function eraseStudent(){
@@ -108,8 +160,8 @@ $('lifecycleFilter').addEventListener('change',renderStudents);
 $('refreshLifecycle').onclick=()=>loadStudents(selectedStudentId).catch(error=>showError(error.message));
 $('lifecycleStudents').onclick=event=>{const button=event.target.closest('[data-student-id]');if(!button)return;selectedStudentId=button.dataset.studentId;renderStudents();renderDetails()};
 $('saveLifecycleStatus').onclick=saveStatus;
-$('exportLifecycleCurrent').onclick=()=>exportStudent(false);
-$('exportLifecycleHistory').onclick=()=>exportStudent(true);
+$('exportLifecycleCurrent').onclick=exportCurrentStudent;
+$('exportLifecycleHistory').onclick=exportStudentHistory;
 $('eraseLifecycleStudent').onclick=eraseStudent;
 
 init();
