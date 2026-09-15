@@ -1,6 +1,6 @@
 # APC Impact Priority Matrix
 
-Purpose: distinguish tasks that materially improve client outcomes, conversion, perceived value or risk control from lower-impact admin/branding work.
+Purpose: distinguish tasks that materially improve client outcomes, access, conversion, perceived value or risk control from lower-impact admin/branding work.
 
 ## Tier 1 — Necessary for impact now
 
@@ -39,12 +39,20 @@ Purpose: distinguish tasks that materially improve client outcomes, conversion, 
    - what changed in the family's routine or implementation,
    - whether further support was needed.
 
-7. **Price and scope consistency**
+7. **Accessibility mechanism**
+   - Free routing remains genuinely useful.
+   - Useful free-resource route remains available.
+   - Test instalments before lowering standard programme price.
+   - Consider a capped supported-rate pathway so cost does not become an absolute gate.
+   - Track cost-related declines rather than assuming affordability.
+
+8. **Price and scope consistency**
    - Malaysia and Singapore have separate pricing.
    - Quotes match exact scope.
    - Existing paid clients are not repriced mid-package.
+   - Supported-rate places, if used, receive the same service scope/quality.
 
-8. **Operational workflow**
+9. **Operational workflow**
    - Intake arrives before session.
    - CJ reviews it.
    - Action Note/plan has a defined turnaround.
@@ -52,20 +60,23 @@ Purpose: distinguish tasks that materially improve client outcomes, conversion, 
 
 ## Tier 2 — Strongly useful before scaling
 
-9. **Shareable Summary option**
+10. **Shareable Summary option**
    Parent can request a concise, non-diagnostic summary to share with school/therapists, with consent and clear scope.
 
-10. **Usability promise**
+11. **Usability promise**
    If the agreed plan is not practical enough to use, APC revises it at the next review rather than treating non-use as parent failure.
 
-11. **Payment flexibility for larger programme**
+12. **Payment flexibility for larger programme**
    If full upfront payment becomes a conversion barrier, test two instalments rather than lowering total programme price.
 
-12. **Social proof based on implementation**
+13. **Social proof based on implementation**
    Collect testimonials that describe what the family tried, what became clearer and what was easier to implement, without claiming guaranteed child outcomes.
 
-13. **Optional Progress Review**
+14. **Optional Progress Review**
    Launch only after former clients repeatedly ask for a 3-month / transition review.
+
+15. **Group access route later**
+   Consider only after repeated common parent needs are validated. Must use APC-owned/appropriately licensed content.
 
 ## Tier 3 — Lower impact / can wait
 
@@ -87,8 +98,16 @@ Necessary for the school lane:
 - Teacher Talk A refresh before paid delivery,
 - Hanen certificate/promotion clarification,
 - institution pricing/terms,
+- participant admin/attendance/evaluation process,
 - privacy/video process where relevant,
 - one paid pilot with implementation follow-up.
+
+Strongly useful for the school lane:
+- buyer objection bank,
+- public evidence pack,
+- leadership implementation summary,
+- certificate/document register,
+- timed rehearsal scorecard.
 
 ## Practical definition of impact
 
@@ -96,10 +115,12 @@ A task is high-impact if it improves one or more of:
 - correct client routing,
 - parent ability to implement,
 - ability to review/adjust support,
+- accessibility without destroying service sustainability,
 - clarity of what the buyer receives,
 - trust/scope safety,
 - conversion at the intended price,
 - referral/repeat behaviour,
-- evidence APC can use to improve future services.
+- evidence APC can use to improve future services,
+- fidelity/readiness for licensed training.
 
 If a task does not materially affect one of those outcomes, it is not a priority this week.
