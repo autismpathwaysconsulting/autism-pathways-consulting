@@ -8,27 +8,36 @@ test('production Pathways source and checked-in browser artifacts remain identic
   for (const file of ['index.html','app.css','app.js','model.js','schema.js','account.html','account.js','lifecycle.html','lifecycle.js']) {
     assert.equal(await read(`pathways/${file}`), await read(`dist/pathways/${file}`), `${file} source/dist drift`);
   }
+  assert.equal(await read('_headers'), await read('dist/_headers'), '_headers source/dist drift');
+  assert.equal(await read('_routes.json'), await read('dist/_routes.json'), '_routes.json source/dist drift');
 });
 
-test('founder bootstrap is one atomic D1 batch with an atomic one-time sentinel', async () => {
-  const [source, migration] = await Promise.all([
+test('founder bootstrap is one atomic D1 batch with an atomic one-time sentinel and immutable demo provenance', async () => {
+  const [source, migration, provenance] = await Promise.all([
     read('functions/api/pathways/bootstrap.js'),
     read('migrations/0012_pathways_production_beta.sql'),
+    read('migrations/0014_pathways_synthetic_provenance.sql'),
   ]);
   assert.match(migration, /CREATE TABLE IF NOT EXISTS pathways_platform_state/);
+  assert.match(provenance, /ADD COLUMN is_synthetic_demo/);
+  assert.match(provenance, /synthetic-demo provenance is immutable/);
   assert.match(source, /INSERT INTO pathways_platform_state/);
   assert.match(source, /const statements = \[/);
   assert.match(source, /INSERT INTO pathways_student_state/);
   assert.match(source, /INSERT INTO pathways_audit_log/);
+  assert.match(source, /is_synthetic_demo/);
   assert.match(source, /await db\.batch\(statements\)/);
   assert.doesNotMatch(source, /createStudentState/);
   assert.match(source, /Organisation timezone is invalid/);
 });
 
-test('authentication excludes memberships for suspended or archived organisations', async () => {
+test('authentication excludes suspended organisations and non-active students from ordinary access', async () => {
   const source = await read('functions/lib/pathways/auth.js');
   assert.match(source, /JOIN pathways_organizations o ON o\.organization_id = m\.organization_id/);
   assert.match(source, /o\.status = 'active'/);
+  assert.match(source, /is_synthetic_demo/);
+  assert.match(source, /const lifecyclePrivilege = includeArchived && \(membership\.role === 'admin' \|\| membership\.role === 'senco'\)/);
+  assert.match(source, /student\.status !== 'active' && !lifecyclePrivilege/);
 });
 
 test('login session issuance is bound to the exact password hash that was verified', async () => {
@@ -78,13 +87,28 @@ test('AI assistance is opt-in, human-confirmed, and blocked without current use 
   assert.match(source, /Never decide an IEP objective result/);
 });
 
-test('complete exports are admin-only, include archived records, and do not silently stop at 100 revisions', async () => {
+test('synthetic authority exemption uses immutable provenance rather than editable school reference', async () => {
+  const [state, migration, bootstrap] = await Promise.all([
+    read('functions/api/pathways/state.js'),
+    read('migrations/0014_pathways_synthetic_provenance.sql'),
+    read('functions/api/pathways/bootstrap.js'),
+  ]);
+  assert.match(state, /student\.is_synthetic_demo === 1/);
+  assert.doesNotMatch(state, /external_ref === 'SYNTHETIC-DEMO'/);
+  assert.match(migration, /is_synthetic_demo/);
+  assert.match(migration, /BEFORE UPDATE OF is_synthetic_demo/);
+  assert.match(bootstrap, /'active', 1/);
+});
+
+test('complete exports are admin-only, include archived records, and bulk-read all revision history', async () => {
   const source = await read('functions/api/pathways/export.js');
   assert.match(source, /Only an administrator or SENCO can export a complete student record/);
   assert.match(source, /includeArchived: true/);
-  assert.match(source, /SELECT revision FROM pathways_state_revisions/);
+  assert.match(source, /async function readCompleteHistory/);
+  assert.match(source, /SELECT revision, schema_version, state_json, state_hash, action/);
   assert.match(source, /historyComplete/);
-  assert.doesNotMatch(source, /listRevisions\(auth\.db, studentId, 100\)/);
+  assert.doesNotMatch(source, /readRevision/);
+  assert.doesNotMatch(source, /for \(const item of revisionRows/);
 });
 
 test('archived students remain available to privileged lifecycle operations', async () => {
@@ -107,10 +131,14 @@ test('student creation persists student, canonical state/history and audit atomi
   assert.doesNotMatch(source, /createStudentState/);
 });
 
-test('assignment permissions fail closed instead of defaulting unknown values to edit', async () => {
+test('assignment creation and its audit evidence commit atomically', async () => {
   const source = await read('functions/api/pathways/assignments.js');
   assert.match(source, /permission === 'read' \? 'read' : parsed\.value\.permission === 'edit' \? 'edit' : null/);
   assert.match(source, /Assignment permission is invalid/);
+  assert.match(source, /requestId = `assignment:/);
+  assert.match(source, /await auth\.db\.batch\(\[/);
+  assert.match(source, /INSERT INTO pathways_student_assignments/);
+  assert.match(source, /INSERT INTO pathways_audit_log/);
 });
 
 test('authority refusal is distinct from concurrency conflict and respects effective date', async () => {
