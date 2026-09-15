@@ -16,9 +16,18 @@ export async function onRequestGet({ request, env }) {
   const studentId = new URL(request.url).searchParams.get('studentId') || '';
   const access = await getStudentAccess(auth, studentId, { write: false });
   if (!access.ok) return json({ error: access.error }, access.status);
-  const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, authority_label,
-      reference_note, granted_at, expires_at, created_by, created_at, updated_at
-    FROM pathways_consents WHERE student_id = ? ORDER BY created_at DESC`)
+  const canViewDetails = auth.user.platformAdmin || ['admin','senco'].includes(access.role);
+  if (canViewDetails) {
+    const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, authority_label,
+        reference_note, granted_at, expires_at, created_by, created_at, updated_at
+      FROM pathways_consents WHERE student_id = ? ORDER BY created_at DESC, consent_id DESC`)
+      .bind(studentId).all();
+    return json({ consents: result?.results || [] });
+  }
+  const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, expires_at, created_at
+    FROM pathways_consents
+    WHERE student_id = ? AND consent_type IN ('pilot-use','school-record')
+    ORDER BY created_at DESC, consent_id DESC`)
     .bind(studentId).all();
   return json({ consents: result?.results || [] });
 }
