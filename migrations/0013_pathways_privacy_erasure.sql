@@ -4,10 +4,13 @@
 
 DROP TRIGGER IF EXISTS pathways_state_revisions_no_delete;
 
+-- Retain only pseudonymous, non-content evidence that an erasure occurred.
+-- `erased_student_hash` is a one-way SHA-256 hash of the internal random student
+-- id. Do not store name, school reference, year group, narrative, or student data.
 CREATE TABLE IF NOT EXISTS pathways_erasure_log (
   erasure_id INTEGER PRIMARY KEY AUTOINCREMENT,
   organization_id TEXT,
-  erased_student_id TEXT NOT NULL,
+  erased_student_hash TEXT NOT NULL CHECK (length(erased_student_hash) = 64),
   actor_user_id TEXT REFERENCES pathways_users(user_id) ON DELETE SET NULL,
   reason_code TEXT NOT NULL,
   created_at TEXT NOT NULL
