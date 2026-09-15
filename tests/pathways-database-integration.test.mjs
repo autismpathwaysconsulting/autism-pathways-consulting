@@ -77,6 +77,7 @@ test('Pathways production migrations execute and enforce atomic history plus gua
   try {
     db.exec(await migration('0012_pathways_production_beta.sql'));
     db.exec(await migration('0013_pathways_privacy_erasure.sql'));
+    db.exec(await migration('0014_pathways_synthetic_provenance.sql'));
     const now = seedIdentity(db);
 
     db.prepare(`INSERT INTO pathways_platform_state(state_key,state_value,created_at)
@@ -91,6 +92,13 @@ test('Pathways production migrations execute and enforce atomic history plus gua
     db.prepare(`INSERT INTO pathways_students
       (student_id,organization_id,display_name,external_ref,year_group,status,created_at,updated_at)
       VALUES ('stu-1','org-1','Student A','SYNTHETIC-DEMO','Demo','active',?,?)`).run(now, now);
+    assert.equal(db.prepare(`SELECT is_synthetic_demo FROM pathways_students WHERE student_id='stu-1'`).get().is_synthetic_demo, 0);
+    assert.throws(
+      () => db.prepare(`UPDATE pathways_students SET is_synthetic_demo=1 WHERE student_id='stu-1'`).run(),
+      /synthetic-demo provenance is immutable/,
+      'synthetic provenance cannot be granted through an ordinary update',
+    );
+
     const state0 = JSON.stringify({version:'1.0',timetable:{Monday:[],Tuesday:[],Wednesday:[],Thursday:[],Friday:[]},subjects:{},overview:{},pins:[],objectives:[],settings:{timezone:'Asia/Kuala_Lumpur'}});
     db.prepare(`INSERT INTO pathways_student_state
       (student_id,schema_version,revision,state_json,state_hash,updated_at,updated_by,last_action,last_request_id)
@@ -183,7 +191,7 @@ test('future-effective and expired authority records fail closed', async () => {
       (consent_id,organization_id,student_id,consent_type,status,granted_at,expires_at,created_by,created_at,updated_at)
       VALUES ('con-future','org-1','stu-authority','pilot-use','granted','2026-09-20','2026-09-30','usr-1',?,?)`).run(now, now);
     const d1 = new SqliteD1(db);
-    const student = { student_id:'stu-authority', external_ref:null };
+    const student = { student_id:'stu-authority', is_synthetic_demo:0 };
 
     assert.equal(await hasUseAuthority(d1, student, new Date('2026-09-15T12:00:00Z')), false);
     assert.equal(await hasUseAuthority(d1, student, new Date('2026-09-20T12:00:00Z')), true);
