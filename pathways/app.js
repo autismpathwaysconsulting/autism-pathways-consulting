@@ -234,12 +234,15 @@ async function persist(action='edit'){
     return true;
   }catch(error){
     setSaveStatus('error',error.status===409?'Conflict':'Save error');
+    if(error.status===403 && error.data?.authorityBlocked){
+      $('authorityWarning').classList.remove('hidden');
+      throw error;
+    }
     if(error.status===409){
       showError('This student record changed in another session. Pathways will reload the latest version rather than overwrite it.');
       await loadStudent();
       return false;
     }
-    if(error.status===409 && /authority/i.test(error.message)) $('authorityWarning').classList.remove('hidden');
     throw error;
   }
 }
@@ -448,7 +451,7 @@ async function renderStudentAdminPanel(){
     currentAssignments=assignmentData.assignments||[];currentConsents=consentData.consents||[];updateAuthorityWarning(student);
     const assigned=new Set(currentAssignments.map(item=>item.user_id));
     const assignable=adminUsers.filter(item=>!assigned.has(item.user_id));
-    $('studentAdminPanel').innerHTML=`<div><strong>${escapeHtml(student.display_name)}</strong><div class="meta"><span>${escapeHtml(student.year_group||'')}</span><span>${escapeHtml(student.external_ref||'No reference')}</span></div></div><div class="row"><button class="btn secondary small" id="recordAuthorityBtn">Record authority</button><button class="btn secondary small" id="editTimetableBtn">Timetable setup</button><button class="btn secondary small" id="exportStudentBtn">Export</button><button class="btn secondary small" id="exportHistoryBtn">Export + history</button></div><h3>Authority / consent</h3>${currentConsents.length?currentConsents.map(item=>`<div class="item"><div class="item-title">${escapeHtml(item.consent_type)} · ${escapeHtml(item.status)}</div><div class="item-copy">${escapeHtml(item.authority_label||'')}</div></div>`).join(''):'<div class="muted-box">No authority record yet.</div>'}<h3>Assigned staff</h3>${currentAssignments.length?currentAssignments.map(item=>`<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(item.display_name)}</div><div class="meta"><span>${escapeHtml(item.role||'')}</span><span>${escapeHtml(item.permission)}</span></div></div><button class="btn ghost small" data-remove-assignment="${escapeHtml(item.assignment_id)}">Remove</button></div></div>`).join(''):'<div class="muted-box">No explicit assignments. Admin/SENCO access is organisation-wide.</div>'}${assignable.length?`<div class="row"><select id="assignUserSelect">${assignable.map(item=>`<option value="${escapeHtml(item.user_id)}">${escapeHtml(item.display_name)} · ${escapeHtml(item.role)}</option>`).join('')}</select><select id="assignPermission"><option value="edit">Edit</option><option value="read">Read only</option></select><button id="assignUserBtn" class="btn secondary small">Assign</button></div>`:''}${canManageUsers()?'<div class="row"><button id="eraseStudentBtn" class="btn danger small">Erase student record</button></div>':''}`;
+    $('studentAdminPanel').innerHTML=`<div><strong>${escapeHtml(student.display_name)}</strong><div class="meta"><span>${escapeHtml(student.year_group||'')}</span><span>${escapeHtml(student.external_ref||'No reference')}</span></div></div><div class="row"><button class="btn secondary small" id="recordAuthorityBtn">Record authority</button><button class="btn secondary small" id="editTimetableBtn">Timetable setup</button><button class="btn secondary small" id="exportStudentBtn">Export</button><button class="btn secondary small" id="exportHistoryBtn">Export + history</button></div><h3>Authority / consent</h3>${currentConsents.length?currentConsents.map(item=>`<div class="item"><div class="item-title">${escapeHtml(item.consent_type)} · ${escapeHtml(item.status)}</div><div class="item-copy">${escapeHtml(item.authority_label||'')}${item.expires_at?` · Expires ${escapeHtml(String(item.expires_at).slice(0,10))}`:''}</div></div>`).join(''):'<div class="muted-box">No authority record yet.</div>'}<h3>Assigned staff</h3>${currentAssignments.length?currentAssignments.map(item=>`<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(item.display_name)}</div><div class="meta"><span>${escapeHtml(item.role||'')}</span><span>${escapeHtml(item.permission)}</span></div></div><button class="btn ghost small" data-remove-assignment="${escapeHtml(item.assignment_id)}">Remove</button></div></div>`).join(''):'<div class="muted-box">No explicit assignments. Admin/SENCO access is organisation-wide.</div>'}${assignable.length?`<div class="row"><select id="assignUserSelect">${assignable.map(item=>`<option value="${escapeHtml(item.user_id)}">${escapeHtml(item.display_name)} · ${escapeHtml(item.role)}</option>`).join('')}</select><select id="assignPermission"><option value="edit">Edit</option><option value="read">Read only</option></select><button id="assignUserBtn" class="btn secondary small">Assign</button></div>`:''}${canManageUsers()?'<div class="row"><button id="eraseStudentBtn" class="btn danger small">Erase student record</button></div>':''}`;
   }catch(error){$('studentAdminPanel').textContent=error.message}
 }
 
@@ -476,7 +479,7 @@ async function createUser(){
 async function saveConsent(){
   if(!studentId)return;
   try{
-    await api('/api/pathways/consents',{method:'POST',body:{studentId,consentType:$('consentType').value,status:$('consentStatus').value,authorityLabel:$('consentAuthority').value.trim(),referenceNote:$('consentNote').value.trim()}});
+    await api('/api/pathways/consents',{method:'POST',body:{studentId,consentType:$('consentType').value,status:$('consentStatus').value,grantedAt:$('consentGrantedAt').value||null,expiresAt:$('consentExpiresAt').value||null,authorityLabel:$('consentAuthority').value.trim(),referenceNote:$('consentNote').value.trim()}});
     $('consentDialog').close();currentConsents=(await api(`/api/pathways/consents?studentId=${encodeURIComponent(studentId)}`)).consents||[];updateAuthorityWarning(selectedStudent());await renderStudentAdminPanel();
   }catch(error){showError(error.message)}
 }
