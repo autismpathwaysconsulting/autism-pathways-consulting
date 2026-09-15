@@ -24,7 +24,10 @@ export async function onRequestPost({ request, env }) {
     if (!result.ok) {
       return json({ error: result.locked ? 'Too many attempts. Try again later.' : 'Email or password was not accepted.' }, 401);
     }
-    const session = await issueSession(db, result.user.id);
+    const session = await issueSession(db, result.user.id, result.credentialHash);
+    if (!session) {
+      return json({ error: 'Your credentials changed during sign-in. Please try again with the current password.' }, 401);
+    }
     await audit(db, {
       actorUserId: result.user.id,
       action: 'login',
