@@ -6,6 +6,7 @@
     "preview:episodes": "node scripts/episode-preview.mjs",
     "build": "node scripts/build-site.mjs",
     "sync:video-rules": "node scripts/sync-video-rules.mjs",
+    "smoke:pathways-preview": "node scripts/pathways-preview-smoke.mjs",
     "test:site-build": "node --test tests/site-build-output.test.mjs",
     "test:site-metrics": "node --test tests/site-metrics.test.mjs",
     "test:content-os": "node --test tests/content-os*.test.mjs",
