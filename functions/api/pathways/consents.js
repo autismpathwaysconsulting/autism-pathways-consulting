@@ -68,7 +68,7 @@ export async function onRequestGet({ request, env }) {
   }
   const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, granted_at, expires_at, created_at
     FROM pathways_consents
-    WHERE student_id = ? AND consent_type IN ('pilot-use','school-record')
+    WHERE student_id = ? AND consent_type IN ('pilot-use','school-record','family-sharing')
     ORDER BY created_at DESC, consent_id DESC`)
     .bind(studentId).all();
   const consents = (result?.results || []).map(row => projectConsentStatus(row, now, timeZone));
