@@ -13,12 +13,6 @@ Purpose: prevent APC from advertising or accepting paid programme delivery befor
 - B2B terms draft built.
 - claim-safety rules built.
 - readiness rubric structure built.
-- participant registration/attendance/evaluation/admin pack built.
-- buyer objection bank built.
-- private study workspace structure built.
-- public Hanen evidence/positioning pack built from current public sources.
-- materials upload manifest built.
-- video/privacy draft built for programmes that require recording/feedback.
 
 ### Waiting for current materials
 - latest Leader Guide review,
@@ -28,11 +22,18 @@ Purpose: prevent APC from advertising or accepting paid programme delivery befor
 - online/in-person implementation details,
 - exact participant completion/documentation rules.
 
-### Waiting for Hanen clarification where relevant
+### Hanen clarification status
+The September 2026 clarification email attempt bounced back and therefore did **not** reach Hanen. Treat all questions from that message as unresolved unless the current licensed materials or another verified Hanen source answer them.
+
+Still unresolved where not stated in current authoritative materials:
 - participant certificate/documentation wording,
 - promotional assets / mark use,
 - cross-border delivery clarification,
 - HRD Corp use of licensed programme material if later pursued.
+
+The bounced email does not block APC's separate parent services because those are APC-owned services and do not deliver Hanen programmes.
+
+Before paid Hanen delivery, resolve any item that remains material to the exact format being sold. Do not infer permission from silence or from the failed email attempt.
 
 ### Requires CJ personally
 - study/revision,
@@ -51,9 +52,7 @@ All must be true:
 - price/quote approved,
 - terms/cancellation/payment ready,
 - delivery format/venue/tech ready,
-- participant documentation rule confirmed,
-- attendance/evaluation/admin workflow ready,
-- public claims checked against current programme/licence information.
+- participant documentation rule confirmed if relevant to the sold offer.
 
 ## 2. Teacher Talk B / C
 
@@ -81,10 +80,9 @@ Do not assume readiness for B/C merely because A is ready.
 - current materials reviewed,
 - chosen format is an authorised format,
 - required video feedback operationally safe,
-- participant documentation confirmed,
+- participant documentation confirmed where applicable,
 - CJ rehearsal/readiness passed,
-- price reflects group + individual feedback workload,
-- participant admin/evaluation process adapted to the actual ABC format.
+- price reflects group + individual feedback workload.
 
 ## 4. Learning Language and Loving It™
 
@@ -99,8 +97,7 @@ Dependencies:
 - secure video handling process finalised,
 - scheduling capacity modelled per participant,
 - quote built from actual workload rather than simple live-hour rate,
-- CJ full rehearsal/readiness passed,
-- participant administration accounts for multi-session attendance and individual feedback.
+- CJ full rehearsal/readiness passed.
 
 ## 5. School enquiry launch versus paid-course launch
 
@@ -123,7 +120,7 @@ Do not conflate an enquiry-ready website with trainer delivery readiness.
 ## 6. Cross-border delivery
 
 Before accepting delivery outside Malaysia:
-- confirm Hanen territorial/licence permission for the exact programme and format,
+- confirm Hanen territorial/licence permission for the exact programme and format from current authoritative sources,
 - check local professional/regulatory scope,
 - check privacy/data-transfer requirements if classroom video is involved,
 - confirm tax/payment/logistics.
