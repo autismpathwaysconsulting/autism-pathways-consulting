@@ -42,23 +42,37 @@ function dateHasNotExpired(value, now, timeZone) {
   return Number.isFinite(instant) && instant >= now.getTime();
 }
 
-export async function hasUseAuthority(db, student, now = new Date()) {
-  if (student.is_synthetic_demo === 1) return true;
-  const row = await db.prepare(`SELECT c.consent_id, c.status, c.granted_at, c.expires_at, c.created_at,
-      o.timezone
+export async function readUseAuthorityDecision(db, student, now = new Date()) {
+  if (student.is_synthetic_demo === 1) {
+    return { valid: true, synthetic: true, decisionSequence: null, timeZone: 'UTC' };
+  }
+  const row = await db.prepare(`SELECT c.rowid AS decision_sequence, c.consent_id, c.status,
+      c.granted_at, c.expires_at, c.created_at, o.timezone
     FROM pathways_consents c
     JOIN pathways_students s ON s.student_id = c.student_id
     JOIN pathways_organizations o ON o.organization_id = s.organization_id
     WHERE c.student_id = ? AND c.consent_type IN ('pilot-use','school-record')
-    ORDER BY c.created_at DESC, c.consent_id DESC
+    ORDER BY c.rowid DESC
     LIMIT 1`)
     .bind(student.student_id)
     .first();
-  if (!row) return false;
-  if (!['granted','not-required'].includes(row.status)) return false;
-  if (!dateHasStarted(row.granted_at, now, row.timezone)) return false;
-  if (!dateHasNotExpired(row.expires_at, now, row.timezone)) return false;
-  return true;
+  if (!row) return { valid: false, synthetic: false, decisionSequence: null };
+  const valid = ['granted','not-required'].includes(row.status)
+    && dateHasStarted(row.granted_at, now, row.timezone)
+    && dateHasNotExpired(row.expires_at, now, row.timezone);
+  return {
+    valid,
+    synthetic: false,
+    decisionSequence: Number(row.decision_sequence),
+    status: row.status,
+    grantedAt: row.granted_at || null,
+    expiresAt: row.expires_at || null,
+    timeZone: row.timezone || 'UTC',
+  };
+}
+
+export async function hasUseAuthority(db, student, now = new Date()) {
+  return (await readUseAuthorityDecision(db, student, now)).valid;
 }
 
 export async function onRequestGet({ request, env }) {
@@ -98,7 +112,8 @@ export async function onRequestPut({ request, env }) {
   const studentId = String(payload.studentId || '');
   const access = await getStudentAccess(auth, studentId, { write: true });
   if (!access.ok) return json({ error: access.error }, access.status);
-  if (!await hasUseAuthority(auth.db, access.student)) {
+  const authorityDecision = await readUseAuthorityDecision(auth.db, access.student);
+  if (!authorityDecision.valid) {
     return json({ error: 'A current school/pilot use-authority record is required before support data can be saved for this student.', authorityBlocked: true }, 403);
   }
   const action = String(payload.action || 'edit');
@@ -107,7 +122,19 @@ export async function onRequestPut({ request, env }) {
     return json({ error: 'Only an administrator or SENCO can import or reset a student record.' }, 403);
   }
   try {
-    const result = await writeStudentState({ db: auth.db, student: access.student, actorUserId: auth.user.id, state: payload.state, expectedRevision: payload.expectedRevision, action, requestId: payload.requestId });
+    const result = await writeStudentState({
+      db: auth.db,
+      student: access.student,
+      actorUserId: auth.user.id,
+      state: payload.state,
+      expectedRevision: payload.expectedRevision,
+      action,
+      requestId: payload.requestId,
+      authorityDecision,
+    });
+    if (result.authorityBlocked) {
+      return json({ error: 'Use authority changed before this save could commit. Reload the student record and try again.', authorityBlocked: true }, 403);
+    }
     return json({ conflict: result.conflict, idempotent: result.idempotent, record: result.record }, result.conflict ? 409 : 200);
   } catch (error) {
     if (error instanceof TypeError) return json({ error: String(error.message || 'Student state is invalid.') }, 400);
@@ -128,13 +155,25 @@ export async function onRequestPost({ request, env }) {
   const studentId = String(payload.studentId || '');
   const access = await getStudentAccess(auth, studentId, { write: true });
   if (!access.ok) return json({ error: access.error }, access.status);
-  if (!await hasUseAuthority(auth.db, access.student)) {
+  const authorityDecision = await readUseAuthorityDecision(auth.db, access.student);
+  if (!authorityDecision.valid) {
     return json({ error: 'A current school/pilot use-authority record is required before historical support data can be restored.', authorityBlocked: true }, 403);
   }
   if (!auth.user.platformAdmin && !['admin','senco'].includes(access.role)) return json({ error: 'Only an administrator or SENCO can restore historical revisions.' }, 403);
   try {
-    const result = await restoreStudentRevision({ db: auth.db, student: access.student, actorUserId: auth.user.id, revision: Number(payload.revision), expectedRevision: payload.expectedRevision, requestId: payload.requestId });
+    const result = await restoreStudentRevision({
+      db: auth.db,
+      student: access.student,
+      actorUserId: auth.user.id,
+      revision: Number(payload.revision),
+      expectedRevision: payload.expectedRevision,
+      requestId: payload.requestId,
+      authorityDecision,
+    });
     if (result.notFound) return json({ error: 'Revision was not found.' }, 404);
+    if (result.authorityBlocked) {
+      return json({ error: 'Use authority changed before this restore could commit. Reload the student record and try again.', authorityBlocked: true }, 403);
+    }
     return json(result, result.conflict ? 409 : 200);
   } catch (error) {
     if (error instanceof TypeError) return json({ error: String(error.message || 'Restore request is invalid.') }, 400);
