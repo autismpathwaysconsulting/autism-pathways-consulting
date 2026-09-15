@@ -1,8 +1,9 @@
--- Permit privacy erasure of student-state history only through the explicit
--- erasure transaction. Revision rows remain database-level append-only for all
--- other application paths.
+-- Permit privacy erasure of student-linked state history and audit evidence only
+-- through the explicit erasure transaction. Records remain database-level
+-- append-only for every other application path.
 
 DROP TRIGGER IF EXISTS pathways_state_revisions_no_delete;
+DROP TRIGGER IF EXISTS pathways_audit_log_no_delete;
 
 CREATE TABLE IF NOT EXISTS pathways_erasure_guard (
   student_id TEXT PRIMARY KEY,
@@ -16,6 +17,15 @@ WHEN NOT EXISTS (
 )
 BEGIN
   SELECT RAISE(ABORT, 'pathways_state_revisions is append-only');
+END;
+
+CREATE TRIGGER IF NOT EXISTS pathways_audit_log_no_delete
+BEFORE DELETE ON pathways_audit_log
+WHEN OLD.student_id IS NULL OR NOT EXISTS (
+  SELECT 1 FROM pathways_erasure_guard g WHERE g.student_id = OLD.student_id
+)
+BEGIN
+  SELECT RAISE(ABORT, 'pathways_audit_log is append-only');
 END;
 
 -- Retain only pseudonymous, non-content evidence that an erasure occurred.
