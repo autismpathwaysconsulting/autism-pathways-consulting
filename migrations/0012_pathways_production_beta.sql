@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS pathways_student_state (
   updated_at TEXT NOT NULL,
   updated_by TEXT REFERENCES pathways_users(user_id) ON DELETE SET NULL,
   last_action TEXT NOT NULL DEFAULT 'create',
-  last_request_id TEXT
+  last_request_id TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS pathways_state_revisions (
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS pathways_state_revisions (
   state_json TEXT NOT NULL,
   state_hash TEXT NOT NULL CHECK (length(state_hash) = 64),
   action TEXT NOT NULL,
-  request_id TEXT,
+  request_id TEXT NOT NULL,
   actor_user_id TEXT REFERENCES pathways_users(user_id) ON DELETE SET NULL,
   created_at TEXT NOT NULL,
   UNIQUE (student_id, revision),
@@ -132,29 +132,17 @@ CREATE TABLE IF NOT EXISTS pathways_audit_log (
   created_at TEXT NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS pathways_memberships_user_idx
-  ON pathways_memberships(user_id, is_active);
-CREATE INDEX IF NOT EXISTS pathways_memberships_org_idx
-  ON pathways_memberships(organization_id, role, is_active);
-CREATE INDEX IF NOT EXISTS pathways_students_org_idx
-  ON pathways_students(organization_id, status, display_name);
-CREATE INDEX IF NOT EXISTS pathways_assignments_user_idx
-  ON pathways_student_assignments(user_id, student_id);
-CREATE INDEX IF NOT EXISTS pathways_consents_student_idx
-  ON pathways_consents(student_id, consent_type, created_at DESC);
-CREATE INDEX IF NOT EXISTS pathways_revisions_student_idx
-  ON pathways_state_revisions(student_id, revision DESC);
-CREATE INDEX IF NOT EXISTS pathways_sessions_user_idx
-  ON pathways_sessions(user_id, expires_at);
-CREATE INDEX IF NOT EXISTS pathways_audit_org_time_idx
-  ON pathways_audit_log(organization_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS pathways_audit_student_time_idx
-  ON pathways_audit_log(student_id, created_at DESC);
-CREATE UNIQUE INDEX IF NOT EXISTS pathways_audit_request_idx
-  ON pathways_audit_log(request_id)
-  WHERE request_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS pathways_memberships_user_idx ON pathways_memberships(user_id, is_active);
+CREATE INDEX IF NOT EXISTS pathways_memberships_org_idx ON pathways_memberships(organization_id, role, is_active);
+CREATE INDEX IF NOT EXISTS pathways_students_org_idx ON pathways_students(organization_id, status, display_name);
+CREATE INDEX IF NOT EXISTS pathways_assignments_user_idx ON pathways_student_assignments(user_id, student_id);
+CREATE INDEX IF NOT EXISTS pathways_consents_student_idx ON pathways_consents(student_id, consent_type, created_at DESC);
+CREATE INDEX IF NOT EXISTS pathways_revisions_student_idx ON pathways_state_revisions(student_id, revision DESC);
+CREATE INDEX IF NOT EXISTS pathways_sessions_user_idx ON pathways_sessions(user_id, expires_at);
+CREATE INDEX IF NOT EXISTS pathways_audit_org_time_idx ON pathways_audit_log(organization_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS pathways_audit_student_time_idx ON pathways_audit_log(student_id, created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS pathways_audit_request_idx ON pathways_audit_log(request_id) WHERE request_id IS NOT NULL;
 
--- Revision and audit history are append-only while the student exists.
 CREATE TRIGGER IF NOT EXISTS pathways_state_revisions_no_update
 BEFORE UPDATE ON pathways_state_revisions
 BEGIN
@@ -177,4 +165,45 @@ CREATE TRIGGER IF NOT EXISTS pathways_audit_log_no_delete
 BEFORE DELETE ON pathways_audit_log
 BEGIN
   SELECT RAISE(ABORT, 'pathways_audit_log is append-only');
+END;
+
+-- Canonical state and its recoverable history/audit evidence are one database
+-- transaction because these inserts execute inside the INSERT/UPDATE statement.
+CREATE TRIGGER IF NOT EXISTS pathways_state_history_after_insert
+AFTER INSERT ON pathways_student_state
+BEGIN
+  INSERT INTO pathways_state_revisions
+    (organization_id, student_id, revision, schema_version, state_json, state_hash,
+     action, request_id, actor_user_id, created_at)
+  SELECT s.organization_id, NEW.student_id, NEW.revision, NEW.schema_version,
+         NEW.state_json, NEW.state_hash, NEW.last_action, NEW.last_request_id,
+         NEW.updated_by, NEW.updated_at
+  FROM pathways_students s WHERE s.student_id = NEW.student_id;
+
+  INSERT INTO pathways_audit_log
+    (organization_id, student_id, actor_user_id, action, entity_type, entity_id,
+     request_id, metadata_json, created_at)
+  SELECT s.organization_id, NEW.student_id, NEW.updated_by, NEW.last_action,
+         'student-state', NEW.student_id, NEW.last_request_id, NULL, NEW.updated_at
+  FROM pathways_students s WHERE s.student_id = NEW.student_id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS pathways_state_history_after_update
+AFTER UPDATE OF revision ON pathways_student_state
+WHEN NEW.revision = OLD.revision + 1
+BEGIN
+  INSERT INTO pathways_state_revisions
+    (organization_id, student_id, revision, schema_version, state_json, state_hash,
+     action, request_id, actor_user_id, created_at)
+  SELECT s.organization_id, NEW.student_id, NEW.revision, NEW.schema_version,
+         NEW.state_json, NEW.state_hash, NEW.last_action, NEW.last_request_id,
+         NEW.updated_by, NEW.updated_at
+  FROM pathways_students s WHERE s.student_id = NEW.student_id;
+
+  INSERT INTO pathways_audit_log
+    (organization_id, student_id, actor_user_id, action, entity_type, entity_id,
+     request_id, metadata_json, created_at)
+  SELECT s.organization_id, NEW.student_id, NEW.updated_by, NEW.last_action,
+         'student-state', NEW.student_id, NEW.last_request_id, NULL, NEW.updated_at
+  FROM pathways_students s WHERE s.student_id = NEW.student_id;
 END;
