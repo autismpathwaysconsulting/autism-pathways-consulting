@@ -116,14 +116,18 @@ CREATE TABLE IF NOT EXISTS pathways_sessions (
   last_seen_at TEXT NOT NULL
 );
 
+-- Audit records deliberately do not foreign-key to students. Student erasure must
+-- not mutate append-only audit rows. Only opaque internal IDs and non-content
+-- metadata may be retained here.
 CREATE TABLE IF NOT EXISTS pathways_audit_log (
   audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
   organization_id TEXT REFERENCES pathways_organizations(organization_id) ON DELETE SET NULL,
-  student_id TEXT REFERENCES pathways_students(student_id) ON DELETE SET NULL,
+  student_id TEXT,
   actor_user_id TEXT REFERENCES pathways_users(user_id) ON DELETE SET NULL,
   action TEXT NOT NULL,
   entity_type TEXT NOT NULL,
   entity_id TEXT,
+  request_id TEXT,
   metadata_json TEXT,
   created_at TEXT NOT NULL
 );
@@ -137,7 +141,7 @@ CREATE INDEX IF NOT EXISTS pathways_students_org_idx
 CREATE INDEX IF NOT EXISTS pathways_assignments_user_idx
   ON pathways_student_assignments(user_id, student_id);
 CREATE INDEX IF NOT EXISTS pathways_consents_student_idx
-  ON pathways_consents(student_id, consent_type, status);
+  ON pathways_consents(student_id, consent_type, created_at DESC);
 CREATE INDEX IF NOT EXISTS pathways_revisions_student_idx
   ON pathways_state_revisions(student_id, revision DESC);
 CREATE INDEX IF NOT EXISTS pathways_sessions_user_idx
@@ -146,8 +150,11 @@ CREATE INDEX IF NOT EXISTS pathways_audit_org_time_idx
   ON pathways_audit_log(organization_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS pathways_audit_student_time_idx
   ON pathways_audit_log(student_id, created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS pathways_audit_request_idx
+  ON pathways_audit_log(request_id)
+  WHERE request_id IS NOT NULL;
 
--- Revision and audit history are append-only.
+-- Revision and audit history are append-only while the student exists.
 CREATE TRIGGER IF NOT EXISTS pathways_state_revisions_no_update
 BEFORE UPDATE ON pathways_state_revisions
 BEGIN
