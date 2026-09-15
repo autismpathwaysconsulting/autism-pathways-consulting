@@ -1,6 +1,6 @@
 # APC Parent Offer Locked Spec - Draft
 
-Status: Internal decision-ready specification. Do not publish new prices until CJ approves the effective date and public migration.
+Status: Internal decision-ready specification. Do not publish new prices until CJ approves the effective date, access policy and public migration.
 
 ## 1. Offer architecture
 
@@ -36,7 +36,7 @@ Do not add extra Bronze/Silver/Gold tiers at this stage.
 
 ## 3. APC One-Concern Parent Session
 
-### Draft price
+### Draft standard price
 Malaysia: **RM450**
 Singapore: **S$200**
 
@@ -78,7 +78,7 @@ Singapore: **S$200**
 
 ## 4. APC Home Implementation Programme
 
-### Draft price
+### Draft standard price
 Malaysia: **RM2,400**
 Singapore: **S$980**
 
@@ -155,20 +155,52 @@ Recommended wording:
 
 This is not an outcome guarantee.
 
-## 7. Scope statement
+## 7. Access layer
+
+Premium 1-to-1 pricing should not be the only route for families who need direction.
+
+Recommended access architecture for CJ approval:
+
+### Always free
+- First Step Call,
+- APC public resources,
+- routing to reputable free/lower-cost resources where appropriate.
+
+### Instalment option
+For Home Implementation:
+- Malaysia: 2 x RM1,200,
+- Singapore: 2 x S$490,
+subject to CJ approval.
+
+### Limited Malaysian supported-rate pathway
+Working proposal:
+- One-Concern supported rate: RM350,
+- Home Implementation supported rate: RM1,800,
+- same service scope/quality,
+- limited capped availability,
+- simple self-attestation that the standard fee would otherwise prevent access,
+- no invasive financial proof.
+
+Suggested capacity cap for consideration:
+- up to 2 supported One-Concern places per month,
+- up to 1 supported Home Implementation place active at a time.
+
+This access layer is intentionally not a fourth package tier. It is a limited pricing accommodation around the same service.
+
+## 8. Scope statement
 
 APC provides parent education, pattern review, practical support planning and implementation guidance.
 
 APC does not provide diagnosis, speech-language therapy, psychological treatment, medical care or crisis services.
 
-## 8. Existing-client transition rule
+## 9. Existing-client transition rule
 
 - Existing paid clients keep the package/price already agreed.
 - Active RM1,800 clients are not repriced mid-programme.
 - Existing written quotes remain valid for their stated validity period.
 - New pricing begins only from a clearly chosen public effective date.
 
-## 9. Evidence to collect after launch
+## 10. Evidence to collect after launch
 
 Track:
 - whether the parent used the agreed plan,
@@ -179,6 +211,9 @@ Track:
 - whether the family needed another adjustment,
 - whether the written deliverables were used,
 - conversion and price objections,
+- cost-related declines,
+- requests for supported-rate places,
+- whether instalments improve access,
 - referrals / repeat review demand.
 
 Do not convert these into pseudo-clinical outcome scores.
