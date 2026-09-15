@@ -83,6 +83,15 @@ function canAdmin(){return user?.platformAdmin || ['admin','senco'].includes(cur
 function canManageUsers(){return user?.platformAdmin || currentRole()==='admin'}
 function canRestore(){return canAdmin() && record?.permission!=='read'}
 function canEdit(){return Boolean(record && record.permission!=='read')}
+function localDateKeyForZone(timeZone='Asia/Kuala_Lumpur'){
+  try{
+    const parts=new Intl.DateTimeFormat('en-CA',{timeZone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const values=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+    if(values.year&&values.month&&values.day)return `${values.year}-${values.month}-${values.day}`;
+  }catch{}
+  const now=new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
 
 function setSaveStatus(kind,text){
   const dot=$('saveDot'); dot.className=`dot ${kind||''}`; $('saveText').textContent=text;
@@ -201,8 +210,13 @@ async function loadStudent(){
 
 function updateAuthorityWarning(student){
   const synthetic=student?.external_ref==='SYNTHETIC-DEMO';
-  const today=new Date().toISOString().slice(0,10);
-  const has=currentConsents.some(item=>['pilot-use','school-record'].includes(item.consent_type)&&['granted','not-required'].includes(item.status)&&(!item.expires_at||item.expires_at>=today));
+  const applicable=currentConsents
+    .filter(item=>['pilot-use','school-record'].includes(item.consent_type))
+    .sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))||String(b.consent_id||'').localeCompare(String(a.consent_id||'')));
+  const latest=applicable[0]||null;
+  const today=localDateKeyForZone(selectedOrg()?.timezone||'Asia/Kuala_Lumpur');
+  const expiry=latest?.expires_at?String(latest.expires_at).slice(0,10):'';
+  const has=Boolean(latest&&['granted','not-required'].includes(latest.status)&&(!expiry||expiry>=today));
   $('authorityWarning').classList.toggle('hidden',synthetic||has);
 }
 
@@ -260,7 +274,7 @@ function renderSubjects(){
   $('savedCount').textContent=`${saved}/${entries.length} saved`;
   $('subjectList').innerHTML=entries.length?entries.map(({time,subject,key,data})=>{
     const status=data?.saved?'Saved':data?.skipped?'Not reported':'Not saved';
-    const preview=data?.narrative||data?.skipped?'Not reported today':'Open to add the normal subject report.';
+    const preview=data?.narrative||(data?.skipped?'Not reported today':'Open to add the normal subject report.');
     const domains=(data?.domains||[]).map(code=>`<span class="pill" style="border-left:3px solid ${DOMAIN_META[code]?.[1]||'#475569'}">${code}</span>`).join('');
     return `<article class="item"><div class="time-cell">${escapeHtml(time)}</div><div><div><span class="item-title">${escapeHtml(subject)}</span> <span class="pill ${data?.saved?'good':''}">${status}</span></div><div class="item-copy">${escapeHtml(preview)}</div><div class="meta">${domains}</div></div><button class="btn secondary small" data-subject-key="${escapeHtml(key)}" data-time="${escapeHtml(time)}" data-subject="${escapeHtml(subject)}">${canEdit()?'Open':'View'}</button></article>`;
   }).join(''):'<div class="muted-box">No timetable blocks configured for this day. Administrators can set up the timetable from Administration.</div>';
@@ -492,7 +506,7 @@ async function eraseStudent(){
 
 function ensureTimetableDialog(){
   let dialog=$('timetableDialog');if(dialog)return dialog;
-  dialog=document.createElement('dialog');dialog.id='timetableDialog';dialog.innerHTML=`<form method="dialog"><div class="dialog-head"><h2>Timetable setup</h2><button class="icon-btn" value="cancel">×</button></div><div class="dialog-body"><p class="muted">One block per line: <strong>Day | time range | subject</strong></p><textarea id="timetableText" rows="16" placeholder="Monday | 09:00–09:55 | EAL\nMonday | 10:55–11:50 | Science"></textarea><p class="tiny muted">Consecutive identical subjects can be entered as one combined block.</p></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="saveTimetableBtn" type="button" class="btn primary">Save timetable</button></div></form>`;document.body.appendChild(dialog);$('saveTimetableBtn').onclick=saveTimetable;return dialog;
+  dialog=document.createElement('dialog');dialog.id='timetableDialog';dialog.innerHTML=`<form method="dialog"><div class="dialog-head"><h2>Timetable setup</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><p class="muted">One block per line: <strong>Day | time range | subject</strong></p><textarea id="timetableText" rows="16" placeholder="Monday | 09:00–09:55 | EAL\nMonday | 10:55–11:50 | Science"></textarea><p class="tiny muted">Consecutive identical subjects can be entered as one combined block.</p></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="saveTimetableBtn" type="button" class="btn primary">Save timetable</button></div></form>`;document.body.appendChild(dialog);$('saveTimetableBtn').onclick=saveTimetable;return dialog;
 }
 function editTimetable(){
   if(!canEdit())return;const dialog=ensureTimetableDialog();const lines=[];for(const day of PATHWAYS_WEEKDAYS)for(const [time,subject] of state.timetable[day]||[])lines.push(`${day} | ${time} | ${subject}`);$('timetableText').value=lines.join('\n');dialog.showModal();
