@@ -89,7 +89,7 @@ function validateTask(task, index) {
   string(task.type ?? '', `task ${index + 1} type`, LIMITS.textShort, { optional: true });
   string(task.outcome ?? '', `task ${index + 1} outcome`, LIMITS.textShort, { optional: true });
   string(task.detail ?? '', `task ${index + 1} detail`, LIMITS.textMedium, { optional: true });
-  boolean(Boolean(task.includeParent), `task ${index + 1} parent visibility`);
+  if ('includeParent' in task) boolean(task.includeParent, `task ${index + 1} parent visibility`);
   if (task.objectiveId) safeId(task.objectiveId, `task ${index + 1} objective id`);
   oneOf(task.objectiveResult ?? '', PATHWAYS_OBJECTIVE_RESULTS, `task ${index + 1} objective result`, { optional: true });
   if (task.measurementValue !== undefined && task.measurementValue !== null && task.measurementValue !== '') {
