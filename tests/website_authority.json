@@ -10,7 +10,7 @@
     "source_authority_version": "1.2",
     "source_candidate_commit": "b7206744965929ce1469295129661a863bbdf733",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
+    "governed_projection_sha256": "sha256:64d834b01e99e63a14c8c283c17d783603a7bee03599a11f3592f43f4d2eae11",
     "generation_method": "Founder-approved website projection update from canonical mirror"
   },
   "offers": {
@@ -19,11 +19,14 @@
       "promise": "One repeated concern. One clear next step.",
       "intended_parent_outcome": "Clearer working understanding and one practical next step",
       "deliverables": [
-        "Focused exploration of one recurring concern",
-        "Working understanding of the pattern",
-        "What may be worth observing or investigating",
-        "One practical response to try",
-        "Concise written next-step summary"
+        "Short pre-session concern form reviewed by CJ",
+        "Focused pattern review of one recurring concern",
+        "One cautious working hypothesis",
+        "One agreed priority",
+        "1–2 practical changes to test",
+        "Guidance on what to observe next",
+        "APC One-Concern Action Note within 2 working days",
+        "One clarification message within 7 days about the agreed concern or plan"
       ],
       "price": {
         "currency": [
@@ -84,17 +87,20 @@
       }
     },
     "home_support": {
-      "canonical_name": "APC Home Support Programme",
-      "promise": "Turn autism advice into a practical home plan you can actually use.",
+      "canonical_name": "APC Home Implementation Programme",
+      "promise": "Turn advice into a manageable home plan, test it in real routines, review what happens, and adjust when needed.",
       "intended_parent_outcome": "Build, test, review, and adjust a practical home-support plan",
       "deliverables": [
-        "Prioritise the most important concern",
-        "Personalised Home Support Plan",
-        "Implementation guidance",
-        "Review what happened",
-        "Adjust the plan based on the family's experience",
-        "WhatsApp clarification throughout the active programme",
-        "One check-in about a month after the final session"
+        "Structured baseline",
+        "1–2 agreed family priorities",
+        "Personalised APC Home Support Plan",
+        "Four implementation-focused sessions",
+        "Brief between-session implementation checks",
+        "What We're Testing summaries",
+        "WhatsApp clarification about the agreed plan during the active programme",
+        "Keep / Adjust / Simplify / Change Direction / Refer review",
+        "Final APC Maintenance Summary",
+        "Brief maintenance check about one month after Session 4"
       ],
       "price": {
         "currency": [
@@ -106,7 +112,7 @@
       "session_count": 4,
       "session_duration_minutes": 60,
       "delivery_period": "APPROXIMATELY_6_TO_8_WEEKS",
-      "session_frequency": "ONCE_EVERY_TWO_WEEKS",
+      "session_frequency": "APPROXIMATELY_EVERY_TWO_WEEKS",
       "window_weeks": [
         6,
         8
@@ -122,25 +128,25 @@
         "services.html": {
           "kind": "article",
           "signals": [
-            "APC Home Support Programme",
+            "APC Home Implementation Programme",
             "RM1,800",
-            "Four sessions"
+            "Four 60-minute sessions"
           ]
         },
         "terms.html": {
           "kind": "li",
           "signals": [
-            "APC Home Support Programme",
+            "APC Home Implementation Programme",
             "RM1,800",
-            "four sessions"
+            "four 60-minute"
           ]
         },
         "pay/index.html": {
           "kind": "article",
           "signals": [
-            "APC Home Support Programme",
+            "APC Home Implementation Programme",
             "RM1,800",
-            "Four sessions"
+            "Four 60-minute sessions"
           ]
         }
       }
@@ -174,15 +180,15 @@
     "request_payment_attempt_or_screenshot_confirms_booking": false
   },
   "founder_override": {
-    "approved_date": "2026-09-03",
+    "approved_date": "2026-09-15",
     "international_clients": true,
     "local_payment_methods": [
       "Maybank business-account transfer",
       "DuitNow QR"
     ],
     "international_payment_method": "Wise bank transfer",
-    "home_support_clarification": "WhatsApp clarification throughout the active programme",
-    "post_programme_checkin": "One check-in about a month after the final session"
+    "home_support_clarification": "WhatsApp clarification about the agreed plan during the active programme",
+    "post_programme_checkin": "Brief maintenance check about one month after Session 4"
   },
   "claim_boundaries": {
     "excludes": [
