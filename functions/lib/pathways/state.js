@@ -125,12 +125,16 @@ export async function writeStudentState({
   }
 
   // `pathways_state_history_after_update` creates the revision and audit rows
-  // inside the UPDATE transaction. If either trigger insert fails, SQLite rolls
-  // back this canonical UPDATE too, so current state can never outrun history.
+  // inside the UPDATE transaction. The active-status EXISTS predicate closes
+  // the race between the earlier authorization read and this canonical write.
   const result = await db.prepare(`UPDATE pathways_student_state
     SET schema_version = ?, revision = ?, state_json = ?, state_hash = ?,
         updated_at = ?, updated_by = ?, last_action = ?, last_request_id = ?
-    WHERE student_id = ? AND revision = ?`)
+    WHERE student_id = ? AND revision = ?
+      AND EXISTS (
+        SELECT 1 FROM pathways_students s
+        WHERE s.student_id = pathways_student_state.student_id AND s.status = 'active'
+      )`)
     .bind(
       PATHWAYS_SCHEMA_VERSION,
       nextRevision,
