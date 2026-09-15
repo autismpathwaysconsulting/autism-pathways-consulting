@@ -74,6 +74,9 @@ export async function onRequestPost({ request, env }) {
   const demoStudentId = seedDemo ? `stu-${crypto.randomUUID()}` : null;
 
   const statements = [
+    db.prepare(`INSERT INTO pathways_platform_state (state_key, state_value, created_at)
+      VALUES ('bootstrap', ?, ?)`)
+      .bind(userId, now),
     db.prepare(`INSERT INTO pathways_organizations
       (organization_id, name, slug, status, timezone, created_at, updated_at)
       VALUES (?, ?, ?, 'active', ?, ?, ?)`)
@@ -122,6 +125,10 @@ export async function onRequestPost({ request, env }) {
       demoStudentId,
     }, 201);
   } catch (error) {
+    const message = String(error?.message || '').toLowerCase();
+    if (message.includes('unique') || message.includes('pathways_platform_state')) {
+      return json({ error: 'Pathways has already been bootstrapped.' }, 409);
+    }
     console.error(JSON.stringify({ message: 'Pathways bootstrap failed', errorType: String(error?.name || 'Error') }));
     return json({ error: 'Pathways bootstrap failed.' }, 500);
   }
