@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 test('production Pathways source and checked-in browser artifacts remain identical', async () => {
-  for (const file of ['index.html','app.css','app.js','model.js','schema.js','account.html','account.js']) {
+  for (const file of ['index.html','app.css','app.js','model.js','schema.js','account.html','account.js','lifecycle.html','lifecycle.js']) {
     assert.equal(await read(`pathways/${file}`), await read(`dist/pathways/${file}`), `${file} source/dist drift`);
   }
 });
@@ -138,38 +138,62 @@ test('self-service password change is bound to the verified credential and revok
 });
 
 test('meeting frontend has keyboard focus, mobile target sizing, no indexing and accessible close controls', async () => {
-  const [html, css, app, account] = await Promise.all([read('pathways/index.html'), read('pathways/app.css'), read('pathways/app.js'), read('pathways/account.html')]);
+  const [html, css, app, account, lifecycle] = await Promise.all([
+    read('pathways/index.html'),
+    read('pathways/app.css'),
+    read('pathways/app.js'),
+    read('pathways/account.html'),
+    read('pathways/lifecycle.html'),
+  ]);
   assert.match(html, /noindex,nofollow,noarchive/);
   assert.match(account, /noindex,nofollow,noarchive/);
+  assert.match(lifecycle, /noindex,nofollow,noarchive/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /min-height:44px/);
   assert.match(html, /aria-label="Close"/);
   assert.doesNotMatch(app, /\blocalStorage\b/);
 });
 
-test('browser and server authority displays both apply effective/latest-record semantics and UI captures dates', async () => {
-  const [html, app, state] = await Promise.all([
+test('browser authority status is projected from the same effective-date rules used for writes', async () => {
+  const [html, app, state, consents] = await Promise.all([
     read('pathways/index.html'),
     read('pathways/app.js'),
     read('functions/api/pathways/state.js'),
+    read('functions/api/pathways/consents.js'),
   ]);
   assert.match(app, /sort\(\(a,b\)=>String\(b\.created_at/);
   assert.match(app, /const latest=applicable\[0\]/);
-  assert.match(app, /granted_at/);
   assert.match(state, /ORDER BY c\.created_at DESC, c\.consent_id DESC/);
   assert.match(state, /dateHasStarted\(row\.granted_at/);
   assert.match(state, /dateHasNotExpired\(row\.expires_at/);
+  assert.match(consents, /function projectConsentStatus/);
+  assert.match(consents, /pending-effective/);
+  assert.match(consents, /recorded_status/);
+  assert.match(consents, /SELECT timezone FROM pathways_organizations/);
+  assert.match(consents, /dateHasStarted\(row\.granted_at/);
+  assert.match(consents, /dateHasNotExpired\(row\.expires_at/);
   assert.match(html, /id="consentGrantedAt"/);
   assert.match(html, /id="consentExpiresAt"/);
   assert.match(app, /grantedAt:\$\('consentGrantedAt'\)\.value/);
   assert.match(app, /expiresAt:\$\('consentExpiresAt'\)\.value/);
 });
 
-test('administration manages inactive and archived students separately from the active daily selector', async () => {
-  const app = await read('pathways/app.js');
-  assert.match(app, /includeInactive=1/);
-  assert.match(app, /\/api\/pathways\/students/);
-  assert.match(app, /method:'PATCH'/);
-  assert.match(app, /status/);
-  assert.match(app, /archived/i);
+test('privileged lifecycle surface manages inactive and archived students outside the active daily selector', async () => {
+  const [daily, lifecycle, account, studentsApi] = await Promise.all([
+    read('pathways/app.js'),
+    read('pathways/lifecycle.js'),
+    read('pathways/account.html'),
+    read('functions/api/pathways/students.js'),
+  ]);
+  assert.doesNotMatch(daily, /includeInactive=1/);
+  assert.match(lifecycle, /includeInactive=1/);
+  assert.match(lifecycle, /canManageLifecycle/);
+  assert.match(lifecycle, /\['admin','senco'\]\.includes\(currentRole\(\)\)/);
+  assert.match(lifecycle, /\/api\/pathways\/students/);
+  assert.match(lifecycle, /method:'PATCH'/);
+  assert.match(lifecycle, /\['active','inactive','archived'\]/);
+  assert.match(lifecycle, /selectedStudentId/);
+  assert.match(account, /lifecycle\.html/);
+  assert.match(studentsApi, /const privileged = role === 'admin' \|\| role === 'senco'/);
+  assert.match(studentsApi, /AND s\.status = 'active'/);
 });
