@@ -75,7 +75,7 @@ MA Special and Inclusive Education
 **Parent services**
 - Free 15-Min First Step Call
 - One-Concern Parent Session
-- APC Home Support Programme
+- APC Home Implementation Programme
 
 **Schools / educators**
 - Hanen licensed educator programmes
@@ -84,25 +84,18 @@ MA Special and Inclusive Education
 **Future products/tools**
 Keep separate under the master brand rather than creating another unrelated brand unless there is a strong strategic reason.
 
-## 3. Free First Step Call — stronger promise
+## 3. Free First Step Call
 
-### Current purpose
+### Purpose
 Fit and routing only.
 
-### The problem
-“Fit check” is safe but abstract. A parent may reasonably ask:
-“What will I actually know after 15 minutes?”
-
-### Recommended promise
-
-**By the end of the call, you should know:**
-1. whether your concern is within APC's scope,
+### Parent should leave knowing
+1. whether the concern is within APC's scope,
 2. which APC support option, if any, fits best,
 3. whether another type of professional may be more appropriate,
 4. what the next booking/preparation step is.
 
-### What it does NOT answer
-It does not answer:
+### It does NOT answer
 - why the behaviour is happening,
 - what strategy the parent should use,
 - whether the child has a diagnosis,
@@ -111,25 +104,15 @@ It does not answer:
 
 Those are paid-support questions.
 
-### Recommended website wording
-
-**Free 15-Min First Step Call**
-
-**Best when:** You are unsure whether APC is the right fit or which support route makes sense.
-
-**You leave knowing:**
-- whether APC can appropriately help with the concern,
-- which support option fits best,
-- whether a different professional route may be more appropriate,
-- what to do next if you choose to continue.
-
-**This is a fit-and-routing call, not a problem-solving consultation, assessment, diagnosis or therapy session.**
-
-## 4. RM350 One-Concern Parent Session — strengthen with deliverables
+## 4. RM350 current One-Concern Parent Session -> proposed RM450 version
 
 ### Recommended positioning
 
 **One repeated concern. One working explanation. One practical plan to test.**
+
+### Proposed price test
+
+**RM450** for new clients once the strengthened deliverables are live.
 
 ### Before the session
 Short structured intake:
@@ -139,7 +122,11 @@ Short structured intake:
 - What has already been tried?
 - What does the parent most want to understand/change?
 
-### During 45 minutes
+CJ reviews this before the meeting.
+
+### During the session
+Recommended live duration: **60 minutes**, not 45, if moving to RM450.
+
 1. Clarify the exact concern.
 2. Map the pattern around it.
 3. Consider relevant contributors within APC scope:
@@ -156,30 +143,35 @@ Short structured intake:
 7. Identify if referral/coordination with another professional is more appropriate.
 
 ### After the session
-Recommended new deliverable:
-
-**APC One-Concern Action Note**
-One concise page containing:
+Provide a client-facing **APC One-Concern Action Note** containing:
 - concern,
-- working pattern / hypothesis,
-- priority,
-- what to try,
+- confirmed/parent-reported pattern,
+- working hypothesis clearly labelled as such,
+- one priority,
+- 1–2 things to try,
 - what to observe,
-- when to stop/review/escalate,
-- relevant referral note if needed.
+- when to review,
+- referral/coordination note if needed.
 
-Recommended optional inclusion:
-- one clarification message/email within 7 days,
-- clarification only, not a new concern or ongoing WhatsApp coaching.
+Include one clarification message within 7 days if CJ approves the boundary:
+- clarification only,
+- no new concern,
+- no ongoing WhatsApp coaching.
 
 ### Scope statement
 “This session is parent education and practical support planning. It is not diagnosis, therapy or clinical treatment.”
 
-## 5. RM1,800 APC Home Support Programme — strengthen with implementation architecture
+## 5. RM1,800 current Home Support Programme -> proposed RM2,400 implementation version
 
 ### Recommended positioning
 
 **For concerns that need more than advice: understand the pattern, implement support, review what happens and adjust over time.**
+
+### Proposed price test
+
+**RM2,400** for new clients once the strengthened programme is operational.
+
+This is a programme fee, not four discounted sessions.
 
 ### Programme structure
 
@@ -197,14 +189,15 @@ Recommended optional inclusion:
 
 **Between sessions**
 - parent implements agreed change,
-- tracks only the minimum useful observations,
-- WhatsApp clarification within the active programme scope.
+- minimum useful observations,
+- bounded WhatsApp clarification about the agreed plan,
+- brief structured implementation check-in before the next meeting.
 
 **Session 2 — Review**
 - what happened,
 - what was easier/harder,
 - adjust strategy/environment/adult response,
-- avoid assuming the first hypothesis was correct.
+- revise the original hypothesis if necessary.
 
 **Session 3 — Build**
 - extend to another context or layer,
@@ -219,47 +212,63 @@ Recommended optional inclusion:
 - early warning signs that the plan needs review,
 - maintenance/generalisation plan.
 
-**30-day follow-up**
-- review maintenance,
+**Approximately 30-day maintenance check**
+- 20–30 minutes,
+- review whether the plan is holding,
 - identify drift/new barriers,
-- decide whether further APC support, self-management or another professional route is most appropriate.
+- decide whether independent continuation, a focused Progress Review, another implementation cycle or another professional route is appropriate.
 
 ### Core deliverables
 - personalised **Home Support Plan**,
 - clear 1–2 priority areas,
 - agreed implementation steps,
 - observation/review framework,
+- updates across the programme,
 - final progress/maintenance summary,
-- one-month follow-up.
+- 30-day maintenance check.
 
-### Qualifications that legitimately strengthen the offer
-Use credentials as the reason for the lens, not as a claim of clinical authority:
-- MA Special and Inclusive Education,
-- 10+ years school-based/1-to-1 autism experience,
-- SCERTS professional-development training informing social communication, emotional regulation and transactional/environmental thinking,
-- Hanen professional training informing CJ's broader understanding of responsive interaction, while proprietary Hanen educator curricula remain separate,
-- literacy/inclusive-education training where relevant,
-- experience working across school/home implementation.
+### Future price after proof
+If demand, outcomes, referrals and capacity support it, consider **RM2,600–RM2,800** later rather than immediately.
 
-Do not market parent support as “Hanen therapy”, “SCERTS programme”, speech-language treatment, or another organisation's branded intervention unless permission specifically covers it.
+## 6. Market-positioning caution
 
-## 6. Offer ladder
+Current Malaysian parent-coaching examples include specialist 90-minute sessions around RM450 and multi-session packages below or around APC's proposed total programme price.
 
-### Free
-**First Step Call**
-Answers: “Is this the right route and what should I book?”
+Therefore APC should not justify higher pricing by claiming clinical status. Higher pricing should be justified by:
+- autism specialisation,
+- structured pre-work,
+- written outputs,
+- implementation support,
+- continuity across sessions,
+- limited capacity,
+- practical school/home experience,
+- clear scope and professional judgement.
 
-### RM350
-**One-Concern Parent Session**
-Answers: “What may be happening in this one repeated situation and what should I test next?”
+## 7. Hanen / SCERTS boundaries
 
-### RM1,800
-**Home Support Programme**
-Answers: “How do we implement, review and adjust support over several weeks rather than rely on one piece of advice?”
+The parent-service prices do NOT include delivery of:
+- Learning Language and Loving It™,
+- Teacher Talk™,
+- ABC and Beyond™,
+- an official SCERTS programme.
 
-This creates a clear escalation in value rather than three versions of the same conversation.
+CJ's professional learning may inform his broader educational judgement where appropriate, but proprietary curricula/materials must not be repackaged into APC parent services unless the programme licence explicitly allows it.
 
-## 7. What NOT to add merely to make offers sound stronger
+## 8. Optional maintenance offer later
+
+Do not launch now.
+
+Potential future offer:
+
+**APC Progress Review**
+- 60 minutes,
+- for former clients,
+- approximately 3 months later or at a meaningful transition,
+- review what still works, what has changed and whether a new implementation cycle is needed.
+
+Only launch if actual client behaviour shows demand.
+
+## 9. What NOT to add merely to make offers sound stronger
 
 Do not add:
 - pseudo-assessments,
@@ -273,20 +282,21 @@ Do not add:
 
 Strength should come from structure, implementation, documentation and judgement, not inflated clinical language.
 
-## 8. Immediate next actions
+## 10. Immediate next actions
 
-Can do now:
-- change social display name only,
-- standardise First Step Call promise,
-- draft APC One-Concern Action Note template,
-- draft Home Support baseline and progress templates,
-- draft 30-day follow-up template,
-- audit all parent website copy for fit-call / paid-session distinction,
-- prepare current-offer comparison graphic for social/website,
-- retain current social username until after weekend launch.
+Autonomous / ready:
+- client-facing One-Concern Action Note template,
+- client-facing Home Implementation Pack template,
+- price-increase strategy,
+- website copy drafts,
+- current-offer comparison architecture,
+- First Step Call routing script.
 
-Needs CJ decision before public change:
-- whether to include one 7-day clarification message in RM350,
-- exact public display name,
-- whether RM1,800 final progress summary is client-facing or internal + short client version,
-- whether a school-alignment add-on should become a separate paid option later.
+Needs CJ approval before public change:
+- RM450 and 60-minute One-Concern format,
+- 7-day clarification inclusion,
+- RM2,400 Home Implementation Programme,
+- 20–30 minute 30-day check,
+- price transition date,
+- treatment of existing enquiries/quotes,
+- final public display name.
