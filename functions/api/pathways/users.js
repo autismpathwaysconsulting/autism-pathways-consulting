@@ -152,13 +152,21 @@ export async function onRequestPatch({ request, env }) {
       }
       if (!validatePassword(payload.password)) return json({ error: 'New password must be 12 to 128 characters.' }, 400);
       const password = await createPasswordRecord(payload.password);
-      await auth.db.batch([
+      const requestId = `reset-password:${crypto.randomUUID()}`;
+      const results = await auth.db.batch([
         auth.db.prepare(`UPDATE pathways_users SET password_salt = ?, password_hash = ?, password_iterations = ?,
           failed_login_count = 0, locked_until = NULL, updated_at = ? WHERE user_id = ?`)
           .bind(password.passwordSalt, password.passwordHash, password.passwordIterations, now, userId),
+        auth.db.prepare(`INSERT INTO pathways_audit_log
+          (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+          SELECT ?, NULL, ?, 'reset-password', 'user', user_id, ?, NULL, ?
+          FROM pathways_users WHERE user_id = ? AND changes() = 1`)
+          .bind(organizationId, auth.user.id, requestId, now, userId),
         auth.db.prepare('DELETE FROM pathways_sessions WHERE user_id = ?').bind(userId),
       ]);
-      await audit(auth.db, { organizationId, actorUserId: auth.user.id, action: 'reset-password', entityType: 'user', entityId: userId });
+      const changed = Number(results?.[0]?.meta?.changes ?? results?.[0]?.meta?.rows_written ?? 0);
+      const audited = Number(results?.[1]?.meta?.changes ?? results?.[1]?.meta?.rows_written ?? 0);
+      if (changed !== 1 || audited !== 1) return json({ error: 'User credentials changed before the reset could commit.' }, 409);
     } else {
       return json({ error: 'Unsupported user action.' }, 400);
     }
