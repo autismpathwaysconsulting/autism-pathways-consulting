@@ -1,10 +1,8 @@
-# APC Parent Offers - Public Copy Draft
+# APC Parent Offers - Public Copy Ready for Migration
 
-Status: Draft only. Do not publish until CJ approves pricing, duration, clarification boundary and effective date.
+Status: FINAL COPY SOURCE for the coordinated public migration. Do not publish individual fragments before the website/terms/payment/test migration is ready.
 
-## Offer ladder
-
-### Free 15-Min First Step Call
+## Free 15-Min First Step Call
 
 **Best when:** You are unsure whether APC is the right fit or which support route makes sense.
 
@@ -22,11 +20,13 @@ CTA: **Book Free 15-Min First Step Call**
 
 ---
 
-### APC One-Concern Parent Session
+## APC One-Concern Parent Session
 
-**Best when:** One repeated concern keeps happening and you want a clearer way to understand it and decide what to try next.
+**Best when:** One repeated situation keeps happening and you want a clearer way to understand what matters and what to try first.
 
-**RM450 · 60 minutes · Online**
+**Malaysia: RM450 · 60 minutes · Online**
+
+**Singapore: S$200 · 60 minutes · Online** for new, unquoted clients.
 
 You receive:
 - structured pre-session intake reviewed by CJ,
@@ -34,50 +34,69 @@ You receive:
 - a working explanation/hypothesis, clearly labelled as such,
 - one priority and 1–2 practical changes to test,
 - guidance on what to observe next,
-- a concise APC One-Concern Action Note,
-- one clarification message within 7 days about the agreed plan.
+- an APC One-Concern Action Note,
+- one clarification message within 7 days about the agreed concern/plan.
+
+Action Note target: within 2 working days.
 
 This session is parent education and practical support planning. It is not diagnosis, therapy or clinical treatment.
 
 CTA: **Request a One-Concern Session**
 
-Small print:
-Paid support remains subject to suitability, capacity and availability. A request does not guarantee acceptance. The 7-day clarification window covers the agreed concern only and is not ongoing messaging support.
+### Supported access — Malaysia
+
+A small number of supported-rate places are available for Malaysian families when the standard fee would otherwise prevent access.
+
+**Supported rate: RM350**
+
+The service itself is the same. Availability is limited by monthly capacity. No payslips, bank statements or proof of diagnosis are required.
 
 ---
 
-### APC Home Implementation Programme
+## APC Home Implementation Programme
 
-**Best when:** You need more than advice and want support implementing, reviewing and adjusting a plan over time.
+**Best when:** You need more than advice and want support making a plan work in real life, reviewing what happens and adjusting it over time.
 
-**RM2,400 · Four 60-minute sessions across approximately 6–8 weeks · Online**
+**Malaysia: RM2,400 · Four 60-minute sessions across approximately 6–8 weeks · Online**
+
+Payment option: RM2,400 upfront or **2 × RM1,200**.
+
+**Singapore: S$980** for new, unquoted online clients.
 
 The programme includes:
 - baseline intake before Session 1,
 - 1–2 clearly defined family priorities,
-- personalised Home Support Plan,
+- a personalised APC Home Support Plan,
 - four implementation-focused sessions,
-- brief between-session check-ins,
+- brief between-session implementation checks,
 - bounded WhatsApp clarification during the active programme,
 - selected APC implementation tools where useful,
 - plan review and adjustment across sessions,
-- final maintenance summary,
+- a progress snapshot,
+- an APC Maintenance Summary,
 - a 20–30 minute maintenance check approximately one month after Session 4.
 
 The programme is designed as a first implementation cycle: understand the pattern, try support at home, review what happens and adjust where needed.
+
+**Usability commitment:** If the agreed plan is not practical enough to use in your family's real routine, we review and adjust it rather than expecting you to keep forcing a plan that does not fit.
 
 APC does not guarantee developmental, behavioural, communication, academic or family outcomes.
 
 CTA: **Start with the Free First Step Call**
 
-Small print:
-This programme is parent education and implementation support. It is not diagnosis or therapy. Hanen educator programmes and other third-party professional programmes are not included in the parent package.
+### Supported access — Malaysia
+
+A small number of supported-rate places are available when the standard fee would otherwise prevent access.
+
+**Supported rate: RM1,800**
+
+Payment option: RM1,800 upfront or **2 × RM900**.
+
+The service itself is the same. Availability is limited by capacity. No payslips, bank statements or proof of diagnosis are required.
 
 ---
 
-## Comparison section
-
-### Which route fits?
+## Which route fits?
 
 **Free First Step Call**
 You are asking: “Is APC the right route and what should I book?”
@@ -88,15 +107,25 @@ You are asking: “What may be shaping this one repeated situation and what shou
 **Home Implementation Programme**
 You are asking: “How do we implement, review and adjust support over several weeks instead of relying on one piece of advice?”
 
-## FAQ additions
+---
+
+## FAQ
 
 ### Why does the Home Implementation Programme cost more than four separate sessions?
 
-The programme is not priced as four standalone conversations. It includes preparation, a structured implementation cycle, a Home Support Plan, review of what happens between sessions, plan updates, bounded clarification support, a maintenance summary and a post-programme maintenance check.
+The programme is not four standalone conversations. It includes preparation, a structured implementation cycle, a Home Support Plan, review of what happens between sessions, plan updates, bounded clarification support, a Maintenance Summary and a post-programme maintenance check.
 
-### Does the parent programme include Hanen, ABC and Beyond™, Learning Language and Loving It™ or SCERTS?
+### Who can request the supported rate?
 
-No. APC parent services are APC's own educational and implementation-support services. CJ's professional education informs his judgement, but third-party programmes are not repackaged into APC parent services unless their licences explicitly permit that use.
+The supported rate is for Malaysian families for whom the standard fee would otherwise prevent access. APC uses simple self-attestation rather than requiring private financial documents. Supported places are limited by capacity.
+
+### Is the supported-rate service different?
+
+No. The core service and scope are the same. The supported rate exists to reduce an access barrier, not to create a lower-quality package.
+
+### Does the parent programme include Hanen, ABC and Beyond™, Learning Language and Loving It™, Teacher Talk™ or SCERTS?
+
+No. APC parent services are APC's own educational and implementation-support services. CJ's professional education informs his judgement, but third-party programmes are not repackaged into APC parent services unless their current licences explicitly permit that use.
 
 ### Is this therapy?
 
@@ -105,6 +134,14 @@ No. APC provides parent education, pattern review, practical support planning an
 ### Can you guarantee improvement?
 
 No. APC can support clearer planning, implementation, observation and review, but cannot guarantee a particular child or family outcome.
+
+---
+
+## Existing clients / prior quotes
+
+Existing clients keep the package and price already agreed. Active RM1,800 clients are not repriced mid-programme. Written quotes remain valid for their stated validity period.
+
+The revised pricing becomes effective for new, unquoted enquiries when the coordinated website/terms/payment migration is deployed to production.
 
 ## Copy rule
 
