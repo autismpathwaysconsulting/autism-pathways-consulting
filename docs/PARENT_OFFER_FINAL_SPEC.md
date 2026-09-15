@@ -68,6 +68,22 @@ Slow one recurring situation down, identify the most useful working explanation 
 - concise APC One-Concern Action Note,
 - one clarification message within 7 calendar days about the agreed concern/plan only.
 
+### Parent-facing material model
+Keep this deliberately simple.
+
+**One standard document only:** APC One-Concern Action Note.
+
+The Action Note should normally fit on 1–2 pages and contain:
+1. concern discussed,
+2. pattern noticed,
+3. working hypothesis,
+4. priority,
+5. 1–2 things to try,
+6. what to observe,
+7. review / referral point if relevant.
+
+Do not create a separate report, worksheet pack or resource bundle unless clearly useful for this concern.
+
 ### Service standard
 - Action Note target: within 2 working days after the session.
 - Clarification-response target: within 2 working days.
@@ -110,19 +126,36 @@ Turn advice into a manageable home plan, test it in real routines, review what h
 - 1–2 agreed family priorities,
 - four 60-minute implementation-focused sessions,
 - personalised APC Home Support Plan,
-- a simple “What We're Testing” summary after major implementation decisions,
 - brief between-session implementation checks,
 - bounded WhatsApp clarification about the agreed plan during the active programme,
 - Keep / Adjust / Stop review,
 - selected APC implementation tools where useful,
 - plan review and adjustment across sessions,
-- progress snapshot,
 - final APC Maintenance Summary,
 - brief maintenance check approximately one month after Session 4.
 
+### Parent-facing material model
+The programme should not create a new polished PDF after every session.
+
+**Standard parent-facing documents:**
+1. **APC Home Support Plan** — one evolving document started after Session 1 and updated only when a material change is agreed.
+2. **APC Maintenance Summary** — final concise summary after Session 4.
+
+**Between sessions:** use a short “What We're Testing” message or simple card rather than a new formal document. It should state:
+- what we are changing,
+- where/when to try it,
+- what the adult will do,
+- what to observe before the next review.
+
+**Progress snapshot:** embed it inside the Home Support Plan or Maintenance Summary rather than creating another standalone file.
+
+**Implementation tools:** send only the specific worksheet/tool needed for the current priority. Do not send the entire toolkit by default.
+
+This is intended to reduce founder documentation burden while keeping the programme concrete for parents.
+
 ### Service standards
 - Initial Home Support Plan target: within 2 working days after Session 1.
-- Material plan updates incorporated after review sessions when the agreed approach changes.
+- Material updates incorporated after review sessions only when the agreed plan changes.
 - Maintenance Summary target: within 3 working days after Session 4.
 - WhatsApp clarification-response target: within 2 working days during the active programme.
 
