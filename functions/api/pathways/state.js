@@ -91,7 +91,7 @@ export async function onRequestPut({ request, env }) {
   const access = await getStudentAccess(auth, studentId, { write: true });
   if (!access.ok) return json({ error: access.error }, access.status);
   if (!await hasUseAuthority(auth.db, access.student)) {
-    return json({ error: 'A current school/pilot use-authority record is required before support data can be saved for this student.' }, 409);
+    return json({ error: 'A current school/pilot use-authority record is required before support data can be saved for this student.', authorityBlocked: true }, 403);
   }
   const action = String(payload.action || 'edit');
   if (!ACTIONS.has(action)) return json({ error: 'State action is invalid.' }, 400);
@@ -121,7 +121,7 @@ export async function onRequestPost({ request, env }) {
   const access = await getStudentAccess(auth, studentId, { write: true });
   if (!access.ok) return json({ error: access.error }, access.status);
   if (!await hasUseAuthority(auth.db, access.student)) {
-    return json({ error: 'A current school/pilot use-authority record is required before historical support data can be restored.' }, 409);
+    return json({ error: 'A current school/pilot use-authority record is required before historical support data can be restored.', authorityBlocked: true }, 403);
   }
   if (!auth.user.platformAdmin && !['admin','senco'].includes(access.role)) return json({ error: 'Only an administrator or SENCO can restore historical revisions.' }, 403);
   try {
