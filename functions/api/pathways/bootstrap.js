@@ -99,8 +99,8 @@ export async function onRequestPost({ request, env }) {
     const stateRequestId = `create:${demoStudentId}:${crypto.randomUUID()}`;
     statements.push(
       db.prepare(`INSERT INTO pathways_students
-        (student_id, organization_id, display_name, external_ref, year_group, status, created_at, updated_at)
-        VALUES (?, ?, 'Student A', 'SYNTHETIC-DEMO', 'Demo', 'active', ?, ?)`)
+        (student_id, organization_id, display_name, external_ref, year_group, status, is_synthetic_demo, created_at, updated_at)
+        VALUES (?, ?, 'Student A', 'SYNTHETIC-DEMO', 'Demo', 'active', 1, ?, ?)`)
         .bind(demoStudentId, organizationId, now, now),
       db.prepare(`INSERT INTO pathways_student_state
         (student_id, schema_version, revision, state_json, state_hash, updated_at, updated_by, last_action, last_request_id)
