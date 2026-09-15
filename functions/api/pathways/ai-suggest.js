@@ -1,5 +1,6 @@
 import {
   authenticate,
+  audit,
   getStudentAccess,
   json,
   readJson,
@@ -53,6 +54,7 @@ export async function onRequestPost({request,env}){
   const auth=await authenticate(request,env);
   if(!auth.ok)return json({error:auth.error},auth.status);
   const writeFailure=requireWriteRequest(request,auth);if(writeFailure)return writeFailure;
+  if(env.APC_PATHWAYS_AI_ENABLED!=='true')return json({error:'Pathways AI suggestions are disabled for this deployment.'},503);
   if(!env.OPENAI_API_KEY)return json({error:'Pathways AI is not configured on this deployment.'},503);
   const parsed=await readJson(request,{maxBytes:32*1024});if(!parsed.ok)return parsed.response;
   const payload=parsed.value;const studentId=String(payload.studentId||'');
@@ -83,6 +85,15 @@ export async function onRequestPost({request,env}){
     const body=await response.json();const text=extractText(body).trim();
     const candidate=JSON.parse(text.replace(/^```json\s*/i,'').replace(/```$/,'').trim());
     const suggestion=cleanSuggestion(candidate);
+    await audit(auth.db,{
+      organizationId:access.student.organization_id,
+      studentId,
+      actorUserId:auth.user.id,
+      action:'ai-structure-suggestion',
+      entityType:'ai-assist',
+      entityId:null,
+      metadata:{model:env.APC_PATHWAYS_AI_MODEL||'gpt-5.6-luna'},
+    });
     return json({suggestion,model:env.APC_PATHWAYS_AI_MODEL||'gpt-5.6-luna',humanConfirmationRequired:true});
   }catch(error){
     console.error(JSON.stringify({message:'Pathways AI suggestion failed',errorType:String(error?.name||'Error')}));
