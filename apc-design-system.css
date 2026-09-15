@@ -4409,7 +4409,7 @@ html {
   html.apc-home-snap,
   html.apc-site-snap {
     scroll-padding-top: 94px !important;
-    scroll-snap-type: y mandatory !important;
+    scroll-snap-type: y proximity !important;
   }
 
   .apc-v2 main > *,
