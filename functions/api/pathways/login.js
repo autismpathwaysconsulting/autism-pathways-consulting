@@ -8,6 +8,19 @@ import {
   verifyLogin,
 } from '../../lib/pathways/auth.js';
 
+const GENERIC_LOGIN_ERROR = 'Email or password was not accepted.';
+
+async function activeMemberships(db, userId) {
+  const result = await db.prepare(`SELECT m.membership_id, m.organization_id, m.role
+    FROM pathways_memberships m
+    JOIN pathways_organizations o ON o.organization_id = m.organization_id
+    WHERE m.user_id = ? AND m.is_active = 1 AND o.status = 'active'
+    ORDER BY m.organization_id`)
+    .bind(userId)
+    .all();
+  return result?.results || [];
+}
+
 export async function onRequestPost({ request, env }) {
   const db = getPathwaysDb(env);
   if (!db) return json({ error: 'Pathways storage is not configured.' }, 503);
@@ -21,13 +34,14 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const result = await verifyLogin(db, email, password);
-    if (!result.ok) {
-      return json({ error: result.locked ? 'Too many attempts. Try again later.' : 'Email or password was not accepted.' }, 401);
-    }
+    // Keep external responses account-agnostic. Lockout state is enforced internally,
+    // but callers cannot distinguish an unknown account from an existing locked one.
+    if (!result.ok) return json({ error: GENERIC_LOGIN_ERROR }, 401);
+
     const session = await issueSession(db, result.user.id, result.credentialHash);
-    if (!session) {
-      return json({ error: 'Your credentials changed during sign-in. Please try again with the current password.' }, 401);
-    }
+    if (!session) return json({ error: GENERIC_LOGIN_ERROR }, 401);
+
+    const memberships = await activeMemberships(db, result.user.id);
     await audit(db, {
       actorUserId: result.user.id,
       action: 'login',
@@ -36,7 +50,7 @@ export async function onRequestPost({ request, env }) {
     });
     return json({
       ok: true,
-      user: result.user,
+      user: { ...result.user, memberships },
       csrfToken: session.csrfToken,
       expiresAt: session.expiresAt,
     }, 200, { 'Set-Cookie': sessionCookie(session.token) });
