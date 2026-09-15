@@ -4,7 +4,7 @@ import {
   canonicalPathwaysState,
   createEmptyPathwaysState,
 } from '../../../pathways/schema.js';
-import { audit, sha256Hex } from './auth.js';
+import { sha256Hex } from './auth.js';
 
 function validRevision(value) {
   return Number.isSafeInteger(value) && value >= 0;
@@ -22,27 +22,13 @@ export async function createStudentState({ db, student, actorUserId, state = nul
   const now = new Date().toISOString();
   const requestId = `create:${student.student_id}:${crypto.randomUUID()}`;
 
+  // D1 trigger `pathways_state_history_after_insert` writes revision 0 and the
+  // matching audit event inside this same SQLite statement transaction.
   await db.prepare(`INSERT INTO pathways_student_state
     (student_id, schema_version, revision, state_json, state_hash, updated_at, updated_by, last_action, last_request_id)
     VALUES (?, ?, 0, ?, ?, ?, ?, 'create', ?)`)
     .bind(student.student_id, PATHWAYS_SCHEMA_VERSION, stateJson, stateHash, now, actorUserId, requestId)
     .run();
-
-  await db.prepare(`INSERT INTO pathways_state_revisions
-    (organization_id, student_id, revision, schema_version, state_json, state_hash, action, request_id, actor_user_id, created_at)
-    VALUES (?, ?, 0, ?, ?, ?, 'create', ?, ?, ?)`)
-    .bind(student.organization_id, student.student_id, PATHWAYS_SCHEMA_VERSION, stateJson, stateHash, requestId, actorUserId, now)
-    .run();
-
-  await audit(db, {
-    organizationId: student.organization_id,
-    studentId: student.student_id,
-    actorUserId,
-    action: 'create',
-    entityType: 'student-state',
-    entityId: student.student_id,
-    metadata: { revision: 0 },
-  });
 
   return {
     schemaVersion: PATHWAYS_SCHEMA_VERSION,
@@ -50,6 +36,8 @@ export async function createStudentState({ db, student, actorUserId, state = nul
     updatedAt: now,
     updatedBy: actorUserId,
     stateHash,
+    lastAction: 'create',
+    lastRequestId: requestId,
     state: initialState,
   };
 }
@@ -136,6 +124,9 @@ export async function writeStudentState({
     return { conflict: true, idempotent: false, record: current };
   }
 
+  // `pathways_state_history_after_update` creates the revision and audit rows
+  // inside the UPDATE transaction. If either trigger insert fails, SQLite rolls
+  // back this canonical UPDATE too, so current state can never outrun history.
   const result = await db.prepare(`UPDATE pathways_student_state
     SET schema_version = ?, revision = ?, state_json = ?, state_hash = ?,
         updated_at = ?, updated_by = ?, last_action = ?, last_request_id = ?
@@ -155,41 +146,12 @@ export async function writeStudentState({
     .run();
   const changes = Number(result?.meta?.changes ?? result?.meta?.rows_written ?? 0);
   if (changes === 0) {
-    return { conflict: true, idempotent: false, record: await readStudentState(db, student.student_id) };
+    const current = await readStudentState(db, student.student_id);
+    if (current?.lastRequestId === requestId && current.stateHash === stateHash) {
+      return { conflict: false, idempotent: true, record: current };
+    }
+    return { conflict: true, idempotent: false, record: current };
   }
-
-  try {
-    await db.prepare(`INSERT INTO pathways_state_revisions
-      (organization_id, student_id, revision, schema_version, state_json, state_hash, action, request_id, actor_user_id, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(
-        student.organization_id,
-        student.student_id,
-        nextRevision,
-        PATHWAYS_SCHEMA_VERSION,
-        stateJson,
-        stateHash,
-        action,
-        requestId,
-        actorUserId,
-        now,
-      )
-      .run();
-  } catch (error) {
-    // The canonical row was already updated. Fail closed rather than hiding a missing audit revision.
-    console.error(JSON.stringify({ message: 'Pathways revision insert failed after canonical write', studentId: student.student_id, revision: nextRevision }));
-    throw error;
-  }
-
-  await audit(db, {
-    organizationId: student.organization_id,
-    studentId: student.student_id,
-    actorUserId,
-    action,
-    entityType: 'student-state',
-    entityId: student.student_id,
-    metadata: { revision: nextRevision, requestId },
-  });
 
   return {
     conflict: false,
