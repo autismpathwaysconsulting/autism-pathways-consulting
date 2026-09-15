@@ -1,5 +1,4 @@
 import {
-  audit,
   countUsers,
   createPasswordRecord,
   getPathwaysDb,
@@ -10,7 +9,7 @@ import {
   validateEmail,
   validatePassword,
 } from '../../lib/pathways/auth.js';
-import { createStudentState } from '../../lib/pathways/state.js';
+import { PATHWAYS_SCHEMA_VERSION } from '../../../pathways/schema.js';
 import { createSyntheticDemoState } from '../../../pathways/demo-state.js';
 
 function parseBasic(header) {
@@ -57,64 +56,69 @@ export async function onRequestPost({ request, env }) {
   const displayName = String(payload.displayName || '').trim();
   const organizationName = String(payload.organizationName || '').trim();
   const slug = String(payload.organizationSlug || '').trim().toLowerCase();
+  const timezone = String(payload.timezone || 'Asia/Kuala_Lumpur').trim();
   if (!email || displayName.length < 2 || displayName.length > 120) return json({ error: 'A valid founder email and display name are required.' }, 400);
   if (!validatePassword(payload.password)) return json({ error: 'Password must be 12 to 128 characters.' }, 400);
-  if (organizationName.length < 2 || organizationName.length > 160 || !/^[a-z0-9][a-z0-9-]{1,62}$/.test(slug)) {
-    return json({ error: 'Organisation name or slug is invalid.' }, 400);
+  if (organizationName.length < 2 || organizationName.length > 160 || !/^[a-z0-9][a-z0-9-]{1,62}$/.test(slug) || timezone.length < 3 || timezone.length > 80) {
+    return json({ error: 'Organisation name, slug or timezone is invalid.' }, 400);
   }
+  try { new Intl.DateTimeFormat('en-CA', { timeZone: timezone }).format(new Date()); } catch { return json({ error: 'Organisation timezone is invalid.' }, 400); }
 
   const now = new Date().toISOString();
   const userId = `usr-${crypto.randomUUID()}`;
   const organizationId = `org-${crypto.randomUUID()}`;
   const membershipId = `mem-${crypto.randomUUID()}`;
+  const bootstrapAuditRequestId = `bootstrap:${crypto.randomUUID()}`;
   const password = await createPasswordRecord(payload.password);
+  const seedDemo = payload.seedDemo !== false;
+  const demoStudentId = seedDemo ? `stu-${crypto.randomUUID()}` : null;
 
-  try {
-    await db.batch([
-      db.prepare(`INSERT INTO pathways_organizations
-        (organization_id, name, slug, status, timezone, created_at, updated_at)
-        VALUES (?, ?, ?, 'active', ?, ?, ?)`)
-        .bind(organizationId, organizationName, slug, payload.timezone || 'Asia/Kuala_Lumpur', now, now),
-      db.prepare(`INSERT INTO pathways_users
-        (user_id, email, display_name, password_salt, password_hash, password_iterations,
-         is_platform_admin, is_active, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, 1, 1, ?, ?)`)
-        .bind(userId, normalizeEmail(email), displayName, password.passwordSalt, password.passwordHash, password.passwordIterations, now, now),
-      db.prepare(`INSERT INTO pathways_memberships
-        (membership_id, organization_id, user_id, role, is_active, created_at, updated_at)
-        VALUES (?, ?, ?, 'admin', 1, ?, ?)`)
-        .bind(membershipId, organizationId, userId, now, now),
-    ]);
+  const statements = [
+    db.prepare(`INSERT INTO pathways_organizations
+      (organization_id, name, slug, status, timezone, created_at, updated_at)
+      VALUES (?, ?, ?, 'active', ?, ?, ?)`)
+      .bind(organizationId, organizationName, slug, timezone, now, now),
+    db.prepare(`INSERT INTO pathways_users
+      (user_id, email, display_name, password_salt, password_hash, password_iterations,
+       is_platform_admin, is_active, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, 1, 1, ?, ?)`)
+      .bind(userId, normalizeEmail(email), displayName, password.passwordSalt, password.passwordHash, password.passwordIterations, now, now),
+    db.prepare(`INSERT INTO pathways_memberships
+      (membership_id, organization_id, user_id, role, is_active, created_at, updated_at)
+      VALUES (?, ?, ?, 'admin', 1, ?, ?)`)
+      .bind(membershipId, organizationId, userId, now, now),
+  ];
 
-    let demoStudentId = null;
-    if (payload.seedDemo !== false) {
-      demoStudentId = `stu-${crypto.randomUUID()}`;
-      await db.prepare(`INSERT INTO pathways_students
+  if (demoStudentId) {
+    const demoState = createSyntheticDemoState();
+    const stateJson = JSON.stringify(demoState);
+    const stateHash = await sha256Hex(stateJson);
+    const stateRequestId = `create:${demoStudentId}:${crypto.randomUUID()}`;
+    statements.push(
+      db.prepare(`INSERT INTO pathways_students
         (student_id, organization_id, display_name, external_ref, year_group, status, created_at, updated_at)
         VALUES (?, ?, 'Student A', 'SYNTHETIC-DEMO', 'Demo', 'active', ?, ?)`)
-        .bind(demoStudentId, organizationId, now, now)
-        .run();
-      await createStudentState({
-        db,
-        student: { student_id: demoStudentId, organization_id: organizationId },
-        actorUserId: userId,
-        state: createSyntheticDemoState(),
-      });
-    }
+        .bind(demoStudentId, organizationId, now, now),
+      db.prepare(`INSERT INTO pathways_student_state
+        (student_id, schema_version, revision, state_json, state_hash, updated_at, updated_by, last_action, last_request_id)
+        VALUES (?, ?, 0, ?, ?, ?, ?, 'create', ?)`)
+        .bind(demoStudentId, PATHWAYS_SCHEMA_VERSION, stateJson, stateHash, now, userId, stateRequestId),
+    );
+  }
 
-    await audit(db, {
-      organizationId,
-      actorUserId: userId,
-      action: 'bootstrap',
-      entityType: 'platform',
-      entityId: organizationId,
-      metadata: { demoSeeded: Boolean(demoStudentId) },
-    });
+  statements.push(
+    db.prepare(`INSERT INTO pathways_audit_log
+      (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+      VALUES (?, NULL, ?, 'bootstrap', 'platform', ?, ?, ?, ?)`)
+      .bind(organizationId, userId, organizationId, bootstrapAuditRequestId, JSON.stringify({ demoSeeded: Boolean(demoStudentId) }), now),
+  );
 
+  try {
+    await db.batch(statements);
     return json({
       ok: true,
       founder: { id: userId, email, displayName },
-      organization: { id: organizationId, name: organizationName, slug },
+      organization: { id: organizationId, name: organizationName, slug, timezone },
       demoStudentId,
     }, 201);
   } catch (error) {
