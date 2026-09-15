@@ -11,6 +11,17 @@ function validSlug(value) {
   return /^[a-z0-9][a-z0-9-]{1,62}$/.test(slug) ? slug : null;
 }
 
+function validTimezone(value) {
+  const timezone = String(value || 'Asia/Kuala_Lumpur').trim();
+  if (timezone.length < 3 || timezone.length > 80) return null;
+  try {
+    new Intl.DateTimeFormat('en-CA', { timeZone: timezone }).format(new Date());
+    return timezone;
+  } catch {
+    return null;
+  }
+}
+
 export async function onRequestGet({ request, env }) {
   const auth = await authenticate(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status);
@@ -43,8 +54,8 @@ export async function onRequestPost({ request, env }) {
   if (!parsed.ok) return parsed.response;
   const name = String(parsed.value.name || '').trim();
   const slug = validSlug(parsed.value.slug);
-  const timezone = String(parsed.value.timezone || 'Asia/Kuala_Lumpur').trim();
-  if (name.length < 2 || name.length > 160 || !slug || timezone.length > 80) return json({ error: 'Organisation details are invalid.' }, 400);
+  const timezone = validTimezone(parsed.value.timezone);
+  if (name.length < 2 || name.length > 160 || !slug || !timezone) return json({ error: 'Organisation details are invalid.' }, 400);
   const id = `org-${crypto.randomUUID()}`;
   const now = new Date().toISOString();
   try {
