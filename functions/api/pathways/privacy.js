@@ -1,11 +1,11 @@
 import {
   authenticate,
-  audit,
   getStudentAccess,
   json,
   membershipFor,
   readJson,
   requireWriteRequest,
+  sha256Hex,
 } from '../../lib/pathways/auth.js';
 
 function canErase(auth, organizationId) {
@@ -31,25 +31,25 @@ export async function onRequestPost({ request, env }) {
   if (!['request','pilot-ended','wrong-record','retention-expired','other'].includes(reasonCode)) return json({ error: 'Erasure reason is invalid.' }, 400);
 
   const now = new Date().toISOString();
+  const erasedStudentHash = await sha256Hex(studentId);
+  const requestId = `erase:${crypto.randomUUID()}`;
   try {
-    await auth.db.prepare(`INSERT INTO pathways_erasure_log
-      (organization_id, erased_student_id, actor_user_id, reason_code, created_at)
-      VALUES (?, ?, ?, ?, ?)`)
-      .bind(access.student.organization_id, studentId, auth.user.id, reasonCode, now)
-      .run();
-    await audit(auth.db, {
-      organizationId: access.student.organization_id,
-      studentId,
-      actorUserId: auth.user.id,
-      action: 'erase-student',
-      entityType: 'student',
-      entityId: studentId,
-      metadata: { reasonCode },
-    });
-    await auth.db.prepare('DELETE FROM pathways_students WHERE student_id = ?').bind(studentId).run();
-    return json({ ok: true, erasedStudentId: studentId, erasedAt: now });
+    const results = await auth.db.batch([
+      auth.db.prepare(`INSERT INTO pathways_erasure_log
+        (organization_id, erased_student_hash, actor_user_id, reason_code, created_at)
+        VALUES (?, ?, ?, ?, ?)`)
+        .bind(access.student.organization_id, erasedStudentHash, auth.user.id, reasonCode, now),
+      auth.db.prepare('DELETE FROM pathways_students WHERE student_id = ?').bind(studentId),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        VALUES (?, NULL, ?, 'erase-student', 'student-erasure', NULL, ?, ?, ?)`)
+        .bind(access.student.organization_id, auth.user.id, requestId, JSON.stringify({ reasonCode }), now),
+    ]);
+    const deleted = Number(results?.[1]?.meta?.changes ?? results?.[1]?.meta?.rows_written ?? 0);
+    if (deleted !== 1) throw new Error('Student erasure did not delete exactly one record.');
+    return json({ ok: true, erasedAt: now });
   } catch (error) {
-    console.error(JSON.stringify({ message: 'Pathways student erasure failed', errorType: String(error?.name || 'Error'), studentId }));
+    console.error(JSON.stringify({ message: 'Pathways student erasure failed', errorType: String(error?.name || 'Error') }));
     return json({ error: 'Student record could not be erased.' }, 500);
   }
 }
