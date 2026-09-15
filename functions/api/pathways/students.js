@@ -20,12 +20,12 @@ export async function onRequestGet({ request, env }) {
   if (!auth.ok) return json({ error: auth.error }, auth.status);
   const url = new URL(request.url);
   const organizationId = url.searchParams.get('organizationId');
-  const includeInactive = url.searchParams.get('includeInactive') === '1';
+  const requestedInactive = url.searchParams.get('includeInactive') === '1';
 
   let result;
   if (auth.user.platformAdmin) {
     const where = organizationId ? 'WHERE s.organization_id = ?' : '';
-    const statusClause = includeInactive ? '' : `${where ? ' AND' : ' WHERE'} s.status = 'active'`;
+    const statusClause = requestedInactive ? '' : `${where ? ' AND' : ' WHERE'} s.status = 'active'`;
     const query = `SELECT s.student_id, s.organization_id, s.display_name, s.external_ref, s.year_group,
         s.status, s.created_at, s.updated_at, o.name AS organization_name
       FROM pathways_students s
@@ -46,9 +46,10 @@ export async function onRequestGet({ request, env }) {
     const rows = [];
     for (const orgId of visibleOrgIds) {
       const role = membershipFor(auth.user, orgId)?.role;
-      if (role === 'admin' || role === 'senco') {
+      const privileged = role === 'admin' || role === 'senco';
+      if (privileged) {
         const query = `SELECT student_id, organization_id, display_name, external_ref, year_group, status, created_at, updated_at
-          FROM pathways_students WHERE organization_id = ? ${includeInactive ? '' : "AND status = 'active'"}
+          FROM pathways_students WHERE organization_id = ? ${requestedInactive ? '' : "AND status = 'active'"}
           ORDER BY display_name COLLATE NOCASE`;
         const found = await auth.db.prepare(query).bind(orgId).all();
         rows.push(...(found?.results || []));
@@ -57,7 +58,7 @@ export async function onRequestGet({ request, env }) {
             s.status, s.created_at, s.updated_at, a.permission
           FROM pathways_student_assignments a
           JOIN pathways_students s ON s.student_id = a.student_id
-          WHERE a.user_id = ? AND s.organization_id = ? ${includeInactive ? '' : "AND s.status = 'active'"}
+          WHERE a.user_id = ? AND s.organization_id = ? AND s.status = 'active'
           ORDER BY s.display_name COLLATE NOCASE`;
         const found = await auth.db.prepare(query).bind(auth.user.id, orgId).all();
         rows.push(...(found?.results || []));
