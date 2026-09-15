@@ -72,6 +72,8 @@ export const PUBLIC_FILES = Object.freeze([
   "pathways/app.js",
   "pathways/model.js",
   "pathways/schema.js",
+  "pathways/account.html",
+  "pathways/account.js",
   "pathways-lab/index.html",
   "pathways-lab/app.js",
   "pathways-lab/app-core.js",
