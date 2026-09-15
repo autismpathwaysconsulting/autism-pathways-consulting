@@ -109,7 +109,7 @@ export async function onRequestPost({ request, env }) {
       action: 'create',
       entityType: 'student',
       entityId: studentId,
-      metadata: { externalRef: externalRef || null, yearGroup: yearGroup || null },
+      metadata: null,
     });
     return json({ student: { ...student, external_ref: externalRef || null, year_group: yearGroup || null, status: 'active', created_at: now, updated_at: now }, state: stateRecord }, 201);
   } catch (error) {
