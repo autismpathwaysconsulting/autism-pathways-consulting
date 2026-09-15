@@ -52,21 +52,26 @@ export async function onRequestPost({ request, env }) {
 
   const now = new Date().toISOString();
   const id = `asg-${crypto.randomUUID()}`;
+  const requestId = `assignment:${crypto.randomUUID()}`;
   try {
-    await auth.db.prepare(`INSERT INTO pathways_student_assignments
-      (assignment_id, organization_id, student_id, user_id, permission, created_at)
-      VALUES (?, ?, ?, ?, ?, ?)`)
-      .bind(id, student.organization_id, student.student_id, userId, permission, now)
-      .run();
-    await audit(auth.db, {
-      organizationId: student.organization_id,
-      studentId: student.student_id,
-      actorUserId: auth.user.id,
-      action: 'assign-user',
-      entityType: 'assignment',
-      entityId: id,
-      metadata: { userId, permission },
-    });
+    await auth.db.batch([
+      auth.db.prepare(`INSERT INTO pathways_student_assignments
+        (assignment_id, organization_id, student_id, user_id, permission, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)`)
+        .bind(id, student.organization_id, student.student_id, userId, permission, now),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        VALUES (?, ?, ?, 'assign-user', 'assignment', ?, ?, ?, ?)`)
+        .bind(
+          student.organization_id,
+          student.student_id,
+          auth.user.id,
+          id,
+          requestId,
+          JSON.stringify({ userId, permission }),
+          now,
+        ),
+    ]);
     return json({ assignment: { assignment_id: id, organization_id: student.organization_id, student_id: student.student_id, user_id: userId, permission, created_at: now } }, 201);
   } catch (error) {
     if (String(error?.message || '').toLowerCase().includes('unique')) return json({ error: 'This user is already assigned to the student.' }, 409);
