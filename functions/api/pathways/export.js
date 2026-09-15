@@ -9,6 +9,9 @@ export async function onRequestGet({ request, env }) {
   const includeHistory = url.searchParams.get('history') === '1';
   const access = await getStudentAccess(auth, studentId, { write: false });
   if (!access.ok) return json({ error: access.error }, access.status);
+  if (!auth.user.platformAdmin && !['admin','senco'].includes(access.role)) {
+    return json({ error: 'Only an administrator or SENCO can export a complete student record.' }, 403);
+  }
 
   try {
     const [record, consentResult] = await Promise.all([
