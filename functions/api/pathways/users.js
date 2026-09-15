@@ -147,6 +147,9 @@ export async function onRequestPatch({ request, env }) {
         .bind(active, now, membership.membership_id).run();
       await audit(auth.db, { organizationId, actorUserId: auth.user.id, action: active ? 'activate-membership' : 'deactivate-membership', entityType: 'membership', entityId: membership.membership_id });
     } else if (action === 'reset-password') {
+      if (!auth.user.platformAdmin) {
+        return json({ error: 'Organisation administrators cannot reset global user credentials. Use the account recovery flow or a platform administrator.' }, 403);
+      }
       if (!validatePassword(payload.password)) return json({ error: 'New password must be 12 to 128 characters.' }, 400);
       const password = await createPasswordRecord(payload.password);
       await auth.db.batch([
