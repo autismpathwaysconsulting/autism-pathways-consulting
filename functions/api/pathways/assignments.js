@@ -1,6 +1,5 @@
 import {
   authenticate,
-  audit,
   json,
   membershipFor,
   readJson,
@@ -42,8 +41,9 @@ export async function onRequestPost({ request, env }) {
   const { studentId, userId } = parsed.value;
   const permission = parsed.value.permission === 'read' ? 'read' : parsed.value.permission === 'edit' ? 'edit' : null;
   if (!permission) return json({ error: 'Assignment permission is invalid.' }, 400);
-  const student = await auth.db.prepare('SELECT student_id, organization_id FROM pathways_students WHERE student_id = ? AND status != ?')
-    .bind(String(studentId || ''), 'archived').first();
+  const student = await auth.db.prepare(`SELECT student_id, organization_id FROM pathways_students
+    WHERE student_id = ? AND status = 'active'`)
+    .bind(String(studentId || '')).first();
   if (!student || !canManage(auth, student.organization_id)) return json({ error: 'You do not have permission to manage assignments.' }, 403);
   const membership = await auth.db.prepare(`SELECT membership_id, role, is_active FROM pathways_memberships
     WHERE organization_id = ? AND user_id = ?`)
@@ -94,18 +94,34 @@ export async function onRequestPatch({ request, env }) {
   if (!assignment || !canManage(auth, assignment.organization_id)) return json({ error: 'Assignment was not found or cannot be managed.' }, 404);
   const permission = parsed.value.permission === 'read' ? 'read' : parsed.value.permission === 'edit' ? 'edit' : null;
   if (!permission) return json({ error: 'Assignment permission is invalid.' }, 400);
-  await auth.db.prepare('UPDATE pathways_student_assignments SET permission = ? WHERE assignment_id = ?')
-    .bind(permission, assignmentId).run();
-  await audit(auth.db, {
-    organizationId: assignment.organization_id,
-    studentId: assignment.student_id,
-    actorUserId: auth.user.id,
-    action: 'update-assignment',
-    entityType: 'assignment',
-    entityId: assignmentId,
-    metadata: { permission },
-  });
-  return json({ ok: true });
+  const now = new Date().toISOString();
+  const requestId = `assignment-update:${crypto.randomUUID()}`;
+  try {
+    const results = await auth.db.batch([
+      auth.db.prepare(`UPDATE pathways_student_assignments
+        SET permission = ?
+        WHERE assignment_id = ?
+          AND EXISTS (
+            SELECT 1 FROM pathways_students s
+            WHERE s.student_id = pathways_student_assignments.student_id AND s.status = 'active'
+          )`)
+        .bind(permission, assignmentId),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        SELECT a.organization_id, a.student_id, ?, 'update-assignment', 'assignment', a.assignment_id, ?, ?, ?
+        FROM pathways_student_assignments a
+        JOIN pathways_students s ON s.student_id = a.student_id
+        WHERE a.assignment_id = ? AND s.status = 'active' AND changes() = 1`)
+        .bind(auth.user.id, requestId, JSON.stringify({ permission }), now, assignmentId),
+    ]);
+    const changed = Number(results?.[0]?.meta?.changes ?? results?.[0]?.meta?.rows_written ?? 0);
+    const audited = Number(results?.[1]?.meta?.changes ?? results?.[1]?.meta?.rows_written ?? 0);
+    if (changed !== 1 || audited !== 1) return json({ error: 'Assignment changed, the student became inactive, or the record was erased before this update could commit.' }, 409);
+    return json({ ok: true });
+  } catch (error) {
+    console.error(JSON.stringify({ message: 'Pathways assignment update failed', errorType: String(error?.name || 'Error') }));
+    return json({ error: 'Assignment could not be updated.' }, 500);
+  }
 }
 
 export async function onRequestDelete({ request, env }) {
@@ -119,17 +135,32 @@ export async function onRequestDelete({ request, env }) {
     FROM pathways_student_assignments WHERE assignment_id = ?`)
     .bind(assignmentId).first();
   if (!assignment || !canManage(auth, assignment.organization_id)) return json({ error: 'Assignment was not found or cannot be managed.' }, 404);
-  await auth.db.prepare('DELETE FROM pathways_student_assignments WHERE assignment_id = ?').bind(assignmentId).run();
-  await audit(auth.db, {
-    organizationId: assignment.organization_id,
-    studentId: assignment.student_id,
-    actorUserId: auth.user.id,
-    action: 'remove-assignment',
-    entityType: 'assignment',
-    entityId: assignmentId,
-    metadata: { userId: assignment.user_id },
-  });
-  return json({ ok: true });
+  const now = new Date().toISOString();
+  const requestId = `assignment-remove:${crypto.randomUUID()}`;
+  try {
+    const results = await auth.db.batch([
+      auth.db.prepare(`DELETE FROM pathways_student_assignments
+        WHERE assignment_id = ?
+          AND EXISTS (
+            SELECT 1 FROM pathways_students s
+            WHERE s.student_id = pathways_student_assignments.student_id
+          )`)
+        .bind(assignmentId),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        SELECT organization_id, student_id, ?, 'remove-assignment', 'assignment', ?, ?, ?, ?
+        FROM pathways_students
+        WHERE student_id = ? AND changes() = 1`)
+        .bind(auth.user.id, assignmentId, requestId, JSON.stringify({ userId: assignment.user_id }), now, assignment.student_id),
+    ]);
+    const changed = Number(results?.[0]?.meta?.changes ?? results?.[0]?.meta?.rows_written ?? 0);
+    const audited = Number(results?.[1]?.meta?.changes ?? results?.[1]?.meta?.rows_written ?? 0);
+    if (changed !== 1 || audited !== 1) return json({ error: 'Assignment changed or the student was erased before removal could commit.' }, 409);
+    return json({ ok: true });
+  } catch (error) {
+    console.error(JSON.stringify({ message: 'Pathways assignment removal failed', errorType: String(error?.name || 'Error') }));
+    return json({ error: 'Assignment could not be removed.' }, 500);
+  }
 }
 
 export async function onRequest(context) {
