@@ -59,17 +59,17 @@ export async function onRequestGet({ request, env }) {
   const timeZone = organization?.timezone || 'UTC';
   const canViewDetails = auth.user.platformAdmin || ['admin','senco'].includes(access.role);
   if (canViewDetails) {
-    const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, authority_label,
+    const result = await auth.db.prepare(`SELECT rowid AS decision_sequence, consent_id, consent_type, status, authority_label,
         reference_note, granted_at, expires_at, created_by, created_at, updated_at
-      FROM pathways_consents WHERE student_id = ? ORDER BY created_at DESC, consent_id DESC`)
+      FROM pathways_consents WHERE student_id = ? ORDER BY rowid DESC`)
       .bind(studentId).all();
     const consents = (result?.results || []).map(row => projectConsentStatus(row, now, timeZone));
     return json({ consents });
   }
-  const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, granted_at, expires_at, created_at
+  const result = await auth.db.prepare(`SELECT rowid AS decision_sequence, consent_id, consent_type, status, granted_at, expires_at, created_at
     FROM pathways_consents
     WHERE student_id = ? AND consent_type IN ('pilot-use','school-record','family-sharing')
-    ORDER BY created_at DESC, consent_id DESC`)
+    ORDER BY rowid DESC`)
     .bind(studentId).all();
   const consents = (result?.results || []).map(row => projectConsentStatus(row, now, timeZone));
   return json({ consents });
@@ -138,7 +138,12 @@ export async function onRequestPost({ request, env }) {
           now,
         ),
     ]);
-    return json({ consent: { consent_id: id, consent_type: type, status, authority_label: authorityLabel || null, reference_note: referenceNote || null, granted_at: grantedAt, expires_at: expiresAt, created_at: now } }, 201);
+    const stored = await auth.db.prepare(`SELECT rowid AS decision_sequence, consent_id, consent_type, status,
+        authority_label, reference_note, granted_at, expires_at, created_at
+      FROM pathways_consents WHERE consent_id = ?`)
+      .bind(id)
+      .first();
+    return json({ consent: stored || { consent_id: id, consent_type: type, status, authority_label: authorityLabel || null, reference_note: referenceNote || null, granted_at: grantedAt, expires_at: expiresAt, created_at: now } }, 201);
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways consent record failed', errorType: String(error?.name || 'Error') }));
     return json({ error: 'Consent status could not be recorded.' }, 500);
