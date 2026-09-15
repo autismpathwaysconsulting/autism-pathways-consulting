@@ -23,7 +23,7 @@ export async function onRequestPost({ request, env }) {
   const payload = parsed.value;
   if (payload.action !== 'erase-student') return json({ error: 'Unsupported privacy action.' }, 400);
   const studentId = String(payload.studentId || '');
-  const access = await getStudentAccess(auth, studentId, { write: true });
+  const access = await getStudentAccess(auth, studentId, { write: true, includeArchived: true });
   if (!access.ok) return json({ error: access.error }, access.status);
   if (!canErase(auth, access.student.organization_id)) return json({ error: 'Only an organisation administrator can erase a student workspace.' }, 403);
   if (String(payload.confirmStudentId || '') !== studentId) return json({ error: 'Student erasure confirmation did not match.' }, 400);
