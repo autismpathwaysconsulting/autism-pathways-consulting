@@ -152,16 +152,22 @@ export async function onRequestPatch({ request, env }) {
     return json({ error: 'Student details are invalid.' }, 400);
   }
   const now = new Date().toISOString();
+  const requestId = `student-update:${crypto.randomUUID()}`;
   try {
-    await auth.db.batch([
+    const results = await auth.db.batch([
       auth.db.prepare(`UPDATE pathways_students SET display_name = ?, external_ref = ?, year_group = ?,
           status = ?, updated_at = ?, archived_at = ? WHERE student_id = ?`)
         .bind(displayName, externalRef || null, yearGroup || null, status, now, status === 'archived' ? now : null, studentId),
       auth.db.prepare(`INSERT INTO pathways_audit_log
         (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
-        VALUES (?, ?, ?, ?, 'student', ?, ?, ?, ?)`)
-        .bind(access.student.organization_id, studentId, auth.user.id, status === 'archived' ? 'archive' : 'update', studentId, `student-update:${crypto.randomUUID()}`, JSON.stringify({ status }), now),
+        SELECT organization_id, student_id, ?, ?, 'student', student_id, ?, ?, ?
+        FROM pathways_students
+        WHERE student_id = ? AND changes() = 1`)
+        .bind(auth.user.id, status === 'archived' ? 'archive' : 'update', requestId, JSON.stringify({ status }), now, studentId),
     ]);
+    const changed = Number(results?.[0]?.meta?.changes ?? results?.[0]?.meta?.rows_written ?? 0);
+    const audited = Number(results?.[1]?.meta?.changes ?? results?.[1]?.meta?.rows_written ?? 0);
+    if (changed !== 1 || audited !== 1) return json({ error: 'Student record was changed or erased before this update could commit.' }, 409);
     return json({ ok: true, student: { student_id: studentId, organization_id: access.student.organization_id, display_name: displayName, external_ref: externalRef || null, year_group: yearGroup || null, status, updated_at: now } });
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways student update failed', errorType: String(error?.name || 'Error') }));
