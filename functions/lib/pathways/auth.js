@@ -237,21 +237,32 @@ export async function verifyLogin(db, email, password) {
   const valid = await constantTimeEqual(candidate, row.password_hash);
   const now = new Date().toISOString();
   if (!valid) {
-    const failures = Number(row.failed_login_count || 0) + 1;
-    const lockedUntil = failures >= MAX_FAILED_LOGINS
-      ? new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000).toISOString()
-      : null;
+    const lockedUntil = new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000).toISOString();
     await db.prepare(`UPDATE pathways_users
-      SET failed_login_count = ?, locked_until = ?, updated_at = ? WHERE user_id = ?`)
-      .bind(failures >= MAX_FAILED_LOGINS ? 0 : failures, lockedUntil, now, row.user_id)
+      SET failed_login_count = CASE
+            WHEN failed_login_count + 1 >= ? THEN 0
+            ELSE failed_login_count + 1
+          END,
+          locked_until = CASE
+            WHEN failed_login_count + 1 >= ? THEN ?
+            ELSE locked_until
+          END,
+          updated_at = ?
+      WHERE user_id = ? AND password_hash = ?
+        AND (locked_until IS NULL OR locked_until <= ?)`)
+      .bind(MAX_FAILED_LOGINS, MAX_FAILED_LOGINS, lockedUntil, now, row.user_id, row.password_hash, now)
       .run();
-    return { ok: false, locked: Boolean(lockedUntil), generic: true };
+    const current = await db.prepare('SELECT locked_until FROM pathways_users WHERE user_id = ?')
+      .bind(row.user_id)
+      .first();
+    const locked = Boolean(current?.locked_until && Date.parse(current.locked_until) > Date.now());
+    return { ok: false, locked, generic: true };
   }
 
   await db.prepare(`UPDATE pathways_users
     SET failed_login_count = 0, locked_until = NULL, last_login_at = ?, updated_at = ?
-    WHERE user_id = ?`)
-    .bind(now, now, row.user_id)
+    WHERE user_id = ? AND password_hash = ?`)
+    .bind(now, now, row.user_id, row.password_hash)
     .run();
   return {
     ok: true,
