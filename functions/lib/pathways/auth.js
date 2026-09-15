@@ -112,17 +112,29 @@ export function clearSessionCookie() {
   return `${SESSION_COOKIE}=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Strict`;
 }
 
-export async function issueSession(db, userId) {
+export async function issueSession(db, userId, expectedPasswordHash = null) {
   const token = randomToken(32);
   const sessionHash = await sha256Hex(token);
   const csrfToken = randomToken(24);
   const createdAt = new Date().toISOString();
   const expiresAt = new Date(Date.now() + SESSION_SECONDS * 1000).toISOString();
-  await db.prepare(`INSERT INTO pathways_sessions
-    (session_hash, user_id, csrf_token, created_at, expires_at, last_seen_at)
-    VALUES (?, ?, ?, ?, ?, ?)`)
-    .bind(sessionHash, userId, csrfToken, createdAt, expiresAt, createdAt)
-    .run();
+  let result;
+  if (expectedPasswordHash) {
+    result = await db.prepare(`INSERT INTO pathways_sessions
+      (session_hash, user_id, csrf_token, created_at, expires_at, last_seen_at)
+      SELECT ?, user_id, ?, ?, ?, ? FROM pathways_users
+      WHERE user_id = ? AND password_hash = ? AND is_active = 1`)
+      .bind(sessionHash, csrfToken, createdAt, expiresAt, createdAt, userId, expectedPasswordHash)
+      .run();
+    const changes = Number(result?.meta?.changes ?? result?.meta?.rows_written ?? 0);
+    if (changes !== 1) return null;
+  } else {
+    await db.prepare(`INSERT INTO pathways_sessions
+      (session_hash, user_id, csrf_token, created_at, expires_at, last_seen_at)
+      VALUES (?, ?, ?, ?, ?, ?)`)
+      .bind(sessionHash, userId, csrfToken, createdAt, expiresAt, createdAt)
+      .run();
+  }
   return { token, csrfToken, expiresAt };
 }
 
@@ -152,9 +164,10 @@ export async function authenticate(request, env) {
     return { ok: false, status: 401, error: 'Session expired. Please sign in again.' };
   }
 
-  const membershipsResult = await db.prepare(`SELECT membership_id, organization_id, role
-    FROM pathways_memberships
-    WHERE user_id = ? AND is_active = 1`)
+  const membershipsResult = await db.prepare(`SELECT m.membership_id, m.organization_id, m.role
+    FROM pathways_memberships m
+    JOIN pathways_organizations o ON o.organization_id = m.organization_id
+    WHERE m.user_id = ? AND m.is_active = 1 AND o.status = 'active'`)
     .bind(row.user_id)
     .all();
   const memberships = membershipsResult?.results || [];
@@ -242,6 +255,7 @@ export async function verifyLogin(db, email, password) {
     .run();
   return {
     ok: true,
+    credentialHash: row.password_hash,
     user: {
       id: row.user_id,
       email: row.email,
@@ -255,13 +269,13 @@ export function membershipFor(user, organizationId) {
   return user.memberships.find(item => item.organization_id === organizationId) || null;
 }
 
-export async function getStudentAccess(auth, studentId, { write = false } = {}) {
+export async function getStudentAccess(auth, studentId, { write = false, includeArchived = false } = {}) {
   const student = await auth.db.prepare(`SELECT student_id, organization_id, display_name, external_ref,
       year_group, status, created_at, updated_at
     FROM pathways_students WHERE student_id = ?`)
     .bind(studentId)
     .first();
-  if (!student || student.status === 'archived') return { ok: false, status: 404, error: 'Student record was not found.' };
+  if (!student || (student.status === 'archived' && !includeArchived)) return { ok: false, status: 404, error: 'Student record was not found.' };
   if (auth.user.platformAdmin) return { ok: true, student, permission: 'edit', role: 'platform-admin' };
 
   const membership = membershipFor(auth.user, student.organization_id);
