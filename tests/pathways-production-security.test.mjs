@@ -43,13 +43,30 @@ test('login session issuance is bound to the exact password hash that was verifi
   assert.match(login, /credentials changed during sign-in/i);
 });
 
+test('failed-login accounting increments atomically against the credential version checked', async () => {
+  const auth = await read('functions/lib/pathways/auth.js');
+  assert.match(auth, /failed_login_count = CASE\s+WHEN failed_login_count \+ 1 >= \?/);
+  assert.match(auth, /password_hash = \?/);
+  assert.match(auth, /locked_until = CASE/);
+  assert.doesNotMatch(auth, /const failures = Number\(row\.failed_login_count/);
+});
+
 test('frontline consent reads are data-minimised while admin roles can view authority details', async () => {
   const source = await read('functions/api/pathways/consents.js');
   assert.match(source, /canViewDetails/);
   assert.match(source, /\['admin','senco'\]\.includes\(access\.role\)/);
-  assert.match(source, /SELECT consent_id, consent_type, status, expires_at, created_at/);
+  assert.match(source, /SELECT consent_id, consent_type, status, granted_at, expires_at, created_at/);
   assert.match(source, /authority_label/);
   assert.match(source, /reference_note/);
+});
+
+test('authority record and matching audit commit in one D1 batch', async () => {
+  const source = await read('functions/api/pathways/consents.js');
+  assert.match(source, /await auth\.db\.batch\(\[/);
+  assert.match(source, /INSERT INTO pathways_consents/);
+  assert.match(source, /INSERT INTO pathways_audit_log/);
+  assert.match(source, /requestId = `consent:/);
+  assert.doesNotMatch(source, /await audit\(/);
 });
 
 test('AI assistance is opt-in, human-confirmed, and blocked without current use authority', async () => {
@@ -96,16 +113,24 @@ test('assignment permissions fail closed instead of defaulting unknown values to
   assert.match(source, /Assignment permission is invalid/);
 });
 
-test('authority refusal is distinct from concurrency conflict', async () => {
+test('authority refusal is distinct from concurrency conflict and respects effective date', async () => {
   const source = await read('functions/api/pathways/state.js');
   assert.match(source, /authorityBlocked: true \}, 403/);
   assert.match(source, /result\.conflict \? 409 : 200/);
+  assert.match(source, /c\.granted_at/);
+  assert.match(source, /dateHasStarted\(row\.granted_at, now, row\.timezone\)/);
+  assert.match(source, /dateHasNotExpired\(row\.expires_at, now, row\.timezone\)/);
 });
 
-test('self-service password change verifies current credentials and revokes sessions', async () => {
+test('self-service password change is bound to the verified credential and revokes sessions atomically', async () => {
   const source = await read('functions/api/pathways/password.js');
   assert.match(source, /verifyLogin\(auth\.db, auth\.user\.email, currentPassword\)/);
-  assert.match(source, /DELETE FROM pathways_sessions WHERE user_id = \?/);
+  assert.match(source, /WHERE user_id = \? AND password_hash = \?/);
+  assert.match(source, /verified\.credentialHash/);
+  assert.match(source, /await auth\.db\.batch\(\[/);
+  assert.match(source, /DELETE FROM pathways_sessions/);
+  assert.match(source, /password_hash = \?\s*\n\s*\)/);
+  assert.match(source, /changed !== 1/);
   assert.match(source, /clearSessionCookie\(\)/);
   const account = await read('pathways/account.js');
   assert.match(account, /X-Pathways-CSRF/);
@@ -122,7 +147,7 @@ test('meeting frontend has keyboard focus, mobile target sizing, no indexing and
   assert.doesNotMatch(app, /\blocalStorage\b/);
 });
 
-test('browser and server authority displays both apply latest-record semantics and UI captures expiry', async () => {
+test('browser and server authority displays both apply effective/latest-record semantics and UI captures dates', async () => {
   const [html, app, state] = await Promise.all([
     read('pathways/index.html'),
     read('pathways/app.js'),
@@ -130,10 +155,21 @@ test('browser and server authority displays both apply latest-record semantics a
   ]);
   assert.match(app, /sort\(\(a,b\)=>String\(b\.created_at/);
   assert.match(app, /const latest=applicable\[0\]/);
+  assert.match(app, /granted_at/);
   assert.match(state, /ORDER BY c\.created_at DESC, c\.consent_id DESC/);
-  assert.match(state, /localDateKey\(now, row\.timezone\)/);
+  assert.match(state, /dateHasStarted\(row\.granted_at/);
+  assert.match(state, /dateHasNotExpired\(row\.expires_at/);
   assert.match(html, /id="consentGrantedAt"/);
   assert.match(html, /id="consentExpiresAt"/);
   assert.match(app, /grantedAt:\$\('consentGrantedAt'\)\.value/);
   assert.match(app, /expiresAt:\$\('consentExpiresAt'\)\.value/);
+});
+
+test('administration manages inactive and archived students separately from the active daily selector', async () => {
+  const app = await read('pathways/app.js');
+  assert.match(app, /includeInactive=1/);
+  assert.match(app, /\/api\/pathways\/students/);
+  assert.match(app, /method:'PATCH'/);
+  assert.match(app, /status/);
+  assert.match(app, /archived/i);
 });
