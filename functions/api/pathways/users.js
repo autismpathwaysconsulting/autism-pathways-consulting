@@ -62,54 +62,54 @@ export async function onRequestPost({ request, env }) {
 
   const now = new Date().toISOString();
   const normalized = normalizeEmail(email);
-  let user = await auth.db.prepare('SELECT user_id, email, display_name, is_active FROM pathways_users WHERE email = ? COLLATE NOCASE')
+  const existingUser = await auth.db.prepare('SELECT user_id FROM pathways_users WHERE email = ? COLLATE NOCASE')
     .bind(normalized).first();
-  let createdUser = false;
+  if (existingUser) {
+    const existingMembership = await auth.db.prepare(`SELECT membership_id FROM pathways_memberships
+      WHERE organization_id = ? AND user_id = ?`)
+      .bind(organizationId, existingUser.user_id).first();
+    if (existingMembership) return json({ error: 'This user already belongs to the organisation.' }, 409);
+    return json({
+      error: 'An existing Pathways account cannot be linked to another organisation from this screen. A verified account-holder invitation flow is required for cross-organisation access.'
+    }, 409);
+  }
+
+  if (!validatePassword(payload.password)) return json({ error: 'A temporary password of 12 to 128 characters is required for a new user.' }, 400);
+  const password = await createPasswordRecord(payload.password);
+  const userId = `usr-${crypto.randomUUID()}`;
+  const membershipId = `mem-${crypto.randomUUID()}`;
+  const requestId = `create-user:${crypto.randomUUID()}`;
 
   try {
-    if (!user) {
-      if (!validatePassword(payload.password)) return json({ error: 'A temporary password of 12 to 128 characters is required for a new user.' }, 400);
-      const password = await createPasswordRecord(payload.password);
-      const userId = `usr-${crypto.randomUUID()}`;
-      await auth.db.prepare(`INSERT INTO pathways_users
+    await auth.db.batch([
+      auth.db.prepare(`INSERT INTO pathways_users
         (user_id, email, display_name, password_salt, password_hash, password_iterations,
          is_platform_admin, is_active, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, 0, 1, ?, ?)`)
-        .bind(userId, normalized, displayName, password.passwordSalt, password.passwordHash, password.passwordIterations, now, now)
-        .run();
-      user = { user_id: userId, email: normalized, display_name: displayName, is_active: 1 };
-      createdUser = true;
-    }
-
-    const existingMembership = await auth.db.prepare(`SELECT membership_id FROM pathways_memberships
-      WHERE organization_id = ? AND user_id = ?`)
-      .bind(organizationId, user.user_id).first();
-    if (existingMembership) return json({ error: 'This user already belongs to the organisation.' }, 409);
-
-    const membershipId = `mem-${crypto.randomUUID()}`;
-    await auth.db.prepare(`INSERT INTO pathways_memberships
-      (membership_id, organization_id, user_id, role, is_active, created_at, updated_at)
-      VALUES (?, ?, ?, ?, 1, ?, ?)`)
-      .bind(membershipId, organizationId, user.user_id, role, now, now)
-      .run();
-    await audit(auth.db, {
-      organizationId,
-      actorUserId: auth.user.id,
-      action: createdUser ? 'create-user' : 'add-membership',
-      entityType: 'user',
-      entityId: user.user_id,
-      metadata: { role },
-    });
+        .bind(userId, normalized, displayName, password.passwordSalt, password.passwordHash, password.passwordIterations, now, now),
+      auth.db.prepare(`INSERT INTO pathways_memberships
+        (membership_id, organization_id, user_id, role, is_active, created_at, updated_at)
+        VALUES (?, ?, ?, ?, 1, ?, ?)`)
+        .bind(membershipId, organizationId, userId, role, now, now),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        VALUES (?, NULL, ?, 'create-user', 'user', ?, ?, ?, ?)`)
+        .bind(organizationId, auth.user.id, userId, requestId, JSON.stringify({ role }), now),
+    ]);
     return json({
       user: {
-        user_id: user.user_id,
-        email: user.email,
-        display_name: user.display_name,
+        user_id: userId,
+        email: normalized,
+        display_name: displayName,
         role,
-        is_active: user.is_active,
+        is_active: 1,
       },
     }, 201);
   } catch (error) {
+    const message = String(error?.message || '').toLowerCase();
+    if (message.includes('unique')) {
+      return json({ error: 'A Pathways account already exists for this email. Cross-organisation linking requires a verified account-holder invitation.' }, 409);
+    }
     console.error(JSON.stringify({ message: 'Pathways user creation failed', errorType: String(error?.name || 'Error') }));
     return json({ error: 'User could not be created.' }, 500);
   }
