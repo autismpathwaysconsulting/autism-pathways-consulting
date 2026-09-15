@@ -40,7 +40,7 @@ test('authentication excludes suspended organisations and non-active students fr
   assert.match(source, /student\.status !== 'active' && !lifecyclePrivilege/);
 });
 
-test('login session issuance is bound to the exact password hash that was verified', async () => {
+test('login session issuance is credential-bound and externally account-agnostic', async () => {
   const [auth, login] = await Promise.all([
     read('functions/lib/pathways/auth.js'),
     read('functions/api/pathways/login.js'),
@@ -49,7 +49,11 @@ test('login session issuance is bound to the exact password hash that was verifi
   assert.match(auth, /password_hash = \?/);
   assert.match(auth, /credentialHash: row\.password_hash/);
   assert.match(login, /issueSession\(db, result\.user\.id, result\.credentialHash\)/);
-  assert.match(login, /credentials changed during sign-in/i);
+  assert.match(login, /GENERIC_LOGIN_ERROR\s*=\s*['"]Email or password was not accepted\./);
+  assert.match(login, /if \(!result\.ok\)[\s\S]*GENERIC_LOGIN_ERROR/);
+  assert.match(login, /if \(!session\)[\s\S]*GENERIC_LOGIN_ERROR/);
+  assert.doesNotMatch(login, /Too many attempts|credentials changed during sign-in/i);
+  assert.match(login, /memberships/);
 });
 
 test('failed-login accounting increments atomically against the credential version checked', async () => {
@@ -64,9 +68,11 @@ test('frontline consent reads are data-minimised while admin roles can view auth
   const source = await read('functions/api/pathways/consents.js');
   assert.match(source, /canViewDetails/);
   assert.match(source, /\['admin','senco'\]\.includes\(access\.role\)/);
-  assert.match(source, /SELECT consent_id, consent_type, status, granted_at, expires_at, created_at/);
+  assert.match(source, /SELECT rowid AS decision_sequence, consent_id, consent_type, status, granted_at, expires_at, created_at/);
   assert.match(source, /authority_label/);
   assert.match(source, /reference_note/);
+  const frontline = source.slice(source.lastIndexOf('SELECT rowid AS decision_sequence'));
+  assert.doesNotMatch(frontline, /authority_label|reference_note|created_by/);
 });
 
 test('authority record and matching audit commit in one D1 batch', async () => {
@@ -100,15 +106,30 @@ test('synthetic authority exemption uses immutable provenance rather than editab
   assert.match(bootstrap, /'active', 1/);
 });
 
-test('complete exports are admin-only, include archived records, and bulk-read all revision history', async () => {
-  const source = await read('functions/api/pathways/export.js');
+test('history exports are privileged, bounded, and tied to one canonical snapshot', async () => {
+  const [source, lifecycle] = await Promise.all([
+    read('functions/api/pathways/export.js'),
+    read('pathways/lifecycle.js'),
+  ]);
   assert.match(source, /Only an administrator or SENCO can export a complete student record/);
   assert.match(source, /includeArchived: true/);
-  assert.match(source, /async function readCompleteHistory/);
-  assert.match(source, /SELECT revision, schema_version, state_json, state_hash, action/);
+  assert.match(source, /const DEFAULT_PAGE_SIZE = 50/);
+  assert.match(source, /const MAX_PAGE_SIZE = 100/);
+  assert.match(source, /async function readHistoryPage/);
+  assert.match(source, /revision > \? AND revision <= \?/);
+  assert.match(source, /LIMIT \?/);
+  assert.match(source, /pageSize \+ 1/);
+  assert.match(source, /snapshotRevision/);
+  assert.match(source, /nextAfterRevision/);
   assert.match(source, /historyComplete/);
+  assert.match(source, /exportRetryRequired: true/);
+  assert.doesNotMatch(source, /readCompleteHistory/);
   assert.doesNotMatch(source, /readRevision/);
-  assert.doesNotMatch(source, /for \(const item of revisionRows/);
+  assert.match(lifecycle, /async function exportStudentHistory/);
+  assert.match(lifecycle, /snapshotRevision/);
+  assert.match(lifecycle, /nextAfterRevision/);
+  assert.match(lifecycle, /history\.push\(\.\.\.\(page\.history\|\|\[\]\)\)/);
+  assert.match(lifecycle, /page\.historyComplete/);
 });
 
 test('archived students remain available to privileged lifecycle operations', async () => {
@@ -148,6 +169,8 @@ test('authority refusal is distinct from concurrency conflict and respects effec
   assert.match(source, /c\.granted_at/);
   assert.match(source, /dateHasStarted\(row\.granted_at, now, row\.timezone\)/);
   assert.match(source, /dateHasNotExpired\(row\.expires_at, now, row\.timezone\)/);
+  assert.match(source, /rowid AS decision_sequence/);
+  assert.match(source, /ORDER BY c\.rowid DESC/);
 });
 
 test('self-service password change is bound to the verified credential and revokes sessions atomically', async () => {
@@ -182,16 +205,32 @@ test('meeting frontend has keyboard focus, mobile target sizing, no indexing and
   assert.doesNotMatch(app, /\blocalStorage\b/);
 });
 
-test('browser authority status is projected from the same effective-date rules used for writes', async () => {
+test('browser clears protected state, uses immutable demo provenance, and gates WhatsApp by projected family-sharing authority', async () => {
+  const app = await read('pathways/app.js');
+  assert.match(app, /resetProtectedUi/);
+  assert.match(app, /is_synthetic_demo/);
+  assert.doesNotMatch(app, /external_ref\s*===\s*['"]SYNTHETIC-DEMO['"]/);
+  assert.match(app, /decision_sequence/);
+  assert.doesNotMatch(app, /sort\(\(a,b\)=>String\(b\.created_at/);
+  assert.match(app, /family-sharing/);
+  assert.match(app, /granted/);
+  assert.match(app, /not-required/);
+  assert.match(app, /openWhatsApp/);
+  assert.match(app, /wa\.me/);
+});
+
+test('browser authority status follows monotonic server ordering and projected effective status', async () => {
   const [html, app, state, consents] = await Promise.all([
     read('pathways/index.html'),
     read('pathways/app.js'),
     read('functions/api/pathways/state.js'),
     read('functions/api/pathways/consents.js'),
   ]);
-  assert.match(app, /sort\(\(a,b\)=>String\(b\.created_at/);
+  assert.match(app, /decision_sequence/);
   assert.match(app, /const latest=applicable\[0\]/);
-  assert.match(state, /ORDER BY c\.created_at DESC, c\.consent_id DESC/);
+  assert.doesNotMatch(app, /String\(b\.created_at/);
+  assert.match(state, /ORDER BY c\.rowid DESC/);
+  assert.match(state, /rowid AS decision_sequence/);
   assert.match(state, /dateHasStarted\(row\.granted_at/);
   assert.match(state, /dateHasNotExpired\(row\.expires_at/);
   assert.match(consents, /function projectConsentStatus/);
@@ -200,6 +239,7 @@ test('browser authority status is projected from the same effective-date rules u
   assert.match(consents, /SELECT timezone FROM pathways_organizations/);
   assert.match(consents, /dateHasStarted\(row\.granted_at/);
   assert.match(consents, /dateHasNotExpired\(row\.expires_at/);
+  assert.match(consents, /rowid AS decision_sequence/);
   assert.match(html, /id="consentGrantedAt"/);
   assert.match(html, /id="consentExpiresAt"/);
   assert.match(app, /grantedAt:\$\('consentGrantedAt'\)\.value/);
