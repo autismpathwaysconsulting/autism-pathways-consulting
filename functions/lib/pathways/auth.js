@@ -282,7 +282,7 @@ export function membershipFor(user, organizationId) {
 
 export async function getStudentAccess(auth, studentId, { write = false, includeArchived = false } = {}) {
   const student = await auth.db.prepare(`SELECT student_id, organization_id, display_name, external_ref,
-      year_group, status, created_at, updated_at
+      year_group, status, is_synthetic_demo, created_at, updated_at
     FROM pathways_students WHERE student_id = ?`)
     .bind(studentId)
     .first();
@@ -291,6 +291,10 @@ export async function getStudentAccess(auth, studentId, { write = false, include
 
   const membership = membershipFor(auth.user, student.organization_id);
   if (!membership) return { ok: false, status: 403, error: 'You do not have access to this organisation.' };
+  const lifecyclePrivilege = includeArchived && (membership.role === 'admin' || membership.role === 'senco');
+  if (student.status !== 'active' && !lifecyclePrivilege) {
+    return { ok: false, status: 404, error: 'Student record was not found.' };
+  }
   if (membership.role === 'admin' || membership.role === 'senco') {
     return { ok: true, student, permission: 'edit', role: membership.role };
   }
