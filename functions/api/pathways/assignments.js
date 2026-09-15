@@ -40,7 +40,8 @@ export async function onRequestPost({ request, env }) {
   const parsed = await readJson(request, { maxBytes: 24 * 1024 });
   if (!parsed.ok) return parsed.response;
   const { studentId, userId } = parsed.value;
-  const permission = parsed.value.permission === 'read' ? 'read' : 'edit';
+  const permission = parsed.value.permission === 'read' ? 'read' : parsed.value.permission === 'edit' ? 'edit' : null;
+  if (!permission) return json({ error: 'Assignment permission is invalid.' }, 400);
   const student = await auth.db.prepare('SELECT student_id, organization_id FROM pathways_students WHERE student_id = ? AND status != ?')
     .bind(String(studentId || ''), 'archived').first();
   if (!student || !canManage(auth, student.organization_id)) return json({ error: 'You do not have permission to manage assignments.' }, 403);
