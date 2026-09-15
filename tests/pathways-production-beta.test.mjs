@@ -61,7 +61,7 @@ function authorityDb(row){
 }
 
 test('production Pathways assets are explicitly allowlisted',()=>{
-  for(const path of ['pathways/index.html','pathways/app.css','pathways/app.js','pathways/model.js','pathways/schema.js']){
+  for(const path of ['pathways/index.html','pathways/app.css','pathways/app.js','pathways/model.js','pathways/schema.js','pathways/account.html','pathways/account.js','pathways/lifecycle.html','pathways/lifecycle.js']){
     assert.ok(PUBLIC_FILES.includes(path),`${path} must ship in the public build`);
   }
 });
@@ -86,7 +86,7 @@ test('saved lesson previews preserve the narrative instead of saying not reporte
 
 test('Pathways production JavaScript passes Node syntax checks',async()=>{
   const files=[
-    'pathways/app.js','pathways/model.js','pathways/schema.js','pathways/demo-state.js',
+    'pathways/app.js','pathways/model.js','pathways/schema.js','pathways/demo-state.js','pathways/account.js','pathways/lifecycle.js',
     'functions/lib/pathways/auth.js','functions/lib/pathways/state.js',
     'functions/api/pathways/bootstrap.js','functions/api/pathways/login.js','functions/api/pathways/logout.js','functions/api/pathways/me.js',
     'functions/api/pathways/organizations.js','functions/api/pathways/users.js','functions/api/pathways/students.js','functions/api/pathways/assignments.js',
@@ -140,14 +140,15 @@ test('dated keys separate school weeks',()=>{
   assert.notEqual(datedLessonKey('Monday','09:00–09:55','EAL',week1),datedLessonKey('Monday','09:00–09:55','EAL',week2));
 });
 
-test('latest use-authority record is decisive and revocation/expiry blocks writes',async()=>{
-  const student={student_id:'stu-test',external_ref:null};
+test('latest use-authority record is decisive and synthetic exemption requires immutable provenance',async()=>{
+  const student={student_id:'stu-test',is_synthetic_demo:0};
   assert.equal(await hasUseAuthority(authorityDb({status:'withdrawn',expires_at:null}),student,new Date('2026-09-15T00:00:00Z')),false);
   assert.equal(await hasUseAuthority(authorityDb({status:'declined',expires_at:null}),student,new Date('2026-09-15T00:00:00Z')),false);
   assert.equal(await hasUseAuthority(authorityDb({status:'granted',expires_at:'2026-09-14'}),student,new Date('2026-09-15T00:00:00Z')),false);
   assert.equal(await hasUseAuthority(authorityDb({status:'granted',expires_at:'2026-09-16'}),student,new Date('2026-09-15T00:00:00Z')),true);
   assert.equal(await hasUseAuthority(authorityDb(null),student,new Date('2026-09-15T00:00:00Z')),false);
-  assert.equal(await hasUseAuthority(authorityDb(null),{student_id:'stu-demo',external_ref:'SYNTHETIC-DEMO'}),true);
+  assert.equal(await hasUseAuthority(authorityDb(null),{student_id:'stu-demo',external_ref:'SYNTHETIC-DEMO',is_synthetic_demo:1}),true);
+  assert.equal(await hasUseAuthority(authorityDb(null),{student_id:'stu-real',external_ref:'SYNTHETIC-DEMO',is_synthetic_demo:0}),false);
 });
 
 test('organisation admins cannot reset global credentials',async()=>{
@@ -168,6 +169,22 @@ test('migration makes canonical state history atomic and audit request-idempoten
   const stateLib=await readFile(new URL('../functions/lib/pathways/state.js',import.meta.url),'utf8');
   assert.match(stateLib,/inside the UPDATE transaction/);
   assert.doesNotMatch(stateLib,/revision insert failed after canonical write/);
+});
+
+test('synthetic demo provenance is database-backed and immutable',async()=>{
+  const [migration,bootstrap,stateApi,auth]=await Promise.all([
+    readFile(new URL('../migrations/0014_pathways_synthetic_provenance.sql',import.meta.url),'utf8'),
+    readFile(new URL('../functions/api/pathways/bootstrap.js',import.meta.url),'utf8'),
+    readFile(new URL('../functions/api/pathways/state.js',import.meta.url),'utf8'),
+    readFile(new URL('../functions/lib/pathways/auth.js',import.meta.url),'utf8'),
+  ]);
+  assert.match(migration,/ADD COLUMN is_synthetic_demo/);
+  assert.match(migration,/synthetic-demo provenance is immutable/);
+  assert.match(bootstrap,/is_synthetic_demo/);
+  assert.match(bootstrap,/VALUES \(\?, \?, 'Student A', 'SYNTHETIC-DEMO', 'Demo', 'active', 1/);
+  assert.match(auth,/is_synthetic_demo/);
+  assert.match(stateApi,/student\.is_synthetic_demo === 1/);
+  assert.doesNotMatch(stateApi,/external_ref === 'SYNTHETIC-DEMO'/);
 });
 
 test('erasure is atomic and retains only hashed non-content evidence',async()=>{
