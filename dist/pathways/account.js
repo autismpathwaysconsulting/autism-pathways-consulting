@@ -13,6 +13,8 @@ async function loadAccount(){
     if(!response.ok)throw new Error(data.error||'Please sign in to Pathways first.');
     csrfToken=data.csrfToken||'';
     $('accountUser').textContent=`Signed in as ${data.user?.displayName||data.user?.email||'Pathways user'}`;
+    const privileged=Boolean(data.user?.platformAdmin||(data.user?.memberships||[]).some(item=>item.role==='admin'||item.role==='senco'));
+    $('lifecycleLink').classList.toggle('hidden',!privileged);
   }catch(error){
     $('accountUser').textContent=error.message;
     $('savePassword').disabled=true;
