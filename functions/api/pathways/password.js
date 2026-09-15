@@ -31,18 +31,27 @@ export async function onRequestPost({ request, env }) {
   const now = new Date().toISOString();
   const requestId = `password:${crypto.randomUUID()}`;
   try {
-    await auth.db.batch([
+    const results = await auth.db.batch([
       auth.db.prepare(`UPDATE pathways_users
         SET password_salt = ?, password_hash = ?, password_iterations = ?,
             failed_login_count = 0, locked_until = NULL, updated_at = ?
-        WHERE user_id = ?`)
-        .bind(next.passwordSalt, next.passwordHash, next.passwordIterations, now, auth.user.id),
-      auth.db.prepare('DELETE FROM pathways_sessions WHERE user_id = ?').bind(auth.user.id),
+        WHERE user_id = ? AND password_hash = ?`)
+        .bind(next.passwordSalt, next.passwordHash, next.passwordIterations, now, auth.user.id, verified.credentialHash),
+      auth.db.prepare(`DELETE FROM pathways_sessions
+        WHERE user_id = ? AND EXISTS (
+          SELECT 1 FROM pathways_users WHERE user_id = ? AND password_hash = ?
+        )`)
+        .bind(auth.user.id, auth.user.id, next.passwordHash),
       auth.db.prepare(`INSERT INTO pathways_audit_log
         (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
-        VALUES (NULL, NULL, ?, 'change-password', 'user', ?, ?, NULL, ?)`)
-        .bind(auth.user.id, auth.user.id, requestId, now),
+        SELECT NULL, NULL, ?, 'change-password', 'user', ?, ?, NULL, ?
+        FROM pathways_users WHERE user_id = ? AND password_hash = ?`)
+        .bind(auth.user.id, auth.user.id, requestId, now, auth.user.id, next.passwordHash),
     ]);
+    const changed = Number(results?.[0]?.meta?.changes ?? results?.[0]?.meta?.rows_written ?? 0);
+    if (changed !== 1) {
+      return json({ error: 'Your credentials changed while this request was being processed. Sign in again and retry.' }, 409);
+    }
     return json({ ok: true, message: 'Password changed. Sign in again.' }, 200, { 'Set-Cookie': clearSessionCookie() });
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways password change failed', errorType: String(error?.name || 'Error') }));
