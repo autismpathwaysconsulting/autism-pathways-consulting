@@ -1,5 +1,33 @@
-import { authenticate, getStudentAccess, json } from '../../lib/pathways/auth.js';
-import { readRevision, readStudentState } from '../../lib/pathways/state.js';
+import { authenticate, getStudentAccess, json, sha256Hex } from '../../lib/pathways/auth.js';
+import { readStudentState } from '../../lib/pathways/state.js';
+import { assertValidPathwaysState } from '../../../pathways/schema.js';
+
+async function readCompleteHistory(db, studentId) {
+  const result = await db.prepare(`SELECT revision, schema_version, state_json, state_hash, action,
+      request_id, actor_user_id, created_at
+    FROM pathways_state_revisions
+    WHERE student_id = ?
+    ORDER BY revision ASC`)
+    .bind(studentId)
+    .all();
+  const rows = result?.results || [];
+  return Promise.all(rows.map(async row => {
+    const state = JSON.parse(row.state_json);
+    assertValidPathwaysState(state);
+    const computedHash = await sha256Hex(JSON.stringify(state));
+    if (computedHash !== row.state_hash) throw new Error('Stored Pathways revision hash is invalid.');
+    return {
+      revision: row.revision,
+      schemaVersion: row.schema_version,
+      action: row.action,
+      requestId: row.request_id,
+      actorUserId: row.actor_user_id,
+      createdAt: row.created_at,
+      stateHash: row.state_hash,
+      state,
+    };
+  }));
+}
 
 export async function onRequestGet({ request, env }) {
   const auth = await authenticate(request, env);
@@ -14,38 +42,16 @@ export async function onRequestGet({ request, env }) {
   }
 
   try {
-    const [record, consentResult] = await Promise.all([
+    const [record, consentResult, history] = await Promise.all([
       readStudentState(auth.db, studentId),
       auth.db.prepare(`SELECT consent_type, status, authority_label, reference_note, granted_at, expires_at,
           created_at, updated_at
         FROM pathways_consents WHERE student_id = ? ORDER BY created_at, consent_id`)
         .bind(studentId)
         .all(),
+      includeHistory ? readCompleteHistory(auth.db, studentId) : Promise.resolve([]),
     ]);
     if (!record) return json({ error: 'Student state was not found.' }, 404);
-
-    let history = [];
-    if (includeHistory) {
-      const revisionRows = await auth.db.prepare(`SELECT revision FROM pathways_state_revisions
-        WHERE student_id = ? ORDER BY revision ASC`)
-        .bind(studentId)
-        .all();
-      history = [];
-      for (const item of revisionRows?.results || []) {
-        const revision = await readRevision(auth.db, studentId, Number(item.revision));
-        if (!revision) throw new Error('A listed Pathways revision could not be read.');
-        history.push({
-          revision: revision.revision,
-          schemaVersion: revision.schema_version,
-          action: revision.action,
-          requestId: revision.request_id,
-          actorUserId: revision.actor_user_id,
-          createdAt: revision.created_at,
-          stateHash: revision.state_hash,
-          state: revision.state,
-        });
-      }
-    }
 
     const body = {
       exportVersion: '1.0',
