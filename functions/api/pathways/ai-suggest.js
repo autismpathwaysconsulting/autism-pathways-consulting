@@ -6,6 +6,7 @@ import {
   readJson,
   requireWriteRequest,
 } from '../../lib/pathways/auth.js';
+import { hasUseAuthority } from './state.js';
 
 const STATUS=['routine','noAide','support','voice','event'];
 const PARTICIPATION=['Full access / participation','Partial','Limited at that time','Not observed / unclear'];
@@ -59,6 +60,9 @@ export async function onRequestPost({request,env}){
   const parsed=await readJson(request,{maxBytes:32*1024});if(!parsed.ok)return parsed.response;
   const payload=parsed.value;const studentId=String(payload.studentId||'');
   const access=await getStudentAccess(auth,studentId,{write:true});if(!access.ok)return json({error:access.error},access.status);
+  if(!await hasUseAuthority(auth.db,access.student)){
+    return json({error:'A current school/pilot use-authority record is required before student support information can be sent to the AI provider.',authorityBlocked:true},403);
+  }
   const narrative=String(payload.narrative||'').trim();const subject=String(payload.subject||'').trim().slice(0,160);
   if(narrative.length<8||narrative.length>5000)return json({error:'Add a short narrative before asking AI to suggest structure.'},400);
 
