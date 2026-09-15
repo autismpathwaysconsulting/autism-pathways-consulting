@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Pathways | Records & lifecycle</title>
+  <link rel="stylesheet" href="/pathways/app.css">
+</head>
+<body>
+  <main class="main" style="max-width:1180px;margin:auto">
+    <div class="screen-head">
+      <div>
+        <p class="eyebrow">Pathways administration</p>
+        <h1>Records & lifecycle</h1>
+        <p class="muted">Manage inactive and archived student workspaces separately from the daily reporting workflow.</p>
+      </div>
+      <div class="row">
+        <a class="btn secondary" href="/pathways/" style="text-decoration:none">Back to Pathways</a>
+        <a class="btn ghost" href="/pathways/account.html" style="text-decoration:none">Account</a>
+      </div>
+    </div>
+
+    <div id="lifecycleError" class="error hidden" role="alert"></div>
+    <div id="lifecycleStatus" class="notice hidden" role="status" aria-live="polite"></div>
+
+    <section id="lifecycleView" class="hidden">
+      <section class="card padded" style="margin-bottom:18px">
+        <div class="two">
+          <label>Organisation<select id="lifecycleOrg"></select></label>
+          <label>Filter<select id="lifecycleFilter"><option value="all">All records</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="archived">Archived</option></select></label>
+        </div>
+      </section>
+
+      <div class="two-col">
+        <section class="card padded">
+          <div class="section-head"><h2>Student workspaces</h2><button id="refreshLifecycle" class="btn secondary small">Refresh</button></div>
+          <div id="lifecycleStudents" class="list"></div>
+        </section>
+
+        <section class="card padded">
+          <p class="eyebrow">Selected workspace</p>
+          <h2 id="lifecycleStudentName">Select a student</h2>
+          <div id="lifecycleDetails" class="muted-box">Choose a record to manage its lifecycle.</div>
+          <div id="lifecycleActions" class="hidden">
+            <label style="margin-top:14px">Workspace status<select id="lifecycleStudentStatus"><option value="active">Active</option><option value="inactive">Inactive</option><option value="archived">Archived</option></select></label>
+            <div class="row">
+              <button id="saveLifecycleStatus" class="btn primary">Save status</button>
+              <button id="exportLifecycleCurrent" class="btn secondary">Export current</button>
+              <button id="exportLifecycleHistory" class="btn secondary">Export + full history</button>
+              <button id="eraseLifecycleStudent" class="btn danger hidden">Erase record</button>
+            </div>
+            <p class="notice warn" style="margin-top:14px"><strong>Archived records are not part of daily reporting.</strong> Reactivate the workspace before entering or changing support data.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/pathways/lifecycle.js"></script>
+</body>
+</html>

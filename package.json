@@ -6,11 +6,13 @@
     "preview:episodes": "node scripts/episode-preview.mjs",
     "build": "node scripts/build-site.mjs",
     "sync:video-rules": "node scripts/sync-video-rules.mjs",
+    "smoke:pathways-preview": "node scripts/pathways-preview-smoke.mjs",
     "test:site-build": "node --test tests/site-build-output.test.mjs",
     "test:site-metrics": "node --test tests/site-metrics.test.mjs",
     "test:content-os": "node --test tests/content-os*.test.mjs",
     "test:episode-workflow": "node --test tests/content-os-episode-workflow.test.mjs",
     "test:pathways-lab": "node --test tests/pathways-lab.test.mjs tests/pathways-bootstrap.test.mjs",
-    "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics && npm run test:pathways-lab"
+    "test:pathways-production": "node --test tests/pathways-production-beta.test.mjs tests/pathways-production-security.test.mjs tests/pathways-database-integration.test.mjs tests/pathways-preview-smoke.test.mjs tests/pathways-deployment-config.test.mjs",
+    "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics && npm run test:pathways-lab && npm run test:pathways-production"
   }
 }

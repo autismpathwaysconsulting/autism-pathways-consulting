@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Pathways | School Support Copilot</title>
+  <link rel="stylesheet" href="/pathways/app.css">
+</head>
+<body>
+  <section id="loginView" class="auth-shell">
+    <div class="auth-card">
+      <p class="eyebrow">AUTISM PATHWAYS CONSULTING</p>
+      <h1>Pathways</h1>
+      <p class="lead">School Support Copilot</p>
+      <p class="muted">Document once. Reuse confirmed support information across parent communication, teacher views and SEN evidence.</p>
+      <form id="loginForm" class="stack">
+        <label>Email<input id="loginEmail" type="email" autocomplete="username" required></label>
+        <label>Password<input id="loginPassword" type="password" autocomplete="current-password" minlength="12" required></label>
+        <button class="btn primary" type="submit">Sign in</button>
+        <p id="loginError" class="error hidden" role="alert"></p>
+      </form>
+      <p class="tiny muted">Design-partner beta. Access is restricted to authorised school/support users.</p>
+    </div>
+  </section>
+
+  <div id="appView" class="app hidden">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">P</span>
+        <div><strong>Pathways</strong><small>School Support Copilot</small></div>
+      </div>
+      <div class="top-context">
+        <label class="compact">Organisation<select id="orgSelect"></select></label>
+        <label class="compact">Student<select id="studentSelect"></select></label>
+        <div class="save-state" role="status" aria-live="polite"><span id="saveDot" class="dot"></span><span id="saveText">Ready</span></div>
+        <a class="btn ghost small" href="/pathways/account.html" style="text-decoration:none">Account</a>
+        <button id="logoutBtn" class="btn ghost small">Sign out</button>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <button class="nav active" data-screen="daily">Today & reports</button>
+        <button class="nav" data-screen="history">History</button>
+        <button class="nav" data-screen="objectives">Objectives</button>
+        <button id="adminNav" class="nav hidden" data-screen="admin">Administration</button>
+        <div class="sidebar-foot">
+          <strong id="userName"></strong>
+          <span id="userRole" class="muted"></span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section id="emptyState" class="empty card hidden">
+          <h2>No student selected</h2>
+          <p>Select a student above, or create a workspace in Administration if your role allows it.</p>
+        </section>
+
+        <section id="dailyScreen" class="screen">
+          <div class="screen-head">
+            <div>
+              <p class="eyebrow">Daily support workflow</p>
+              <h1 id="studentHeading">Student</h1>
+              <p class="muted">Report once. Structure underneath.</p>
+            </div>
+            <div class="week-controls">
+              <button id="prevWeek" class="btn secondary small">← Previous</button>
+              <button id="currentWeek" class="btn secondary small">Current week</button>
+              <button id="nextWeek" class="btn secondary small">Next →</button>
+              <span id="weekLabel" class="week-label"></span>
+            </div>
+          </div>
+
+          <div id="authorityWarning" class="notice warn hidden"><strong>Use authority required.</strong> An administrator or SENCO must record the school's pilot/school-record authority before support data can be saved for this non-synthetic workspace.</div>
+          <div id="readOnlyWarning" class="notice hidden"><strong>Read-only.</strong> Your account can view this workspace but cannot edit it.</div>
+
+          <nav id="dayTabs" class="days" aria-label="School days"></nav>
+
+          <section class="card padded persistent">
+            <div class="section-head"><div><p class="eyebrow">Persistent items</p><h2>Homework, upcoming & announcements</h2></div><button id="addPinBtn" class="btn secondary small">+ Add</button></div>
+            <div id="pinList" class="list"></div>
+          </section>
+
+          <div class="daily-grid">
+            <section>
+              <div class="section-head"><div><p class="eyebrow">Daily timetable</p><h2 id="dayHeading">Monday</h2></div><span id="savedCount" class="muted"></span></div>
+              <div id="subjectList" class="list subjects"></div>
+            </section>
+
+            <aside class="right-rail">
+              <section class="card padded">
+                <p class="eyebrow">Behaviour & Focus</p><h2>Daily overview</h2>
+                <div id="overviewChoices" class="choice-grid"></div>
+                <label>Optional note<textarea id="overviewNote" rows="2" placeholder="Only add detail if it improves understanding."></textarea></label>
+                <button id="saveOverviewBtn" class="btn primary full">Save overview</button>
+              </section>
+
+              <section class="card padded">
+                <div class="section-head"><div><p class="eyebrow">Measurable objectives</p><h2>Active objectives</h2></div><button id="quickObjectiveBtn" class="btn secondary small">+ Add</button></div>
+                <div id="objectiveSummary" class="list compact-list"></div>
+              </section>
+
+              <section class="card padded">
+                <p class="eyebrow">Generated from confirmed data</p><h2>Output</h2>
+                <div class="output-tabs">
+                  <button class="output-tab active" data-output="parent">Parent / WhatsApp</button>
+                  <button class="output-tab" data-output="teacher">Teacher</button>
+                  <button class="output-tab" data-output="iep">IEP / SEN</button>
+                </div>
+                <pre id="outputText" class="output"></pre>
+                <div class="row"><button id="copyOutput" class="btn secondary">Copy</button><button id="openWhatsApp" class="btn whatsapp">Open WhatsApp</button></div>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section id="historyScreen" class="screen hidden">
+          <div class="screen-head"><div><p class="eyebrow">Record history</p><h1>History & recovery</h1><p class="muted">Review saved revisions. Historical records are read-only unless an authorised administrator restores one.</p></div><button id="refreshHistory" class="btn secondary">Refresh</button></div>
+          <div class="two-col">
+            <section class="card padded"><h2>Revisions</h2><div id="revisionList" class="list"></div></section>
+            <section class="card padded"><h2 id="revisionHeading">Select a revision</h2><pre id="revisionPreview" class="output tall"></pre><button id="restoreRevision" class="btn danger hidden">Restore selected revision</button></section>
+          </div>
+        </section>
+
+        <section id="objectivesScreen" class="screen hidden">
+          <div class="screen-head"><div><p class="eyebrow">Support goals</p><h1>Objectives</h1><p class="muted">Active objectives appear during lesson capture. Historical objectives remain available without cluttering daily entry.</p></div><button id="addObjectiveBtn" class="btn primary">+ Add objective</button></div>
+          <div id="objectiveList" class="list"></div>
+        </section>
+
+        <section id="adminScreen" class="screen hidden">
+          <div class="screen-head"><div><p class="eyebrow">Organisation controls</p><h1>Administration</h1><p class="muted">Users, access, students, consent/authority, audit and portability.</p></div></div>
+          <div class="admin-grid">
+            <section class="card padded"><div class="section-head"><h2>Students</h2><button id="newStudentBtn" class="btn secondary small">+ Student</button></div><div id="adminStudents" class="list"></div></section>
+            <section class="card padded"><div class="section-head"><h2>Staff</h2><button id="newUserBtn" class="btn secondary small">+ User</button></div><div id="adminUsers" class="list"></div></section>
+            <section class="card padded"><h2>Selected student</h2><div id="studentAdminPanel" class="muted-box">Select a student.</div></section>
+            <section class="card padded"><div class="section-head"><h2>Audit</h2><button id="refreshAudit" class="btn secondary small">Refresh</button></div><div id="auditList" class="list compact-list"></div></section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="subjectDialog"><form method="dialog" id="subjectForm">
+    <div class="dialog-head"><div><p id="subjectTime" class="eyebrow"></p><h2 id="subjectName"></h2></div><button class="icon-btn" value="cancel" aria-label="Close">×</button></div>
+    <div class="dialog-body">
+      <section><h3>Quick status</h3><p class="muted">Choose the closest fit. Routine lessons stay quick.</p><div id="statusChoices" class="choice-grid"></div></section>
+      <section><h3>Subject note</h3><div id="quickNotes" class="chips"></div><label>Parent-readable narrative<textarea id="narrative" rows="4" placeholder="Write the same short report you would normally send."></textarea></label></section>
+      <section><div class="section-head"><div><h3>Tasks in this lesson</h3><p class="muted">Optional. Add only when task-level detail is useful.</p></div><button id="addTaskBtn" type="button" class="btn secondary small">+ Task</button></div><div id="taskList" class="list"></div></section>
+      <details id="moreDetail"><summary>More detail <span class="muted">Participation, support, communication, domains and important event</span></summary>
+        <section><h3>Participation</h3><div id="participationChoices" class="choice-grid"></div></section>
+        <section id="supportSection"><h3>Support used</h3><div class="two"><label>Aide involvement<select id="aideLevel"><option>None</option><option>Light</option><option>Moderate</option><option>High</option></select></label><label>Primary source<select id="supportSource"><option>Student / self</option><option>Teacher</option><option>Aide</option><option>Peer</option><option>Environment / material</option><option>Multiple</option><option>Unclear</option></select></label></div><label>Support purpose<select id="supportPurpose"><option>Task initiation</option><option>Understanding / clarification</option><option>Sequencing / planning</option><option>Organisation</option><option>Communication</option><option>Regulation / sensory access</option><option>Transition</option><option>Social participation</option><option>Safety / access</option><option>Other</option></select></label></section>
+        <section><h3>Communication / autonomy</h3><div id="autonomyChoices" class="chips"></div></section>
+        <section><h3>Pathways domains</h3><div id="domainChoices" class="domain-grid"></div></section>
+        <section><h3>Important event</h3><label>Direct observation<textarea id="eventObservation" rows="2"></textarea></label><label>What remains uncertain?<textarea id="eventUncertainty" rows="2"></textarea></label></section>
+      </details>
+    </div>
+    <div class="dialog-actions"><button id="notReportedBtn" type="button" class="btn ghost">Not reported today</button><button id="saveSubjectBtn" type="button" class="btn primary">Save subject</button></div>
+  </form></dialog>
+
+  <dialog id="pinDialog"><form method="dialog"><div class="dialog-head"><h2>Add persistent item</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><div class="two"><label>Type<select id="pinType"><option>Homework</option><option>Upcoming task / assessment</option><option>Announcement</option><option>Materials / bring item</option><option>Reminder</option></select></label><label>Subject<input id="pinSubject"></label></div><label>Title<input id="pinTitle" required></label><label>Details<textarea id="pinDetails" rows="2"></textarea></label><div class="two"><label>Due / expiry<input id="pinDue" type="date"></label><label>Parent report?<select id="pinParent"><option value="yes">Yes</option><option value="no">No</option></select></label></div></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="savePinBtn" type="button" class="btn primary">Save</button></div></form></dialog>
+
+  <dialog id="objectiveDialog"><form method="dialog"><div class="dialog-head"><h2 id="objectiveDialogTitle">Add measurable objective</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><div class="two"><label>Domain<select id="objDomain"></select></label><label>Status<select id="objStatus"><option value="active">Active</option><option value="achieved">Achieved / no longer priority</option><option value="archived">Archived</option><option value="replaced">Replaced</option></select></label></div><label>Observable target<input id="objTarget"></label><label>Context / condition<input id="objCondition"></label><label>Allowed support<input id="objSupport"></label><label>Measurable criterion<input id="objCriterion"></label><div class="two"><label>Measurement type<select id="objMeasure"><option value="criterion">Opportunity / criterion</option><option value="latency">Latency</option><option value="duration">Duration</option><option value="frequency">Frequency</option><option value="accuracy">Accuracy / percentage</option></select></label><label>Review date<input id="objReview" type="date"></label></div></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="saveObjectiveDialogBtn" type="button" class="btn primary">Save objective</button></div></form></dialog>
+
+  <dialog id="studentDialog"><form method="dialog"><div class="dialog-head"><h2>Create student workspace</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Display name / pilot alias<input id="newStudentName" required></label><label>School reference (optional)<input id="newStudentRef"></label><label>Year group (optional)<input id="newStudentYear"></label><p class="notice warn"><strong>Privacy:</strong> only enter identifiable details if your organisation has an appropriate authority and the deployment has been approved for that use.</p></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="createStudentBtn" type="button" class="btn primary">Create</button></div></form></dialog>
+
+  <dialog id="userDialog"><form method="dialog"><div class="dialog-head"><h2>Add staff user</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Name<input id="newUserName" required></label><label>Email<input id="newUserEmail" type="email" required></label><label>Role<select id="newUserRole"><option value="support">Support staff / aide</option><option value="viewer">Viewer</option><option value="senco">SENCO</option><option value="admin">Administrator</option></select></label><label>Temporary password<input id="newUserPassword" type="password" minlength="12" required></label><p class="tiny muted">The user can change this password from Account after first sign-in.</p></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="createUserBtn" type="button" class="btn primary">Create user</button></div></form></dialog>
+
+  <dialog id="consentDialog"><form method="dialog"><div class="dialog-head"><h2>Record use authority</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Type<select id="consentType"><option value="pilot-use">Pilot use</option><option value="school-record">School record</option><option value="family-sharing">Family sharing</option></select></label><label>Status<select id="consentStatus"><option value="granted">Granted</option><option value="not-required">Not required / other lawful authority recorded by school</option><option value="declined">Declined</option><option value="withdrawn">Withdrawn</option></select></label><div class="two"><label>Granted / effective date (optional)<input id="consentGrantedAt" type="date"></label><label>Expiry date (optional)<input id="consentExpiresAt" type="date"></label></div><label>Authority label / source<input id="consentAuthority" placeholder="e.g. Parent consent form / school lawful basis"></label><label>Reference note<textarea id="consentNote" rows="2" placeholder="Do not paste unnecessary sensitive information."></textarea></label></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="saveConsentBtn" type="button" class="btn primary">Record</button></div></form></dialog>
+
+  <script type="module" src="/pathways/app.js"></script>
+</body>
+</html>

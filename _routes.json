@@ -4,6 +4,7 @@
     "/content-os",
     "/content-os/*",
     "/api/content-os/*",
+    "/api/pathways/*",
     "/api/site-metrics"
   ],
   "exclude": []

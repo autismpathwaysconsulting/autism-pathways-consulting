@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Pathways Account</title>
+  <link rel="stylesheet" href="/pathways/app.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card" aria-labelledby="accountTitle">
+      <p class="eyebrow">Pathways account</p>
+      <h1 id="accountTitle">Account & security</h1>
+      <p id="accountUser" class="muted">Loading your account…</p>
+      <form id="passwordForm" class="stack">
+        <label>Current password<input id="currentPassword" type="password" autocomplete="current-password" required minlength="12" maxlength="128"></label>
+        <label>New password<input id="newPassword" type="password" autocomplete="new-password" required minlength="12" maxlength="128"></label>
+        <label>Confirm new password<input id="confirmPassword" type="password" autocomplete="new-password" required minlength="12" maxlength="128"></label>
+        <p id="accountError" class="error hidden" role="alert"></p>
+        <p id="accountStatus" class="notice hidden" role="status" aria-live="polite"></p>
+        <button id="savePassword" class="btn primary" type="submit">Change password</button>
+        <a id="lifecycleLink" class="btn secondary hidden" href="/pathways/lifecycle.html" style="text-decoration:none;text-align:center">Records & lifecycle</a>
+        <a class="btn secondary" href="/pathways/" style="text-decoration:none;text-align:center">Back to Pathways</a>
+      </form>
+    </section>
+  </main>
+  <script type="module" src="/pathways/account.js"></script>
+</body>
+</html>
