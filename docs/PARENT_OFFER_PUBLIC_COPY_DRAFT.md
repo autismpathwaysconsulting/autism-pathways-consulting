@@ -1,6 +1,6 @@
 # APC Parent Offers - Public Copy Ready for Migration
 
-Status: FINAL COPY SOURCE for the coordinated public migration. Do not publish individual fragments before the website/terms/payment/test migration is ready.
+Status: FINAL COPY SOURCE for the current-price package refresh. Prices remain RM350 / RM1,800. The goal is clearer value, not a price or payment-method change.
 
 ## Free 15-Min First Step Call
 
@@ -22,77 +22,72 @@ CTA: **Book Free 15-Min First Step Call**
 
 ## APC One-Concern Parent Session
 
-**Best when:** One repeated situation keeps happening and you want a clearer way to understand what matters and what to try first.
+**Best when:** One repeated situation keeps happening and you want help understanding what matters most and what to try first.
 
-**Malaysia: RM450 · 60 minutes · Online**
+**RM350 · 45 minutes · Online**
 
-**Singapore: S$200 · 60 minutes · Online** for new, unquoted clients.
+### What problem this solves
+You may have heard several possible explanations or strategies already, but still feel unsure which part of the situation matters most. This session narrows the problem down so you leave with one priority and a practical plan to test.
 
-You receive:
-- structured pre-session intake reviewed by CJ,
-- focused review of one repeated concern,
-- a working explanation/hypothesis, clearly labelled as such,
-- one priority and 1–2 practical changes to test,
+### You receive
+- a short pre-session concern form reviewed by CJ,
+- a focused review of one repeated concern,
+- a cautious working explanation/hypothesis, clearly labelled as such,
+- one agreed priority,
+- 1–2 practical changes to test,
 - guidance on what to observe next,
-- an APC One-Concern Action Note,
+- a concise APC One-Concern Action Note,
 - one clarification message within 7 days about the agreed concern/plan.
 
-Action Note target: within 2 working days.
+**Action Note target:** within 2 working days.
 
 This session is parent education and practical support planning. It is not diagnosis, therapy or clinical treatment.
 
 CTA: **Request a One-Concern Session**
 
-### Supported access — Malaysia
-
-A small number of supported-rate places are available for Malaysian families when the standard fee would otherwise prevent access.
-
-**Supported rate: RM350**
-
-The service itself is the same. Availability is limited by monthly capacity. No payslips, bank statements or proof of diagnosis are required.
-
 ---
 
 ## APC Home Implementation Programme
 
-**Best when:** You need more than advice and want support making a plan work in real life, reviewing what happens and adjusting it over time.
+**Best when:** You have advice or ideas already, but need help making a plan work in real family life, reviewing what happens and adjusting it over time.
 
-**Malaysia: RM2,400 · Four 60-minute sessions across approximately 6–8 weeks · Online**
+**RM1,800 · Four 60-minute sessions across approximately 6–8 weeks · Online**
 
-Payment option: RM2,400 upfront or **2 × RM1,200**.
+### What problem this solves
+Advice can sound clear in a consultation and still fall apart during mornings, screen time, homework, transitions or other daily routines. This programme gives you a structured cycle to understand the pattern, try a manageable change, review what actually happened and adjust rather than repeatedly starting over.
 
-**Singapore: S$980** for new, unquoted online clients.
-
-The programme includes:
-- baseline intake before Session 1,
+### You receive
+- a structured baseline before Session 1,
 - 1–2 clearly defined family priorities,
 - a personalised APC Home Support Plan,
 - four implementation-focused sessions,
+- a simple “What We're Testing” summary after major implementation decisions,
 - brief between-session implementation checks,
-- bounded WhatsApp clarification during the active programme,
+- bounded WhatsApp clarification about the agreed plan during the active programme,
 - selected APC implementation tools where useful,
+- Keep / Adjust / Stop reviews,
 - plan review and adjustment across sessions,
 - a progress snapshot,
 - an APC Maintenance Summary,
-- a 20–30 minute maintenance check approximately one month after Session 4.
+- a brief maintenance check approximately one month after Session 4.
 
-The programme is designed as a first implementation cycle: understand the pattern, try support at home, review what happens and adjust where needed.
+### How the programme works
+**Session 1 — Understand:** establish the pattern, priority and first manageable plan.
 
-**Usability commitment:** If the agreed plan is not practical enough to use in your family's real routine, we review and adjust it rather than expecting you to keep forcing a plan that does not fit.
+**Session 2 — Review:** check whether the plan was actually usable and what happened when it was used.
+
+**Session 3 — Adjust / build:** continue, simplify, revise the working explanation or extend the plan where appropriate.
+
+**Session 4 — Consolidate:** decide what to keep, adjust or stop and prepare for maintenance.
+
+**About one month later:** brief maintenance check to decide whether the family can continue independently, needs a focused review, or should coordinate with another professional.
+
+### Usability commitment
+If the agreed plan is not practical enough to use in your family's real routine, we review and adjust it rather than expecting you to keep forcing a plan that does not fit.
 
 APC does not guarantee developmental, behavioural, communication, academic or family outcomes.
 
 CTA: **Start with the Free First Step Call**
-
-### Supported access — Malaysia
-
-A small number of supported-rate places are available when the standard fee would otherwise prevent access.
-
-**Supported rate: RM1,800**
-
-Payment option: RM1,800 upfront or **2 × RM900**.
-
-The service itself is the same. Availability is limited by capacity. No payslips, bank statements or proof of diagnosis are required.
 
 ---
 
@@ -102,26 +97,22 @@ The service itself is the same. Availability is limited by capacity. No payslips
 You are asking: “Is APC the right route and what should I book?”
 
 **One-Concern Parent Session**
-You are asking: “What may be shaping this one repeated situation and what should I test next?”
+You are asking: “What may be shaping this one repeated situation and what should I try first?”
 
 **Home Implementation Programme**
-You are asking: “How do we implement, review and adjust support over several weeks instead of relying on one piece of advice?”
+You are asking: “How do we make support work across several weeks, review what happens and change direction when needed?”
 
 ---
 
 ## FAQ
 
-### Why does the Home Implementation Programme cost more than four separate sessions?
+### Why is the Home Implementation Programme more than four separate conversations?
 
-The programme is not four standalone conversations. It includes preparation, a structured implementation cycle, a Home Support Plan, review of what happens between sessions, plan updates, bounded clarification support, a Maintenance Summary and a post-programme maintenance check.
+The programme includes preparation, a structured implementation cycle, a Home Support Plan, review of what happens between sessions, plan updates, bounded clarification support, a Maintenance Summary and a post-programme maintenance check.
 
-### Who can request the supported rate?
+### What if the plan does not lead to the change we hoped for?
 
-The supported rate is for Malaysian families for whom the standard fee would otherwise prevent access. APC uses simple self-attestation rather than requiring private financial documents. Supported places are limited by capacity.
-
-### Is the supported-rate service different?
-
-No. The core service and scope are the same. The supported rate exists to reduce an access barrier, not to create a lower-quality package.
+APC does not keep adding strategies simply to fill the programme. We first check whether the plan was practical and used as intended. If it was and there is still little or no useful change, we revisit the working explanation, adjust or stop the strategy, and decide whether another professional or setting needs to be involved.
 
 ### Does the parent programme include Hanen, ABC and Beyond™, Learning Language and Loving It™, Teacher Talk™ or SCERTS?
 
@@ -133,15 +124,21 @@ No. APC provides parent education, pattern review, practical support planning an
 
 ### Can you guarantee improvement?
 
-No. APC can support clearer planning, implementation, observation and review, but cannot guarantee a particular child or family outcome.
+No. APC can support clearer planning, implementation, observation, review and decision-making, but cannot guarantee a particular child or family outcome.
 
 ---
 
+## Payment
+
+Keep the current manual payment process. Do not advertise instalments, Atome/BNPL, card payment or supported-rate pricing at this stage.
+
+## International clients
+
+International clients remain individually reviewed and quoted rather than displaying multiple currencies on the Malaysia services page.
+
 ## Existing clients / prior quotes
 
-Existing clients keep the package and price already agreed. Active RM1,800 clients are not repriced mid-programme. Written quotes remain valid for their stated validity period.
-
-The revised pricing becomes effective for new, unquoted enquiries when the coordinated website/terms/payment migration is deployed to production.
+Existing clients keep the package and price already agreed. Written quotes remain valid for their stated validity period.
 
 ## Copy rule
 
