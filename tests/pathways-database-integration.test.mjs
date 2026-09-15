@@ -157,7 +157,7 @@ test('parallel failed logins reach lockout without lost increments', async () =>
     const password = await createPasswordRecord('correct-horse-battery-staple');
     db.prepare(`INSERT INTO pathways_users
       (user_id,email,display_name,password_salt,password_hash,password_iterations,is_platform_admin,is_active,created_at,updated_at)
-      VALUES ('usr-login','login@example.test','Login User',?,?,?,?,0,1,?,?)`)
+      VALUES ('usr-login','login@example.test','Login User',?,?,?,0,1,?,?)`)
       .run(password.passwordSalt, password.passwordHash, password.passwordIterations, now, now);
     const d1 = new SqliteD1(db);
 
