@@ -15,16 +15,24 @@ import {
 
 const ACTIONS = new Set(['edit','import','reset']);
 
-async function hasUseAuthority(db, student) {
+export async function hasUseAuthority(db, student, now = new Date()) {
   if (student.external_ref === 'SYNTHETIC-DEMO') return true;
-  const row = await db.prepare(`SELECT consent_id FROM pathways_consents
+  const row = await db.prepare(`SELECT consent_id, status, expires_at, created_at
+    FROM pathways_consents
     WHERE student_id = ? AND consent_type IN ('pilot-use','school-record')
-      AND status IN ('granted','not-required')
-      AND (expires_at IS NULL OR expires_at = '' OR expires_at >= ?)
-    ORDER BY created_at DESC LIMIT 1`)
-    .bind(student.student_id, new Date().toISOString().slice(0, 10))
+    ORDER BY created_at DESC, consent_id DESC
+    LIMIT 1`)
+    .bind(student.student_id)
     .first();
-  return Boolean(row);
+  if (!row) return false;
+  if (!['granted','not-required'].includes(row.status)) return false;
+  if (row.expires_at) {
+    const expiresAt = Date.parse(row.expires_at);
+    if (!Number.isFinite(expiresAt)) return false;
+    const endOfExpiryDay = new Date(row.expires_at.length === 10 ? `${row.expires_at}T23:59:59.999Z` : row.expires_at).getTime();
+    if (!Number.isFinite(endOfExpiryDay) || endOfExpiryDay < now.getTime()) return false;
+  }
+  return true;
 }
 
 export async function onRequestGet({ request, env }) {
@@ -76,7 +84,7 @@ export async function onRequestPut({ request, env }) {
   const access = await getStudentAccess(auth, studentId, { write: true });
   if (!access.ok) return json({ error: access.error }, access.status);
   if (!await hasUseAuthority(auth.db, access.student)) {
-    return json({ error: 'A school/pilot use-authority record must be recorded before support data can be saved for this student.' }, 409);
+    return json({ error: 'A current school/pilot use-authority record is required before support data can be saved for this student.' }, 409);
   }
   const action = String(payload.action || 'edit');
   if (!ACTIONS.has(action)) return json({ error: 'State action is invalid.' }, 400);
@@ -117,6 +125,9 @@ export async function onRequestPost({ request, env }) {
   const studentId = String(payload.studentId || '');
   const access = await getStudentAccess(auth, studentId, { write: true });
   if (!access.ok) return json({ error: access.error }, access.status);
+  if (!await hasUseAuthority(auth.db, access.student)) {
+    return json({ error: 'A current school/pilot use-authority record is required before historical support data can be restored.' }, 409);
+  }
   if (!auth.user.platformAdmin && !['admin','senco'].includes(access.role)) return json({ error: 'Only an administrator or SENCO can restore historical revisions.' }, 403);
   try {
     const result = await restoreStudentRevision({
