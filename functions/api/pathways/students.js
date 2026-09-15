@@ -1,14 +1,13 @@
 import {
   authenticate,
-  audit,
   getStudentAccess,
   json,
   membershipFor,
   readJson,
   requireWriteRequest,
+  sha256Hex,
 } from '../../lib/pathways/auth.js';
-import { createStudentState } from '../../lib/pathways/state.js';
-import { createEmptyPathwaysState, assertValidPathwaysState } from '../../../pathways/schema.js';
+import { PATHWAYS_SCHEMA_VERSION, createEmptyPathwaysState, assertValidPathwaysState } from '../../../pathways/schema.js';
 
 function canCreate(auth, organizationId) {
   if (auth.user.platformAdmin) return true;
@@ -94,23 +93,36 @@ export async function onRequestPost({ request, env }) {
 
   const studentId = `stu-${crypto.randomUUID()}`;
   const now = new Date().toISOString();
+  const stateJson = JSON.stringify(initialState);
+  const stateHash = await sha256Hex(stateJson);
+  const stateRequestId = `create:${studentId}:${crypto.randomUUID()}`;
+  const auditRequestId = `student-create:${crypto.randomUUID()}`;
   try {
-    await auth.db.prepare(`INSERT INTO pathways_students
-      (student_id, organization_id, display_name, external_ref, year_group, status, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, 'active', ?, ?)`)
-      .bind(studentId, organizationId, displayName, externalRef || null, yearGroup || null, now, now)
-      .run();
+    await auth.db.batch([
+      auth.db.prepare(`INSERT INTO pathways_students
+        (student_id, organization_id, display_name, external_ref, year_group, status, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, 'active', ?, ?)`)
+        .bind(studentId, organizationId, displayName, externalRef || null, yearGroup || null, now, now),
+      auth.db.prepare(`INSERT INTO pathways_student_state
+        (student_id, schema_version, revision, state_json, state_hash, updated_at, updated_by, last_action, last_request_id)
+        VALUES (?, ?, 0, ?, ?, ?, ?, 'create', ?)`)
+        .bind(studentId, PATHWAYS_SCHEMA_VERSION, stateJson, stateHash, now, auth.user.id, stateRequestId),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        VALUES (?, ?, ?, 'create', 'student', ?, ?, NULL, ?)`)
+        .bind(organizationId, studentId, auth.user.id, studentId, auditRequestId, now),
+    ]);
     const student = { student_id: studentId, organization_id: organizationId, display_name: displayName };
-    const stateRecord = await createStudentState({ db: auth.db, student, actorUserId: auth.user.id, state: initialState });
-    await audit(auth.db, {
-      organizationId,
-      studentId,
-      actorUserId: auth.user.id,
-      action: 'create',
-      entityType: 'student',
-      entityId: studentId,
-      metadata: null,
-    });
+    const stateRecord = {
+      schemaVersion: PATHWAYS_SCHEMA_VERSION,
+      revision: 0,
+      updatedAt: now,
+      updatedBy: auth.user.id,
+      stateHash,
+      lastAction: 'create',
+      lastRequestId: stateRequestId,
+      state: initialState,
+    };
     return json({ student: { ...student, external_ref: externalRef || null, year_group: yearGroup || null, status: 'active', created_at: now, updated_at: now }, state: stateRecord }, 201);
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways student creation failed', errorType: String(error?.name || 'Error') }));
@@ -127,7 +139,7 @@ export async function onRequestPatch({ request, env }) {
   if (!parsed.ok) return parsed.response;
   const payload = parsed.value;
   const studentId = String(payload.studentId || '');
-  const access = await getStudentAccess(auth, studentId, { write: true });
+  const access = await getStudentAccess(auth, studentId, { write: true, includeArchived: true });
   if (!access.ok) return json({ error: access.error }, access.status);
   if (!auth.user.platformAdmin && !['admin','senco'].includes(access.role)) return json({ error: 'You do not have permission to edit student profile details.' }, 403);
 
@@ -140,19 +152,15 @@ export async function onRequestPatch({ request, env }) {
   }
   const now = new Date().toISOString();
   try {
-    await auth.db.prepare(`UPDATE pathways_students SET display_name = ?, external_ref = ?, year_group = ?,
-        status = ?, updated_at = ?, archived_at = ? WHERE student_id = ?`)
-      .bind(displayName, externalRef || null, yearGroup || null, status, now, status === 'archived' ? now : null, studentId)
-      .run();
-    await audit(auth.db, {
-      organizationId: access.student.organization_id,
-      studentId,
-      actorUserId: auth.user.id,
-      action: status === 'archived' ? 'archive' : 'update',
-      entityType: 'student',
-      entityId: studentId,
-      metadata: { status },
-    });
+    await auth.db.batch([
+      auth.db.prepare(`UPDATE pathways_students SET display_name = ?, external_ref = ?, year_group = ?,
+          status = ?, updated_at = ?, archived_at = ? WHERE student_id = ?`)
+        .bind(displayName, externalRef || null, yearGroup || null, status, now, status === 'archived' ? now : null, studentId),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        VALUES (?, ?, ?, ?, 'student', ?, ?, ?, ?)`)
+        .bind(access.student.organization_id, studentId, auth.user.id, status === 'archived' ? 'archive' : 'update', studentId, `student-update:${crypto.randomUUID()}`, JSON.stringify({ status }), now),
+    ]);
     return json({ ok: true, student: { student_id: studentId, organization_id: access.student.organization_id, display_name: displayName, external_ref: externalRef || null, year_group: yearGroup || null, status, updated_at: now } });
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways student update failed', errorType: String(error?.name || 'Error') }));
