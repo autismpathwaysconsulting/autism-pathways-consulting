@@ -1,8 +1,22 @@
--- Permit privacy erasure of student-state history through ON DELETE CASCADE.
--- Revisions remain immutable while they exist, but must be removable with the
--- student's canonical record if a valid erasure request is executed.
+-- Permit privacy erasure of student-state history only through the explicit
+-- erasure transaction. Revision rows remain database-level append-only for all
+-- other application paths.
 
 DROP TRIGGER IF EXISTS pathways_state_revisions_no_delete;
+
+CREATE TABLE IF NOT EXISTS pathways_erasure_guard (
+  student_id TEXT PRIMARY KEY,
+  created_at TEXT NOT NULL
+);
+
+CREATE TRIGGER IF NOT EXISTS pathways_state_revisions_no_delete
+BEFORE DELETE ON pathways_state_revisions
+WHEN NOT EXISTS (
+  SELECT 1 FROM pathways_erasure_guard g WHERE g.student_id = OLD.student_id
+)
+BEGIN
+  SELECT RAISE(ABORT, 'pathways_state_revisions is append-only');
+END;
 
 -- Retain only pseudonymous, non-content evidence that an erasure occurred.
 -- `erased_student_hash` is a one-way SHA-256 hash of the internal random student
