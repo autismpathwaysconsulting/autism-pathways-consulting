@@ -1,69 +1,124 @@
 # APC Parent Offers - Finalization Status
 
-Status: Parent offer design is **decision-ready**, not yet publicly migrated to new pricing.
+Status: **FINALIZED internally.** Public migration is still pending and must be deployed as one coordinated website/terms/payment/test change.
 
-## Final proposed architecture
+Until that coordinated migration is live, the existing public website pricing remains the operative public price.
+
+## Final architecture
 
 ### Free 15-Min First Step Call
 Problem solved: “Is APC the right route and what should I do next?”
 
-No-cost fit/routing only.
+Price: Free.
+
+Purpose: fit + routing only.
 
 ### APC One-Concern Parent Session
-Draft Malaysia price: RM450
-Draft Singapore price: S$200
-Duration: 60 minutes online
+Malaysia standard: **RM450**
+Malaysia supported access: **RM350**
+Singapore standard for new/unquoted online clients: **S$200**
+Duration: 60 minutes online.
 
 Problem solved: “One repeated situation keeps happening and I do not know what matters most or what to try first.”
 
 Core value:
-- focused intake,
-- pattern review,
+- pre-session intake/review,
+- focused pattern review,
 - working hypothesis,
 - one priority,
-- 1-2 actions,
-- Action Note,
-- 7-day clarification boundary.
+- 1–2 practical changes,
+- One-Concern Action Note,
+- one clarification message within 7 days.
+
+Service target:
+- Action Note within 2 working days,
+- clarification response within 2 working days.
 
 ### APC Home Implementation Programme
-Draft Malaysia price: RM2,400
-Draft Singapore price: S$980
-Duration: four 60-minute sessions across approximately 6-8 weeks + maintenance check
+Malaysia standard: **RM2,400**
+Malaysia supported access: **RM1,800**
+Singapore standard for new/unquoted online clients: **S$980**
+Duration: four 60-minute sessions across approximately 6–8 weeks + 20–30 minute maintenance check approximately one month later.
 
 Problem solved: “I know some of the advice, but I need help making it work consistently in real life and adjusting it when it does not fit.”
 
 Core value:
 - baseline,
-- 1-2 priorities,
+- 1–2 priorities,
 - Home Support Plan,
-- implementation between sessions,
-- adaptive review,
+- four implementation/review sessions,
+- between-session implementation checks,
 - bounded clarification,
-- implementation tools,
+- selected APC implementation tools,
+- review/adjustment,
 - progress snapshot,
 - Maintenance Summary,
-- 20-30 minute maintenance check.
+- maintenance check.
 
-## Access / affordability decision
+Payment options:
+- standard: RM2,400 upfront or 2 × RM1,200,
+- supported access: RM1,800 upfront or 2 × RM900.
 
-The higher standard price should not be treated as the only access route.
+Service targets:
+- Home Support Plan within 2 working days after Session 1,
+- material updates after review sessions when the plan changes,
+- Maintenance Summary within 3 working days after Session 4,
+- WhatsApp clarification response target within 2 working days during the active programme.
 
-Malaysian evidence identifies cost of private intervention/support as a real barrier, particularly for lower-income and rural families. APC therefore needs an access mechanism alongside any premium 1-to-1 price increase.
+## Final accessibility policy — Malaysia
 
-Current recommended access design for CJ approval:
-- keep the First Step Call free,
-- keep a useful free-resource route,
-- allow the Home Implementation Programme to be split into two instalments,
-- offer a small capped supported-rate pathway for Malaysian families where the standard fee would otherwise prevent access,
-- consider using the legacy prices as the supported-rate amounts (RM350 / RM1,800) rather than lowering the standard price for everyone,
-- no invasive proof-of-income requirement,
-- same service quality/scope for a supported-rate place,
-- supported places capped so APC remains sustainable.
+APC will use a limited supported-access pathway so higher standard pricing does not become an absolute paywall.
 
-This is preferable to unlimited sliding-scale negotiation.
+Supported rates:
+- One-Concern: RM350,
+- Home Implementation: RM1,800.
 
-## Included assets now designed
+Capacity:
+- up to 2 supported One-Concern places per calendar month,
+- up to 1 supported Home Implementation family active at a time.
 
+Eligibility:
+Self-attestation only: “The standard fee would prevent my family from accessing this support at present.”
+
+No payslips, bank statements or proof of diagnosis.
+
+Same core service quality/scope. Supported access is not a reduced package.
+
+Public transparency decision: publish the existence and exact supported rates so families do not have to negotiate privately to learn whether support is financially possible.
+
+If supported capacity is full, the free call still provides routing and relevant free/lower-cost resource signposting.
+
+Singapore: no fixed supported-access tariff at launch. Review after real Singapore demand data.
+
+## Existing-client transition rule
+
+- Existing paid clients keep their agreed package and price.
+- Active RM1,800 clients are not repriced or re-scoped mid-programme.
+- Written quotes remain valid for their stated validity period.
+- Singapore clients already quoted/accepted at a lower amount keep that quote unless scope materially changes.
+- No artificial discounts or fake urgency.
+
+## Effective-date rule
+
+The revised pricing applies to **new, unquoted enquiries from the moment the coordinated price-migration release is deployed to production**.
+
+This avoids a date where website, terms, payment wording and internal systems disagree.
+
+## Programme-owner / scope boundary
+
+The parent packages do not include delivery of:
+- Learning Language and Loving It™,
+- Teacher Talk™,
+- ABC and Beyond™,
+- an official SCERTS programme.
+
+Hanen's bounced clarification email therefore does not block these APC-owned parent offers.
+
+APC provides parent education, pattern review, practical support planning and implementation guidance. It does not provide diagnosis, speech-language therapy, psychological treatment, medical care or crisis services.
+
+## Included assets designed
+
+- `PARENT_OFFER_FINAL_SPEC.md`
 - First Step Call Script V2
 - One-Concern Action Note
 - Home Implementation Client Pack
@@ -72,7 +127,7 @@ This is preferable to unlimited sliding-scale negotiation.
 - Parent Communication Boundaries
 - Parent Access & Equity Strategy
 - Parent Access public-copy draft
-- Malaysia price-increase strategy
+- Malaysia price strategy
 - Singapore pricing strategy
 - Singapore quote template
 - Public copy draft
@@ -85,57 +140,16 @@ This is preferable to unlimited sliding-scale negotiation.
 - Evidence review
 - Impact-priority matrix
 
-## What should NOT be added before launch
+## Stop rule
 
-- more parent tiers,
-- unlimited WhatsApp,
-- annual membership,
-- generic resource library,
-- Hanen/SCERTS branded curricula inside the parent package,
-- clinical-sounding assessments,
-- outcome guarantees.
-
-## Remaining manual business decisions
-
-These are the only decisions that require CJ before public migration:
-
-1. Approve or revise RM450 / RM2,400 as the Malaysia standard test prices.
-2. Approve or revise S$200 / S$980 as the Singapore standard test prices for future unquoted clients.
-3. Decide whether APC will offer a supported-rate pathway and approve:
-   - supported-rate amounts,
-   - capacity cap,
-   - whether it is mentioned publicly or only during fit calls.
-4. Decide whether the Home Implementation Programme offers two instalments.
-5. Choose the public effective date for the Malaysia change.
-6. Confirm the recommended communication standard:
-   - Action Note within 2 working days,
-   - Home Plan within 2 working days after Session 1,
-   - Maintenance Summary within 3 working days after Session 4,
-   - messaging response target within 2 working days.
-7. Approve the existing-client transition rule.
-
-No further package ideation is required before these decisions.
-
-## Technical work after approval
-
-Once CJ approves the offer spec, access policy and effective date:
-- migrate all public website copy together,
-- align terms/payment/confirmation pages,
-- update website-authority tests,
-- implement a separate Practice Console service-code migration away from price-coupled codes,
-- QA and deploy as one coordinated release.
-
-## Strategic stop rule
-
-After approval, stop adding package features until at least 5-10 new qualified enquiries / paid cases provide real evidence about:
+No more parent-package features or price changes until at least 5–10 new qualified enquiries/paid cases provide real data on:
 - conversion,
-- price resistance,
+- standard vs supported demand,
+- price objections,
+- instalment uptake,
 - cost-related decline rate,
-- demand for supported-rate places,
-- whether instalments materially improve access,
 - between-session workload,
-- client use of deliverables,
-- implementation feasibility,
+- use of deliverables,
 - repeat/referral demand.
 
-Use those data to decide whether the next move is a higher/lower standard price, more supported-rate capacity, Progress Review product, group-access offer, or no change.
+Parent product design is now closed. The next implementation task is the coordinated public/system migration, followed by real-world validation.
