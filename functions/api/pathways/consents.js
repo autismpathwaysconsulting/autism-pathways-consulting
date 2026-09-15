@@ -1,6 +1,5 @@
 import {
   authenticate,
-  audit,
   getStudentAccess,
   json,
   readJson,
@@ -24,7 +23,7 @@ export async function onRequestGet({ request, env }) {
       .bind(studentId).all();
     return json({ consents: result?.results || [] });
   }
-  const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, expires_at, created_at
+  const result = await auth.db.prepare(`SELECT consent_id, consent_type, status, granted_at, expires_at, created_at
     FROM pathways_consents
     WHERE student_id = ? AND consent_type IN ('pilot-use','school-record')
     ORDER BY created_at DESC, consent_id DESC`)
@@ -55,37 +54,46 @@ export async function onRequestPost({ request, env }) {
   }
   const dateLike = value => value === null || /^\d{4}-\d{2}-\d{2}(?:T.*Z)?$/.test(value);
   if (!dateLike(grantedAt) || !dateLike(expiresAt)) return json({ error: 'Consent dates are invalid.' }, 400);
+  if (grantedAt && expiresAt && grantedAt.slice(0, 10) > expiresAt.slice(0, 10)) {
+    return json({ error: 'Authority expiry cannot be earlier than its effective date.' }, 400);
+  }
 
   const id = `con-${crypto.randomUUID()}`;
+  const requestId = `consent:${crypto.randomUUID()}`;
   const now = new Date().toISOString();
   try {
-    await auth.db.prepare(`INSERT INTO pathways_consents
-      (consent_id, organization_id, student_id, consent_type, status, authority_label,
-       reference_note, granted_at, expires_at, created_by, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(
-        id,
-        access.student.organization_id,
-        studentId,
-        type,
-        status,
-        authorityLabel || null,
-        referenceNote || null,
-        grantedAt,
-        expiresAt,
-        auth.user.id,
-        now,
-        now,
-      ).run();
-    await audit(auth.db, {
-      organizationId: access.student.organization_id,
-      studentId,
-      actorUserId: auth.user.id,
-      action: 'record-consent',
-      entityType: 'consent',
-      entityId: id,
-      metadata: { consentType: type, status },
-    });
+    await auth.db.batch([
+      auth.db.prepare(`INSERT INTO pathways_consents
+        (consent_id, organization_id, student_id, consent_type, status, authority_label,
+         reference_note, granted_at, expires_at, created_by, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(
+          id,
+          access.student.organization_id,
+          studentId,
+          type,
+          status,
+          authorityLabel || null,
+          referenceNote || null,
+          grantedAt,
+          expiresAt,
+          auth.user.id,
+          now,
+          now,
+        ),
+      auth.db.prepare(`INSERT INTO pathways_audit_log
+        (organization_id, student_id, actor_user_id, action, entity_type, entity_id, request_id, metadata_json, created_at)
+        VALUES (?, ?, ?, 'record-consent', 'consent', ?, ?, ?, ?)`)
+        .bind(
+          access.student.organization_id,
+          studentId,
+          auth.user.id,
+          id,
+          requestId,
+          JSON.stringify({ consentType: type, status }),
+          now,
+        ),
+    ]);
     return json({ consent: { consent_id: id, consent_type: type, status, authority_label: authorityLabel || null, reference_note: referenceNote || null, granted_at: grantedAt, expires_at: expiresAt, created_at: now } }, 201);
   } catch (error) {
     console.error(JSON.stringify({ message: 'Pathways consent record failed', errorType: String(error?.name || 'Error') }));
