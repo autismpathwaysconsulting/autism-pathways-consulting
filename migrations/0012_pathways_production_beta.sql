@@ -5,6 +5,12 @@
 
 PRAGMA foreign_keys = ON;
 
+CREATE TABLE IF NOT EXISTS pathways_platform_state (
+  state_key TEXT PRIMARY KEY CHECK (state_key = 'bootstrap'),
+  state_value TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS pathways_organizations (
   organization_id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
