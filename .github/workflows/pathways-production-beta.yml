@@ -12,6 +12,7 @@ on:
       - '_routes.json'
       - 'package.json'
       - 'tests/pathways-production-beta.test.mjs'
+      - 'tests/pathways-production-security.test.mjs'
       - '.github/workflows/pathways-production-beta.yml'
   push:
     branches: [main]
@@ -25,6 +26,7 @@ on:
       - '_routes.json'
       - 'package.json'
       - 'tests/pathways-production-beta.test.mjs'
+      - 'tests/pathways-production-security.test.mjs'
       - '.github/workflows/pathways-production-beta.yml'
 
 permissions:
