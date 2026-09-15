@@ -28,9 +28,23 @@ function localDateKey(date, timeZone) {
   }
 }
 
+function dateHasStarted(value, now, timeZone) {
+  if (!value) return true;
+  if (DATE_ONLY_RE.test(value)) return value <= localDateKey(now, timeZone);
+  const instant = Date.parse(value);
+  return Number.isFinite(instant) && instant <= now.getTime();
+}
+
+function dateHasNotExpired(value, now, timeZone) {
+  if (!value) return true;
+  if (DATE_ONLY_RE.test(value)) return value >= localDateKey(now, timeZone);
+  const instant = Date.parse(value);
+  return Number.isFinite(instant) && instant >= now.getTime();
+}
+
 export async function hasUseAuthority(db, student, now = new Date()) {
   if (student.external_ref === 'SYNTHETIC-DEMO') return true;
-  const row = await db.prepare(`SELECT c.consent_id, c.status, c.expires_at, c.created_at,
+  const row = await db.prepare(`SELECT c.consent_id, c.status, c.granted_at, c.expires_at, c.created_at,
       o.timezone
     FROM pathways_consents c
     JOIN pathways_students s ON s.student_id = c.student_id
@@ -42,14 +56,8 @@ export async function hasUseAuthority(db, student, now = new Date()) {
     .first();
   if (!row) return false;
   if (!['granted','not-required'].includes(row.status)) return false;
-  if (row.expires_at) {
-    if (DATE_ONLY_RE.test(row.expires_at)) {
-      if (row.expires_at < localDateKey(now, row.timezone)) return false;
-    } else {
-      const expiresAt = Date.parse(row.expires_at);
-      if (!Number.isFinite(expiresAt) || expiresAt < now.getTime()) return false;
-    }
-  }
+  if (!dateHasStarted(row.granted_at, now, row.timezone)) return false;
+  if (!dateHasNotExpired(row.expires_at, now, row.timezone)) return false;
   return true;
 }
 
