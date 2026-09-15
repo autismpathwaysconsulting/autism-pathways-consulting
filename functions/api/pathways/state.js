@@ -43,7 +43,7 @@ function dateHasNotExpired(value, now, timeZone) {
 }
 
 export async function hasUseAuthority(db, student, now = new Date()) {
-  if (student.external_ref === 'SYNTHETIC-DEMO') return true;
+  if (student.is_synthetic_demo === 1) return true;
   const row = await db.prepare(`SELECT c.consent_id, c.status, c.granted_at, c.expires_at, c.created_at,
       o.timezone
     FROM pathways_consents c
