@@ -13,6 +13,12 @@ Purpose: prevent APC from advertising or accepting paid programme delivery befor
 - B2B terms draft built.
 - claim-safety rules built.
 - readiness rubric structure built.
+- participant registration/attendance/evaluation/admin pack built.
+- buyer objection bank built.
+- private study workspace structure built.
+- public Hanen evidence/positioning pack built from current public sources.
+- materials upload manifest built.
+- video/privacy draft built for programmes that require recording/feedback.
 
 ### Waiting for current materials
 - latest Leader Guide review,
@@ -45,7 +51,9 @@ All must be true:
 - price/quote approved,
 - terms/cancellation/payment ready,
 - delivery format/venue/tech ready,
-- participant documentation rule confirmed.
+- participant documentation rule confirmed,
+- attendance/evaluation/admin workflow ready,
+- public claims checked against current programme/licence information.
 
 ## 2. Teacher Talk B / C
 
@@ -75,7 +83,8 @@ Do not assume readiness for B/C merely because A is ready.
 - required video feedback operationally safe,
 - participant documentation confirmed,
 - CJ rehearsal/readiness passed,
-- price reflects group + individual feedback workload.
+- price reflects group + individual feedback workload,
+- participant admin/evaluation process adapted to the actual ABC format.
 
 ## 4. Learning Language and Loving It™
 
@@ -90,7 +99,8 @@ Dependencies:
 - secure video handling process finalised,
 - scheduling capacity modelled per participant,
 - quote built from actual workload rather than simple live-hour rate,
-- CJ full rehearsal/readiness passed.
+- CJ full rehearsal/readiness passed,
+- participant administration accounts for multi-session attendance and individual feedback.
 
 ## 5. School enquiry launch versus paid-course launch
 
