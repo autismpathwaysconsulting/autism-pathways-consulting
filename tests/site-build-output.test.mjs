@@ -220,8 +220,8 @@ test("public pages preserve audited contrast, narrow-screen wrapping, and securi
   const css = await readFile(new URL("../apc-design-system.css", import.meta.url), "utf8");
   const headers = await readFile(new URL("../_headers", import.meta.url), "utf8");
 
-  assert.match(css, /@media \(max-width: 640px\)[\s\S]*?html\.apc-home-snap,[\s\S]*?html\.apc-site-snap\s*{[^}]*scroll-snap-type: y proximity !important;/);
-  assert.doesNotMatch(css, /@media \(max-width: 640px\)[\s\S]*?html\.apc-home-snap,[\s\S]*?html\.apc-site-snap\s*{[^}]*scroll-snap-type: y mandatory !important;/);
+  assert.match(css, /@media \(max-width: 640px\)[\s\S]*?html\.apc-home-snap,[\s\S]*?html\.apc-site-snap\s*{[^}]*scroll-snap-type: none !important;/);
+  assert.doesNotMatch(css, /@media \(max-width: 640px\)[\s\S]*?html\.apc-home-snap,[\s\S]*?html\.apc-site-snap\s*{[^}]*scroll-snap-type: y (?:mandatory|proximity) !important;/);
   assert.match(css, /\.apc-about-page :where\(\.work-panel, \.final-card\) > \.eyebrow\s*{[^}]*color: #8fe8dc !important;/s);
   assert.match(css, /\.apc-legal-page :where\([^)]*\.legal-contact[^)]*\) a\s*{[^}]*overflow-wrap: anywhere;/s);
   assert.match(headers, /^\/\*\n(?:  .+\n)*  Content-Security-Policy: .*frame-ancestors 'none';/m);
