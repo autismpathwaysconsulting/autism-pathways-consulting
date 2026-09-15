@@ -1,189 +1,146 @@
 # APC Parent Access & Equity Strategy
 
-Status: Internal draft. Designed to reduce cost barriers without undermining the sustainability or clarity of APC's 1-to-1 offers.
+Status: FINAL POLICY DESIGN. Public activation occurs with the coordinated parent-price migration.
 
-## 1. Why this matters
+## 1. Purpose
 
-APC should not assume that higher 1-to-1 pricing is neutral. Malaysian evidence identifies high private-service cost, limited public capacity and geographic access as barriers for families of children with neurodevelopmental disabilities, with lower-income and rural families particularly affected.
+APC will not treat higher 1-to-1 pricing as neutral. Private-service cost can exclude families who need support, but permanently underpricing all individual work can also reduce capacity and service quality.
 
-The correct response is not automatically to keep all 1-to-1 services underpriced. Underpricing can reduce capacity, increase founder overload and ultimately reduce availability. APC should instead separate:
-
-1. **standard specialist 1-to-1 pricing**, from
-2. **access mechanisms for families who would otherwise be excluded**.
+APC therefore separates:
+1. sustainable standard specialist 1-to-1 pricing, from
+2. a clear supported-access pathway for Malaysian families who would otherwise be unable to access the service.
 
 ## 2. Access principles
 
-- Do not market scarcity or affordability as shame.
-- Do not require parents to disclose unnecessary financial/private documents.
-- Do not create a second-class service with lower-quality support.
-- Do not overload CJ with unlimited discounted places.
-- Do not imply APC is a charity or publicly funded service.
-- Keep access support predictable enough that the business remains sustainable.
-- Free/public resources should remain genuinely useful, not intentionally crippled to force paid conversion.
+- Do not use shame, artificial scarcity or income policing.
+- Do not require payslips, bank statements or proof of diagnosis.
+- Supported-rate clients receive the same core service quality/scope.
+- Keep supported places capped so APC remains sustainable.
+- Maintain genuinely useful free-resource routing.
+- Do not turn supported access into unlimited sliding-scale negotiation.
 
-## 3. Recommended access ladder
+## 3. Final access ladder
 
-### Layer A - Free routing
+### Layer A — Free routing
 
 **Free 15-Min First Step Call**
 
 Purpose:
 - clarify whether APC fits,
 - identify the right route,
-- point to another professional or free resource when paid APC support is unnecessary.
+- point to another professional or free/lower-cost resource when paid APC support is unnecessary or inaccessible.
 
-No strategy delivery is required for the free call.
+The call remains fit/routing only rather than a free strategy consultation.
 
-### Layer B - Free evidence-informed resources
+### Layer B — Free resources
 
-Maintain a curated free-resource route for families who cannot purchase 1-to-1 support.
-
-Examples:
+Maintain a curated free-resource route, which may include:
 - APC Calm,
 - APC articles/videos relevant to the concern,
 - selected reputable public resources,
-- WHO Caregiver Skills Training online resource where appropriate.
+- external caregiver resources such as WHO materials when appropriate.
 
-Do not present external resources as APC-delivered programmes.
+External resources are signposted, not represented as APC-delivered programmes.
 
-### Layer C - Payment flexibility
+### Layer C — Payment flexibility
 
-For the larger Home Implementation Programme, if full upfront payment creates a barrier, test instalments before reducing the overall fee.
+**Home Implementation Programme**
 
-Recommended working option:
-- Malaysia: 2 x RM1,200
-- Singapore: 2 x S$490
+Standard Malaysia fee: RM2,400.
 
-Suggested payment timing:
-- instalment 1 before Session 1,
-- instalment 2 before Session 3.
+Payment choices:
+- RM2,400 upfront, or
+- 2 × RM1,200: first before Session 1, second before Session 3.
 
-Do not let an instalment option imply that a family may consume the full programme without completing agreed payment obligations.
+Supported-access fee: RM1,800.
 
-### Layer D - Limited Supported Access Rate
+Payment choices:
+- RM1,800 upfront, or
+- 2 × RM900: first before Session 1, second before Session 3.
 
-Recommended as a small, capped pathway rather than a separate public package tier.
+### Layer D — Supported Access Rate (Malaysia)
 
-Working model for CJ approval:
-- Malaysia One-Concern: legacy-equivalent **RM350 supported rate**
-- Malaysia Home Implementation: legacy-equivalent **RM1,800 supported rate**
+Same service quality/scope, limited by capacity.
 
-Suggested capacity cap:
-- no more than 2 supported One-Concern places per calendar month,
-- no more than 1 supported Home Implementation place active at a time.
+Final supported prices:
+- One-Concern Parent Session: **RM350**
+- Home Implementation Programme: **RM1,800**
 
-Eligibility principle:
-Use simple self-attestation:
+Capacity cap:
+- up to **2 supported One-Concern places per calendar month**,
+- up to **1 supported Home Implementation family active at a time**.
 
-> "The standard fee would prevent my family from accessing this support at present."
+Eligibility statement:
+> “The standard fee would prevent my family from accessing this support at present.”
 
-Do not require payslips, bank statements or proof of diagnosis unless a future funded programme specifically requires them.
+No supporting financial documents are required.
 
-Suggested public wording:
+### Public transparency
 
-> "A small number of supported-rate places may be available for Malaysian families when the standard fee would otherwise prevent access. Availability is limited and is reviewed case by case."
+APC will publish that supported-rate places exist and publish the exact supported rates.
 
-Do not publish the supported price initially unless CJ wants a fully transparent fixed policy.
+Recommended wording:
+> “A small number of supported-rate places are available for Malaysian families when the standard fee would otherwise prevent access. The supported rate is RM350 for a One-Concern Parent Session and RM1,800 for the Home Implementation Programme. The service itself is the same; availability is limited by monthly capacity.”
 
-### Layer E - Community / sponsor route later
+If supported capacity is full, the free call should still provide a clear next-step route and relevant free/lower-cost resource signposting.
 
-Future possibilities if demand is proven:
-- school/centre sponsorship of parent places,
-- employer-sponsored support,
-- CSR-funded parent cohorts,
-- foundation/NGO-supported places,
-- lower-cost group parent education built from APC-owned content.
+### Singapore
 
-Do not build these before the core 1-to-1 offer is stable.
+No fixed supported-access Singapore tariff is launched initially.
 
-## 4. Why not offer unlimited sliding-scale pricing
+Standard Singapore prices for new/unquoted online clients:
+- S$200 One-Concern,
+- S$980 Home Implementation.
 
-A fully open sliding scale can create:
+Review Singapore affordability/demand after real cases rather than inventing a second tariff before evidence exists.
+
+## 4. Why not unlimited sliding-scale pricing
+
+Unlimited sliding scale creates:
 - unpredictable revenue,
 - negotiation around every enquiry,
-- perceived arbitrariness,
 - administrative burden,
-- founder guilt/pressure,
-- difficulty maintaining capacity.
+- inconsistency,
+- founder pressure,
+- difficulty protecting capacity.
 
-A small capped supported-rate allocation is easier to explain and operate.
+A capped, transparent supported rate is easier to explain and operate fairly.
 
-## 5. Why not keep standard prices permanently low
+## 5. Why not keep all standard prices low
 
-APC's standard price must fund more than live call time:
+The standard price funds more than live call time:
 - pre-session review,
 - written outputs,
 - implementation support,
 - between-session review,
 - documentation,
 - maintenance check,
-- admin and safeguarding/privacy overhead,
-- non-billable business time.
+- admin/privacy/safeguarding overhead,
+- non-billable preparation time.
 
-If the standard service is underpriced, CJ either reduces quality or accepts too many cases, both of which reduce impact.
+If APC underprices this work, either capacity or service quality will eventually suffer.
 
-## 6. Access without gatekeeping
+## 6. Group/community access later
 
-APC should make it obvious that a parent who cannot pay the standard fee still leaves with a direction.
+Only after real demand data, consider:
+- APC-owned lower-cost group parent education,
+- school/centre-sponsored parent places,
+- employer/CSR/foundation-supported access.
 
-Recommended free-call close when cost is a barrier:
+Do not build these before the revised 1-to-1 model is validated.
 
-> "If the paid option is not workable for your family right now, I can still point you toward the most relevant free or lower-cost resources I know. I do not want the call to end with you having no next step."
+## 7. Data to monitor
 
-This is routing, not free personalised consulting.
+Track after migration:
+- cost-related declines,
+- supported-rate requests,
+- instalment uptake,
+- supported-capacity waiting,
+- conversion at standard and supported rates,
+- delivery workload,
+- whether free-resource routing gives a useful next step,
+- referral/repeat demand.
 
-## 7. Group access route later
+Review the access policy after at least 5–10 new qualified enquiries/paid cases.
 
-A lower-cost group format could improve access once repeated parent needs are clear.
-
-Important boundaries:
-- group content must be APC-owned or separately licensed,
-- do not repackage Hanen educator programmes as parent groups,
-- do not promise individualised support inside a low-cost group course,
-- group launch should follow evidence of repeated common needs.
-
-Potential future topic examples:
-- making routines more predictable,
-- reducing over-prompting,
-- helping adults respond consistently,
-- understanding what to observe before changing a plan.
-
-These are concepts to validate, not current products.
-
-## 8. Data to monitor
-
-Track after price change:
-- how many parents cite cost as the main barrier,
-- whether instalments solve the problem,
-- requests for supported-rate places,
-- conversion by standard vs supported rate,
-- delivery workload per client,
-- whether supported places create a waiting list,
-- referral patterns,
-- whether free-resource routing is useful.
-
-If more than a modest minority of otherwise suitable Malaysian families consistently decline solely on cost, revisit either:
-- standard pricing,
-- supported-rate capacity,
-- group-access route,
-- partnership/subsidy strategy.
-
-## 9. Recommended launch posture
-
-Do not frame APC publicly as "premium autism support".
-
-Frame it as:
-- focused,
-- implementation-oriented,
-- transparent about scope,
-- clear about what the fee includes,
-- with a limited access pathway where cost would otherwise be the deciding barrier.
-
-## 10. Decision still required from CJ
-
-Before publishing the access policy, CJ should approve:
-- whether supported-rate places are offered,
-- supported-rate amounts,
-- monthly capacity cap,
-- instalment option,
-- whether supported-rate availability is publicly mentioned or only offered during fit calls.
+If otherwise suitable families are frequently excluded solely by price, increase supported capacity, revise standard pricing, or validate a lower-cost group/partner-funded route.
