@@ -3,12 +3,58 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { DatabaseSync } from 'node:sqlite';
 
+import { createPasswordRecord, verifyLogin } from '../functions/lib/pathways/auth.js';
+import { hasUseAuthority } from '../functions/api/pathways/state.js';
+
 const migration = path => readFile(new URL(`../migrations/${path}`, import.meta.url), 'utf8');
 
 function setup() {
   const db = new DatabaseSync(':memory:');
   db.exec('PRAGMA foreign_keys = ON;');
   return db;
+}
+
+class SqliteD1Statement {
+  constructor(statement) {
+    this.statement = statement;
+    this.args = [];
+  }
+  bind(...args) {
+    this.args = args;
+    return this;
+  }
+  async first() {
+    return this.statement.get(...this.args) ?? null;
+  }
+  async all() {
+    return { results: this.statement.all(...this.args) };
+  }
+  async run() {
+    const result = this.statement.run(...this.args);
+    const changes = Number(result?.changes ?? 0);
+    return { meta: { changes, rows_written: changes } };
+  }
+}
+
+class SqliteD1 {
+  constructor(db) {
+    this.db = db;
+  }
+  prepare(sql) {
+    return new SqliteD1Statement(this.db.prepare(sql));
+  }
+  async batch(statements) {
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const results = [];
+      for (const statement of statements) results.push(await statement.run());
+      this.db.exec('COMMIT');
+      return results;
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      throw error;
+    }
+  }
 }
 
 function seedIdentity(db) {
@@ -95,6 +141,53 @@ test('Pathways production migrations execute and enforce atomic history plus gua
     assert.equal(db.prepare(`SELECT COUNT(*) n FROM pathways_audit_log WHERE student_id='stu-1'`).get().n, 0);
     assert.equal(db.prepare(`SELECT COUNT(*) n FROM pathways_erasure_log`).get().n, 1);
     assert.equal(db.prepare(`SELECT COUNT(*) n FROM pathways_erasure_guard`).get().n, 0);
+  } finally {
+    db.close();
+  }
+});
+
+test('parallel failed logins reach lockout without lost increments', async () => {
+  const db = setup();
+  try {
+    db.exec(await migration('0012_pathways_production_beta.sql'));
+    const now = '2026-09-15T04:00:00.000Z';
+    db.prepare(`INSERT INTO pathways_organizations
+      (organization_id,name,slug,status,timezone,created_at,updated_at)
+      VALUES ('org-login','Login School','login-school','active','Asia/Kuala_Lumpur',?,?)`).run(now, now);
+    const password = await createPasswordRecord('correct-horse-battery-staple');
+    db.prepare(`INSERT INTO pathways_users
+      (user_id,email,display_name,password_salt,password_hash,password_iterations,is_platform_admin,is_active,created_at,updated_at)
+      VALUES ('usr-login','login@example.test','Login User',?,?,?,?,0,1,?,?)`)
+      .run(password.passwordSalt, password.passwordHash, password.passwordIterations, now, now);
+    const d1 = new SqliteD1(db);
+
+    const attempts = await Promise.all(Array.from({length:5}, () => verifyLogin(d1, 'login@example.test', 'definitely-wrong-password')));
+    assert.ok(attempts.some(result => result.locked), 'one of the parallel attempts should observe lockout');
+    const user = db.prepare(`SELECT failed_login_count, locked_until FROM pathways_users WHERE user_id='usr-login'`).get();
+    assert.equal(user.failed_login_count, 0);
+    assert.ok(Date.parse(user.locked_until) > Date.now());
+  } finally {
+    db.close();
+  }
+});
+
+test('future-effective and expired authority records fail closed', async () => {
+  const db = setup();
+  try {
+    db.exec(await migration('0012_pathways_production_beta.sql'));
+    const now = seedIdentity(db);
+    db.prepare(`INSERT INTO pathways_students
+      (student_id,organization_id,display_name,status,created_at,updated_at)
+      VALUES ('stu-authority','org-1','Authority Student','active',?,?)`).run(now, now);
+    db.prepare(`INSERT INTO pathways_consents
+      (consent_id,organization_id,student_id,consent_type,status,granted_at,expires_at,created_by,created_at,updated_at)
+      VALUES ('con-future','org-1','stu-authority','pilot-use','granted','2026-09-20','2026-09-30','usr-1',?,?)`).run(now, now);
+    const d1 = new SqliteD1(db);
+    const student = { student_id:'stu-authority', external_ref:null };
+
+    assert.equal(await hasUseAuthority(d1, student, new Date('2026-09-15T12:00:00Z')), false);
+    assert.equal(await hasUseAuthority(d1, student, new Date('2026-09-20T12:00:00Z')), true);
+    assert.equal(await hasUseAuthority(d1, student, new Date('2026-10-01T12:00:00Z')), false);
   } finally {
     db.close();
   }
