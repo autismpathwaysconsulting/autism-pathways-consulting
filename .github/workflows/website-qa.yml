@@ -10,9 +10,7 @@ on:
       - 'booking-confirmed-session.html'
       - 'schools.html'
       - 'about.html'
-      - 'tests/website_authority.json'
-      - 'tests/validate_website_authority.py'
-      - 'tests/test_website_authority.py'
+      - 'tests/validate_parent_offer_release.py'
       - 'scripts/build-site.mjs'
       - 'package.json'
       - '.github/workflows/website-qa.yml'
@@ -27,9 +25,7 @@ on:
       - 'booking-confirmed-session.html'
       - 'schools.html'
       - 'about.html'
-      - 'tests/website_authority.json'
-      - 'tests/validate_website_authority.py'
-      - 'tests/test_website_authority.py'
+      - 'tests/validate_parent_offer_release.py'
       - 'scripts/build-site.mjs'
       - 'package.json'
       - '.github/workflows/website-qa.yml'
@@ -61,11 +57,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate website authority
-        run: python tests/validate_website_authority.py
-
-      - name: Run authority adversarial tests
-        run: python tests/test_website_authority.py
+      - name: Validate approved parent and school release copy
+        run: python tests/validate_parent_offer_release.py
 
       - name: Build public site
         run: npm run build
