@@ -1,0 +1,92 @@
+name: Reconcile Main Once
+
+on:
+  push:
+    branches:
+      - feat/educator-pd-weekend-launch
+    paths:
+      - '.github/workflows/reconcile-main-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/educator-pd-weekend-launch
+          fetch-depth: 0
+      - name: Merge current main with bounded conflict resolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+
+          set +e
+          git merge --no-ff --no-commit origin/main
+          merge_status=$?
+          set -e
+
+          conflicts="$(git diff --name-only --diff-filter=U || true)"
+          if [ -n "$conflicts" ]; then
+            echo "Conflicts detected:"
+            echo "$conflicts"
+            allowed='^(about\.html|pay/index\.html|schools\.html|services\.html|start\.html|terms\.html)$'
+            unexpected="$(printf '%s\n' "$conflicts" | grep -Ev "$allowed" || true)"
+            if [ -n "$unexpected" ]; then
+              echo "Unexpected conflicts; aborting:"
+              echo "$unexpected"
+              git merge --abort || true
+              exit 1
+            fi
+            while IFS= read -r file; do
+              [ -z "$file" ] && continue
+              git checkout --ours -- "$file"
+              git add "$file"
+            done <<< "$conflicts"
+          elif [ "$merge_status" -ne 0 ]; then
+            echo "Merge failed without resolvable conflicts"
+            git merge --abort || true
+            exit 1
+          fi
+
+          # The release branch did not modify the shared design-system CSS.
+          # Keep main's newer natural mobile scrolling behavior.
+          git show origin/main:apc-design-system.css > apc-design-system.css
+          git add apc-design-system.css
+
+          # Keep branch-specific copy while adopting main's current CSS cache key.
+          python - <<'PY'
+          from pathlib import Path
+          pages = [
+              'about.html', 'pay/index.html', 'schools.html',
+              'services.html', 'start.html', 'terms.html'
+          ]
+          current = '/apc-design-system.css?v=44d702869116'
+          for filename in pages:
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+              text = __import__('re').sub(
+                  r'/apc-design-system\.css\?v=[0-9a-f]+', current, text
+              )
+              path.write_text(text, encoding='utf-8')
+          PY
+          git add about.html pay/index.html schools.html services.html start.html terms.html
+
+          python tests/validate_parent_offer_release.py
+          npm ci
+          npm run build
+          npm run test:site-build
+
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "Unresolved conflicts remain"
+            exit 1
+          fi
+
+          git commit -m "Merge main into educator PD and parent release branch"
+          git push origin HEAD:feat/educator-pd-weekend-launch
