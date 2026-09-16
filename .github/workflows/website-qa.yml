@@ -16,6 +16,23 @@ on:
       - 'scripts/build-site.mjs'
       - 'package.json'
       - '.github/workflows/website-qa.yml'
+  push:
+    branches:
+      - 'feat/educator-pd-weekend-launch'
+    paths:
+      - 'services.html'
+      - 'start.html'
+      - 'terms.html'
+      - 'pay/**'
+      - 'booking-confirmed-session.html'
+      - 'schools.html'
+      - 'about.html'
+      - 'tests/website_authority.json'
+      - 'tests/validate_website_authority.py'
+      - 'tests/test_website_authority.py'
+      - 'scripts/build-site.mjs'
+      - 'package.json'
+      - '.github/workflows/website-qa.yml'
 
 permissions:
   contents: read
