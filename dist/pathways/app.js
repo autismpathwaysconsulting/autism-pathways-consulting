@@ -101,6 +101,52 @@ function showError(message){
   window.alert(message);
 }
 
+function clearProtectedDom(){
+  const textIds=['userName','userRole','studentHeading','weekLabel','savedCount','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','adminStudents','adminUsers','auditList','dayTabs'];
+  for(const id of textIds){const el=$(id);if(el)el.textContent=''}
+  if($('studentAdminPanel'))$('studentAdminPanel').textContent='Select a student.';
+  if($('orgSelect'))$('orgSelect').innerHTML='';
+  if($('studentSelect'))$('studentSelect').innerHTML='<option value="">No students</option>';
+  if($('overviewNote'))$('overviewNote').value='';
+  if($('authorityWarning'))$('authorityWarning').classList.add('hidden');
+  if($('readOnlyWarning'))$('readOnlyWarning').classList.add('hidden');
+  if($('restoreRevision'))$('restoreRevision').classList.add('hidden');
+  if($('adminNav'))$('adminNav').classList.add('hidden');
+  if($('emptyState'))$('emptyState').classList.add('hidden');
+  document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());
+  document.querySelectorAll('.nav').forEach(item=>item.classList.toggle('active',item.dataset.screen==='daily'));
+  document.querySelectorAll('.screen').forEach(screen=>screen.classList.add('hidden'));
+  if($('dailyScreen'))$('dailyScreen').classList.remove('hidden');
+}
+
+function resetProtectedUi(){
+  user=null;
+  csrfToken='';
+  organizations=[];
+  organizationId='';
+  students=[];
+  studentId='';
+  record=null;
+  state=null;
+  revisions=[];
+  currentConsents=[];
+  adminUsers=[];
+  currentAssignments=[];
+  selectedRevision=null;
+  editingKey=null;
+  editingTime='';
+  editingSubject='';
+  formData=null;
+  editingObjectiveId=null;
+  historicalEditConfirmedFor='';
+  outputView='parent';
+  activeWeek=startOfWeek(new Date());
+  currentDay=preferredDay();
+  clearProtectedDom();
+  setSaveStatus('','Ready');
+  updateWhatsAppAvailability();
+}
+
 async function api(path,{method='GET',body=null}={}){
   const headers={Accept:'application/json'};
   if(body!==null){
@@ -112,6 +158,7 @@ async function api(path,{method='GET',body=null}={}){
   const type=response.headers.get('Content-Type')||'';
   const data=type.includes('application/json')?await response.json().catch(()=>({})):{};
   if(response.status===401 && path!=='/api/pathways/login'){
+    resetProtectedUi();
     showLogin();
     throw new Error(data.error||'Session expired.');
   }
@@ -133,28 +180,41 @@ function showApp(){
 
 async function init(){
   bindStaticEvents();
+  resetProtectedUi();
+  showLogin();
   try{
     const me=await api('/api/pathways/me');
-    user=me.user; csrfToken=me.csrfToken; showApp(); await loadOrganizations();
+    user=me.user; csrfToken=me.csrfToken;
+    await loadOrganizations();
+    showApp();
   }catch(error){
     if(error.status!==401) console.error(error);
+    resetProtectedUi();
     showLogin();
   }
 }
 
 async function login(event){
   event.preventDefault(); $('loginError').classList.add('hidden');
+  resetProtectedUi();
+  showLogin();
   try{
     const result=await api('/api/pathways/login',{method:'POST',body:{email:$('loginEmail').value,password:$('loginPassword').value}});
-    user=result.user; csrfToken=result.csrfToken; $('loginPassword').value=''; showApp(); await loadOrganizations();
+    user=result.user; csrfToken=result.csrfToken; $('loginPassword').value='';
+    await loadOrganizations();
+    showApp();
   }catch(error){
+    resetProtectedUi();
+    showLogin();
     $('loginError').textContent=error.message; $('loginError').classList.remove('hidden');
   }
 }
 
 async function logout(){
+  showLogin();
   try{await api('/api/pathways/logout',{method:'POST',body:{}})}catch{}
-  user=null;csrfToken='';organizations=[];students=[];state=null;record=null;showLogin();
+  resetProtectedUi();
+  showLogin();
 }
 
 async function loadOrganizations(){
@@ -182,14 +242,20 @@ async function loadStudents(preferredId=''){
 }
 
 function renderNoStudent(){
-  state=null;record=null;$('emptyState').classList.remove('hidden');
+  state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
+  $('emptyState').classList.remove('hidden');
   ['dailyScreen','historyScreen','objectivesScreen'].forEach(id=>$(id).classList.add('hidden'));
   $('studentHeading').textContent='No student selected';
+  $('outputText').textContent='';
+  updateWhatsAppAvailability();
 }
 
 async function loadStudent(){
   if(!studentId){renderNoStudent();return}
   setSaveStatus('saving','Loading');
+  state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
+  $('outputText').textContent='';
+  updateWhatsAppAvailability();
   try{
     const [stateData,consentData]=await Promise.all([
       api(`/api/pathways/state?studentId=${encodeURIComponent(studentId)}&history=1&limit=40`),
@@ -205,19 +271,59 @@ async function loadStudent(){
     updateAuthorityWarning(stateData.student);
     renderAll();
     setSaveStatus('saved','Saved');
-  }catch(error){setSaveStatus('error','Load error');showError(error.message)}
+  }catch(error){
+    state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
+    $('outputText').textContent='';
+    updateWhatsAppAvailability();
+    setSaveStatus('error','Load error');showError(error.message)
+  }
+}
+
+function latestConsent(types){
+  const wanted=Array.isArray(types)?types:[types];
+  return currentConsents
+    .filter(item=>wanted.includes(item.consent_type))
+    .sort((a,b)=>Number(b.decision_sequence||0)-Number(a.decision_sequence||0))[0]||null;
 }
 
 function updateAuthorityWarning(student){
-  const synthetic=student?.external_ref==='SYNTHETIC-DEMO';
+  const synthetic=student?.is_synthetic_demo===1;
   const applicable=currentConsents
     .filter(item=>['pilot-use','school-record'].includes(item.consent_type))
-    .sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))||String(b.consent_id||'').localeCompare(String(a.consent_id||'')));
+    .sort((a,b)=>Number(b.decision_sequence||0)-Number(a.decision_sequence||0));
   const latest=applicable[0]||null;
-  const today=localDateKeyForZone(selectedOrg()?.timezone||'Asia/Kuala_Lumpur');
-  const expiry=latest?.expires_at?String(latest.expires_at).slice(0,10):'';
-  const has=Boolean(latest&&['granted','not-required'].includes(latest.status)&&(!expiry||expiry>=today));
+  const has=Boolean(latest&&['granted','not-required'].includes(latest.status));
   $('authorityWarning').classList.toggle('hidden',synthetic||has);
+}
+
+function latestFamilySharing(){
+  return latestConsent('family-sharing');
+}
+
+function familySharingAllowed(){
+  const latest=latestFamilySharing();
+  return Boolean(latest&&['granted','not-required'].includes(latest.status));
+}
+
+function updateWhatsAppAvailability(){
+  const button=$('openWhatsApp');
+  if(!button)return;
+  const parentView=outputView==='parent';
+  button.classList.toggle('hidden',!parentView);
+  const allowed=parentView&&Boolean(state)&&familySharingAllowed();
+  button.disabled=parentView&&!allowed;
+  button.setAttribute('aria-disabled',String(parentView&&!allowed));
+  button.title=allowed?'':'Record current family-sharing authority before sharing this report to WhatsApp. You can still use Copy.';
+}
+
+function openWhatsApp(){
+  if(!state)return;
+  if(!familySharingAllowed()){
+    showError('WhatsApp sharing is unavailable until current family-sharing authority is recorded. You can still copy the parent report.');
+    return;
+  }
+  const text=outputFor('parent',{state,dayName:currentDay,baseDate:activeWeek});
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank','noopener');
 }
 
 async function persist(action='edit'){
@@ -300,7 +406,7 @@ function renderObjectiveSummary(){
 function renderOutput(){
   $('outputText').textContent=outputFor(outputView,{state,dayName:currentDay,baseDate:activeWeek});
   document.querySelectorAll('.output-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.output===outputView));
-  $('openWhatsApp').classList.toggle('hidden',outputView!=='parent');
+  updateWhatsAppAvailability();
 }
 
 function renderObjectives(){
@@ -448,7 +554,7 @@ async function renderStudentAdminPanel(){
       api(`/api/pathways/assignments?studentId=${encodeURIComponent(studentId)}`),
       api(`/api/pathways/consents?studentId=${encodeURIComponent(studentId)}`),
     ]);
-    currentAssignments=assignmentData.assignments||[];currentConsents=consentData.consents||[];updateAuthorityWarning(student);
+    currentAssignments=assignmentData.assignments||[];currentConsents=consentData.consents||[];updateAuthorityWarning(student);updateWhatsAppAvailability();
     const assigned=new Set(currentAssignments.map(item=>item.user_id));
     const assignable=adminUsers.filter(item=>!assigned.has(item.user_id));
     $('studentAdminPanel').innerHTML=`<div><strong>${escapeHtml(student.display_name)}</strong><div class="meta"><span>${escapeHtml(student.year_group||'')}</span><span>${escapeHtml(student.external_ref||'No reference')}</span></div></div><div class="row"><button class="btn secondary small" id="recordAuthorityBtn">Record authority</button><button class="btn secondary small" id="editTimetableBtn">Timetable setup</button><button class="btn secondary small" id="exportStudentBtn">Export</button><button class="btn secondary small" id="exportHistoryBtn">Export + history</button></div><h3>Authority / consent</h3>${currentConsents.length?currentConsents.map(item=>`<div class="item"><div class="item-title">${escapeHtml(item.consent_type)} · ${escapeHtml(item.status)}</div><div class="item-copy">${escapeHtml(item.authority_label||'')}${item.expires_at?` · Expires ${escapeHtml(String(item.expires_at).slice(0,10))}`:''}</div></div>`).join(''):'<div class="muted-box">No authority record yet.</div>'}<h3>Assigned staff</h3>${currentAssignments.length?currentAssignments.map(item=>`<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(item.display_name)}</div><div class="meta"><span>${escapeHtml(item.role||'')}</span><span>${escapeHtml(item.permission)}</span></div></div><button class="btn ghost small" data-remove-assignment="${escapeHtml(item.assignment_id)}">Remove</button></div></div>`).join(''):'<div class="muted-box">No explicit assignments. Admin/SENCO access is organisation-wide.</div>'}${assignable.length?`<div class="row"><select id="assignUserSelect">${assignable.map(item=>`<option value="${escapeHtml(item.user_id)}">${escapeHtml(item.display_name)} · ${escapeHtml(item.role)}</option>`).join('')}</select><select id="assignPermission"><option value="edit">Edit</option><option value="read">Read only</option></select><button id="assignUserBtn" class="btn secondary small">Assign</button></div>`:''}${canManageUsers()?'<div class="row"><button id="eraseStudentBtn" class="btn danger small">Erase student record</button></div>':''}`;
@@ -480,7 +586,7 @@ async function saveConsent(){
   if(!studentId)return;
   try{
     await api('/api/pathways/consents',{method:'POST',body:{studentId,consentType:$('consentType').value,status:$('consentStatus').value,grantedAt:$('consentGrantedAt').value||null,expiresAt:$('consentExpiresAt').value||null,authorityLabel:$('consentAuthority').value.trim(),referenceNote:$('consentNote').value.trim()}});
-    $('consentDialog').close();currentConsents=(await api(`/api/pathways/consents?studentId=${encodeURIComponent(studentId)}`)).consents||[];updateAuthorityWarning(selectedStudent());await renderStudentAdminPanel();
+    $('consentDialog').close();currentConsents=(await api(`/api/pathways/consents?studentId=${encodeURIComponent(studentId)}`)).consents||[];updateAuthorityWarning(selectedStudent());updateWhatsAppAvailability();await renderStudentAdminPanel();
   }catch(error){showError(error.message)}
 }
 async function assignUser(){
@@ -543,7 +649,7 @@ function bindStaticEvents(){
   $('overviewChoices').onclick=async event=>{const btn=event.target.closest('[data-overview]');if(!btn||!canEdit())return;const key=datedDayKey(currentDay,activeWeek);state.overview[key]={...(state.overview[key]||{}),choice:btn.dataset.overview};try{if(await persist('edit'))renderAll()}catch(error){showError(error.message)}};$('saveOverviewBtn').onclick=saveOverview;
   $('addPinBtn').onclick=openPin;$('savePinBtn').onclick=savePin;$('pinList').onclick=event=>{const btn=event.target.closest('[data-pin-done]');if(btn)donePin(btn.dataset.pinDone)};
   $('quickObjectiveBtn').onclick=()=>openObjective();$('addObjectiveBtn').onclick=()=>openObjective();$('objectiveList').onclick=event=>{const btn=event.target.closest('[data-edit-objective]');if(btn)openObjective(btn.dataset.editObjective)};$('saveObjectiveDialogBtn').onclick=saveObjective;
-  document.querySelectorAll('.output-tab').forEach(btn=>btn.onclick=()=>{outputView=btn.dataset.output;renderOutput()});$('copyOutput').onclick=async()=>{try{await navigator.clipboard.writeText($('outputText').textContent);$('copyOutput').textContent='Copied';setTimeout(()=>$('copyOutput').textContent='Copy',1200)}catch{showError('Copy was blocked by the browser.')}};$('openWhatsApp').onclick=()=>window.open(`https://wa.me/?text=${encodeURIComponent(outputFor('parent',{state,dayName:currentDay,baseDate:activeWeek}))}`,'_blank','noopener');
+  document.querySelectorAll('.output-tab').forEach(btn=>btn.onclick=()=>{outputView=btn.dataset.output;renderOutput()});$('copyOutput').onclick=async()=>{try{await navigator.clipboard.writeText($('outputText').textContent);$('copyOutput').textContent='Copied';setTimeout(()=>$('copyOutput').textContent='Copy',1200)}catch{showError('Copy was blocked by the browser.')}};$('openWhatsApp').onclick=openWhatsApp;
   $('revisionList').onclick=event=>{const btn=event.target.closest('[data-revision]');if(btn)loadRevision(Number(btn.dataset.revision))};$('restoreRevision').onclick=restoreRevision;$('refreshHistory').onclick=loadStudent;
   $('newStudentBtn').onclick=()=>{$('studentDialog').querySelector('form').reset();$('studentDialog').showModal()};$('createStudentBtn').onclick=createStudent;$('newUserBtn').onclick=()=>{$('userDialog').querySelector('form').reset();$('userDialog').showModal()};$('createUserBtn').onclick=createUser;$('saveConsentBtn').onclick=saveConsent;$('refreshAudit').onclick=loadAudit;
   $('adminStudents').onclick=async event=>{const btn=event.target.closest('[data-admin-student]');if(!btn)return;studentId=btn.dataset.adminStudent;$('studentSelect').value=studentId;await loadStudent();await renderStudentAdminPanel()};
