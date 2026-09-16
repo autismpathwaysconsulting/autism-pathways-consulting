@@ -37,7 +37,7 @@ jobs:
           trap 'kill $server_pid || true' EXIT
           sleep 2
           mkdir -p qa-screenshots
-          cat > /tmp/visual-qa.mjs <<'JS'
+          cat > visual-qa.mjs <<'JS'
           import { chromium } from 'playwright';
           const browser = await chromium.launch();
           const pages = ['/services','/start','/pay/','/terms','/schools'];
@@ -114,7 +114,7 @@ jobs:
           }
           console.log('Visual and synthetic journey QA passed.');
           JS
-          node /tmp/visual-qa.mjs
+          node visual-qa.mjs
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4
