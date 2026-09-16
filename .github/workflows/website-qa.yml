@@ -1,5 +1,6 @@
 name: Website QA
 
+# Final release-readiness QA for the approved parent and school website copy.
 on:
   pull_request:
     paths:
