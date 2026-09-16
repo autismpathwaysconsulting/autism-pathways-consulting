@@ -68,11 +68,18 @@ test('frontline consent reads are data-minimised while admin roles can view auth
   const source = await read('functions/api/pathways/consents.js');
   assert.match(source, /canViewDetails/);
   assert.match(source, /\['admin','senco'\]\.includes\(access\.role\)/);
-  assert.match(source, /SELECT rowid AS decision_sequence, consent_id, consent_type, status, granted_at, expires_at, created_at/);
-  assert.match(source, /authority_label/);
-  assert.match(source, /reference_note/);
-  const frontline = source.slice(source.lastIndexOf('SELECT rowid AS decision_sequence'));
+  const getSource = source.slice(source.indexOf('export async function onRequestGet'), source.indexOf('export async function onRequestPost'));
+  const frontlineStart = getSource.lastIndexOf('const result = await auth.db.prepare(`SELECT rowid AS decision_sequence');
+  const frontlineEnd = getSource.indexOf('const consents =', frontlineStart);
+  const frontline = getSource.slice(frontlineStart, frontlineEnd);
+  assert.match(frontline, /decision_sequence/);
+  assert.match(frontline, /consent_id, consent_type, status, granted_at, expires_at, created_at/);
+  assert.match(frontline, /family-sharing/);
   assert.doesNotMatch(frontline, /authority_label|reference_note|created_by/);
+  const privileged = getSource.slice(getSource.indexOf('if (canViewDetails)'), frontlineStart);
+  assert.match(privileged, /authority_label/);
+  assert.match(privileged, /reference_note/);
+  assert.match(privileged, /created_by/);
 });
 
 test('authority record and matching audit commit in one D1 batch', async () => {
