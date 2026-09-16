@@ -19,21 +19,20 @@ Purpose: prevent APC from advertising or accepting paid programme delivery befor
 - latest slides review,
 - workbook/material requirements verification,
 - exact mandatory content / activities / timing,
-- online/in-person implementation details,
-- exact participant completion/documentation rules.
+- online/in-person implementation details.
 
-### Hanen clarification status
-The September 2026 clarification email attempt bounced back and therefore did **not** reach Hanen. Treat all questions from that message as unresolved unless the current licensed materials or another verified Hanen source answer them.
+### Hanen clarification reply received — September 2026
+CJ received a written reply from Hanen addressing the six clarification questions.
 
-Still unresolved where not stated in current authoritative materials:
-- participant certificate/documentation wording,
-- promotional assets / mark use,
-- cross-border delivery clarification,
-- HRD Corp use of licensed programme material if later pursued.
+Confirmed by Hanen:
+- **Participant certificates:** yes. Certificate templates have already been created and are included in CJ's downloadable Clinical Resources with the programme slides/resources. Use the official templates rather than inventing an APC certificate for official Hanen programme completion.
+- **Professional-development hours:** yes. CJ may state the official programme/training hours as professional-development hours when using the official Hanen programme format and requirements.
+- **Promotion:** Hanen-provided programme flyers may be used for programmes CJ is licensed to deliver. On APC's website/social media, CJ may provide a brief programme description and link to the relevant Hanen programme page; available official promotional videos may be linked. Any APC-created promotional material for a Hanen programme, such as a custom poster or flyer, must be submitted to `copyright@hanen.org` for review and approval before use.
+- **Cross-border delivery:** yes. Hanen stated CJ's certification permits international delivery, online or in person, subject to CJ remaining within professional scope and complying with local law/regulatory requirements in the destination country.
+- **Pricing:** yes. CJ may set his own commercial fee for delivering licensed programmes, while separately accounting for required participant materials/Hanen resources.
 
-The bounced email does not block APC's separate parent services because those are APC-owned services and do not deliver Hanen programmes.
-
-Before paid Hanen delivery, resolve any item that remains material to the exact format being sold. Do not infer permission from silence or from the failed email attempt.
+Still unresolved:
+- **HRD Corp registration:** Hanen needs more information about the HRD Corp registration process and what would be required from Hanen before deciding whether registration of an official Hanen programme can be accommodated. Hanen emphasised that training materials, including slides, outlines and handouts, must remain with the certified Hanen member and cannot be shared with a third party.
 
 ### Requires CJ personally
 - study/revision,
@@ -49,10 +48,10 @@ All must be true:
 - readiness >= 8.5/10,
 - zero critical fail findings,
 - participant materials available,
+- official certificate template/completion rules verified in the current Clinical Resources,
 - price/quote approved,
 - terms/cancellation/payment ready,
-- delivery format/venue/tech ready,
-- participant documentation rule confirmed if relevant to the sold offer.
+- delivery format/venue/tech ready.
 
 ## 2. Teacher Talk B / C
 
@@ -74,13 +73,14 @@ Do not assume readiness for B/C merely because A is ready.
 - verify required individual video-feedback elements,
 - map full vs module delivery workload,
 - create separate pricing model based on actual feedback workload,
-- finalise video privacy/consent operations.
+- finalise video privacy/consent operations,
+- verify and use Hanen's official certificate template/resources.
 
 ### Paid-launch gate
 - current materials reviewed,
 - chosen format is an authorised format,
 - required video feedback operationally safe,
-- participant documentation confirmed where applicable,
+- official participant documentation confirmed,
 - CJ rehearsal/readiness passed,
 - price reflects group + individual feedback workload.
 
@@ -97,6 +97,7 @@ Dependencies:
 - secure video handling process finalised,
 - scheduling capacity modelled per participant,
 - quote built from actual workload rather than simple live-hour rate,
+- official participant certificate resources verified,
 - CJ full rehearsal/readiness passed.
 
 ## 5. School enquiry launch versus paid-course launch
@@ -119,15 +120,39 @@ Do not conflate an enquiry-ready website with trainer delivery readiness.
 
 ## 6. Cross-border delivery
 
-Before accepting delivery outside Malaysia:
-- confirm Hanen territorial/licence permission for the exact programme and format from current authoritative sources,
+Hanen has confirmed international delivery is permitted online or in person under CJ's certification.
+
+Before accepting delivery outside Malaysia, APC still must:
 - check local professional/regulatory scope,
 - check privacy/data-transfer requirements if classroom video is involved,
-- confirm tax/payment/logistics.
+- confirm tax/payment/logistics,
+- confirm any destination-specific institutional requirements.
 
-Do not advertise worldwide availability as a blanket claim.
+Do not describe this as blanket legal clearance for every country. Hanen permission does not replace local-law review.
 
-## 7. Recognition path after first pilot
+## 7. Promotion rules
+
+For official Hanen programme promotion:
+- use Hanen-provided flyers/resources where available,
+- use a brief APC description and link to the official Hanen programme page,
+- link to official Hanen promotional videos where available,
+- do not create and publish a custom Hanen-programme poster/flyer without Hanen copyright review and approval,
+- keep official Hanen programme identity separate from APC-owned autism-specific training.
+
+## 8. HRD Corp path
+
+HRD Corp remains a separate future procurement project.
+
+Before returning to Hanen on HRD Corp, APC should prepare a concise factual pack explaining:
+- what HRD Corp requires from a training provider,
+- what programme documents HRD Corp would need to see or retain,
+- whether third-party copyrighted slides/handouts would need to be uploaded/shared,
+- whether a licence/authorisation letter from Hanen is required,
+- whether programme registration can protect confidential/proprietary materials.
+
+Only then ask Hanen whether the exact HRD process can be accommodated.
+
+## 9. Recognition path after first pilot
 
 After real institutional demand and one or more successful cohorts:
 - collect implementation feedback,
@@ -136,8 +161,8 @@ After real institutional demand and one or more successful cohorts:
 - consider APC-owned separately accredited educator courses later,
 - keep Hanen programme-owner IP separate from APC-owned accreditation efforts.
 
-## 8. Stop rule
+## 10. Stop rule
 
 Do not add a new certification/course to the immediate plan until APC has tested demand for the current licensed portfolio.
 
-The current bottleneck is readiness + demand validation, not shortage of credentials.
+The current bottleneck is programme readiness + demand validation, not shortage of credentials.
