@@ -176,10 +176,9 @@ export async function writeStudentState({
     : null;
   const localDate = localDateKey(nowDate, authorityDecision?.timeZone || 'UTC');
 
-  // Revision and matching audit are created by the update trigger in this same
-  // SQLite transaction. The predicates below also close both lifecycle and
-  // authority-revocation races between the earlier API authorization read and
-  // this canonical write.
+  // Revision and matching audit are created by the update trigger in this same SQLite transaction.
+  // The predicates below also close both lifecycle and authority-revocation races between the
+  // earlier API authorization read and this canonical write.
   const result = await db.prepare(`UPDATE pathways_student_state
     SET schema_version = ?, revision = ?, state_json = ?, state_hash = ?,
         updated_at = ?, updated_by = ?, last_action = ?, last_request_id = ?
