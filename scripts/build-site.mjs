@@ -12,6 +12,8 @@ import { fileURLToPath } from "node:url";
 export const PUBLIC_FILES = Object.freeze([
   "404.html",
   "about.html",
+  "autism-friendly-places-kl-pj.html",
+  "autism-friendly-places-cover.webp",
   "bedtime.html",
   "booking-confirmed-call.html",
   "booking-confirmed-session.html",
