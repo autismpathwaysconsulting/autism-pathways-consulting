@@ -74,7 +74,7 @@ function preferredDay(){
 
 function uid(prefix){return `${prefix}-${crypto.randomUUID()}`}
 function clone(value){return JSON.parse(JSON.stringify(value))}
-function escapeHtml(value=''){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[char]))}
+function escapeHtml(value=''){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
 function selectedOrg(){return organizations.find(item=>item.organization_id===organizationId)||null}
 function selectedStudent(){return students.find(item=>item.student_id===studentId)||null}
 function currentMembership(){return user?.memberships?.find(item=>item.organization_id===organizationId)||null}
