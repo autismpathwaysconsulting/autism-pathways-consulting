@@ -1,0 +1,57 @@
+name: Website QA
+
+on:
+  pull_request:
+    paths:
+      - 'services.html'
+      - 'start.html'
+      - 'terms.html'
+      - 'pay/**'
+      - 'booking-confirmed-session.html'
+      - 'schools.html'
+      - 'about.html'
+      - 'tests/website_authority.json'
+      - 'tests/validate_website_authority.py'
+      - 'tests/test_website_authority.py'
+      - 'scripts/build-site.mjs'
+      - 'package.json'
+      - '.github/workflows/website-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  website-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TZ: Asia/Kuala_Lumpur
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate website authority
+        run: python tests/validate_website_authority.py
+
+      - name: Run authority adversarial tests
+        run: python tests/test_website_authority.py
+
+      - name: Build public site
+        run: npm run build
+
+      - name: Test public build allowlist
+        run: npm run test:site-build
