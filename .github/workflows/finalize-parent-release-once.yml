@@ -1,0 +1,82 @@
+name: Finalize Parent Release Once
+
+on:
+  push:
+    branches:
+      - feat/educator-pd-weekend-launch
+    paths:
+      - '.github/workflows/finalize-parent-release-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-approved-copy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/educator-pd-weekend-launch
+      - name: Apply approved optional Action Note wording
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'services.html': [
+                  (
+                      'APC One-Concern Action Note, a concise written next-step summary, sent within 2 working days',
+                      'When useful, an APC One-Concern Action Note provides a concise written next-step summary and is sent within 2 working days'
+                  ),
+              ],
+              'pay/index.html': [
+                  (
+                      'guidance on what to observe, an APC One-Concern Action Note, and one clarification message within 7 days about the agreed concern or plan. The Action Note target is within 2 working days after the session.',
+                      'guidance on what to observe, and one clarification message within 7 days about the agreed concern or plan. When a written summary would be useful, CJ may also send an APC One-Concern Action Note within 2 working days.'
+                  ),
+              ],
+              'terms.html': [
+                  (
+                      'guidance on what to observe next, an APC One-Concern Action Note, and one clarification message within 7 calendar days about the agreed concern or plan only. The Action Note target is within 2 working days after the session.',
+                      'guidance on what to observe next, and one clarification message within 7 calendar days about the agreed concern or plan only. When a written summary would be useful, CJ may also provide an APC One-Concern Action Note; when provided, the target is within 2 working days after the session.'
+                  ),
+                  (
+                      'The One-Concern Action Note is targeted for delivery within 2 working days after the session.',
+                      'When an APC One-Concern Action Note is useful and provided, it is targeted for delivery within 2 working days after the session.'
+                  ),
+              ],
+              'tests/validate_parent_offer_release.py': [
+                  (
+                      '"APC One-Concern Action Note",\n    "within 2 working days",',
+                      '"When useful, an APC One-Concern Action Note",\n    "within 2 working days",'
+                  ),
+                  (
+                      '"APC One-Concern Action Note",\n    "APC Home Implementation Programme",',
+                      '"When a written summary would be useful",\n    "APC One-Concern Action Note within 2 working days",\n    "APC Home Implementation Programme",'
+                  ),
+                  (
+                      '"APC One-Concern Action Note",\n    "APC Home Implementation Programme (RM1,800)",',
+                      '"When a written summary would be useful",\n    "APC One-Concern Action Note",\n    "when provided, the target is within 2 working days",\n    "APC Home Implementation Programme (RM1,800)",'
+                  ),
+              ],
+          }
+
+          for filename, pairs in replacements.items():
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+              original = text
+              for old, new in pairs:
+                  if old not in text:
+                      raise SystemExit(f'Expected text not found in {filename}: {old}')
+                  text = text.replace(old, new, 1)
+              if text == original:
+                  raise SystemExit(f'No change made to {filename}')
+              path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit approved copy
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add services.html pay/index.html terms.html tests/validate_parent_offer_release.py
+          git commit -m "Align Action Note wording with approved optional use"
+          git push origin HEAD:feat/educator-pd-weekend-launch
