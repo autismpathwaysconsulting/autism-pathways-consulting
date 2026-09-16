@@ -95,9 +95,14 @@ forbid(
     "HRD Corp claimable",
     "KPM accredited",
     "KPM recognised",
-    "Hanen-certified provider",
     "SCERTS-certified",
-    "guaranteed child outcomes",
+)
+require(
+    "schools.html",
+    "Attendance does not make participants Hanen-certified providers",
+    "No current claim of HRD Corp or KPM accreditation",
+    "No guaranteed child outcomes",
+    "Public paid course dates are not yet being advertised",
 )
 
 print("Parent/school release copy validation passed.")
