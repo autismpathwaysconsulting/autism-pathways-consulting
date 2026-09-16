@@ -168,7 +168,8 @@ test('migration makes canonical state history atomic and audit request-idempoten
   assert.doesNotMatch(schema,/student_id TEXT REFERENCES pathways_students\(student_id\) ON DELETE SET NULL/);
   const stateLib=await readFile(new URL('../functions/lib/pathways/state.js',import.meta.url),'utf8');
   assert.match(stateLib,/same SQLite transaction/);
-  assert.match(stateLib,/pathways_state_history_after_update/);
+  assert.doesNotMatch(stateLib,/INSERT INTO pathways_state_revisions/);
+  assert.doesNotMatch(stateLib,/INSERT INTO pathways_audit_log/);
   assert.doesNotMatch(stateLib,/revision insert failed after canonical write/);
 });
 
