@@ -1,3 +1,4 @@
+// These are aggregate categories: services includes /parents and /schools; resources includes /blog.
 export const PAGES = Object.freeze(["home", "services", "start", "about", "resources"]);
 export const EVENTS = Object.freeze(["page_view", "booking_click", "calendar_open", "booking_submitted"]);
 

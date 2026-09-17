@@ -1,4 +1,4 @@
-const pages = { home: "Home", services: "Services", start: "Start Here", about: "About", resources: "Resources" };
+const pages = { home: "Home", services: "Parent & school services", start: "Start Here", about: "About", resources: "Resources & blog" };
 const events = { page_view: "Page views", booking_click: "Booking clicks", calendar_open: "Calendar opens", booking_submitted: "Submitted bookings (embed)" };
 const status = document.getElementById("status");
 const counts = document.getElementById("counts");

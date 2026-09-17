@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import vm from "node:vm";
 import { onRequest } from "../functions/api/site-metrics.js";
 import { onRequest as report } from "../functions/api/content-os/site-metrics.js";
+import { validMetric } from "../functions/lib/site-metrics.js";
 import { onRequest as auth } from "../functions/_middleware.js";
 
 function database() {
@@ -62,6 +63,15 @@ test("browser counters ignore form payloads, deduplicate callbacks, and respect 
       fetch: (...args) => { calls.push(args); return Promise.resolve(); }, URL, Set };
     vm.createContext(context); vm.runInContext(source.slice(start, end), context);
     return { calls, context, listeners };
+  }
+  for (const [pathname, page] of [["/parents", "services"], ["/schools", "services"], ["/blog/", "resources"]]) {
+    const visitor = browser({}, pathname);
+    assert.deepEqual(JSON.parse(visitor.calls[0][1].body), { page, event: "page_view" });
+    visitor.listeners.click({ target: { closest: () => ({ href: "https://cal.com/autismpathwaysconsulting/first-step-call" }) } });
+    const click = JSON.parse(visitor.calls[1][1].body);
+    assert.deepEqual(click, { page, event: "booking_click" });
+    assert.ok(validMetric(click));
+    assert.equal(browser({ globalPrivacyControl: true }, pathname).calls.length, 0);
   }
   const active = browser();
   vm.runInContext('recordSiteMetric("booking_submitted"); recordSiteMetric("booking_submitted");', active.context);
