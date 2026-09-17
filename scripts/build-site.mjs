@@ -78,6 +78,7 @@ export const PUBLIC_FILES = Object.freeze([
   "terms.html",
   "thank-you-free-guide.html",
   "apc-design-system.css",
+  "apc-article-layout.css",
   "apc-option-d-primary-logo.png",
   "apc-option-d-primary-logo.webp",
   "apple-touch-icon.png",
