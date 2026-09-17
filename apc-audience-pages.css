@@ -46,3 +46,30 @@
 html:has(body.apc-audience-page) { scroll-snap-type:none!important; }
 .apc-v2.apc-audience-page .apc-snap-stop { scroll-snap-stop:normal!important; }
 .apc-audience-page main .blog-category-links { width:auto;min-height:0;margin:0;padding:0;justify-content:flex-start; }
+
+/* Purposeful visuals: a clear next action remains alongside each opening. */
+.apc-audience-page .audience-hero-split { display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:36px;align-items:center;max-width:none; }
+.apc-audience-page .audience-hero-copy { min-width:0; }
+.apc-audience-page .audience-hero-split h1 { font-size:clamp(2.2rem,3.8vw,3.25rem);max-width:23ch; }
+.apc-audience-page .audience-hero-visual { margin:0;border:1px solid #dbe5e2;border-radius:14px;overflow:hidden;background:#fff9f1; }
+.apc-audience-page .audience-hero-visual img { display:block;width:100%;height:auto; }
+.apc-audience-page .audience-hero-visual figcaption { padding:20px;line-height:1.6; }
+.apc-audience-page .audience-hero-visual figcaption span { display:block;margin-top:7px;font-size:.95rem; }
+.apc-audience-page .training-visual { padding:24px;background:#eef4ef;border-radius:14px; }
+.apc-audience-page .training-guide { display:flex;gap:14px;align-items:center; }
+.apc-audience-page .training-guide img { width:64px;height:64px;flex:0 0 64px;object-fit:cover;border-radius:50%; }
+.apc-audience-page .training-guide p { font-size:.9rem;margin:0; }
+.apc-audience-page .training-guide span { display:block;font-size:.8rem;line-height:1.5;margin-top:3px; }
+.apc-audience-page .visual-label { margin:24px 0 12px;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em; }
+.apc-audience-page .training-example { list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:example; }
+.apc-audience-page .training-example li { background:#fff;padding:14px 16px;border-radius:8px;border-left:3px solid #6b9e7a; }
+.apc-audience-page .training-example strong { display:block;font-size:.95rem; }
+.apc-audience-page .training-example span { display:block;font-size:.9rem;line-height:1.6;margin-top:3px; }
+.apc-audience-page .visual-caption { font-size:.8rem;margin:16px 0 0;line-height:1.5; }
+.apc-audience-page .guide-card-visual { display:block;width:100%;height:auto;margin:0 0 20px;border-radius:8px; }
+@media(max-width:760px) {
+ .apc-audience-page .audience-hero-split { grid-template-columns:1fr;gap:24px; }
+ .apc-audience-page .audience-hero-visual { max-width:400px; }
+ .apc-audience-page .training-visual { padding:20px; }
+ .apc-audience-page .guide-card-visual { max-height:120px;object-fit:cover; }
+}

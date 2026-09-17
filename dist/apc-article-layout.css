@@ -116,3 +116,7 @@
 .apc-v2.apc-article-page .step:hover { transform:none;box-shadow:none!important; }
 html:has(body.apc-article-page) { scroll-snap-type:none!important; }
 .apc-v2.apc-article-page .apc-snap-stop { scroll-snap-stop:normal!important; }
+
+.apc-article-page main > .guide-topic-visual { float:right;display:block;width:160px;height:72px;margin:0 0 16px 24px; }
+.apc-article-page main > h1 { clear:both; }
+@media(max-width:600px) { .apc-article-page main > .guide-topic-visual { float:none;width:120px;height:54px;margin:8px 0 16px; } }
