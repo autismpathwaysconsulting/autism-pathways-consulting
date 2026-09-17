@@ -11,6 +11,17 @@ import { fileURLToPath } from "node:url";
 
 export const PUBLIC_FILES = Object.freeze([
   "404.html",
+  "guide-visual-mornings.svg",
+  "guide-visual-bedtime.svg",
+  "guide-visual-mealtimes.svg",
+  "guide-visual-screens.svg",
+  "guide-visual-communication.svg",
+  "guide-visual-echolalia.svg",
+  "guide-visual-meltdowns.svg",
+  "guide-visual-school-collapse.svg",
+  "guide-visual-sensory-public.svg",
+  "guide-visual-task-initiation.svg",
+
   "apc-school-enquiry.js",
   "apc-navigation.js",
   "apc-navigation.css",
