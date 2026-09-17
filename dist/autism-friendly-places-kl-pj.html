@@ -79,8 +79,8 @@ body.apc-places-page{background:#fffdf9;}
 .apc-places-page > .section-rail{display:none!important;}
 .apc-places-page > main{padding-bottom:64px!important;}
 .apc-places-page > main > h1{font-size:clamp(2rem,4.2vw,3.25rem)!important;font-weight:400;letter-spacing:-.025em;}
-.apc-places-page > main > section{background:transparent!important;border:0;border-top:1px solid #dbe5e2;padding:38px 0!important;scroll-margin-top:100px;scroll-snap-align:none;}
-.apc-places-page > main > section h2{font-size:clamp(1.6rem,3vw,2.2rem)!important;font-weight:400;line-height:1.2;letter-spacing:-.015em;margin-bottom:20px!important;}
+.apc-places-page > main > section:not(.outing-summary){background:transparent!important;border:0;border-top:1px solid #dbe5e2;padding:38px 0!important;scroll-margin-top:100px;scroll-snap-align:none;}
+.apc-places-page > main > section:not(.outing-summary) h2{font-size:clamp(1.6rem,3vw,2.2rem)!important;font-weight:400;line-height:1.2;letter-spacing:-.015em;margin-bottom:20px!important;}
 .apc-places-page .venue-image{margin:20px 0 24px;}
 .apc-places-page .venue-image img{border-radius:8px;}
 .apc-places-page .place-list{padding:24px 0 28px;border-top:1px solid #dbe5e2;}
@@ -89,21 +89,17 @@ body.apc-places-page{background:#fffdf9;}
 .apc-places-page .place-list a{font-size:.98rem;font-weight:600;line-height:1.45;text-decoration:none;}
 .apc-places-page .place-list a:hover{text-decoration:underline;}
 .apc-places-page .note{border-radius:0;background:#f2f6f3;padding:18px 20px;}
-.apc-places-page .outing-cta{margin:8px auto 28px;padding:20px 0;border-top:0;border-bottom:1px solid #dbe5e2;}
-.apc-places-page .outing-cta-end{border:0;margin-bottom:0;padding-top:24px;}
-.apc-places-page .article-author{display:flex;align-items:flex-start;gap:20px;max-width:700px;margin:4px auto 0;padding:24px 0;border-block:1px solid #dbe5e2;}
-.apc-places-page .article-author img{display:block;width:88px;height:88px;flex:0 0 88px;object-fit:cover;border-radius:50%;}
-.apc-places-page .article-author h2{font-family:"DM Sans",sans-serif;font-size:1.05rem!important;font-weight:700;line-height:1.5;margin:0 0 4px;}
-.apc-places-page .article-author p{font-size:.95rem;line-height:1.65;margin:0 0 6px;}
-.apc-places-page .article-author .author-role{font-size:.85rem;color:#526966;}
-.apc-places-page .article-author a{display:inline-flex;align-items:center;min-height:44px;font-size:.95rem;}
+.apc-places-page .outing-cta:not(.outing-cta-end){margin:8px auto 28px;padding:20px 0;border-top:0;border-bottom:1px solid #dbe5e2;}
 @media(max-width:600px){
 .apc-places-page .place-list ol{grid-template-columns:1fr;gap:2px;}
-.apc-places-page > main > section{padding-block:30px!important;}
-.apc-places-page .article-author{gap:14px;}
-.apc-places-page .article-author img{width:64px;height:64px;flex-basis:64px;}
+.apc-places-page > main > section:not(.outing-summary){padding-block:30px!important;}
 .apc-places-page .outing-cta-links{align-items:flex-start;gap:4px 16px;}
 }
+
+.apc-v2.apc-places-page:not(.apc-home-page) .apc-snap-stop{scroll-snap-align:none;scroll-snap-stop:normal;scroll-margin-top:100px;}
+.apc-places-page .article-byline{display:flex;align-items:center;gap:14px;padding:8px 0;}
+.apc-places-page .article-byline img{display:block;width:56px;height:56px;flex:0 0 56px;object-fit:cover;border-radius:50%;}
+.apc-places-page .article-byline .checked-date{font-size:.85rem;}
 </style>
 </head>
 
@@ -124,7 +120,7 @@ body.apc-places-page{background:#fffdf9;}
 <figure class="arrival-cover"><img src="/autism-friendly-places-cover.webp" srcset="/autism-friendly-places-cover-400.webp 400w, /autism-friendly-places-cover-800.webp 800w, /autism-friendly-places-cover.webp 864w" sizes="(max-width: 600px) min(320px, calc(100vw - 32px)), 360px" fetchpriority="high" loading="eager" width="864" height="1080" alt="APC carousel cover: seven autism-friendly places in KL and PJ, featuring sensory spaces, inclusive play and calmer outings"><figcaption>A starting point for your next family outing.</figcaption></figure>
 <p>A family outing can take a lot of preparation: where to park, how busy it might be, and where your child can take a break. This guide brings together seven places in Kuala Lumpur and Petaling Jaya, with the details you need before setting off.</p>
 <p>Some offer a quieter room or a more flexible activity. Others offer space to move or support autistic adults through employment. Choose the kind of outing your child enjoys, then check the access arrangements below.</p>
-<p class="meta">By <a href="/about">CJ Lim, autism educator</a> · Details checked 17 September 2026</p>
+<p class="meta article-byline"><img src="/cj-photo.webp" width="400" height="400" loading="lazy" decoding="async" alt="CJ Lim"><span>By <a href="/about">CJ Lim, autism educator</a><br><span class="checked-date">Details checked 17 September 2026</span></span></p>
 <div class="note"><strong>Choose the support that fits your child.</strong> “Autism-friendly” does not mean every space will suit every child. Prices, access arrangements and programmes can change. Check with the venue before travelling.</div>
 <nav class="place-list" aria-label="Places in this guide"><strong>Jump to a place</strong><ol>
 <li><a href="#one-utama">1 Utama Sensory Pod<span class="place-purpose">Sensory play and a quieter break</span></a></li>
@@ -198,11 +194,10 @@ body.apc-places-page{background:#fffdf9;}
 <p>You could start with a takeaway rather than a sit-down visit. For a child who likes knowing the sequence, explain it beforehand: go in, choose a flavour, pay, then leave or find a seat.</p>
 <p>YL’s inclusion work focuses on employment. If your child needs a quiet space during an outing, ask about the café environment rather than assuming it has the same facilities as the malls above.</p>
 <p class="visit"><a href="https://ylgelateria.com/">Read YL’s story and contact the café</a></p><p class="visit map-link"><a href="https://maps.app.goo.gl/mWJsRfdvh3XKC87J6">Find YL&#x27;s Gelateria on Google Maps</a></p></section>
-<section><h2>Before you head out</h2>
+<section class="outing-summary"><h2>Before you head out</h2>
 <ul><li><strong>Choose one manageable stop.</strong> You can keep the first visit short and leave room to change the plan.</li><li><strong>Check access first.</strong> Ask about registration, booking, quieter times and where you can take a break.</li><li><strong>Make the plan familiar.</strong> Show your child a photo, explain what will happen, and bring comfort items they already use.</li></ul>
 <p>A short visit can still be a worthwhile outing. You do not need to stay longer simply because you planned to.</p>
 </section>
-<aside class="article-author" aria-label="About the author"><img src="/cj-photo.webp" width="400" height="400" loading="lazy" decoding="async" alt="CJ Lim, autism educator and founder of Autism Pathways Consulting"><div><h2>CJ Lim</h2><p class="author-role">Autism Educator · Founder of APC</p><p>CJ helps parents understand their autistic child’s needs and find practical ways to support everyday family life.</p><a href="/about">More about CJ</a></div></aside>
 <aside class="outing-cta outing-cta-end" aria-label="Further parent support"><p><strong>Need help choosing your next step?</strong> Browse more parent guides, or book a Free 15-Min First Step Call with CJ to check which APC support option fits. The call is a fit check, not a consultation or assessment.</p><div class="outing-cta-links"><a class="outing-call" href="https://cal.com/autismpathwaysconsulting/first-step-call">Book a free First Step Call</a><a href="/resources">Explore more parent guides</a></div></aside>
 </main>
   <footer class="apc-footer apc-footer-minimal">
