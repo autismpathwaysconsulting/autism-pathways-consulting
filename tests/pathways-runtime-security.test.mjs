@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { webcrypto } from 'node:crypto';
 import { verifyLogin } from '../functions/lib/pathways/auth.js';
+import { onRequestPost as bootstrap } from '../functions/api/pathways/bootstrap.js';
 
 const app = (await readFile(new URL('../pathways/app.js', import.meta.url), 'utf8'))
   .replace(/^import\s*\{[\s\S]*?\}\s*from\s*'[^']+';\s*/gm, '')
@@ -79,4 +80,43 @@ test('login rejection paths perform equivalent PBKDF2 work and constant-time com
       assert.equal(result.ok,false);assert.deepEqual(calls,[['derive',160000],['digest'],['digest']],kind);
     }
   }finally{Object.defineProperty(globalThis,'crypto',{configurable:true,value:original})}
+});
+
+test('bootstrap reports a runtime hashing limit without writing accounts or exposing secrets', async () => {
+  const original = globalThis.crypto;
+  let writes = 0;
+  const secret = 'private-bootstrap-test-key';
+  const password = 'private-founder-test-password';
+  const db = { prepare: () => ({ first: async () => ({count: 0}) }), batch: async () => { writes++; } };
+  Object.defineProperty(globalThis, 'crypto', { configurable: true, value: {
+    randomUUID: () => webcrypto.randomUUID(),
+    getRandomValues: a => webcrypto.getRandomValues(a),
+    subtle: {
+      digest: (...a) => webcrypto.subtle.digest(...a),
+      importKey: (...a) => webcrypto.subtle.importKey(...a),
+      deriveBits: async () => { throw new DOMException('Pbkdf2 failed: iteration counts above 100000 are not supported (requested 160000).', 'NotSupportedError'); },
+    },
+  }});
+  try {
+    const request = new Request('https://example.test/api/pathways/bootstrap', {
+      method: 'POST', headers: {'Content-Type':'application/json', Origin:'https://example.test', 'X-Pathways-Request':'1', Authorization:'Basic '+btoa('apc:'+secret)},
+      body: JSON.stringify({email:'founder@example.test', password, displayName:'Founder', organizationName:'Demo School', organizationSlug:'demo-school'}),
+    });
+    const response = await bootstrap({request, env:{APC_PATHWAYS_DB:db, APC_PATHWAYS_BOOTSTRAP_SECRET:secret}});
+    const body = await response.text();
+    assert.equal(response.status, 503);
+    assert.equal(JSON.parse(body).code, 'PATHWAYS_PASSWORD_HASH_RUNTIME_LIMIT');
+    assert.equal(writes, 0);
+    assert.ok(!body.includes(password) && !body.includes(secret));
+  } finally {
+    Object.defineProperty(globalThis, 'crypto', {configurable:true, value:original});
+  }
+});
+
+test('bootstrap storage exceptions return JSON without database details', async () => {
+  const response = await bootstrap({request:new Request('https://example.test/api/pathways/bootstrap', {method:'POST'}), env:{APC_PATHWAYS_DB:{prepare(){throw new Error('private database diagnostic');}}}});
+  assert.equal(response.status, 503);
+  const body = await response.text();
+  assert.equal(JSON.parse(body).code, 'PATHWAYS_BOOTSTRAP_RUNTIME_ERROR');
+  assert.ok(!body.includes('private database diagnostic'));
 });

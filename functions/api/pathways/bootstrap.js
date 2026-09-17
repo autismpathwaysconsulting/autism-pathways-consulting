@@ -33,7 +33,7 @@ async function sameSecret(a, b) {
   return diff === 0;
 }
 
-export async function onRequestPost({ request, env }) {
+async function bootstrapRequest({ request, env }) {
   const db = getPathwaysDb(env);
   if (!db) return json({ error: 'Pathways storage is not configured.' }, 503);
   const existingUsers = await countUsers(db);
@@ -131,6 +131,24 @@ export async function onRequestPost({ request, env }) {
     }
     console.error(JSON.stringify({ message: 'Pathways bootstrap failed', errorType: String(error?.name || 'Error') }));
     return json({ error: 'Pathways bootstrap failed.' }, 500);
+  }
+}
+
+export async function onRequestPost(context) {
+  try {
+    return await bootstrapRequest(context);
+  } catch (error) {
+    const message = String(error?.message || '');
+    const hashingLimit = error?.name === 'NotSupportedError' &&
+      /pbkdf2/i.test(message) && /iteration counts above \d+ are not supported/i.test(message);
+    const code = hashingLimit ? 'PATHWAYS_PASSWORD_HASH_RUNTIME_LIMIT' : 'PATHWAYS_BOOTSTRAP_RUNTIME_ERROR';
+    console.error(JSON.stringify({ message: 'Pathways bootstrap runtime failure', code, errorType: String(error?.name || 'Error') }));
+    return json({
+      error: hashingLimit
+        ? 'Password hashing exceeds this runtime\'s supported iteration limit. Setup was not completed; no password or setup-key reset is needed.'
+        : 'Account setup encountered a server runtime error. Do not reset your password or setup key.',
+      code,
+    }, 503);
   }
 }
 
