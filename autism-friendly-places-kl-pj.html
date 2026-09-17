@@ -49,9 +49,24 @@
 <link rel="preload" href="/dm-sans-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/dm-serif-display-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" type="image/png" href="/favicon-32x32.png">
+
+<style id="places-arrival-layout">
+.apc-places-page > main {width:min(calc(100% - 40px),1080px) !important;max-width:1080px !important;padding-top:24px !important;}
+.apc-places-page > main > h1 {width:100%;max-width:none;margin:10px 0 22px !important;font-size:clamp(2rem,4.5vw,3.6rem) !important;line-height:1.12 !important;text-wrap:balance;}
+.apc-places-page > main > :where(p,.note,.place-list,section) {max-width:700px;margin-inline:auto;}
+.apc-places-page > main > .eyebrow {max-width:none;margin-bottom:8px !important;}
+.apc-places-page > main > .back-link {display:inline-block;margin-bottom:14px !important;}
+.apc-places-page .arrival-cover {margin:0 0 28px;}
+.apc-places-page .arrival-cover img {width:min(100%,360px);height:auto;object-fit:contain;}
+@media(max-width:600px){
+.apc-places-page > main {width:calc(100% - 32px) !important;padding-top:18px !important;}
+.apc-places-page > main > h1 {font-size:clamp(1.85rem,8vw,2.5rem) !important;margin-bottom:18px !important;}
+.apc-places-page .arrival-cover img {width:min(100%,320px);}
+}
+</style>
 </head>
 
-<body class="apc-v2 apc-guide-page">
+<body class="apc-v2 apc-guide-page apc-places-page">
 <a class="apc-skip-link" href="#main-content">Skip to main content</a>
   <header class="apc-site-header">
   <div class="apc-shell-inner">
@@ -65,11 +80,11 @@
 <a class="back-link" href="/resources">Back to Resources</a>
 <p class="eyebrow">Family outings · KL &amp; PJ</p>
 <h1>7 Autism-Friendly Places in KL &amp; PJ</h1>
+<figure class="arrival-cover"><img src="/autism-friendly-places-cover.webp" fetchpriority="high" loading="eager" width="864" height="1080" alt="APC carousel cover: seven autism-friendly places in KL and PJ, featuring sensory spaces, inclusive play and calmer outings"><figcaption>A starting point for your next family outing.</figcaption></figure>
 <p>You want to take your child out, but it helps to know what support will actually be there. A place to pause, room to move, or a more flexible cinema experience can make planning easier.</p>
 <p>This list brings together seven places from our <a href="https://www.instagram.com/p/DdQu4U7megk/">APC Instagram carousel</a>. Each offers something different, from sensory spaces and inclusive play to employment opportunities for autistic adults.</p>
 <p class="meta">By CJ Lim · Information checked 16 September 2026</p>
 <div class="note"><strong>Choose the support that fits your child.</strong> “Autism-friendly” does not mean every space will suit every child. Prices, access arrangements and programmes can change. Check with the venue before travelling.</div>
-<figure><img src="/autism-friendly-places-cover.webp" width="864" height="1080" alt="APC carousel cover: seven autism-friendly places in KL and PJ, featuring sensory spaces, inclusive play and calmer outings"><figcaption>A starting point for your next family outing.</figcaption></figure>
 <nav class="place-list" aria-label="Places in this guide"><strong>Jump to a place</strong><ol>
 <li><a href="#we-rock">We Rock The Spectrum, Taman Desa</a></li>
 <li><a href="#one-utama">1 Utama Sensory Pod</a></li>
