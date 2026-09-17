@@ -12,9 +12,11 @@
   line-height:1.14!important; letter-spacing:-.025em!important;
   text-wrap:balance;
 }
-.apc-article-page > main > .back-link,
 .apc-article-page > main > .eyebrow { display:block;max-width:none; }
-.apc-article-page > main > .back-link { margin-bottom:18px; }
+.apc-article-page > main > .back-link {
+  display:inline-flex;align-items:center;max-width:100%;min-height:44px;
+  margin-inline:0;margin-bottom:18px;
+}
 .apc-article-page main p,
 .apc-article-page .step-body p { font-size:1.05rem!important;line-height:1.75!important; }
 .apc-article-page main a { color:#0f766e;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere; }
