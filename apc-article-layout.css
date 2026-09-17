@@ -109,3 +109,10 @@
   .apc-article-page .two-col { grid-template-columns:1fr!important; }
   .apc-article-page .step { gap:12px!important; }
 }
+.apc-article-page main .article-reviewed { font-size:.85rem!important;color:#526966;margin-top:-12px; }
+.apc-article-page .article-sources h2 { font-size:1.4rem!important; }
+.apc-article-page .article-sources li { margin:10px 0; }
+.apc-article-page .article-sources p { font-size:.9rem!important; }
+.apc-v2.apc-article-page .step:hover { transform:none;box-shadow:none!important; }
+html:has(body.apc-article-page) { scroll-snap-type:none!important; }
+.apc-v2.apc-article-page .apc-snap-stop { scroll-snap-stop:normal!important; }

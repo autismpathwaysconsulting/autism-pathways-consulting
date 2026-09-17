@@ -1,0 +1,31 @@
+/* Services and Resources use native details disclosures, not hover-only menus. */
+.apc-v2 .apc-shell-inner { position:relative; }
+.apc-v2 .apc-nav-dropdown { position:relative;margin:0;border:0;padding:0;min-width:0; }
+.apc-v2 .apc-nav-dropdown > summary {
+  display:flex;align-items:center;gap:8px;min-height:44px;padding:0;
+  color:#073734;font:700 .9rem/1.4 'DM Sans',sans-serif;cursor:pointer;list-style:none;
+}
+.apc-v2 .apc-nav-dropdown > summary::-webkit-details-marker { display:none; }
+.apc-v2 .apc-nav-dropdown > summary::after {
+  content:'';width:6px;height:6px;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);margin-top:-3px;
+}
+.apc-v2 .apc-nav-dropdown[open] > summary::after { transform:rotate(225deg);margin-top:3px; }
+.apc-v2 .apc-dropdown-panel {
+  position:absolute;z-index:210;top:calc(100% + 8px);right:0;width:270px;
+  padding:8px;background:#fffdf9;border:1px solid #cddeda;border-radius:10px;
+  box-shadow:0 14px 32px rgba(7,55,52,.12);
+}
+.apc-v2 .apc-shell-nav .apc-dropdown-panel a {
+  display:flex;justify-content:flex-start;min-height:46px;padding:11px 12px;
+  border-radius:6px;line-height:1.45;white-space:normal;
+}
+.apc-v2 .apc-dropdown-panel a:hover,.apc-v2 .apc-dropdown-panel a:focus-visible { background:#edf4f0; }
+.apc-v2 .apc-nav-dropdown:has(a[aria-current='page']) > summary { text-decoration:underline;text-underline-offset:6px; }
+.apc-v2 .apc-nav-dropdown summary:focus-visible { outline:3px solid #0f766e;outline-offset:3px;border-radius:4px; }
+@media(max-width:760px) {
+  .apc-v2 .apc-nav-dropdown { position:static; }
+  .apc-v2 .apc-nav-dropdown > summary { justify-content:center;font-size:.78rem;padding:6px; }
+  .apc-v2 .apc-dropdown-panel { top:100%;left:0;right:0;width:auto;max-height:calc(100dvh - 150px);overflow-y:auto; }
+  .apc-v2 .apc-shell-nav .apc-dropdown-panel a { font-size:.9rem!important; }
+}
+.apc-v2 .apc-shell-nav > a { min-height:44px; }

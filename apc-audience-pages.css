@@ -1,0 +1,48 @@
+.apc-audience-page main { width:min(1080px,calc(100% - 40px));margin:auto;padding:36px 0 64px; }
+.apc-audience-page main > section { padding:32px 0;border-bottom:1px solid #dbe5e2; }
+.apc-audience-page .audience-hero { max-width:920px;padding-top:12px; }
+.apc-audience-page h1 { max-width:22ch;font-size:clamp(2.3rem,4.6vw,3.6rem);line-height:1.13;margin:14px 0 22px; }
+.apc-audience-page h2 { font-size:clamp(1.7rem,3vw,2.3rem);line-height:1.2;margin:0 0 18px; }
+.apc-audience-page h3 { font-size:1.3rem;line-height:1.35;margin:0 0 12px; }
+.apc-audience-page p { max-width:68ch;line-height:1.75; }
+.apc-audience-page .audience-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:24px 0; }
+.apc-audience-page .audience-card { min-width:0;padding:22px;border:1px solid #dbe5e2;background:#fff;border-radius:10px; }
+.apc-audience-page .audience-card p { font-size:1rem; }
+.apc-audience-page .audience-actions { display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:22px; }
+.apc-audience-page main a { color:#0f766e;text-underline-offset:3px; }
+.apc-audience-page .audience-actions a { display:inline-flex;align-items:center;min-height:44px; }
+.apc-audience-page .audience-actions .audience-primary { color:#fff;background:#0f766e;border-radius:6px;padding:11px 18px;text-decoration:none; }
+.apc-audience-page .audience-author { display:flex;align-items:center;gap:16px;margin:26px 0; }
+.apc-audience-page .audience-author img { width:64px;height:64px;flex:0 0 64px;border-radius:50%;object-fit:cover; }
+.apc-audience-page .audience-author p { margin:0;font-size:.9rem; }
+.apc-audience-page .audience-note { padding:18px 20px;border-left:3px solid #6b9e7a;background:#f2f6f2;margin:24px 0; }
+.apc-audience-page .audience-list { padding-left:22px;max-width:75ch; }
+.apc-audience-page .audience-list li { margin:10px 0; }
+.apc-audience-page details.audience-faq { border-bottom:1px solid #dbe5e2;padding:4px 0; }
+.apc-audience-page details.audience-faq > summary { padding:14px 0;min-height:48px;cursor:pointer;color:#073734;font-weight:600; }
+.apc-audience-page .blog-category-links { display:flex;flex-wrap:wrap;gap:8px 20px; }
+.apc-audience-page .blog-category-links a { min-height:44px;display:inline-flex;align-items:center; }
+.apc-audience-page .blog-feature { display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:center; }
+.apc-audience-page .blog-feature img { display:block;width:100%;height:auto;border-radius:8px; }
+.apc-audience-page .audience-card a { display:inline-flex;min-height:44px;align-items:center; }
+.apc-audience-page > .section-rail { display:none!important; }
+.apc-v2.apc-audience-page:not(.apc-home-page) .apc-snap-stop { scroll-snap-align:none;scroll-snap-stop:normal;scroll-margin-top:130px; }
+.apc-audience-page main [id] { scroll-margin-top:130px; }
+@media(max-width:760px) {
+ .apc-audience-page main { width:calc(100% - 32px);padding-top:22px; }
+ .apc-audience-page .audience-grid { grid-template-columns:1fr;gap:16px; }
+ .apc-audience-page .blog-feature { grid-template-columns:1fr;gap:22px; }
+ .apc-audience-page .blog-feature img { max-width:260px;margin:auto; }
+}
+.apc-audience-page .form-row { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px; }
+.apc-audience-page .form-field { margin:0 0 20px;min-width:0; }
+.apc-audience-page label { display:block;margin-bottom:6px;font-weight:600; }
+.apc-audience-page input,.apc-audience-page select,.apc-audience-page textarea { width:100%;min-height:46px;padding:10px 12px;border:1px solid #a8bbb6;border-radius:6px;background:#fff;color:#073734;font:inherit; }
+.apc-audience-page textarea { min-height:140px;resize:vertical; }
+.apc-audience-page button[type=submit] { min-height:46px;padding:12px 18px;border:0;border-radius:6px;background:#0f766e;color:#fff;font:inherit;font-weight:600;cursor:pointer; }
+.apc-audience-page .form-note { margin-top:14px;font-size:.9rem; }
+.apc-audience-page #sf-success { margin-top:24px;padding:20px;background:#eef5f1; }
+@media(max-width:760px) { .apc-audience-page .form-row { grid-template-columns:1fr;gap:0; } }
+html:has(body.apc-audience-page) { scroll-snap-type:none!important; }
+.apc-v2.apc-audience-page .apc-snap-stop { scroll-snap-stop:normal!important; }
+.apc-audience-page main .blog-category-links { width:auto;min-height:0;margin:0;padding:0;justify-content:flex-start; }
