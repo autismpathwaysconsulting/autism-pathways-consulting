@@ -1,0 +1,128 @@
+name: Visual Release QA Once
+
+on:
+  push:
+    branches:
+      - feat/educator-pd-weekend-launch
+    paths:
+      - '.github/workflows/visual-release-qa-once.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/educator-pd-weekend-launch
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install project and browser
+        run: |
+          npm ci
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Build site
+        run: npm run build
+      - name: Run visual and journey checks
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --directory dist >/tmp/apc-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid || true' EXIT
+          sleep 2
+          mkdir -p qa-screenshots
+          cat > visual-qa.mjs <<'JS'
+          import { chromium } from 'playwright';
+          const browser = await chromium.launch();
+          const pages = ['/services','/start','/pay/','/terms','/schools'];
+          const viewports = [
+            {name:'desktop', width:1440, height:1000},
+            {name:'mobile', width:390, height:844},
+          ];
+          const failures = [];
+          async function openLocal(page, route) {
+            const response = await page.goto('http://127.0.0.1:4173'+route, {waitUntil:'domcontentloaded', timeout:15000});
+            await page.waitForTimeout(500);
+            return response;
+          }
+          for (const vp of viewports) {
+            const context = await browser.newContext({viewport:{width:vp.width,height:vp.height}});
+            for (const route of pages) {
+              const page = await context.newPage();
+              const errors=[];
+              page.on('pageerror', e => errors.push('pageerror: '+e.message));
+              const response = await openLocal(page, route);
+              if (!response || !response.ok()) failures.push(`${vp.name} ${route}: HTTP ${response?.status()}`);
+              const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+              if (overflow > 2) failures.push(`${vp.name} ${route}: horizontal overflow ${overflow}px`);
+              if (errors.length) failures.push(`${vp.name} ${route}: ${errors.join(' | ')}`);
+              const slug = route.replaceAll('/','_').replace(/^_|_$/g,'') || 'home';
+              await page.screenshot({path:`qa-screenshots/${vp.name}-${slug}.png`, fullPage:true});
+              await page.close();
+            }
+            await context.close();
+          }
+
+          // Parent journey: start -> services -> free call link is present and external booking link is valid.
+          {
+            const context = await browser.newContext({viewport:{width:390,height:844}});
+            const page = await context.newPage();
+            await openLocal(page, '/start');
+            const serviceHref = await page.locator('a[href*="/services"]').first().getAttribute('href').catch(()=>null);
+            if (!serviceHref) failures.push('parent journey: no services route found on Start page');
+            await openLocal(page, '/services');
+            const bookingHref = await page.locator('a[href*="cal.com/autismpathwaysconsulting/first-step-call"]').first().getAttribute('href').catch(()=>null);
+            if (bookingHref !== 'https://cal.com/autismpathwaysconsulting/first-step-call') failures.push(`parent journey: unexpected booking link ${bookingHref}`);
+            const text = await page.locator('body').innerText();
+            for (const required of ['RM350','RM1,800','APC Home Implementation Programme','When useful, an APC One-Concern Action Note']) {
+              if (!text.includes(required)) failures.push(`parent journey: missing ${required}`);
+            }
+            await context.close();
+          }
+
+          // School enquiry: fill synthetic, de-identified data and verify WhatsApp payload without opening WhatsApp.
+          {
+            const context = await browser.newContext({viewport:{width:1440,height:1000}});
+            const page = await context.newPage();
+            await page.addInitScript(() => { window.__apcOpenedUrl = null; window.open = (url) => { window.__apcOpenedUrl = String(url); return null; }; });
+            await openLocal(page, '/schools');
+            await page.fill('#sf-name','Synthetic QA');
+            await page.fill('#sf-school','Example Learning Centre');
+            await page.selectOption('#sf-role',{label:'Principal / Director'});
+            await page.selectOption('#sf-size',{label:'6–10'});
+            await page.fill('#sf-phone','011-0000 0000');
+            await page.selectOption('#sf-interest',{label:'Autism-specific educator support'});
+            await page.fill('#sf-message','Team wants clearer transition support. Synthetic de-identified QA only.');
+            await page.click('button[type="submit"]');
+            const opened = await page.evaluate(() => window.__apcOpenedUrl);
+            if (!opened?.startsWith('https://wa.me/601172998168?text=')) failures.push(`school journey: bad WhatsApp URL ${opened}`);
+            const decoded = decodeURIComponent(opened || '');
+            for (const required of ['Synthetic QA','Example Learning Centre','Autism-specific educator support','Synthetic de-identified QA only']) {
+              if (!decoded.includes(required)) failures.push(`school journey: WhatsApp payload missing ${required}`);
+            }
+            const successVisible = await page.locator('#sf-success').isVisible();
+            if (!successVisible) failures.push('school journey: success state not shown');
+            await context.close();
+          }
+
+          await browser.close();
+          if (failures.length) {
+            console.error(failures.join('\n'));
+            process.exit(1);
+          }
+          console.log('Visual and synthetic journey QA passed.');
+          JS
+          node visual-qa.mjs
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-visual-qa
+          path: qa-screenshots/
+          if-no-files-found: error
