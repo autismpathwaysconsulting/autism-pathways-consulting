@@ -96,7 +96,7 @@ test('Pathways production JavaScript passes Node syntax checks',async()=>{
   for(const file of files)await execFileAsync(process.execPath,['--check',file],{cwd:projectRoot});
 });
 
-test('password records use strong PBKDF2 parameters and reproduce deterministically',async()=>{
+test('password records use salted PBKDF2 and reproduce deterministically',async()=>{
   assert.equal(validatePassword('short'),false);
   assert.equal(validatePassword('correct horse battery staple'),true);
   const record=await createPasswordRecord('correct horse battery staple');

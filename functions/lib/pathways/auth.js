@@ -1,6 +1,9 @@
 const SESSION_COOKIE = '__Host-pathways_session';
 const SESSION_SECONDS = 12 * 60 * 60;
-const PASSWORD_ITERATIONS = 160000;
+// Cloudflare hosted PBKDF2 caps iterations at 100000. New records and dummy
+// login work must use the same count. Never truncate an existing record count.
+// See docs/pathways-password-runtime.md for the pilot security gate.
+const PASSWORD_ITERATIONS = 100000;
 const DUMMY_PASSWORD_SALT = '00000000000000000000000000000000';
 const DUMMY_PASSWORD_HASH = '0'.repeat(64);
 const MAX_FAILED_LOGINS = 5;
