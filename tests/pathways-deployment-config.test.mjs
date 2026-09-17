@@ -13,13 +13,13 @@ test('Pathways preview alone binds the isolated synthetic D1 and keeps AI disabl
   const binding = (preview?.d1_databases || []).find(item => item.binding === 'APC_PATHWAYS_DB');
   assert.deepEqual(binding, {
     binding: 'APC_PATHWAYS_DB',
-    database_name: 'apc-client-pathway-preview-synthetic',
-    database_id: '16329f9f-f191-4279-96f5-b60cee420dae',
+    database_name: 'apc-pathways-school-preview',
+    database_id: 'a4480082-888f-467b-976d-a8aeeeb98db5',
     migrations_dir: 'pathways-migrations',
   });
   const productionJson = JSON.stringify(production || {});
-  assert.doesNotMatch(productionJson, /apc-client-pathway-preview-synthetic/);
-  assert.doesNotMatch(productionJson, /16329f9f-f191-4279-96f5-b60cee420dae/);
+  assert.doesNotMatch(productionJson, /apc-pathways-school-preview/);
+  assert.doesNotMatch(productionJson, /a4480082-888f-467b-976d-a8aeeeb98db5/);
   assert.ok(!(production?.d1_databases || []).some(item => item.binding === 'APC_PATHWAYS_DB'), 'production must not inherit the synthetic preview binding');
 });
 

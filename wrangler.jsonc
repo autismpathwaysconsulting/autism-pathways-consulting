@@ -30,8 +30,8 @@
       "d1_databases": [
         {
           "binding": "APC_PATHWAYS_DB",
-          "database_name": "apc-client-pathway-preview-synthetic",
-          "database_id": "16329f9f-f191-4279-96f5-b60cee420dae",
+          "database_name": "apc-pathways-school-preview",
+          "database_id": "a4480082-888f-467b-976d-a8aeeeb98db5",
           "migrations_dir": "pathways-migrations"
         }
       ]
