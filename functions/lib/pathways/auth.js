@@ -1,6 +1,8 @@
 const SESSION_COOKIE = '__Host-pathways_session';
 const SESSION_SECONDS = 12 * 60 * 60;
 const PASSWORD_ITERATIONS = 160000;
+const DUMMY_PASSWORD_SALT = '00000000000000000000000000000000';
+const DUMMY_PASSWORD_HASH = '0'.repeat(64);
 const MAX_FAILED_LOGINS = 5;
 const LOCKOUT_MINUTES = 15;
 
@@ -225,16 +227,21 @@ export async function verifyLogin(db, email, password) {
     FROM pathways_users WHERE email = ? COLLATE NOCASE`)
     .bind(normalized)
     .first();
-  if (!row || row.is_active !== 1) return { ok: false, generic: true };
+  // Every account-state path pays for one password derivation before rejection.
+  // Fixed dummy material is not a credential and can never authenticate a user.
+  const usableRecord = row && /^[a-f0-9]{32}$/i.test(row.password_salt)
+    && /^[a-f0-9]{64}$/i.test(row.password_hash)
+    && Number.isSafeInteger(row.password_iterations)
+    && row.password_iterations >= 100000 && row.password_iterations <= 500000;
+  const candidate = await derivePasswordHash(
+    validatePassword(password) ? password : 'invalid-password-placeholder',
+    usableRecord ? row.password_salt : DUMMY_PASSWORD_SALT,
+    usableRecord ? row.password_iterations : PASSWORD_ITERATIONS,
+  );
+  const matches = await constantTimeEqual(candidate, usableRecord ? row.password_hash : DUMMY_PASSWORD_HASH);
+  if (!row || row.is_active !== 1 || !usableRecord) return { ok: false, generic: true };
   if (row.locked_until && Date.parse(row.locked_until) > Date.now()) return { ok: false, locked: true, generic: true };
-
-  let candidate;
-  try {
-    candidate = await derivePasswordHash(password, row.password_salt, row.password_iterations);
-  } catch {
-    candidate = await derivePasswordHash('invalid-password-placeholder', row.password_salt, row.password_iterations);
-  }
-  const valid = await constantTimeEqual(candidate, row.password_hash);
+  const valid = validatePassword(password) && matches;
   const now = new Date().toISOString();
   if (!valid) {
     const lockedUntil = new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000).toISOString();

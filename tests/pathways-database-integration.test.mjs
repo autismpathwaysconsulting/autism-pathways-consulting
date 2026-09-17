@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { DatabaseSync } from 'node:sqlite';
 
 import { createPasswordRecord, verifyLogin } from '../functions/lib/pathways/auth.js';
+import { auditOutcome } from '../functions/api/pathways/ai-suggest.js';
 import { hasUseAuthority } from '../functions/api/pathways/state.js';
 
 const migration = path => readFile(new URL(`../migrations/${path}`, import.meta.url), 'utf8');
@@ -199,4 +200,29 @@ test('future-effective and expired authority records fail closed', async () => {
   } finally {
     db.close();
   }
+});
+
+
+test('AI outcome audit cannot recreate erased identifiers or use the wrong organisation', async () => {
+  const db = setup();
+  try {
+    db.exec(await migration('0012_pathways_production_beta.sql'));
+    db.exec(await migration('0013_pathways_privacy_erasure.sql'));
+    db.exec(await migration('0014_pathways_synthetic_provenance.sql'));
+    const now = seedIdentity(db);
+    db.prepare(`INSERT INTO pathways_students
+      (student_id,organization_id,display_name,status,created_at,updated_at)
+      VALUES ('stu-ai','org-1','Synthetic AI','active',?,?)`).run(now,now);
+    const auth={db:new SqliteD1(db),user:{id:'usr-1'}};
+    const access={student:{organization_id:'org-1'}};
+    await auditOutcome(auth,access,'stu-ai','test-model','success');
+    assert.equal(db.prepare("SELECT COUNT(*) n FROM pathways_audit_log WHERE student_id='stu-ai'").get().n,1);
+    await auditOutcome(auth,{student:{organization_id:'other-org'}},'stu-ai','test-model','success');
+    assert.equal(db.prepare("SELECT COUNT(*) n FROM pathways_audit_log WHERE student_id='stu-ai'").get().n,1);
+    db.prepare("INSERT INTO pathways_erasure_guard(student_id,created_at) VALUES ('stu-ai',?)").run(now);
+    db.exec("DELETE FROM pathways_audit_log WHERE student_id='stu-ai'; DELETE FROM pathways_students WHERE student_id='stu-ai'; DELETE FROM pathways_erasure_guard WHERE student_id='stu-ai';");
+    await auditOutcome(auth,access,'stu-ai','test-model','success');
+    await auditOutcome(auth,access,'stu-ai','test-model','provider-or-parse-error');
+    assert.equal(db.prepare("SELECT COUNT(*) n FROM pathways_audit_log WHERE student_id='stu-ai' OR metadata_json LIKE '%stu-ai%'").get().n,0);
+  } finally { db.close(); }
 });

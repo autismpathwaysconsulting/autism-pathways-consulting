@@ -66,6 +66,23 @@ let currentConsents = [];
 let adminUsers = [];
 let currentAssignments = [];
 let historicalEditConfirmedFor = '';
+let sessionEpoch = 0;
+let studentLoadSequence = 0;
+let studentListSequence = 0;
+
+function captureStudentContext(){
+  const epoch=sessionEpoch, sequence=studentLoadSequence, org=organizationId, id=studentId;
+  return {studentId:id,organizationId:org,isCurrent:()=>epoch===sessionEpoch&&sequence===studentLoadSequence&&org===organizationId&&id===studentId};
+}
+
+function clearStudentUi(){
+  for(const id of ['studentHeading','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','savedCount','studentAdminPanel']){
+    if($(id))$(id).textContent='';
+  }
+  if($('overviewNote'))$('overviewNote').value='';
+  selectedRevision=null;currentAssignments=[];formData=null;editingKey=null;editingObjectiveId=null;
+  document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());
+}
 
 function preferredDay(){
   const name = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()];
@@ -120,6 +137,7 @@ function clearProtectedDom(){
 }
 
 function resetProtectedUi(){
+  sessionEpoch++;studentLoadSequence++;studentListSequence++;
   user=null;
   csrfToken='';
   organizations=[];
@@ -148,6 +166,7 @@ function resetProtectedUi(){
 }
 
 async function api(path,{method='GET',body=null}={}){
+  const requestEpoch=sessionEpoch;
   const headers={Accept:'application/json'};
   if(body!==null){
     headers['Content-Type']='application/json';
@@ -157,7 +176,7 @@ async function api(path,{method='GET',body=null}={}){
   const response=await fetch(path,{method,headers,body:body===null?undefined:JSON.stringify(body),credentials:'same-origin'});
   const type=response.headers.get('Content-Type')||'';
   const data=type.includes('application/json')?await response.json().catch(()=>({})):{};
-  if(response.status===401 && path!=='/api/pathways/login'){
+  if(response.status===401 && path!=='/api/pathways/login' && requestEpoch===sessionEpoch){
     resetProtectedUi();
     showLogin();
     throw new Error(data.error||'Session expired.');
@@ -230,8 +249,14 @@ async function loadOrganizations(){
 }
 
 async function loadStudents(preferredId=''){
+  const requestedOrg=organizationId, epoch=sessionEpoch, listSequence=++studentListSequence;
+  renderNoStudent();
+  students=[];adminUsers=[];
+  for(const id of ['adminStudents','adminUsers','auditList'])if($(id))$(id).textContent='';
+  $('studentSelect').innerHTML='<option value="">Loading students</option>';
   if(!organizationId){students=[];studentId='';renderNoStudent();return}
   const data=await api(`/api/pathways/students?organizationId=${encodeURIComponent(organizationId)}`);
+  if(requestedOrg!==organizationId||epoch!==sessionEpoch||listSequence!==studentListSequence)return;
   students=data.students||[];
   if(preferredId && students.some(item=>item.student_id===preferredId)) studentId=preferredId;
   else if(!studentId || !students.some(item=>item.student_id===studentId)) studentId=students[0]?.student_id||'';
@@ -242,6 +267,8 @@ async function loadStudents(preferredId=''){
 }
 
 function renderNoStudent(){
+  studentLoadSequence++;
+  clearStudentUi();
   state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
   $('emptyState').classList.remove('hidden');
   ['dailyScreen','historyScreen','objectivesScreen'].forEach(id=>$(id).classList.add('hidden'));
@@ -252,26 +279,33 @@ function renderNoStudent(){
 
 async function loadStudent(){
   if(!studentId){renderNoStudent();return}
+  studentLoadSequence++;
+  const context=captureStudentContext();
+  clearStudentUi();
   setSaveStatus('saving','Loading');
   state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
   $('outputText').textContent='';
   updateWhatsAppAvailability();
   try{
     const [stateData,consentData]=await Promise.all([
-      api(`/api/pathways/state?studentId=${encodeURIComponent(studentId)}&history=1&limit=40`),
-      api(`/api/pathways/consents?studentId=${encodeURIComponent(studentId)}`),
+      api(`/api/pathways/state?studentId=${encodeURIComponent(context.studentId)}&history=1&limit=40`),
+      api(`/api/pathways/consents?studentId=${encodeURIComponent(context.studentId)}`),
     ]);
+    if(!context.isCurrent())return;
     record={...stateData.record,permission:stateData.permission,role:stateData.role};
     state=clone(stateData.record.state);
     revisions=stateData.revisions||[];
     currentConsents=consentData.consents||[];
     $('emptyState').classList.add('hidden');
+    const activeScreen=document.querySelector('.nav.active')?.dataset.screen||'daily';
+    if($(`${activeScreen}Screen`))$(`${activeScreen}Screen`).classList.remove('hidden');
     $('studentHeading').textContent=stateData.student.display_name;
     $('readOnlyWarning').classList.toggle('hidden',canEdit());
     updateAuthorityWarning(stateData.student);
     renderAll();
     setSaveStatus('saved','Saved');
   }catch(error){
+    if(!context.isCurrent())return;
     state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
     $('outputText').textContent='';
     updateWhatsAppAvailability();
@@ -316,29 +350,47 @@ function updateWhatsAppAvailability(){
   button.title=allowed?'':'Record current family-sharing authority before sharing this report to WhatsApp. You can still use Copy.';
 }
 
-function openWhatsApp(){
+async function openWhatsApp(){
   if(!state)return;
-  if(!familySharingAllowed()){
-    showError('WhatsApp sharing is unavailable until current family-sharing authority is recorded. You can still copy the parent report.');
-    return;
+  const context=captureStudentContext();
+  $('openWhatsApp').disabled=true;
+  try{
+    const data=await api(`/api/pathways/consents?studentId=${encodeURIComponent(context.studentId)}`);
+    if(!context.isCurrent()||!state)return;
+    currentConsents=data.consents||[];
+    if(!familySharingAllowed()){
+      showError('WhatsApp sharing is unavailable until current family-sharing authority is recorded. You can still copy the parent report.');
+      return;
+    }
+    const text=outputFor('parent',{state,dayName:currentDay,baseDate:activeWeek});
+    // Same-tab navigation survives the asynchronous authority check without a popup blocker.
+    window.location.assign(`https://wa.me/?text=${encodeURIComponent(text)}`);
+  }catch(error){
+    if(!context.isCurrent())return;
+    currentConsents=[];
+    showError('Current family-sharing authority could not be verified. Nothing was shared.');
+  }finally{
+    if(context.isCurrent())updateWhatsAppAvailability();
   }
-  const text=outputFor('parent',{state,dayName:currentDay,baseDate:activeWeek});
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank','noopener');
 }
 
 async function persist(action='edit'){
   if(!canEdit()) throw new Error('This workspace is read-only.');
+  const context=captureStudentContext();
+  const savedPermission=record.permission,savedRole=record.role;
   setSaveStatus('saving','Saving');
   const requestId=`web:${Date.now()}:${crypto.randomUUID()}`;
   try{
     const result=await api('/api/pathways/state',{method:'PUT',body:{studentId,expectedRevision:record.revision,requestId,action,state}});
-    record={...result.record,permission:record.permission,role:record.role};
+    if(!context.isCurrent())return false;
+    record={...result.record,permission:savedPermission,role:savedRole};
     state=clone(result.record.state);
     revisions.unshift({revision:record.revision,action:record.lastAction,created_at:record.updatedAt,actor_user_id:record.updatedBy,state_hash:record.stateHash,request_id:record.lastRequestId});
     revisions=[...new Map(revisions.map(item=>[item.revision,item])).values()].sort((a,b)=>b.revision-a.revision).slice(0,40);
     setSaveStatus('saved','Saved');
     return true;
   }catch(error){
+    if(!context.isCurrent())return false;
     setSaveStatus('error',error.status===409?'Conflict':'Save error');
     if(error.status===403 && error.data?.authorityBlocked){
       $('authorityWarning').classList.remove('hidden');
@@ -518,55 +570,68 @@ async function saveObjective(){
 }
 
 async function loadRevision(revision){
+  const context=captureStudentContext();
   try{
-    const data=await api(`/api/pathways/state?studentId=${encodeURIComponent(studentId)}&revision=${revision}`);selectedRevision=data.revision;
+    const data=await api(`/api/pathways/state?studentId=${encodeURIComponent(studentId)}&revision=${revision}`);
+    if(!context.isCurrent())return;
+    selectedRevision=data.revision;
     $('revisionHeading').textContent=`Revision ${revision} · ${data.revision.action}`;
     const snapshot=data.revision.state;const lessonCount=Object.values(snapshot.subjects||{}).filter(item=>item.saved).length;
     $('revisionPreview').textContent=JSON.stringify({createdAt:data.revision.created_at,actorUserId:data.revision.actor_user_id,action:data.revision.action,summary:{savedLessons:lessonCount,objectives:(snapshot.objectives||[]).length,persistentItems:(snapshot.pins||[]).length},state:snapshot},null,2);
     $('restoreRevision').classList.toggle('hidden',!canRestore()||Number(revision)===record.revision);
-  }catch(error){showError(error.message)}
+  }catch(error){if(!context.isCurrent())return;showError(error.message)}
 }
 async function restoreRevision(){
   if(!selectedRevision||!canRestore())return;
   if(!window.confirm(`Restore revision ${selectedRevision.revision}? The current state will remain available in history.`))return;
+  const restoredRevision=selectedRevision.revision;
+  const context=captureStudentContext();
   try{
     const result=await api('/api/pathways/state',{method:'POST',body:{action:'restore',studentId,revision:selectedRevision.revision,expectedRevision:record.revision,requestId:`restore:${Date.now()}:${crypto.randomUUID()}`}});
+    if(!context.isCurrent())return;
     if(result.conflict){showError('The record changed before restore. Reloading.');await loadStudent();return}
-    await loadStudent();showError(`Revision ${selectedRevision.revision} restored as a new revision.`);
-  }catch(error){showError(error.message)}
+    await loadStudent();showError(`Revision ${restoredRevision} restored as a new revision.`);
+  }catch(error){if(!context.isCurrent())return;showError(error.message)}
 }
 
 async function renderAdmin(){
   if(!canAdmin())return;
+  const context=captureStudentContext();
   try{
-    const usersData=await api(`/api/pathways/users?organizationId=${encodeURIComponent(organizationId)}`);adminUsers=usersData.users||[];
+    const usersData=await api(`/api/pathways/users?organizationId=${encodeURIComponent(organizationId)}`);
+    if(!context.isCurrent())return;
+    adminUsers=usersData.users||[];
     $('newUserBtn').classList.toggle('hidden',!canManageUsers());
     $('adminStudents').innerHTML=students.length?students.map(item=>`<button class="item" data-admin-student="${escapeHtml(item.student_id)}"><div class="item-title">${escapeHtml(item.display_name)}</div><div class="meta"><span>${escapeHtml(item.year_group||'')}</span><span>${escapeHtml(item.external_ref||'No external ref')}</span></div></button>`).join(''):'<div class="muted-box">No students.</div>';
     $('adminUsers').innerHTML=adminUsers.length?adminUsers.map(item=>`<div class="item"><div class="item-title">${escapeHtml(item.display_name)}</div><div class="item-copy">${escapeHtml(item.email)}</div><div class="meta"><span class="pill">${escapeHtml(item.role)}</span><span>${item.membership_active?'Active':'Inactive'}</span></div></div>`).join(''):'<div class="muted-box">No staff users.</div>';
     await renderStudentAdminPanel();await loadAudit();
-  }catch(error){showError(error.message)}
+  }catch(error){if(!context.isCurrent())return;showError(error.message)}
 }
 
 async function renderStudentAdminPanel(){
   const student=selectedStudent();if(!student){$('studentAdminPanel').innerHTML='Select a student.';return}
+  const context=captureStudentContext();
   try{
     const [assignmentData,consentData]=await Promise.all([
       api(`/api/pathways/assignments?studentId=${encodeURIComponent(studentId)}`),
       api(`/api/pathways/consents?studentId=${encodeURIComponent(studentId)}`),
     ]);
+    if(!context.isCurrent())return;
     currentAssignments=assignmentData.assignments||[];currentConsents=consentData.consents||[];updateAuthorityWarning(student);updateWhatsAppAvailability();
     const assigned=new Set(currentAssignments.map(item=>item.user_id));
     const assignable=adminUsers.filter(item=>!assigned.has(item.user_id));
     $('studentAdminPanel').innerHTML=`<div><strong>${escapeHtml(student.display_name)}</strong><div class="meta"><span>${escapeHtml(student.year_group||'')}</span><span>${escapeHtml(student.external_ref||'No reference')}</span></div></div><div class="row"><button class="btn secondary small" id="recordAuthorityBtn">Record authority</button><button class="btn secondary small" id="editTimetableBtn">Timetable setup</button><button class="btn secondary small" id="exportStudentBtn">Export</button><button class="btn secondary small" id="exportHistoryBtn">Export + history</button></div><h3>Authority / consent</h3>${currentConsents.length?currentConsents.map(item=>`<div class="item"><div class="item-title">${escapeHtml(item.consent_type)} · ${escapeHtml(item.status)}</div><div class="item-copy">${escapeHtml(item.authority_label||'')}${item.expires_at?` · Expires ${escapeHtml(String(item.expires_at).slice(0,10))}`:''}</div></div>`).join(''):'<div class="muted-box">No authority record yet.</div>'}<h3>Assigned staff</h3>${currentAssignments.length?currentAssignments.map(item=>`<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(item.display_name)}</div><div class="meta"><span>${escapeHtml(item.role||'')}</span><span>${escapeHtml(item.permission)}</span></div></div><button class="btn ghost small" data-remove-assignment="${escapeHtml(item.assignment_id)}">Remove</button></div></div>`).join(''):'<div class="muted-box">No explicit assignments. Admin/SENCO access is organisation-wide.</div>'}${assignable.length?`<div class="row"><select id="assignUserSelect">${assignable.map(item=>`<option value="${escapeHtml(item.user_id)}">${escapeHtml(item.display_name)} · ${escapeHtml(item.role)}</option>`).join('')}</select><select id="assignPermission"><option value="edit">Edit</option><option value="read">Read only</option></select><button id="assignUserBtn" class="btn secondary small">Assign</button></div>`:''}${canManageUsers()?'<div class="row"><button id="eraseStudentBtn" class="btn danger small">Erase student record</button></div>':''}`;
-  }catch(error){$('studentAdminPanel').textContent=error.message}
+  }catch(error){if(!context.isCurrent())return;$('studentAdminPanel').textContent=error.message}
 }
 
 async function loadAudit(){
   if(!canAdmin())return;
+  const context=captureStudentContext();
   try{
     const data=await api(`/api/pathways/audit?organizationId=${encodeURIComponent(organizationId)}&limit=60`);
+    if(!context.isCurrent())return;
     $('auditList').innerHTML=(data.events||[]).length?data.events.map(event=>`<div class="item"><div class="item-title">${escapeHtml(event.action)} · ${escapeHtml(event.entity_type)}</div><div class="meta"><span>${escapeHtml(event.actor_name||event.actor_user_id||'system')}</span><span>${escapeHtml(event.created_at)}</span></div></div>`).join(''):'<div class="muted-box">No audit events.</div>';
-  }catch(error){$('auditList').textContent=error.message}
+  }catch(error){if(!context.isCurrent())return;$('auditList').textContent=error.message}
 }
 
 async function createStudent(){

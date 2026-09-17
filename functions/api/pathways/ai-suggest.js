@@ -51,17 +51,16 @@ function extractText(response){
   return '';
 }
 
-async function auditOutcome(auth, access, studentId, model, outcome){
+export async function auditOutcome(auth, access, studentId, model, outcome){
   try{
-    await audit(auth.db,{
-      organizationId:access.student.organization_id,
-      studentId,
-      actorUserId:auth.user.id,
-      action:'ai-disclosure-outcome',
-      entityType:'ai-assist',
-      entityId:null,
-      metadata:{model,outcome},
-    });
+    // The existence check and insert are one statement, so erasure cannot
+    // complete between a separate lookup and recreation of the raw identifier.
+    await auth.db.prepare(`INSERT INTO pathways_audit_log
+      (organization_id, student_id, actor_user_id, action, entity_type, entity_id, metadata_json, created_at)
+      SELECT organization_id, student_id, ?, 'ai-disclosure-outcome', 'ai-assist', NULL, ?, ?
+      FROM pathways_students WHERE student_id = ? AND organization_id = ?`)
+      .bind(auth.user.id,JSON.stringify({model,outcome}),new Date().toISOString(),studentId,access.student.organization_id)
+      .run();
   }catch(error){
     console.error(JSON.stringify({message:'Pathways AI outcome audit failed',errorType:String(error?.name||'Error'),outcome}));
   }
