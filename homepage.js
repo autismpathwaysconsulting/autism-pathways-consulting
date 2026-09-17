@@ -110,7 +110,8 @@ document.querySelectorAll("[data-apc-carousel]").forEach(carousel => {
 const calInline = document.querySelector("[data-cal-inline]");
 
 // Only broad page categories and action names leave the browser.
-const metricPage = ({ "/": "home", "/services": "services", "/start": "start", "/about": "about", "/resources": "resources" })[window.location.pathname.replace(/\/$/, "") || "/"];
+// Audience routes share existing service/resource counters; no per-article or identity data.
+const metricPage = ({ "/": "home", "/services": "services", "/start": "start", "/about": "about", "/resources": "resources", "/parents": "services", "/schools": "services", "/blog": "resources" })[window.location.pathname.replace(/\/$/, "") || "/"];
 const recordedMetrics = new Set();
 function recordSiteMetric(event) {
   if (!metricPage || window.location.origin !== "https://autismpathwaysconsulting.com" ||

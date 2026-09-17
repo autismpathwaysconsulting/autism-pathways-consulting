@@ -47,6 +47,12 @@ The existing services page was the source of truth for prices, session lengths a
 
 Browser rendering, actual keyboard interaction in a browser, Lighthouse scores and authenticated Search Console data have not been verified in this session. The user requested their own browser, so checks use code, structural analysis and HTTP responses. No claim is made about AI-detection results, ranking, indexing or a numerical SEO score.
 
+## Review repair: aggregate website counters
+
+The review identified that /parents and /blog were not included in the existing client-side counter map. Added /parents and /schools to the existing services category and /blog to resources. Updated dashboard labels, its explanation and privacy wording. Categories remain aggregate; individual new-page journeys cannot be separated in this report. This preserves the deployed database schema, retention, privacy signals and authentication without a database migration. Focused tests cover each new route, its booking-click mapping and server acceptance.
+
+The preview matched all 17 checked public pages and eight assets. Source and CTA URLs returned HTTP 200; Instagram redirected to its sign-in page.
+
 ## High-impact next checks after release
 
 1. In the user's own browser, check the Services and Resources menus at desktop and narrow mobile widths, then tab through and close each with Escape. Review the new page headings, card spacing and article sections.
