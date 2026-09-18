@@ -425,7 +425,7 @@ function renderPins(){
   const visible=(state.pins||[]).filter(pin=>!['Done','Archived'].includes(effectivePinStatus(pin,new Date()))).sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'));
   $('pinList').innerHTML=visible.length?visible.map(pin=>{
     const status=effectivePinStatus(pin,new Date());
-    return `<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(pin.title)}</div><div class="meta"><span class="pill">${escapeHtml(pin.type)}</span>${pin.subject?`<span>${escapeHtml(pin.subject)}</span>`:''}${pin.due?`<span>${status==='Overdue'?'Overdue · ':''}${escapeHtml(pin.due)}</span>`:''}${pin.parent?'<span class="pill good">Parent-visible</span>':'<span class="pill">Internal</span>'}</div>${pin.details?`<div class="item-copy">${escapeHtml(pin.details)}</div>`:''}</div>${canEdit()?`<button class="btn secondary small" data-pin-done="${escapeHtml(pin.id)}">Done</button>`:''}</div></div>`;
+    return `<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(pin.title)}</div><div class="meta"><span class="pill">${escapeHtml(pin.type)}</span>${pin.subject?`<span>${escapeHtml(pin.subject)}</span>`:''}${pin.due?`<span>${status==='Overdue'?'Overdue · ':''}${escapeHtml(pin.due)}</span>`:''}${pin.parent?'<span class="pill good">Parent-visible</span>':'<span class="pill">Internal</span>'}</div>${pin.details?`<div class="item-copy">${escapeHtml(pin.details)}</div>`:''}${pin.preparation?`<div class="item-copy"><strong>Lesson preparation</strong>${[['Topic','topic'],['Task','task'],['Learning outcome','learningOutcome'],['Materials reference','materials'],['Differentiated work','differentiatedWork'],['Planned support','plannedSupport']].filter(([,key])=>pin.preparation[key]).map(([label,key])=>`<p><strong>${label}:</strong> ${escapeHtml(pin.preparation[key])}</p>`).join('')}</div>`:''}</div>${canEdit()?`<button class="btn secondary small" data-pin-done="${escapeHtml(pin.id)}">Done</button>`:''}</div></div>`;
   }).join(''):'<div class="muted-box">No open homework, upcoming tasks or announcements.</div>';
 }
 
@@ -544,12 +544,30 @@ async function saveOverview(){
 }
 
 function openPin(){
-  if(!canEdit())return;$('pinDialog').querySelector('form').reset();$('pinParent').value='yes';$('pinDialog').showModal();
+  if(!canEdit())return;$('pinDialog').querySelector('form').reset();$('pinParent').value='no';updatePreparationFields();$('pinDialog').showModal();
+}
+function updatePreparationFields(){
+  const enabled=$('pinPrepare').checked;
+  $('preparationFields').hidden=!enabled;
+  $('pinType').disabled=enabled;
+  $('pinParent').disabled=enabled;
+  if(enabled){$('pinType').value='Upcoming task / assessment';$('pinParent').value='no'}
 }
 async function savePin(){
+  if($('savePinBtn').disabled||!canEdit())return;
   const title=$('pinTitle').value.trim();if(!title){showError('Add a short title.');return}
-  state.pins.push({id:uid('pin'),type:$('pinType').value,subject:$('pinSubject').value.trim(),title,details:$('pinDetails').value.trim(),due:$('pinDue').value,parent:$('pinParent').value==='yes',status:'Open'});
-  try{if(await persist('edit')){$('pinDialog').close();renderAll()}}catch(error){showError(error.message)}
+  let preparation;
+  if($('pinPrepare').checked){
+    preparation={topic:$('prepTopic').value.trim(),task:$('prepTask').value.trim(),learningOutcome:$('prepOutcome').value.trim(),materials:$('prepMaterials').value.trim(),differentiatedWork:$('prepDifferentiated').value.trim(),plannedSupport:$('prepSupport').value.trim()};
+    if(!preparation.topic||!preparation.task||!preparation.learningOutcome){showError('Add the topic, task and intended learning outcome.');return}
+  }
+  const pin={id:uid('pin'),type:preparation?'Upcoming task / assessment':$('pinType').value,subject:$('pinSubject').value.trim(),title,details:$('pinDetails').value.trim(),due:$('pinDue').value,parent:preparation?false:$('pinParent').value==='yes',status:'Open',...(preparation?{preparation}:{})};
+  const context=captureStudentContext();
+  state.pins.push(pin);
+  $('savePinBtn').disabled=true;
+  try{if(await persist('edit')){$('pinDialog').close();renderAll()}}catch(error){
+    if(context.isCurrent()){state.pins=state.pins.filter(item=>item.id!==pin.id);showError(error.message)}
+  }finally{$('savePinBtn').disabled=false}
 }
 async function donePin(id){
   const pin=state.pins.find(item=>item.id===id);if(!pin)return;pin.status='Done';try{if(await persist('edit'))renderAll()}catch(error){showError(error.message)}
@@ -712,7 +730,7 @@ function bindStaticEvents(){
   $('taskList').addEventListener('change',event=>{const taskRoot=event.target.closest('[data-task-index]');if(!taskRoot||!canEdit())return;const task=formData.tasks[Number(taskRoot.dataset.taskIndex)];if(event.target.classList.contains('task-type'))task.type=event.target.value;if(event.target.classList.contains('task-outcome'))task.outcome=event.target.value;if(event.target.classList.contains('task-parent'))task.includeParent=event.target.checked;if(event.target.classList.contains('task-result'))task.objectiveResult=event.target.value;if(event.target.classList.contains('task-objective')){task.objectiveId=event.target.value;task.objectiveResult=task.objectiveId?(task.objectiveResult||'Not measured / insufficient opportunity'):'';task.measurementValue=null;const objective=state.objectives.find(item=>item.id===task.objectiveId);task.measurementUnit={latency:'seconds',duration:'minutes',frequency:'count',accuracy:'percent'}[objective?.measureType]||'';renderTasks()}});
   $('saveSubjectBtn').onclick=saveSubject;$('notReportedBtn').onclick=markNotReported;
   $('overviewChoices').onclick=async event=>{const btn=event.target.closest('[data-overview]');if(!btn||!canEdit())return;const key=datedDayKey(currentDay,activeWeek);state.overview[key]={...(state.overview[key]||{}),choice:btn.dataset.overview};try{if(await persist('edit'))renderAll()}catch(error){showError(error.message)}};$('saveOverviewBtn').onclick=saveOverview;
-  $('addPinBtn').onclick=openPin;$('savePinBtn').onclick=savePin;$('pinList').onclick=event=>{const btn=event.target.closest('[data-pin-done]');if(btn)donePin(btn.dataset.pinDone)};
+  $('pinPrepare').onchange=updatePreparationFields;$('addPinBtn').onclick=openPin;$('savePinBtn').onclick=savePin;$('pinList').onclick=event=>{const btn=event.target.closest('[data-pin-done]');if(btn)donePin(btn.dataset.pinDone)};
   $('quickObjectiveBtn').onclick=()=>openObjective();$('addObjectiveBtn').onclick=()=>openObjective();$('objectiveList').onclick=event=>{const btn=event.target.closest('[data-edit-objective]');if(btn)openObjective(btn.dataset.editObjective)};$('saveObjectiveDialogBtn').onclick=saveObjective;
   document.querySelectorAll('.output-tab').forEach(btn=>btn.onclick=()=>{outputView=btn.dataset.output;renderOutput()});$('copyOutput').onclick=async()=>{try{await navigator.clipboard.writeText($('outputText').textContent);$('copyOutput').textContent='Copied';setTimeout(()=>$('copyOutput').textContent='Copy',1200)}catch{showError('Copy was blocked by the browser.')}};$('openWhatsApp').onclick=openWhatsApp;
   $('revisionList').onclick=event=>{const btn=event.target.closest('[data-revision]');if(btn)loadRevision(Number(btn.dataset.revision))};$('restoreRevision').onclick=restoreRevision;$('refreshHistory').onclick=loadStudent;

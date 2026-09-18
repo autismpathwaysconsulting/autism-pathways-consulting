@@ -159,7 +159,7 @@ export function buildParentReport({ state, dayName, baseDate }) {
     }
     lines.push('');
   }
-  const parentPins = (state.pins || []).filter(pin => pin.parent && !['Done','Archived'].includes(effectivePinStatus(pin,baseDate)));
+  const parentPins = (state.pins || []).filter(pin => pin.parent && !pin.preparation && !['Done','Archived'].includes(effectivePinStatus(pin,baseDate)));
   if (parentPins.length) {
     lines.push('*Homework / Upcoming:*');
     for (const pin of parentPins) lines.push(`• ${pin.subject?`${pin.subject}: `:''}${pin.title}${pin.due?` (due ${formatDueDate(pin.due)})`:''}${pin.details?` - ${pin.details}`:''}`);

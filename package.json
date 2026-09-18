@@ -12,7 +12,7 @@
     "test:content-os": "node --test tests/content-os*.test.mjs",
     "test:episode-workflow": "node --test tests/content-os-episode-workflow.test.mjs",
     "test:pathways-lab": "node --test tests/pathways-lab.test.mjs tests/pathways-bootstrap.test.mjs",
-    "test:pathways-production": "node --test tests/pathways-runtime-security.test.mjs tests/pathways-production-beta.test.mjs tests/pathways-production-security.test.mjs tests/pathways-database-integration.test.mjs tests/pathways-preview-smoke.test.mjs tests/pathways-deployment-config.test.mjs",
+    "test:pathways-production": "node --test tests/pathways-lesson-preparation.test.mjs tests/pathways-runtime-security.test.mjs tests/pathways-production-beta.test.mjs tests/pathways-production-security.test.mjs tests/pathways-database-integration.test.mjs tests/pathways-preview-smoke.test.mjs tests/pathways-deployment-config.test.mjs",
     "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics && npm run test:pathways-lab && npm run test:pathways-production"
   }
 }

@@ -140,6 +140,17 @@ function validatePin(pin, index) {
   string(pin.subject ?? '', `pin ${index + 1} subject`, LIMITS.textShort, { optional: true });
   string(pin.title, `pin ${index + 1} title`, LIMITS.textMedium);
   string(pin.details ?? '', `pin ${index + 1} details`, LIMITS.textMedium, { optional: true });
+  if (pin.preparation !== undefined) {
+    plainObject(pin.preparation, 'lesson preparation');
+    if (pin.type !== 'Upcoming task / assessment' || pin.parent !== false) fail('Lesson preparation must be an internal upcoming task.');
+    for (const field of ['topic', 'task', 'learningOutcome']) {
+      string(pin.preparation[field], `lesson preparation ${field}`, LIMITS.textMedium);
+      if (!pin.preparation[field].trim()) fail(`Lesson preparation ${field} is required.`);
+    }
+    for (const field of ['materials', 'differentiatedWork', 'plannedSupport']) {
+      string(pin.preparation[field] ?? '', `lesson preparation ${field}`, LIMITS.textMedium, { optional: true });
+    }
+  }
   optionalDate(pin.due ?? '', `pin ${index + 1} due date`);
   if (typeof pin.parent !== 'boolean') fail(`pin ${index + 1} parent visibility is invalid.`);
   oneOf(pin.status ?? 'Open', PATHWAYS_PIN_STATUSES, `pin ${index + 1} status`);
