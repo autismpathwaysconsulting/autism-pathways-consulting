@@ -27,11 +27,14 @@ body.apc-parent-minimal { background:#fffdf9; }
 .apc-parent-minimal details { width:100%;margin-top:10px; }
 .apc-parent-minimal summary { cursor:pointer;min-height:44px;padding:10px 0;color:#0f766e;font-size:.94rem; }
 .apc-parent-minimal .parent-booking-note { max-width:88ch;margin:20px auto 0;text-align:center; }
-.apc-parent-minimal main > .parent-process { background:#edf2eb;border-radius:28px;padding:48px 36px;text-align:center; }
-.apc-parent-minimal .parent-process ol { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;list-style:none;margin:32px 0;padding:0; }
-.apc-parent-minimal .parent-process li > span { display:grid;place-items:center;width:38px;height:38px;margin:0 auto 16px;border-radius:50%;background:#557c60;color:white; }
+.apc-parent-minimal main > .parent-process { background:#edf2eb;border-radius:24px;padding:30px 28px;text-align:center; }
+.apc-parent-minimal .parent-process ol { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;list-style:none;margin:22px 0 0;padding:0; }
+.apc-parent-minimal .parent-process li > span { display:grid;place-items:center;width:38px;height:38px;margin:0 auto 10px;border-radius:50%;background:#557c60;color:white; }
 .apc-parent-minimal .parent-process li p { margin:0;font-size:.96rem;line-height:1.65; }
-.apc-parent-minimal .parent-process .audience-author { justify-content:center;text-align:left;margin:32px 0 16px; }
+.apc-parent-minimal .parent-process h3 { margin-bottom:8px; }
+.apc-parent-minimal .parent-guide { display:flex;align-items:center;gap:28px;padding:24px 8px;border-bottom:1px solid #e1e8e2; }
+.apc-parent-minimal .parent-guide .audience-author { flex:0 1 430px;margin:0;text-align:left; }
+.apc-parent-minimal .parent-guide .parent-scope { flex:1;max-width:65ch;margin:0; }
 .apc-parent-minimal .parent-scope { margin:0 auto; }
 .apc-parent-minimal .parent-section-heading { display:flex;align-items:center;justify-content:space-between;gap:24px; }
 .apc-parent-minimal .parent-section-heading h2 { max-width:24ch;margin:0; }
@@ -41,10 +44,11 @@ body.apc-parent-minimal { background:#fffdf9; }
 .apc-parent-minimal .parent-resources .audience-card > span { display:block;margin-top:18px;color:#0f766e;text-decoration:underline;text-underline-offset:4px; }
 .apc-parent-minimal .parent-calm { margin:24px auto 0;text-align:center;font-size:.96rem; }
 .apc-parent-minimal .parent-calm a { display:inline-flex;align-items:center;min-height:44px; }
-.apc-parent-minimal main > .parent-closing { border-top:1px solid #e1e8e2; }
-.apc-parent-minimal .parent-closing .audience-author { margin:0 0 24px; }
+.apc-parent-minimal main > .parent-closing { border-top:1px solid #e1e8e2;text-align:center;padding:40px 24px; }
+.apc-parent-minimal .parent-closing .audience-author { justify-content:center;margin:0 0 20px;text-align:left; }
+.apc-parent-minimal .parent-closing .audience-actions { justify-content:center;margin-top:20px; }
 .apc-parent-minimal .parent-closing h2 { margin-bottom:12px; }
-.apc-parent-minimal .parent-closing > p { margin:12px 0; }
+.apc-parent-minimal .parent-closing > p { margin:12px auto;max-width:56ch; }
 @media(max-width:760px) {
  .apc-parent-minimal main { width:calc(100% - 40px);padding-top:4px; }
  .apc-parent-minimal main > section { padding:40px 0; }
@@ -57,12 +61,16 @@ body.apc-parent-minimal { background:#fffdf9; }
  .apc-parent-minimal .audience-grid { grid-template-columns:1fr;gap:14px;margin-top:24px; }
  .apc-parent-minimal .audience-card { padding:22px; }
  .apc-parent-minimal .parent-booking-note { text-align:left; }
- .apc-parent-minimal main > .parent-process { padding:32px 22px;border-radius:20px;text-align:left; }
+ .apc-parent-minimal main > .parent-process { padding:24px 20px;border-radius:20px;text-align:left; }
  .apc-parent-minimal .parent-process ol { grid-template-columns:1fr;gap:24px; }
  .apc-parent-minimal .parent-process li { position:relative;padding-left:54px; }
  .apc-parent-minimal .parent-process li > span { position:absolute;left:0;top:0;margin:0; }
  .apc-parent-minimal .parent-process h3 { margin-bottom:6px; }
- .apc-parent-minimal .parent-process .audience-author { justify-content:flex-start; }
+ .apc-parent-minimal .parent-guide { flex-direction:column;align-items:flex-start;gap:12px;padding:20px 4px; }
+ .apc-parent-minimal .parent-guide .audience-author { flex:auto; }
+ .apc-parent-minimal main > .parent-closing { padding:32px 4px; }
+ .apc-parent-minimal .parent-closing .audience-author { flex-direction:column;gap:10px;text-align:center; }
+ .apc-parent-minimal .parent-closing .audience-actions { flex-direction:column;gap:12px; }
  .apc-parent-minimal .parent-section-heading { align-items:flex-start;flex-direction:column;gap:8px; }
  .apc-parent-minimal .parent-resources img { max-height:110px;object-fit:cover; }
  .apc-parent-minimal .audience-author p { font-size:.82rem; }
