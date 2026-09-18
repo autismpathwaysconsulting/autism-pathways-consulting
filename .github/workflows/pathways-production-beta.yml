@@ -1,0 +1,60 @@
+name: Pathways Production Beta QA
+
+on:
+  pull_request:
+    paths:
+      - 'pathways/**'
+      - 'functions/api/pathways/**'
+      - 'functions/lib/pathways/**'
+      - 'migrations/0012_pathways_production_beta.sql'
+      - 'migrations/0013_pathways_privacy_erasure.sql'
+      - 'scripts/build-site.mjs'
+      - '_routes.json'
+      - 'package.json'
+      - 'tests/pathways-production-beta.test.mjs'
+      - 'tests/pathways-production-security.test.mjs'
+      - 'tests/pathways-database-integration.test.mjs'
+      - '.github/workflows/pathways-production-beta.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'pathways/**'
+      - 'functions/api/pathways/**'
+      - 'functions/lib/pathways/**'
+      - 'migrations/0012_pathways_production_beta.sql'
+      - 'migrations/0013_pathways_privacy_erasure.sql'
+      - 'scripts/build-site.mjs'
+      - '_routes.json'
+      - 'package.json'
+      - 'tests/pathways-production-beta.test.mjs'
+      - 'tests/pathways-production-security.test.mjs'
+      - 'tests/pathways-database-integration.test.mjs'
+      - '.github/workflows/pathways-production-beta.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  production-beta-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Kuala_Lumpur
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build public site
+        run: npm run build
+      - name: Test public build allowlist
+        run: npm run test:site-build
+      - name: Test Pathways Lab regressions
+        run: npm run test:pathways-lab
+      - name: Test Pathways production beta
+        run: npm run test:pathways-production
