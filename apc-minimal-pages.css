@@ -120,3 +120,52 @@ body.apc-minimal-page { margin:0;background:#fffdf9; }
  .apc-school-minimal #training-topics .minimal-topic-image { height:105px; }
  .apc-school-minimal .school-format-icon { width:64px;height:64px;margin-bottom:14px; }
 }
+
+/* Product-style motion exploration. Finite animations, no scroll hijacking. */
+.apc-school-minimal .school-motion-hero { grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:36px;padding-bottom:64px; }
+.apc-school-minimal .school-motion-hero h1 { font-size:clamp(3rem,6vw,5.2rem);max-width:12ch;letter-spacing:-.055em; }
+.apc-school-minimal .school-motion { min-width:0;padding:24px 16px 16px;background:#edf1eb;border-radius:28px; }
+.apc-school-minimal .motion-controls { display:flex;justify-content:center;gap:4px;border:0;padding:0;margin:0; }
+.apc-school-minimal .motion-controls legend { text-align:center;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;margin:0 auto 14px; }
+.apc-school-minimal .motion-controls label { position:relative;margin:0;cursor:pointer; }
+.apc-school-minimal .motion-controls input { position:absolute;opacity:0;width:1px;height:1px;min-height:0;padding:0; }
+.apc-school-minimal .motion-controls span { display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;border-radius:99px;font-size:.86rem;color:#073734;transition:background .2s,color .2s; }
+.apc-school-minimal .motion-controls input:checked + span { background:#073734;color:#fff; }
+.apc-school-minimal .motion-controls input:focus-visible + span { outline:3px solid #0f766e;outline-offset:3px; }
+.apc-school-minimal .motion-stage { position:relative;display:grid;place-items:center;min-height:375px;perspective:900px;overflow:hidden; }
+.apc-school-minimal .motion-orbit { position:absolute;width:310px;height:310px;border:1px solid #c5d2c2;border-radius:50%;transform:rotateX(58deg) rotateZ(-25deg); }
+.apc-school-minimal .motion-scene { display:none;position:relative;text-align:center;width:min(100%,300px);padding:28px 14px 0; }
+.apc-school-minimal .school-motion:has(input[value=start]:checked) .scene-start,.apc-school-minimal .school-motion:has(input[value=help]:checked) .scene-help,.apc-school-minimal .school-motion:has(input[value=next]:checked) .scene-next { display:block;animation:school-scene-in .8s cubic-bezier(.2,.7,.2,1) both; }
+.apc-school-minimal .motion-object { position:relative;min-height:256px;padding:36px 24px 24px;border-radius:18px;background:#fffdf9;box-shadow:0 24px 30px -24px #46635066;transform:rotate(-5deg);transition:transform .4s; }
+.apc-school-minimal .scene-help .motion-object { transform:rotate(4deg); }
+.apc-school-minimal .scene-next .motion-object { transform:rotate(-2deg); }
+.apc-school-minimal .motion-object:hover { transform:rotate(0) translateY(-5px); }
+.apc-school-minimal .motion-number { position:absolute;top:14px;left:18px;color:#627369;font-size:.75rem;letter-spacing:.1em; }
+.apc-school-minimal .motion-object svg { display:block;width:160px;height:130px;margin:0 auto 16px;fill:none;stroke:#073734;stroke-width:3;stroke-linecap:round;stroke-linejoin:round; }
+.apc-school-minimal .motion-object .motion-accent { stroke:#b76743;stroke-width:5; }
+.apc-school-minimal .motion-object strong { font-size:1.25rem;letter-spacing:-.03em; }
+.apc-school-minimal .motion-scene > p { font-size:.94rem;margin:24px 0 0; }
+.apc-school-minimal .motion-caption { text-align:center;font-size:.75rem;margin:8px auto 0;max-width:40ch; }
+.apc-school-minimal #training-topics .audience-card { border:0;border-radius:0;padding:12px 24px 12px 0;background:transparent; }
+.apc-school-minimal #training-topics .audience-card + .audience-card { border-left:1px solid #dbe5e2;padding-left:24px; }
+.apc-school-minimal #training-topics .minimal-topic-image { background:transparent;transition:transform .35s; }
+.apc-school-minimal #training-topics .audience-card:hover .minimal-topic-image { transform:translateY(-6px); }
+.apc-school-minimal .school-formats .audience-card { border-radius:0;background:transparent;padding:12px 20px; }
+.apc-school-minimal main > .school-formats { background:#edf1eb;padding:36px 28px;border-radius:0; }
+.apc-school-minimal .school-facilitator { text-align:center;padding:16px 16px 28px; }
+.apc-school-minimal .school-facilitator p { font-size:.85rem;margin:8px auto;max-width:72ch; }
+.apc-school-minimal .school-facilitator span { display:block;font-size:.8rem; }
+@keyframes school-scene-in { from { opacity:0;transform:translateY(28px) rotateY(-12deg) scale(.92); } to { opacity:1;transform:translateY(0) rotateY(0) scale(1); } }
+@media(max-width:760px) {
+ .apc-school-minimal .school-motion-hero { grid-template-columns:1fr;padding-bottom:32px; }
+ .apc-school-minimal .school-motion-hero h1 { font-size:clamp(3rem,12vw,4.5rem); }
+ .apc-school-minimal .motion-stage { min-height:350px; }
+ .apc-school-minimal .motion-controls span { padding-inline:16px; }
+ .apc-school-minimal #training-topics .audience-card + .audience-card { border-left:0;border-top:1px solid #dbe5e2;padding:24px 0 12px; }
+ .apc-school-minimal #training-topics .audience-card { padding-right:0; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .apc-school-minimal .motion-scene { animation:none!important; }
+ .apc-school-minimal .motion-object,.apc-school-minimal .minimal-topic-image,.apc-school-minimal .motion-controls span { transition:none!important; }
+ .apc-school-minimal .motion-object:hover,.apc-school-minimal #training-topics .audience-card:hover .minimal-topic-image { transform:none; }
+}
