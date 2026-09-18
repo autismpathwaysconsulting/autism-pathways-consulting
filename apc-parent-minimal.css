@@ -24,8 +24,8 @@ body.apc-parent-minimal { background:#fffdf9; }
 .apc-parent-minimal .parent-price { font-size:.92rem;font-weight:600; }
 .apc-parent-minimal .parent-icon { display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:#eaf0e7;color:#073734; }
 .apc-parent-minimal .parent-icon svg { width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round; }
-.apc-parent-minimal details { width:100%;margin-top:10px; }
-.apc-parent-minimal summary { cursor:pointer;min-height:44px;padding:10px 0;color:#0f766e;font-size:.94rem; }
+.apc-parent-minimal .parent-offers details { width:100%;margin-top:10px; }
+.apc-parent-minimal .parent-offers summary { cursor:pointer;min-height:44px;padding:10px 0;color:#0f766e;font-size:.94rem; }
 .apc-parent-minimal .parent-booking-note { max-width:88ch;margin:20px auto 0;text-align:center; }
 .apc-parent-minimal main > .parent-process { background:#edf2eb;border-radius:24px;padding:30px 28px;text-align:center; }
 .apc-parent-minimal .parent-process ol { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;list-style:none;margin:22px 0 0;padding:0; }
@@ -76,3 +76,7 @@ body.apc-parent-minimal { background:#fffdf9; }
  .apc-parent-minimal .audience-author p { font-size:.82rem; }
  .apc-parent-minimal .parent-calm { text-align:left; }
 }
+
+/* Keep offer disclosures independent from the header navigation. */
+.apc-parent-minimal .apc-shell-nav > a,.apc-parent-minimal .apc-nav-dropdown > summary { white-space:nowrap; }
+.apc-parent-minimal .apc-shell-nav > * { flex-shrink:0; }
