@@ -106,3 +106,17 @@ body.apc-minimal-page { margin:0;background:#fffdf9; }
  .apc-school-minimal .school-example-board { gap:8px; }
  .apc-school-minimal .school-example-board > div { padding:20px 8px; }
 }
+
+/* Visual choices reveal detail only when the reader asks for it. */
+.apc-school-minimal #training-topics .minimal-topic-image { height:130px;object-fit:contain;background:#f3f5ee; }
+.apc-school-minimal .school-topic-detail { border-top:1px solid #e1e8e2;margin-top:18px; }
+.apc-school-minimal .school-topic-detail > summary { min-height:44px;padding:12px 0 0;cursor:pointer;color:#0f766e;font-size:.9rem; }
+.apc-school-minimal .school-topic-detail > p { font-size:.9rem;line-height:1.6;margin:12px 0 0; }
+.apc-school-minimal .school-format-icon { display:block;width:72px;height:72px;padding:8px;margin:0 auto 20px;fill:none;stroke:#0f766e;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+.apc-school-minimal .school-formats .audience-card { text-align:center;background:#f4f6f1;border-color:transparent; }
+.apc-school-minimal .school-formats .school-topic-detail { text-align:left; }
+.apc-school-minimal .school-formats > p { font-size:.84rem;max-width:80ch;margin:0 auto;text-align:center; }
+@media(max-width:760px) {
+ .apc-school-minimal #training-topics .minimal-topic-image { height:105px; }
+ .apc-school-minimal .school-format-icon { width:64px;height:64px;margin-bottom:14px; }
+}
