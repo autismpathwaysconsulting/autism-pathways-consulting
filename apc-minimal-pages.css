@@ -268,3 +268,24 @@ body.apc-minimal-page { margin:0;background:#fffdf9; }
  .apc-school-minimal .motion-scene,.apc-school-minimal .school-topic-art svg { transition:none!important;transform:none!important; }
  .apc-school-minimal .audience-card:hover .school-topic-art svg { transform:none; }
 }
+
+/* Classroom materials: paper edges, restrained colour and directional shadows. */
+.apc-school-minimal .school-motion { background:#f0ecdf;box-shadow:inset 1px 0 #e1ddcf; }
+.apc-school-minimal .motion-object .school-solid-art { filter:none;max-height:250px;overflow:visible; }
+.apc-school-minimal .motion-orbit { display:none; }
+.apc-school-minimal .school-topic-art { background:#edece2;border-radius:8px;box-shadow:inset 0 1px 2px #153d3710; }
+.apc-school-minimal #training-topics .audience-card { background:#fffefa;border:1px solid #e6e7de;box-shadow:0 3px 6px #16382e04,0 12px 24px -16px #16382e35; }
+.apc-school-minimal #training-topics .audience-card + .audience-card { border:1px solid #e6e7de; }
+.apc-school-minimal .school-topic-art svg { height:160px; }
+.apc-school-minimal .school-planning > summary { cursor:pointer;font-size:1.1rem;font-weight:600;color:#073734;min-height:44px;display:list-item;align-content:center; }
+.apc-school-minimal main > .school-process { padding:12px 24px; }
+.apc-school-minimal .school-planning[open] { padding-bottom:12px; }
+.apc-school-minimal .school-scope summary { cursor:pointer;padding:10px 0;min-height:44px;font-size:.8rem;color:#435d58; }
+.apc-school-minimal .school-formats .school-topic-detail { border:0; }
+.apc-school-minimal .school-formats .audience-card { padding:10px 14px;border-left:2px solid #d0dac8; }
+@media(max-width:760px) {
+ .apc-school-minimal .school-topic-art { width:112px; }
+ .apc-school-minimal .school-topic-art svg { height:90px; }
+ .apc-school-minimal #training-topics h3 { min-height:60px;display:flex;align-items:center; }
+ .apc-school-minimal .motion-object .school-solid-art { max-height:220px; }
+}
