@@ -28,6 +28,8 @@ export const PUBLIC_FILES = Object.freeze([
   "apc-audience-pages.css",
   "blog.html",
   "parents.html",
+  "apc-parent-minimal.css",
+  "apc-minimal-pages.css",
   "about.html",
   "autism-friendly-places-kl-pj.html",
   "autism-friendly-places-cover.webp",
