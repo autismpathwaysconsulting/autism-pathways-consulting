@@ -239,3 +239,32 @@ body.apc-minimal-page { margin:0;background:#fffdf9; }
  .apc-school-minimal .school-contact-layout .minimal-enquiry { padding:20px 16px; }
  .apc-school-minimal .school-process ol { gap:16px; }
 }
+
+/* Solid forms, warm surfaces and depth echo the homepage clarity-path artwork. */
+.apc-school-minimal .school-motion { background:#f5ecdc; }
+.apc-school-minimal .motion-controls legend,.apc-school-minimal .motion-controls span,.apc-school-minimal .motion-scene > p,.apc-school-minimal .motion-caption { color:#244b44; }
+.apc-school-minimal .motion-controls input:checked + span { background:#073734;color:#fffdf9; }
+.apc-school-minimal .motion-controls input:focus-visible + span { outline-color:#0f766e; }
+.apc-school-minimal .motion-stage { isolation:isolate; }
+.apc-school-minimal .motion-orbit { width:440px;height:280px;border:0;background:radial-gradient(ellipse,#ccd6bb88,transparent 68%);transform:none; }
+.apc-school-minimal .motion-scene { display:block!important;grid-area:1/1;width:100%;padding:12px 4px 0;opacity:0;visibility:hidden;transform:translate3d(18px,8px,0) scale(.97);transition:opacity .5s ease,transform .65s cubic-bezier(.22,1,.36,1),visibility .5s;animation:none!important;pointer-events:none; }
+.apc-school-minimal .school-motion:has(input[value=start]:checked) .scene-start,.apc-school-minimal .school-motion:has(input[value=help]:checked) .scene-help,.apc-school-minimal .school-motion:has(input[value=next]:checked) .scene-next { opacity:1;visibility:visible;transform:translate3d(0,0,0) scale(1);pointer-events:auto; }
+.apc-school-minimal .motion-object,.apc-school-minimal .scene-help .motion-object,.apc-school-minimal .scene-next .motion-object { background:transparent;box-shadow:none;transform:none;min-height:0;padding:14px 0 0; }
+.apc-school-minimal .motion-object:hover { transform:none; }
+.apc-school-minimal .motion-number { top:0;left:16px;color:#49695a; }
+.apc-school-minimal .motion-object .school-solid-art { width:100%;height:auto;max-height:235px;stroke:none;fill:initial;margin:0 auto 8px;filter:drop-shadow(0 10px 8px #34534812); }
+.apc-school-minimal .motion-object strong { color:#073734;font-size:1.35rem; }
+.apc-school-minimal .motion-scene > p { margin-top:6px; }
+.apc-school-minimal .school-topic-art { background:#f6edde;border-radius:12px;margin:0 0 12px;overflow:hidden; }
+.apc-school-minimal .school-topic-art svg { display:block;width:100%;height:148px;transition:transform .55s cubic-bezier(.22,1,.36,1); }
+.apc-school-minimal .audience-card:hover .school-topic-art svg { transform:translateY(-3px) scale(1.025); }
+.apc-school-minimal .school-format-icon { fill:#d8e4cf;stroke:#286c60; }
+@media(max-width:760px) {
+ .apc-school-minimal .motion-object .school-solid-art { max-height:210px; }
+ .apc-school-minimal .school-topic-art { float:right;width:112px;margin:0 0 10px 12px; }
+ .apc-school-minimal .school-topic-art svg { height:90px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .apc-school-minimal .motion-scene,.apc-school-minimal .school-topic-art svg { transition:none!important;transform:none!important; }
+ .apc-school-minimal .audience-card:hover .school-topic-art svg { transform:none; }
+}
