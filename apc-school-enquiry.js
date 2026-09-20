@@ -3,9 +3,25 @@ if (schoolForm) {
   const topic = document.getElementById('sf-topic');
   const preparedLink = document.getElementById('school-whatsapp-link');
   const preparedState = document.getElementById('sf-success');
+  const messagePreview = document.getElementById('school-message-preview');
+  const copyButton = document.getElementById('school-copy-message');
+  const copyStatus = document.getElementById('school-copy-status');
+  const format = document.getElementById('sf-format');
+  const updateChoiceMarkers = () => {
+    for (const [prefix, field, key] of [['school-topic', topic, 'topic'], ['school-format', format, 'format']]) {
+      for (let i = 0; i < 3; i++) {
+        const route = document.getElementById(`${prefix}-${i}`);
+        const marker = document.getElementById(`${prefix}-selected-${i}`);
+        if (marker) marker.hidden = !field?.value || field.value !== route?.dataset[key];
+      }
+    }
+  };
   const invalidatePreparedEnquiry = () => {
     preparedState.hidden = true;
     preparedLink.removeAttribute('href');
+    if (messagePreview) messagePreview.value = '';
+    if (copyStatus) copyStatus.textContent = '';
+    updateChoiceMarkers();
   };
   // Changes invalidate the old message so a parent or educator cannot send stale details.
   schoolForm.addEventListener('input', invalidatePreparedEnquiry);
@@ -19,13 +35,30 @@ if (schoolForm) {
       topic.focus({ preventScroll: true });
     });
   }
-  const format = document.getElementById('sf-format');
   for (const id of ['school-format-0', 'school-format-1', 'school-format-2']) {
     const route = document.getElementById(id);
     if (route && format) route.addEventListener('click', () => {
       format.value = route.dataset.format;
       invalidatePreparedEnquiry();
       format.focus({ preventScroll: true });
+    });
+  }
+  updateChoiceMarkers();
+  if (copyButton && messagePreview) {
+    copyButton.hidden = false;
+    copyButton.addEventListener('click', async () => {
+      const message = messagePreview.value;
+      if (!message || preparedState.hidden) return;
+      try {
+        if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(message);
+        if (copyStatus && messagePreview.value === message && !preparedState.hidden) copyStatus.textContent = 'Message copied. Paste it into WhatsApp or your preferred message app.';
+      } catch {
+        if (messagePreview.value !== message || preparedState.hidden) return;
+        messagePreview.focus();
+        messagePreview.select();
+        if (copyStatus) copyStatus.textContent = 'Select and copy the message above using your device’s copy command.';
+      }
     });
   }
   schoolForm.addEventListener('submit', event => {
@@ -45,6 +78,8 @@ if (schoolForm) {
     ].join('\n');
     const link = document.getElementById('school-whatsapp-link');
     link.href = `https://wa.me/601172998168?text=${encodeURIComponent(message)}`;
+    if (messagePreview) messagePreview.value = message;
+    if (copyStatus) copyStatus.textContent = '';
     document.getElementById('sf-success').hidden = false;
     link.focus();
   });

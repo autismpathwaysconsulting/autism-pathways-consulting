@@ -5,9 +5,10 @@ import { readFile } from 'node:fs/promises';
 const code = await readFile(new URL('../apc-school-enquiry.js', import.meta.url), 'utf8');
 function setup() {
   const fields = {};
-  for (const id of ['school-training-form','school-whatsapp-link','sf-success','sf-name','sf-school','sf-role','sf-phone','sf-message','sf-topic','sf-format','sf-team-size','school-format-0','school-format-1','school-format-2','school-topic-0','school-topic-1','school-topic-2']) {
+  for (const id of ['school-message-preview','school-copy-message','school-copy-status','school-topic-selected-0','school-topic-selected-1','school-topic-selected-2','school-format-selected-0','school-format-selected-1','school-format-selected-2','school-training-form','school-whatsapp-link','sf-success','sf-name','sf-school','sf-role','sf-phone','sf-message','sf-topic','sf-format','sf-team-size','school-format-0','school-format-1','school-format-2','school-topic-0','school-topic-1','school-topic-2']) {
     fields[id] = { value:'', events:{}, hidden:true,
       addEventListener(type,fn) { this.events[type]=fn; },
+      select() { this.selected=true; },
       removeAttribute(name) { delete this[name]; },
       focus(options) { this.focused=true; this.focusOptions=options; }
     };
@@ -67,4 +68,26 @@ test('unspecified optional enquiry details have useful message defaults',()=>{
  assert.ok(message.includes('Preferred format: Help me choose'));
  assert.ok(message.includes('Team size: To discuss'));
  assert.ok(message.includes('Training needs: To discuss'));
+});
+
+test('review matches the WhatsApp message and clears after edits',()=>{
+ const f=setup();f['school-topic-1'].events.click();f['school-format-0'].events.click();
+ assert.equal(f['school-topic-selected-1'].hidden,false);
+ assert.equal(f['school-topic-selected-0'].hidden,true);
+ assert.equal(f['school-format-selected-0'].hidden,false);
+ f['school-training-form'].events.submit({preventDefault(){}});
+ assert.equal(f['school-message-preview'].value,new URL(f['school-whatsapp-link'].href).searchParams.get('text'));
+ f['sf-topic'].value='';f['school-training-form'].events.change();
+ assert.equal(f['school-message-preview'].value,'');
+ assert.equal(f['school-topic-selected-1'].hidden,true);
+ assert.equal(f['school-format-selected-0'].hidden,false);
+});
+test('copy has a manual fallback without a clipboard and ignores invalidated drafts',async()=>{
+ const f=setup();f['school-training-form'].events.submit({preventDefault(){}});
+ await f['school-copy-message'].events.click();
+ assert.equal(f['school-message-preview'].selected,true);
+ assert.match(f['school-copy-status'].textContent,/copy command/);
+ f['school-training-form'].events.input();
+ await f['school-copy-message'].events.click();
+ assert.equal(f['school-copy-status'].textContent,'');
 });
