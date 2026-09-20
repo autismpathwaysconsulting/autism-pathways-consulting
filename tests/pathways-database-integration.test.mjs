@@ -6,6 +6,62 @@ import { DatabaseSync } from 'node:sqlite';
 import { createPasswordRecord, verifyLogin } from '../functions/lib/pathways/auth.js';
 import { auditOutcome } from '../functions/api/pathways/ai-suggest.js';
 import { hasUseAuthority } from '../functions/api/pathways/state.js';
+import { readHistoryPage } from '../functions/api/pathways/export.js';
+import { sha256Hex } from '../functions/lib/pathways/auth.js';
+import { createEmptyPathwaysState, assertValidPathwaysState } from '../pathways/schema.js';
+
+test('history export bounds fetched JSON bytes and traverses every revision without gaps', async () => {
+  const db = setup();
+  try {
+    db.exec(`CREATE TABLE pathways_state_revisions (
+      student_id TEXT, revision INTEGER, schema_version TEXT, state_json TEXT,
+      state_hash TEXT, action TEXT, request_id TEXT, actor_user_id TEXT, created_at TEXT
+    )`);
+    const state = createEmptyPathwaysState();
+    state.pins = Array.from({length: 450}, (_, i) => ({
+      id: `pin-${i}`, type: 'Reminder', title: 'x'.repeat(1200),
+      details: 'y'.repeat(1200), parent: false, status: 'Open',
+    }));
+    assertValidPathwaysState(state);
+    const json = JSON.stringify(state), hash = await sha256Hex(json);
+    assert.ok(Buffer.byteLength(json) > 1024 * 1024);
+    const insert = db.prepare('INSERT INTO pathways_state_revisions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    for (let revision = 0; revision < 5; revision++) {
+      insert.run('synthetic', revision, '1.0', json, hash, 'edit', `request-${revision}`, 'tester', '2026-09-20');
+    }
+    const adapter = new SqliteD1(db), fetchedBytes = [];
+    const boundedDb = { prepare(sql) {
+      const statement = adapter.prepare(sql);
+      const all = statement.all.bind(statement);
+      statement.all = async () => {
+        const result = await all();
+        if (result.results.some(row => row.state_json !== undefined)) {
+          const bytes = result.results.reduce((total, row) => total + Buffer.byteLength(row.state_json), 0);
+          fetchedBytes.push(bytes);
+          assert.ok(bytes <= 2 * 1024 * 1024, 'oversized query result must be prevented before parsing');
+        }
+        return result;
+      };
+      return statement;
+    }};
+    const revisions = [];
+    let cursor = -1;
+    for (let pageNumber = 0; pageNumber < 5; pageNumber++) {
+      const page = await readHistoryPage(boundedDb, 'synthetic', cursor, 4, 100);
+      revisions.push(...page.history.map(row => row.revision));
+      assert.equal(page.hasMore, pageNumber < 4);
+      assert.ok(page.nextAfterRevision > cursor);
+      cursor = page.nextAfterRevision;
+    }
+    assert.deepEqual(revisions, [0, 1, 2, 3, 4]);
+    assert.equal(fetchedBytes.length, 5);
+    const snapshot = await readHistoryPage(boundedDb, 'synthetic', -1, 0, 100);
+    assert.deepEqual(snapshot.history.map(row => row.revision), [0]);
+    assert.equal(snapshot.hasMore, false);
+    db.prepare("UPDATE pathways_state_revisions SET state_hash = 'corrupt' WHERE revision = 0").run();
+    await assert.rejects(readHistoryPage(boundedDb, 'synthetic', -1, 4, 100), /hash is invalid/);
+  } finally { db.close(); }
+});
 
 const migration = path => readFile(new URL(`../migrations/${path}`, import.meta.url), 'utf8');
 

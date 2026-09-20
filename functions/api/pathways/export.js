@@ -4,6 +4,8 @@ import { assertValidPathwaysState } from '../../../pathways/schema.js';
 
 const DEFAULT_PAGE_SIZE = 50;
 const MAX_PAGE_SIZE = 100;
+// Bound raw revision JSON before fetching it, not just after parsing it.
+const MAX_HISTORY_PAGE_BYTES = 2 * 1024 * 1024;
 
 function parseIntegerParam(value, { min, max = Number.MAX_SAFE_INTEGER, fallback = null } = {}) {
   if (value === null || value === '') return fallback;
@@ -13,20 +15,39 @@ function parseIntegerParam(value, { min, max = Number.MAX_SAFE_INTEGER, fallback
   return parsed;
 }
 
-async function readHistoryPage(db, studentId, afterRevision, snapshotRevision, pageSize) {
-  const result = await db.prepare(`SELECT revision, schema_version, state_json, state_hash, action,
-      request_id, actor_user_id, created_at
+export async function readHistoryPage(db, studentId, afterRevision, snapshotRevision, pageSize) {
+  const candidates = await db.prepare(`SELECT revision, length(CAST(state_json AS BLOB)) AS state_bytes
     FROM pathways_state_revisions
     WHERE student_id = ? AND revision > ? AND revision <= ?
     ORDER BY revision ASC
     LIMIT ?`)
     .bind(studentId, afterRevision, snapshotRevision, pageSize + 1)
     .all();
+  const metadata = candidates?.results || [];
+  let count = 0, bytes = 0;
+  for (const row of metadata.slice(0, pageSize)) {
+    if (!Number.isSafeInteger(row.state_bytes) || row.state_bytes < 1 || row.state_bytes > MAX_HISTORY_PAGE_BYTES) {
+      throw new Error('Stored Pathways revision exceeds the export size limit.');
+    }
+    if (bytes + row.state_bytes > MAX_HISTORY_PAGE_BYTES) break;
+    bytes += row.state_bytes;
+    count++;
+  }
+  if (!count) return { history: [], hasMore: false, nextAfterRevision: afterRevision };
+  const lastRevision = metadata[count - 1].revision;
+  const result = await db.prepare(`SELECT revision, schema_version, state_json, state_hash, action,
+      request_id, actor_user_id, created_at
+    FROM pathways_state_revisions
+    WHERE student_id = ? AND revision > ? AND revision <= ?
+    ORDER BY revision ASC
+    LIMIT ?`)
+    .bind(studentId, afterRevision, lastRevision, count)
+    .all();
   const rows = result?.results || [];
-  const hasMore = rows.length > pageSize;
-  const pageRows = hasMore ? rows.slice(0, pageSize) : rows;
+  if (rows.length !== count) throw new Error('Stored Pathways history changed during export.');
+  const hasMore = metadata.length > count;
   const history = [];
-  for (const row of pageRows) {
+  for (const row of rows) {
     const state = JSON.parse(row.state_json);
     assertValidPathwaysState(state);
     const computedHash = await sha256Hex(JSON.stringify(state));
