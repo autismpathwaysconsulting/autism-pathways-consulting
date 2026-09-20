@@ -337,3 +337,52 @@ body.apc-minimal-page { margin:0;background:#fffdf9; }
  .apc-school-minimal .school-choice-art svg,.apc-school-minimal .school-choice-arrow { transition:none; }
  .apc-school-minimal .school-choice summary:hover svg,.apc-school-minimal .school-choice[open] svg { transform:none; }
 }
+
+/* Homepage-aligned colour and spacing, with readable text kept on warm white. */
+.apc-school-minimal main { width:min(1200px,calc(100% - 48px));padding:20px 0 40px; }
+.apc-school-minimal main > .school-motion-hero { background:#edf4eb;border:1px solid #e1e8da;box-shadow:0 12px 32px -26px #07373466; }
+.apc-school-minimal .school-motion-hero .audience-hero-copy { padding:clamp(24px,3.2vw,40px); }
+.apc-school-minimal .school-motion-hero .audience-hero-copy > p:not(.eyebrow) { margin-bottom:0; }
+.apc-school-minimal main > .school-choice-section { padding:32px 0 20px; }
+.apc-school-minimal .school-section-heading { align-items:start;flex-wrap:wrap;gap:6px 20px;margin-bottom:18px; }
+.apc-school-minimal .school-section-heading p { white-space:normal; }
+.apc-school-minimal .school-choice-grid { gap:20px; }
+.apc-school-minimal .school-choice { border-color:#dae5da;box-shadow:0 2px 4px #143c2e06,0 16px 30px -18px #143c2e45; }
+.apc-school-minimal .choice-0 .school-choice-art { background:linear-gradient(135deg,#d9edbb,#a8d8b9); }
+.apc-school-minimal .choice-1 .school-choice-art { background:linear-gradient(135deg,#f9ddc0,#edb69d); }
+.apc-school-minimal .choice-2 .school-choice-art { background:linear-gradient(135deg,#d0eee4,#91cfc2); }
+.apc-school-minimal .school-choice-art { border-bottom:1px solid #0737340d; }
+.apc-school-minimal .school-choice-art svg { height:236px; }
+.apc-school-minimal .school-choice-title { min-height:80px;padding:18px 20px;line-height:1.35; }
+.apc-school-minimal .school-choice-content { padding:0 20px 20px; }
+.apc-school-minimal .school-choice-content a { min-height:44px;line-height:1.5; }
+.apc-school-minimal .school-other-focus { padding:12px 0;min-height:44px; }
+.apc-school-minimal main > .school-formats { padding:0 0 12px; }
+.apc-school-minimal .school-format-options > summary { padding:16px 4px; }
+.apc-school-minimal .school-contact-layout { padding-top:28px;gap:32px; }
+.apc-school-minimal .school-contact-layout .minimal-enquiry { padding:28px;background:#f0f5ec;border:1px solid #dee7d7;box-shadow:0 14px 28px -24px #07373455; }
+.apc-school-minimal .form-row { gap:16px; }
+.apc-school-minimal .form-field { margin-bottom:16px; }
+.apc-school-minimal .form-note { font-size:.8rem;line-height:1.6;margin-bottom:0; }
+.apc-school-minimal textarea { min-height:112px; }
+.apc-school-minimal #interest { scroll-margin-top:145px; }
+@media(min-width:761px) and (max-width:1000px) {
+ .apc-school-minimal .school-choice-grid { gap:12px; }
+ .apc-school-minimal .school-choice-art svg { height:180px; }
+ .apc-school-minimal .school-choice-title { padding:16px 12px;font-size:.95rem;min-height:84px; }
+ .apc-school-minimal .school-contact-layout { grid-template-columns:1fr 1.2fr;gap:20px; }
+ .apc-school-minimal .school-contact-layout .form-row { grid-template-columns:1fr;gap:0; }
+}
+@media(max-width:760px) {
+ .apc-school-minimal main { width:calc(100% - 32px);padding:12px 0 28px; }
+ .apc-school-minimal main > .school-choice-section { padding:24px 0 16px; }
+ .apc-school-minimal .school-choice-grid { gap:14px; }
+ .apc-school-minimal .school-choice-art svg { height:136px; }
+ .apc-school-minimal .school-choice-title { padding:14px 12px;min-height:0; }
+ .apc-school-minimal .school-choice-content { padding:16px; }
+ .apc-school-minimal .school-choice > summary { grid-template-columns:38% minmax(0,1fr); }
+ .apc-school-minimal .school-contact-layout { padding:24px 0 0;gap:24px; }
+ .apc-school-minimal .school-contact-layout .minimal-enquiry { padding:20px 16px; }
+ .apc-school-minimal .form-row { gap:0; }
+ .apc-school-minimal .school-facilitator { padding-inline:0; }
+}
