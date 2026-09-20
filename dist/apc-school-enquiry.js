@@ -19,6 +19,15 @@ if (schoolForm) {
       topic.focus({ preventScroll: true });
     });
   }
+  const format = document.getElementById('sf-format');
+  for (const id of ['school-format-0', 'school-format-1', 'school-format-2']) {
+    const route = document.getElementById(id);
+    if (route && format) route.addEventListener('click', () => {
+      format.value = route.dataset.format;
+      invalidatePreparedEnquiry();
+      format.focus({ preventScroll: true });
+    });
+  }
   schoolForm.addEventListener('submit', event => {
     event.preventDefault();
     if (!schoolForm.reportValidity()) return;
@@ -30,6 +39,8 @@ if (schoolForm) {
       `Role: ${value('sf-role') || 'Not specified'}`,
       `WhatsApp: ${value('sf-phone')}`,
       ...(topic ? [`Training focus: ${topic.value || 'Help me choose'}`] : []),
+      ...(format ? [`Preferred format: ${format.value || 'Help me choose'}`] : []),
+      ...(document.getElementById('sf-team-size') ? [`Team size: ${value('sf-team-size') || 'To discuss'}`] : []),
       `Training needs: ${value('sf-message') || 'To discuss'}`,
     ].join('\n');
     const link = document.getElementById('school-whatsapp-link');
