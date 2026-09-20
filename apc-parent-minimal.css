@@ -1,6 +1,7 @@
 /* Option B: scoped to the parent page, retaining shared navigation. */
-body.apc-parent-minimal { background:#fffdf9; }
-.apc-parent-minimal h1,.apc-parent-minimal h2,.apc-parent-minimal h3 { font-family:'DM Sans',sans-serif!important;font-weight:650!important;letter-spacing:-.04em; }
+body.apc-parent-minimal { margin:0;background:#fffdf9; }
+.apc-parent-minimal h1,.apc-parent-minimal h2 { font-family:'DM Serif Display',Georgia,serif!important;font-weight:400!important;letter-spacing:-.025em;text-wrap:balance; }
+.apc-parent-minimal h3 { font-family:'DM Sans',sans-serif!important;font-weight:650!important;letter-spacing:-.02em; }
 .apc-parent-minimal main { width:min(1120px,calc(100% - 64px));padding-top:16px; }
 .apc-parent-minimal main > section { padding:64px 0;border:0; }
 .apc-parent-minimal .parent-hero { display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center;gap:28px;min-height:500px; }
@@ -9,14 +10,14 @@ body.apc-parent-minimal { background:#fffdf9; }
 .apc-parent-minimal h3 { font-size:1.18rem;line-height:1.35;letter-spacing:-.02em; }
 .apc-parent-minimal .parent-intro { max-width:38ch;font-size:clamp(1.1rem,1.7vw,1.3rem);line-height:1.55;color:#435d58; }
 .apc-parent-minimal .eyebrow { font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:650; }
-.apc-parent-minimal .parent-path { width:100%;height:auto;display:block; }
-.apc-parent-minimal .audience-actions .audience-primary { background:#073734;border-radius:999px;padding:13px 23px;font-weight:600;text-align:center;justify-content:center;line-height:1.4; }
+.apc-parent-minimal .parent-path { width:100%;height:auto;display:block;filter:drop-shadow(0 14px 18px #07373412); }
+.apc-parent-minimal .audience-actions .audience-primary { background:#0f766e;border-radius:999px;padding:13px 23px;font-weight:600;text-align:center;justify-content:center;line-height:1.4;box-shadow:0 8px 20px #07373414; }
 .apc-parent-minimal main a:hover { text-decoration:underline; }
-.apc-parent-minimal .audience-primary:hover { background:#0f766e; }
+.apc-parent-minimal .audience-primary:hover { background:#073734; }
 .apc-parent-minimal .parent-small { font-size:.84rem;line-height:1.65;color:#526660; }
 .apc-parent-minimal #support > h2 { text-align:center; }
 .apc-parent-minimal .audience-grid { gap:20px;margin:30px 0 20px; }
-.apc-parent-minimal .audience-card { padding:28px 24px;border-radius:20px;background:#fff;border-color:#e1e8e2; }
+.apc-parent-minimal .audience-card { padding:28px 24px;border-radius:20px;background:#fff;border-color:#e1e8e2;box-shadow:0 8px 24px #07373408; }
 .apc-parent-minimal .parent-offers .audience-card { display:flex;flex-direction:column;align-items:flex-start; }
 .apc-parent-minimal .parent-offers .audience-card > a { margin-top:auto;padding-top:16px;gap:8px; }
 .apc-parent-minimal .parent-offers h3 { margin:18px 0 8px; }

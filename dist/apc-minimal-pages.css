@@ -386,3 +386,7 @@ body.apc-minimal-page { margin:0;background:#fffdf9; }
  .apc-school-minimal .form-row { gap:0; }
  .apc-school-minimal .school-facilitator { padding-inline:0; }
 }
+
+/* Preserve the selected service through the parent-page journey. */
+.apc-service-minimal .offer-card:target { border-color:#0f766e;box-shadow:0 0 0 2px #0f766e; }
+.apc-service-minimal .service-request-link { display:inline-flex;align-items:center;min-height:46px;line-height:1.5;text-underline-offset:4px; }
