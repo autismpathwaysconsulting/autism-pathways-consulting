@@ -35,6 +35,12 @@ Known browser limit: phone, tablet and 200% zoom emulation remain unavailable. S
 
 ## Parent Home Support wording and tactile artwork
 Scope: Rename the public parent-support category, match the Schools material photography on homepage, Parents and Services, preserve approved offers and routes.
-- [ ] V1: Inspect artwork, hierarchy, spacing and loaded images on all four rendered pages.
-- [ ] V2: Verify the longer shared navigation label, support links and offer disclosures.
-- [ ] V3: Build, focused regression tests, asset references and published preview verification pass.
+- [x] V1: Inspect artwork, hierarchy, spacing and loaded images on all four rendered pages.
+- [x] V2: Verify the longer shared navigation label, support links and offer disclosures.
+- [x] V3: Build, focused regression tests, asset references and published preview verification pass.
+
+Evidence: Implementation c7143714071227d6e52f35e6a656b785f783aca3, reviewed at https://7b73c6b2.autism-pathways-consulting.pages.dev. Three coordinated still-life assets replace flat offer icons; home-routine hero replaces abstract path on homepage and Parents. School photograph used as the visual reference. Public category wording, metadata, breadcrumbs, all 31 shared headers and footers use Parent Home Support. Offer product names remain intact.
+V1: Browser screenshots of all four page heroes and both offer grids inspected. Cream, teal, sage and coral materials have consistent light and texture. Card image frames measure 310 x 155px, aligned. Images loaded, one H1 per route, no desktop horizontal overflow at 1363px.
+V2: Renamed dropdown fits and navigates; parent support anchor, session-details destination and parent/service disclosures exercised. The session link reaches /services#service-slide-session. Free-call and existing WhatsApp destinations retained. No external submission.
+V3: Build emits 139 public files; 29 Node and 2 Python tests pass. Caught and repaired stale nested-page CSS versions and category labels. Headings, unique IDs, anchors, raster paths and no em dashes checked. Local tree 8c2d52140684d8cf0d0cca633f2d444537010386 exactly matches published implementation tree. Cloudflare and pathways-qa succeed.
+Limits: Desktop visual check only. Phone/tablet/200% zoom unavailable in supported browser. New raster WebPs total 117158 bytes, lazy-loaded in offer cards. Review branch only; production unchanged.
