@@ -32,3 +32,9 @@ Scope: Homepage, Parents, Schools and Services. Retain offer facts and preview-o
 - [x] A3: Build and focused regression checks pass; inspect repaired pages in the published browser.
   EVIDENCE: Build emits 135 files; 29 Node plus 2 Python focused checks pass after repairs. Unique IDs, one H1, anchors, asset versions, no em dashes and git diff checks pass. Unrelated route HTML differences are cache-version updates only. Implementation ca5c2664b3e4e6aff1a4b917a5c0a40264ad1df4 deployed successfully at https://ae06aa80.autism-pathways-consulting.pages.dev; Cloudflare and pathways-qa pass. Final comparison cards rendered with stable transforms and consistent font size. No production change.
 Known browser limit: phone, tablet and 200% zoom emulation remain unavailable. Source breakpoint review is not a rendered-device check.
+
+## Parent Home Support wording and tactile artwork
+Scope: Rename the public parent-support category, match the Schools material photography on homepage, Parents and Services, preserve approved offers and routes.
+- [ ] V1: Inspect artwork, hierarchy, spacing and loaded images on all four rendered pages.
+- [ ] V2: Verify the longer shared navigation label, support links and offer disclosures.
+- [ ] V3: Build, focused regression tests, asset references and published preview verification pass.

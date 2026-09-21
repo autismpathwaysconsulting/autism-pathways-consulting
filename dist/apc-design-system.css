@@ -5251,3 +5251,7 @@ html.apc-home-snap { scroll-snap-type: none !important; }
 
 .apc-home-page .offer-detail .offer-followup { margin: 12px 0 0 !important; }
 .apc-home-page .offer-followup a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* Home materials share the Schools photographic treatment. */
+.apc-home-page .hero-visual img { width: 100%; margin-left: 0; filter: none; }
+.apc-home-page .hero-visual picture { border-radius: 24px; box-shadow: 0 12px 32px #0737340d; }

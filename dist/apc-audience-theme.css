@@ -192,3 +192,21 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
 
 .apc-audience-theme .offer-card:hover,
 .apc-audience-theme .parent-offers .audience-card:hover { transform: none !important; }
+
+/* Tactile materials echo the school page without adding decorative icon tiles. */
+.apc-audience-theme .support-material-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  margin: 0 0 20px;
+  background: #f2ede3;
+}
+.apc-audience-theme .parent-offers .support-material-image + h3 { margin-top: 0; }
+.apc-audience-theme .audience-hero-visual > img { aspect-ratio: 3 / 2; }
+@media (max-width: 900px) {
+  .apc-audience-theme .support-material-image { max-height: 190px; }
+}
