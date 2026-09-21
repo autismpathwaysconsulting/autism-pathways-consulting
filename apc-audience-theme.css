@@ -111,11 +111,11 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
 .apc-audience-theme .parent-offers article:nth-child(3) .parent-icon,
 .apc-audience-theme .offer-card:nth-child(3) .parent-icon { background: #c9e7df; }
 .apc-audience-theme .offer-grid { align-items: stretch; }
-.apc-audience-theme .minimal-process .section-heading { text-align: left; }
+.apc-audience-theme.apc-service-minimal .minimal-process .section-heading { text-align: left; }
 .apc-audience-theme .offer-card .parent-icon { margin-bottom: 20px; }
 .apc-audience-theme #support > h2 { text-align: left; }
 .apc-audience-theme main > .parent-process,
-.apc-audience-theme main > .minimal-process {
+.apc-audience-theme.apc-service-minimal main > .minimal-process {
   padding: 36px;
   border-radius: 24px;
   background: #073734;
@@ -124,12 +124,12 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
 }
 .apc-audience-theme .parent-process h2,
 .apc-audience-theme .parent-process h3,
-.apc-audience-theme .minimal-process h2,
-.apc-audience-theme .minimal-process strong { color: #fff9f1 !important; }
+.apc-audience-theme.apc-service-minimal .minimal-process h2,
+.apc-audience-theme.apc-service-minimal .minimal-process strong { color: #fff9f1 !important; }
 .apc-audience-theme .parent-process p,
-.apc-audience-theme .minimal-process p { color: #dbe7df !important; }
+.apc-audience-theme.apc-service-minimal .minimal-process p { color: #dbe7df !important; }
 .apc-audience-theme .parent-process li > span { margin-left: 0; background: #ffffff12; color: #a6d3c7; border-color: #ffffff30; }
-.apc-audience-theme .minimal-process .eyebrow { color: #a6d3c7 !important; }
+.apc-audience-theme.apc-service-minimal .minimal-process .eyebrow { color: #a6d3c7 !important; }
 .apc-audience-theme .parent-resources { gap: 20px; }
 .apc-audience-theme .parent-resources .audience-card { border-top: 3px solid #6b9e7a !important; }
 .apc-audience-theme .parent-resources .audience-card:nth-child(2) { border-top-color: #e8997a !important; }
@@ -145,7 +145,7 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
   .apc-audience-theme .audience-hero-visual figcaption,
   .apc-audience-theme .services-route-panel,
   .apc-audience-theme main > .parent-process,
-  .apc-audience-theme main > .minimal-process { padding: 24px; }
+  .apc-audience-theme.apc-service-minimal main > .minimal-process { padding: 24px; }
   .apc-audience-theme main h1 { font-size: clamp(2.4rem, 9vw, 3.1rem) !important; }
   .apc-audience-theme .parent-process ol { grid-template-columns: 1fr; gap: 24px; }
 }
