@@ -30,6 +30,20 @@ document.addEventListener('click', event => {
     if (!dropdown.contains(event.target)) closeDropdown(dropdown);
   });
 });
+// Keep the shared information architecture consistent on older static pages.
+for (const link of document.querySelectorAll('.apc-shell-nav a, .apc-footer-column a')) {
+  const target = new URL(link.href, window.location.href);
+  const path = target.pathname.replace(/\/$/, '') || '/';
+  const label = link.textContent.trim();
+  if (target.origin === window.location.origin && path === '/services') {
+    if (label === 'Parent sessions & programmes' || label === 'Services') link.textContent = 'Learning & Workshops';
+    if (label === 'Parent Home Support Options') {
+      link.href = '/parents';
+      link.textContent = 'Parent Home Support';
+    }
+  }
+}
+
 // Match both origin and path: APC Calm must not appear current on the home page.
 const currentURL = new URL(window.location.href);
 for (const link of document.querySelectorAll('.apc-shell-nav a')) {
