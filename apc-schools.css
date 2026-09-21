@@ -152,3 +152,47 @@
 .apc-school-minimal .school-contact-layout{grid-template-columns:1fr;gap:28px;padding:32px 0}.apc-school-minimal .school-contact-context{padding:24px 20px}.apc-school-minimal .school-contact-layout .minimal-enquiry{width:100%}.apc-school-minimal .svc-title h2{font-size:2rem}.apc-school-minimal .form-row{grid-template-columns:1fr;gap:0}.apc-school-minimal .form-submit{width:100%}.apc-school-minimal main>.minimal-faq{display:block;padding:24px 0}.apc-school-minimal main>.minimal-faq h2{max-width:none;margin:0 0 16px}.apc-school-minimal main>#sf-success{padding:24px 16px;margin-bottom:28px}.apc-school-minimal .school-review-actions>*{width:100%}.apc-school-minimal #school-message-preview{padding:12px}.apc-school-minimal .minimal-closing .audience-actions{display:grid;gap:4px}
 }
 @media(prefers-reduced-motion:reduce){.apc-school-minimal *{scroll-behavior:auto!important}.apc-school-minimal .school-choice-arrow,.apc-school-minimal .format-toggle{transition:none}.apc-motion-ready .apc-school-minimal [data-reveal]{transform:none;transition:none}}
+
+/* A useful interaction gives the classroom imagery a destination. */
+.apc-school-minimal .school-hero-image figcaption{background:none;padding:0;align-items:end;gap:10px}
+.apc-school-minimal main .school-image-story{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:52px;padding:14px 18px;background:#fffdf9;border-left:3px solid #6b9e7a;border-radius:4px;color:#073734;text-decoration:none;font-size:.9rem;box-shadow:0 4px 14px #07373412;transition:transform .18s,background .18s}
+.apc-school-minimal .school-image-story>span:last-child{font-size:1.2rem}
+.apc-school-minimal .school-image-caption{padding:7px 9px;background:#fffdf9;border-radius:4px;font-size:.65rem;line-height:1.4}
+.apc-school-minimal .school-hero-note a{font-weight:600}
+.apc-school-minimal .school-sample-sheet.school-example{transform:none;padding:26px;border-top:3px solid #6b9e7a;box-shadow:0 16px 30px -24px #07373455}
+.apc-school-minimal .school-sample-sheet .school-sample-tag{white-space:nowrap}
+.apc-school-minimal .school-example-picker{display:none;min-width:0;gap:4px;border:0;padding:0;margin:20px 0}
+.apc-school-minimal .school-example-picker legend{width:100%;float:left;padding:0;margin:0 0 10px;font-size:.78rem;color:#435d58;font-weight:500}
+.apc-school-minimal .school-example-picker label{position:relative;flex:1;min-width:0;margin:0;font-size:.8rem;font-weight:500;cursor:pointer}
+.apc-school-minimal .school-example-picker input{position:absolute;opacity:0;width:1px;height:1px;min-height:0;padding:0;margin:0;clip-path:inset(50%);overflow:hidden}
+.apc-school-minimal .school-example-picker label>span{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;box-sizing:border-box;background:#fffdf9;border:1px solid #d6dfd1;border-radius:6px;color:#435d58;line-height:1.35;text-align:center;transition:background .18s,color .18s}
+.apc-school-minimal .school-example-picker input:checked+span{background:#073734;border-color:#073734;color:#fffdf9}
+.apc-school-minimal .school-example-picker input:focus-visible+span{outline:3px solid #0f766e;outline-offset:3px}
+.apc-school-minimal .school-example-panel h3{font-family:'DM Sans',sans-serif!important;font-size:1rem;letter-spacing:-.015em;line-height:1.5;margin:0 0 14px;color:#073734}
+.apc-school-minimal .school-example-panel ol{margin:0}
+.apc-school-minimal .school-example-panel+.school-example-panel{margin-top:28px}
+.apc-school-minimal .school-example-panel li:nth-child(2){border-left:3px solid #6b9e7a;padding-left:12px;margin-left:-15px}
+.apc-school-minimal .school-example-invite{display:none;font-size:.85rem!important;font-weight:600;color:#0f766e;margin-top:24px}
+.apc-school-minimal .school-example-invite span{margin-right:6px}
+@supports selector(:has(*)){
+ .apc-school-minimal .school-example-picker{display:flex;flex-wrap:wrap}
+ .apc-school-minimal .school-example-panel{display:none;margin:0!important}
+ .apc-school-minimal .school-example:has(#example-instructions:checked) #panel-instructions,.apc-school-minimal .school-example:has(#example-help:checked) #panel-help,.apc-school-minimal .school-example:has(#example-transitions:checked) #panel-transitions{display:block;animation:school-example-in .18s ease-out}
+ .apc-school-minimal .school-example-invite{display:block}
+ .apc-school-minimal .school-example-panels{min-height:342px}
+}
+@keyframes school-example-in{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media(hover:hover){.apc-school-minimal .school-image-story:hover{transform:translateY(-2px);background:#f1f6ec}.apc-school-minimal .school-example-picker input:not(:checked)+span:hover{background:#e7eee2}}
+@media(max-width:760px){
+ .apc-school-minimal main .school-image-story{gap:12px;padding:12px;font-size:.8rem;min-height:48px}
+ .apc-school-minimal .school-hero-image figcaption{inset:auto 10px 10px;gap:8px}
+ .apc-school-minimal .school-image-caption{font-size:.6rem;max-width:70px;text-align:center;padding:6px}
+ .apc-school-minimal .school-sample-sheet.school-example{padding:20px 16px}
+ .apc-school-minimal .school-example-picker{gap:4px;margin-top:18px}
+ .apc-school-minimal .school-example-picker label{font-size:.75rem}
+ .apc-school-minimal .school-example-picker label>span{padding:8px 5px}
+ .apc-school-minimal .school-example-panels{min-height:392px}
+ .apc-school-minimal .school-example-invite span{display:none}
+ .apc-school-minimal .school-example-panel li:nth-child(2){padding-left:9px;margin-left:-12px}
+}
+@media(prefers-reduced-motion:reduce){.apc-school-minimal .school-image-story,.apc-school-minimal .school-example-picker label>span{transition:none}.apc-school-minimal .school-example-panel{animation:none!important}}
