@@ -1,6 +1,18 @@
 const schoolForm = document.getElementById('school-training-form');
 if (schoolForm) {
   const topic = document.getElementById('sf-topic');
+  const validateContact = () => {
+    for (const [id, message] of [['sf-name', 'Enter your name.'], ['sf-school', 'Enter your school or centre name.']]) {
+      const field = document.getElementById(id);
+      field.setCustomValidity(field.value.trim() ? '' : message);
+    }
+    const phone = document.getElementById('sf-phone');
+    const text = phone.value.trim();
+    const digits = text.replace(/\D/g, '');
+    const valid = /^\+?[0-9\s().-]+$/.test(text) && digits.length >= 7 && digits.length <= 15;
+    phone.setCustomValidity(valid ? '' : 'Enter a phone number with 7 to 15 digits. Spaces, +, brackets and hyphens are allowed.');
+  };
+
   const extraDetails = document.getElementById('school-extra-details');
   schoolForm.addEventListener('invalid', event => {
     // Reveal an invalid optional field before the browser moves focus to it.
@@ -29,8 +41,14 @@ if (schoolForm) {
     updateChoiceMarkers();
   };
   // Changes invalidate the old message so a parent or educator cannot send stale details.
-  schoolForm.addEventListener('input', invalidatePreparedEnquiry);
-  schoolForm.addEventListener('change', invalidatePreparedEnquiry);
+  schoolForm.addEventListener('input', () => {
+    validateContact();
+    invalidatePreparedEnquiry();
+  });
+  schoolForm.addEventListener('change', () => {
+    validateContact();
+    invalidatePreparedEnquiry();
+  });
   for (const id of ['school-topic-0', 'school-topic-1', 'school-topic-2']) {
     const route = document.getElementById(id);
     if (route && topic) route.addEventListener('click', () => {
@@ -72,6 +90,7 @@ if (schoolForm) {
   }
   schoolForm.addEventListener('submit', event => {
     event.preventDefault();
+    validateContact();
     if (!schoolForm.reportValidity()) return;
     const value = id => document.getElementById(id).value.trim();
     const message = [

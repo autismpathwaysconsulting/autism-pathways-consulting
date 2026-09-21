@@ -196,3 +196,9 @@
  .apc-school-minimal .school-example-panel li:nth-child(2){padding-left:9px;margin-left:-12px}
 }
 @media(prefers-reduced-motion:reduce){.apc-school-minimal .school-image-story,.apc-school-minimal .school-example-picker label>span{transition:none}.apc-school-minimal .school-example-panel{animation:none!important}}
+
+/* Audit repairs: semantic heading and an alternative contact route. */
+.apc-school-minimal .school-format-options .school-format-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;margin:0;color:#fffdf9;font-size:2rem}
+.apc-school-minimal .school-email-alternative{font-size:.85rem;line-height:1.5;margin:14px 0 0}
+.apc-school-minimal .school-email-alternative a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+@media(max-width:760px){.apc-school-minimal .school-format-options .school-format-heading{font-size:1.7rem;gap:16px}}
