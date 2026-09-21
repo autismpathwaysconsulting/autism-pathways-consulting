@@ -23,15 +23,17 @@
 .apc-school-minimal main>.school-choice-section{display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1.35fr);gap:12px 64px;align-items:start;padding:48px 0;border-top:1px solid var(--school-line)}
 .apc-school-minimal .school-section-heading{display:block}
 .apc-school-minimal .school-section-heading h2{font-size:2.4rem;line-height:1.12;margin:12px 0 16px;max-width:15ch}
-.apc-school-minimal .school-section-heading p:not(.eyebrow){font-size:1rem;margin:0;max-width:28ch}
+.apc-school-minimal .school-section-heading p:not(.eyebrow){white-space:normal;font-size:1rem;margin:0;max-width:28ch}
 .apc-school-minimal .school-choice-grid{display:grid;grid-template-columns:1fr;gap:0;align-items:start}
 .apc-school-minimal .school-choice{border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible;border-bottom:1px solid var(--school-line)}
 .apc-school-minimal .school-choice:first-child{border-top:1px solid var(--school-line)}
 .apc-school-minimal .school-choice>summary{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:20px;padding:18px 0;list-style:none;cursor:pointer}
 .apc-school-minimal .school-choice>summary::-webkit-details-marker{display:none}
 .apc-school-minimal .school-choice-art{display:grid;place-items:center;min-height:76px;border-radius:12px;background:#f1e3d7}
+.apc-school-minimal .choice-0 .school-choice-art{background:#f1e3d7}
 .apc-school-minimal .choice-1 .school-choice-art{background:#e0ebe1}
 .apc-school-minimal .choice-2 .school-choice-art{background:#deece8}
+.apc-school-minimal .school-choice summary:hover svg,.apc-school-minimal .school-choice[open] svg{transform:none}
 .apc-school-minimal .school-choice-art svg{display:block;width:60px;height:60px;transform:none;filter:none}
 .apc-school-minimal .school-choice-title{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:0;padding:0;background:none;color:#073734;font-size:1.1rem;font-weight:600;line-height:1.35}
 .apc-school-minimal .school-choice-hint{display:block;margin-top:6px;color:#435d58;font-size:.9rem;font-weight:400;letter-spacing:0;line-height:1.5}
@@ -46,7 +48,7 @@
 .apc-school-minimal .school-format-options{border:0;background:none;border-radius:0;overflow:visible}
 .apc-school-minimal .school-format-options>summary{display:flex;align-items:center;justify-content:space-between;gap:24px;list-style:none;cursor:pointer;min-height:48px;padding:0;color:#fffdf9}
 .apc-school-minimal .school-format-options>summary::-webkit-details-marker{display:none}
-.apc-school-minimal .school-format-options .eyebrow{display:block;color:#a7d9c8;margin:0 0 10px;font-size:.72rem}
+.apc-school-minimal .school-format-options .eyebrow{display:block;color:#a7d9c8!important;margin:0 0 10px;font-size:.72rem}
 .apc-school-minimal .school-format-heading{display:block;font-family:'DM Serif Display',serif;font-size:2rem;line-height:1.2;letter-spacing:-.025em;font-weight:400}
 .apc-school-minimal .format-toggle{display:grid;place-items:center;flex:none;width:30px;height:30px;border:1px solid #699a90;border-radius:50%;color:inherit;font-size:1.2rem;transition:transform .18s}
 .apc-school-minimal details[open]>.school-format-summary .format-toggle,.apc-school-minimal .school-format-options[open]>summary .format-toggle,.apc-school-minimal .school-planning[open]>summary .format-toggle{transform:rotate(45deg)}
@@ -97,7 +99,7 @@
 .apc-school-minimal .school-facilitator p.school-scope-visible{font-size:.78rem;border-top:1px solid #cedbcd;padding-top:16px;margin:16px auto 0}
 .apc-school-minimal .school-scope summary{cursor:pointer;min-height:44px;padding:12px 0;font-size:.78rem;box-sizing:border-box}
 .apc-school-minimal .school-scope p{font-size:.8rem}
-.apc-school-minimal .school-contact-layout .minimal-enquiry{padding:0;background:none;border:0;border-radius:0;min-width:0}
+.apc-school-minimal .school-contact-layout .minimal-enquiry{padding:0;box-shadow:none;background:none;border:0;border-radius:0;min-width:0}
 .apc-school-minimal .svc-title h2{font-size:2.3rem;max-width:none;margin:12px 0}
 .apc-school-minimal .svc-title>p:not(.eyebrow){font-size:1rem;margin-bottom:20px}
 .apc-school-minimal .school-required-note{font-size:.8rem;line-height:1.6;margin:0 0 20px}
