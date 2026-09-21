@@ -5248,3 +5248,6 @@ html.apc-home-snap { scroll-snap-type: none !important; }
   .apc-home-page .hero-actions .text-action { display: inline-flex; align-items: center; min-height: 44px; font-size: .9rem; }
   .apc-v2 .apc-footer-column a { display: inline-flex; align-items: center; min-height: 44px !important; }
 }
+
+.apc-home-page .offer-detail .offer-followup { margin: 12px 0 0 !important; }
+.apc-home-page .offer-followup a { display: inline-flex; align-items: center; min-height: 44px; }
