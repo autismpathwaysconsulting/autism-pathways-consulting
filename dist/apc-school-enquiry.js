@@ -1,6 +1,11 @@
 const schoolForm = document.getElementById('school-training-form');
 if (schoolForm) {
   const topic = document.getElementById('sf-topic');
+  const extraDetails = document.getElementById('school-extra-details');
+  schoolForm.addEventListener('invalid', event => {
+    // Reveal an invalid optional field before the browser moves focus to it.
+    if (extraDetails?.contains(event.target)) extraDetails.open = true;
+  }, true);
   const preparedLink = document.getElementById('school-whatsapp-link');
   const preparedState = document.getElementById('sf-success');
   const messagePreview = document.getElementById('school-message-preview');
@@ -29,6 +34,8 @@ if (schoolForm) {
   for (const id of ['school-topic-0', 'school-topic-1', 'school-topic-2']) {
     const route = document.getElementById(id);
     if (route && topic) route.addEventListener('click', () => {
+      const extra = document.getElementById('school-extra-details');
+      if (extra) extra.open = true;
       topic.value = route.dataset.topic;
       invalidatePreparedEnquiry();
       // The native anchor still scrolls to the form; focus supports keyboard users.
@@ -38,6 +45,8 @@ if (schoolForm) {
   for (const id of ['school-format-0', 'school-format-1', 'school-format-2']) {
     const route = document.getElementById(id);
     if (route && format) route.addEventListener('click', () => {
+      const extra = document.getElementById('school-extra-details');
+      if (extra) extra.open = true;
       format.value = route.dataset.format;
       invalidatePreparedEnquiry();
       format.focus({ preventScroll: true });
