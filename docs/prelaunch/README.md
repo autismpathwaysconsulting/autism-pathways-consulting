@@ -7,7 +7,7 @@ Prepared for CJ's approved five-part prelaunch task. This change does not publis
 1. `/programmes`: one parent-facing page for Community Crew, Everyday Money and Community Adventure Camp. Community Crew is first to develop; Saturday is provisional.
 2. One household interest form with multiple interests, one first choice, age bands, town, Saturday and accompanying-adult availability. Phone and a private support conversation are optional. No child name, diagnosis, medical history or full address is requested.
 3. On-screen receipt after database acceptance and `/content-os/programmes/`, protected by existing Content OS authentication. Homepage discovery and a private-dashboard link are included.
-4. The separately supplied five-page Saturday scouting pack includes observation records, host questions, staffing responsibilities, coaching activities and proceed/adapt/postpone criteria.
+4. The separately supplied six-page Saturday scouting pack includes observation records, host questions, staffing responsibilities, coaching activities, proceed/adapt/postpone criteria and an action log with disruption scenarios.
 5. The separately supplied one-page partner brief can be taken to a scouting discussion. It makes no confirmed-partner or launch claims.
 
 ## How interest is counted
@@ -19,6 +19,16 @@ Two adult email addresses can belong to the same household. CJ confirms the adul
 Future updates require both verified status and update permission and must relate only to selected programmes. This package sends no email or WhatsApp messages automatically. Enquiry responses can be handled individually by CJ. Never use a group chat that exposes parent contact details without separate agreement.
 
 CJ reviews the list monthly, handles access/correction/removal requests from the registered address and deletes expired or withdrawn records. Records older than 180 days are also removed on a new submission or tracker visit. Open the tracker during a monthly review even without new submissions. Do not put private child information in the tracker, issue tracker, source repository or test fixtures.
+
+The tracker includes follow-up-due and missing-follow-up-date views. Due dates use the reviewer's local calendar date and exclude closed or duplicate records. These views help prioritise manual review; they do not send messages. Setting a weekly review slot while recruiting is a proposed working routine, not a published response-time promise.
+
+## Scouting readiness
+
+`/content-os/programmes/readiness` is covered by the existing Content OS authentication boundary. It reviews eight areas: host agreement, useful work, people and support, learning, emergency and safeguarding, requirements and insurance, participant records, and costs or disruption. Any unresolved area remains visible. Even eight confirmed selections only prompt CJ to review evidence; they never approve a launch or confirm suitability. Choices are not saved or sent to a server. Print a reviewed copy if needed, and record actions and owners in the scouting pack. Keep personal details out of this working checklist.
+
+## Parent journey refinements
+
+The programme page shows the accompanying-adult condition before the form and explains the progression from interest to scouting to a possible proposal. The resources page links to programme exploration and interest-list availability. Form fields stay disabled while availability is unknown or closed, with a visible email fallback. A confirmed save hides the programme-selection actions so later clicks cannot appear to update a saved record. The receipt explains that a second submission is unnecessary and no response or launch date is confirmed.
 
 ## Infrastructure and activation
 

@@ -22,6 +22,8 @@ export const PUBLIC_FILES = Object.freeze([
   "programme-camp-480.webp",
   "programme-camp-960.webp",
   "content-os/programmes/index.html",
+  "content-os/programmes/readiness.html",
+  "content-os/programmes/readiness.js",
   "content-os/programmes/app.js",
   "content-os/programmes/style.css",
   "guide-visual-mornings.svg",
@@ -313,4 +315,3 @@ if (invokedPath === fileURLToPath(import.meta.url)) {
   const result = await buildSite();
   console.log("Built " + result.files.length + " allowlisted public files in dist.");
 }
-

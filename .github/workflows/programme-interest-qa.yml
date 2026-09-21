@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'programmes*'
+      - 'resources.html'
       - 'programme-interest.js'
       - 'programme-explorer.js'
       - 'programme-*.webp'
