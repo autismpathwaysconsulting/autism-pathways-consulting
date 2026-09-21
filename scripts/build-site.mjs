@@ -23,6 +23,7 @@ export const PUBLIC_FILES = Object.freeze([
   "guide-visual-task-initiation.svg",
 
   "apc-school-enquiry.js",
+  "apc-schools.css",
   "apc-navigation.js",
   "apc-navigation.css",
   "apc-audience-pages.css",

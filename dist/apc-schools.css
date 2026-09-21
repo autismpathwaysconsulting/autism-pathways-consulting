@@ -1,0 +1,179 @@
+:where(a,button,input,textarea,select,summary):focus-visible{outline:3px solid #0f766e;outline-offset:3px}.apc-skip-link{position:absolute;left:8px;top:-60px;z-index:999;padding:12px;background:#fff}.apc-skip-link:focus{top:8px}.apc-school-minimal .school-facilitator-portrait{display:block;width:88px;height:88px;object-fit:cover;object-position:center 30%;border-radius:50%;margin:0 auto 12px;border:3px solid #fffdf6;box-shadow:0 4px 14px #0737341f}
+/* Schools refinement: semantic choices, a real example and mobile reading rhythm. */
+.apc-school-minimal h1,.apc-school-minimal h2{font-family:'DM Serif Display',serif!important;font-weight:400!important;letter-spacing:-.025em;text-wrap:balance}
+.apc-school-minimal .school-choice-hint{display:block;margin-top:7px;font-size:.8rem;font-weight:500;color:#435d58;letter-spacing:0}
+.apc-school-minimal .school-choice-hint .when-open{display:none}
+.apc-school-minimal .school-choice[open] .when-closed{display:none}
+.apc-school-minimal .school-choice[open] .when-open{display:inline}
+.apc-school-minimal .school-choice[open]{border-color:#0f766e;box-shadow:0 8px 24px -16px #07373466}
+.apc-school-minimal .school-choice-content{border-top:1px solid #e1e8da;padding-top:16px}
+.apc-school-minimal .school-choice-content p{font-size:1rem;line-height:1.6}
+.apc-school-minimal .school-choice-content a{font-size:1rem;text-underline-offset:4px}
+.apc-school-minimal main>.school-takeaway{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;gap:clamp(24px,5vw,64px);padding:36px 0 40px;border-top:1px solid #dee7d7}
+.apc-school-minimal .school-takeaway-copy>p{max-width:38ch;margin:12px 0;font-size:1rem}
+.apc-school-minimal .school-takeaway-copy>p.eyebrow{font-size:.75rem}
+.apc-school-minimal .school-takeaway-copy>p.school-sample-note{font-size:.85rem}
+.apc-school-minimal .school-takeaway h2{max-width:19ch;margin:12px 0;font-size:clamp(1.8rem,3vw,2.5rem)}
+.apc-school-minimal .school-sample-sheet{margin:0;padding:24px;background:#fffdf9;border:1px solid #dce5da;border-top:5px solid #0f766e;border-radius:4px 4px 14px 14px;box-shadow:0 2px 3px #07373408,0 14px 32px -18px #07373444}
+.apc-school-minimal .school-sample-sheet figcaption{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-weight:650;color:#073734}
+.apc-school-minimal .school-sample-tag{padding:4px 9px;background:#f8e1d4;border-radius:5px;font-size:.75rem;color:#703c26}
+.apc-school-minimal .school-sample-sheet ol{list-style:none;margin:18px 0 0;padding:0}
+.apc-school-minimal .school-sample-sheet li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;padding:14px 0;border-top:1px solid #e1e8da}
+.apc-school-minimal .school-sample-sheet li:last-child{padding-bottom:0}
+.apc-school-minimal .sample-step{color:#0f766e;font-size:.8rem;font-weight:700;padding-top:3px}
+.apc-school-minimal .school-sample-sheet strong{color:#073734;font-size:1rem}
+.apc-school-minimal .school-sample-sheet p{font-size:1rem;line-height:1.5;margin:4px 0 0}
+.apc-school-minimal input,.apc-school-minimal select,.apc-school-minimal textarea{font-size:1rem;max-width:100%;min-width:0}
+.apc-school-minimal .form-field{min-width:0}
+.apc-school-minimal .school-format-options p,.apc-school-minimal .school-process li{font-size:1rem}
+.apc-school-minimal .school-choice-content a:focus-visible{outline-offset:4px}
+@media(max-width:760px){
+.apc-school-minimal main>.school-takeaway{grid-template-columns:1fr;gap:20px;padding:28px 0}
+.apc-school-minimal .school-takeaway-copy>p{max-width:48ch}
+.apc-school-minimal .school-takeaway h2{max-width:22ch}
+.apc-school-minimal .school-choice>summary{grid-template-columns:36% minmax(0,1fr)}
+.apc-school-minimal .school-choice-title{gap:8px;padding:16px 12px;font-size:1rem}
+.apc-school-minimal .school-choice-art svg{height:140px;transform:none}
+.apc-school-minimal .school-choice-hint{font-size:.75rem;margin-top:6px}
+.apc-school-minimal .school-choice-arrow{width:28px;height:28px}
+.apc-school-minimal .school-choice-content{padding:16px}
+.apc-school-minimal .school-choice-content a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:8px 0}
+.apc-school-minimal .school-sample-sheet{padding:20px 16px}
+.apc-school-minimal .school-contact-layout{display:flex;flex-direction:column;padding-inline:0;gap:28px}
+.apc-school-minimal .school-contact-layout>.minimal-enquiry{width:100%;box-sizing:border-box}
+.apc-school-minimal .school-contact-context{width:100%}
+.apc-school-minimal .school-contact-layout .form-row{grid-template-columns:minmax(0,1fr);gap:0}
+.apc-school-minimal .school-contact-layout .form-submit{width:100%}
+.apc-school-minimal .school-contact-context .school-facilitator{padding-top:24px}
+}
+@media(max-width:360px){.apc-school-minimal .school-choice-title{font-size:.92rem;padding:12px 10px}.apc-school-minimal .school-choice>summary{grid-template-columns:32% minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.apc-school-minimal .school-choice-art svg{transform:none!important}}
+
+/* Compact format comparison with a single disclosure and visible booking terms. */
+.apc-school-minimal main>.school-formats{padding:0 0 20px}
+.apc-school-minimal .school-format-options{border:1px solid #dce5da;border-radius:14px;background:#f4f7f0;overflow:hidden}
+.apc-school-minimal .school-format-options>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;min-height:56px;box-sizing:border-box;line-height:1.4;font-size:1rem}
+.apc-school-minimal .school-format-options>summary::-webkit-details-marker{display:none}
+.apc-school-minimal .school-format-options>summary:focus-visible{outline-offset:-4px}
+.apc-school-minimal .format-toggle{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#073734;color:#fff;font-size:1.2rem;transition:transform .2s}
+.apc-school-minimal .school-format-options[open] .format-toggle{transform:rotate(45deg)}
+.apc-school-minimal .school-format-compare{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;margin:0;padding:4px 20px 20px;gap:0}
+.apc-school-minimal .school-format-compare>li{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:start;gap:12px;padding:8px 20px 8px 0;margin:0}
+.apc-school-minimal .school-format-compare>li+li{border-left:1px solid #d9e1d6;padding-left:20px}
+.apc-school-minimal .school-format-compare>li:last-child{padding-right:0}
+.apc-school-minimal .format-symbol{display:grid;place-items:center;width:44px;height:44px;border-radius:10px;background:#d2e6d8;color:#073734}
+.apc-school-minimal .format-symbol-1{background:#f4dbc9}
+.apc-school-minimal .format-symbol-2{background:#cbe8e2}
+.apc-school-minimal .format-symbol svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.apc-school-minimal .school-format-compare h3{font-size:1rem;letter-spacing:-.015em;margin:0 0 4px;line-height:1.4}
+.apc-school-minimal .school-format-compare p{font-size:.95rem;line-height:1.5;margin:8px 0 0}
+.apc-school-minimal .school-format-compare p.format-fit{font-size:.8rem;font-weight:600;color:#435d58;margin:0}
+.apc-school-minimal .school-format-terms{font-size:.85rem;line-height:1.6;margin:12px 4px 0;max-width:90ch}
+@media(max-width:1000px){
+.apc-school-minimal .school-format-compare{grid-template-columns:1fr;padding:0 20px 8px}
+.apc-school-minimal .school-format-compare>li,.apc-school-minimal .school-format-compare>li+li{padding:16px 0;border-left:0}
+.apc-school-minimal .school-format-compare>li+li{border-top:1px solid #d9e1d6}
+.apc-school-minimal .school-format-compare p{max-width:52ch}
+}
+@media(max-width:760px){.apc-school-minimal .school-format-options>summary{padding:16px}.apc-school-minimal .school-format-compare{padding:0 16px 4px}.apc-school-minimal .school-format-compare p{font-size:1rem}}
+@media(prefers-reduced-motion:reduce){.apc-school-minimal .format-toggle{transition:none}}
+
+/* Connected enquiry choices and consistent, immediately readable disclosures. */
+.apc-school-minimal .school-format-select{display:inline-flex;align-items:center;min-height:44px;margin-top:6px;font-size:.9rem;font-weight:600;line-height:1.4;text-underline-offset:4px}
+.apc-school-minimal .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.apc-school-minimal main>.school-process{padding:0;border:1px solid #dce5da;border-radius:14px;background:#f4f7f0;overflow:hidden}
+.apc-school-minimal .school-planning>summary{display:flex;align-items:center;justify-content:space-between;gap:16px;list-style:none;padding:18px 20px;min-height:56px;box-sizing:border-box;font-size:1rem;line-height:1.4;cursor:pointer;color:#073734;font-weight:600}
+.apc-school-minimal .school-planning>summary::-webkit-details-marker{display:none}
+.apc-school-minimal .school-planning>summary:focus-visible{outline-offset:-4px}
+.apc-school-minimal .school-planning[open] .format-toggle{transform:rotate(45deg)}
+.apc-school-minimal .school-process ol{margin:0;padding:4px 20px 20px;gap:24px}
+.apc-school-minimal .school-process li{line-height:1.5}
+.apc-school-minimal .school-required-note{font-size:.85rem;margin:0 0 20px;line-height:1.5}
+.apc-school-minimal #sf-format:target{outline:3px solid #0f766e;outline-offset:3px}
+.apc-motion-ready .apc-school-minimal [data-reveal]{opacity:1;transform:translateY(6px);transition:transform 180ms ease-out}
+.apc-motion-ready .apc-school-minimal [data-reveal].is-visible{transform:none}
+@media(max-width:760px){.apc-school-minimal .school-planning>summary{padding:16px}.apc-school-minimal .school-process ol{grid-template-columns:1fr;padding:4px 16px 20px;gap:20px}.apc-school-minimal .school-format-select{min-height:48px}}
+@media(prefers-reduced-motion:reduce){.apc-motion-ready .apc-school-minimal [data-reveal]{transform:none;transition:none}}
+
+/* Selection feedback and a local message review before leaving the page. */
+.apc-school-minimal .school-selected:not([hidden]){display:inline-block;margin:6px 0 0;padding:3px 8px;border-radius:5px;background:#d2e6d8;color:#073734;font:600 .75rem/1.4 'DM Sans',sans-serif;letter-spacing:0}
+.apc-school-minimal .school-selected[hidden],.apc-school-minimal #sf-success[hidden],.apc-school-minimal #school-copy-message[hidden]{display:none!important}
+.apc-school-minimal #sf-success{margin-top:24px;padding-top:24px;border-top:1px solid #cddbcc;text-align:left}
+.apc-school-minimal #sf-success h3{margin:0 0 8px;font-size:1.15rem}
+.apc-school-minimal #sf-success p{font-size:.9rem;line-height:1.55;margin:8px 0 16px}
+.apc-school-minimal #school-message-preview{display:block;width:100%;box-sizing:border-box;padding:16px;min-height:264px;background:#fffdf9;color:#253532;font:400 .95rem/1.6 'DM Sans',sans-serif;border:1px solid #cad9ce;resize:vertical}
+.apc-school-minimal .school-review-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.apc-school-minimal #school-whatsapp-link{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:10px 18px;box-sizing:border-box;border-radius:99px;background:#073734;color:#fff;text-decoration:none;font-size:.95rem;font-weight:600}
+.apc-school-minimal #school-copy-message{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 16px;border:1px solid #93aaa0;background:transparent;color:#073734;border-radius:99px;font:600 .95rem/1.4 'DM Sans',sans-serif;cursor:pointer}
+.apc-school-minimal #school-copy-status:empty{display:none}
+.apc-school-minimal #school-copy-status{margin-bottom:0}
+@media(max-width:760px){.apc-school-minimal #school-message-preview{font-size:1rem}.apc-school-minimal .school-review-actions>*{width:100%}}
+
+/* Final composition: clear reading rhythm and a full-width review stage. */
+.apc-school-minimal{--school-ink:#073734;--school-paper:#fffdf9;--school-line:#dbe4d9}
+.apc-school-minimal main{width:min(1160px,calc(100% - 48px));padding-top:0}
+.apc-school-minimal .school-breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-height:44px;padding:8px 0 12px;font-size:.8rem;color:#435d58}
+.apc-school-minimal .school-breadcrumb a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
+.apc-school-minimal main>.school-motion-hero{border-radius:24px;overflow:hidden;box-shadow:0 16px 34px -28px #07373455}
+.apc-school-minimal .school-motion-hero .audience-hero-copy{padding:36px}
+.apc-school-minimal .school-motion-hero h1{font-size:clamp(2.4rem,4.1vw,3.6rem);max-width:17ch;line-height:1.08;letter-spacing:-.035em;margin:14px 0 20px}
+.apc-school-minimal .school-motion-hero .audience-hero-copy>p:not(.eyebrow){font-size:1.06rem;line-height:1.6;max-width:36ch}
+.apc-school-minimal .school-path-visual{align-self:stretch;min-height:0}
+.apc-school-minimal .school-path-visual img{height:100%;min-height:0;object-fit:cover}
+.apc-school-minimal .school-choice-grid{gap:20px}
+.apc-school-minimal .school-choice-title{min-height:84px}
+.apc-school-minimal main>.school-choice-section{padding:36px 0 24px}
+.apc-school-minimal .school-choice-art svg{height:220px}
+.apc-school-minimal .school-section-heading h2{font-size:clamp(1.65rem,2.6vw,2.1rem);line-height:1.2}
+.apc-school-minimal main>.school-takeaway{padding:40px 0;gap:48px}
+.apc-school-minimal .school-contact-layout{grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:40px;padding-top:40px}
+.apc-school-minimal .school-contact-context .minimal-faq h2{font-size:1.9rem}
+.apc-school-minimal .school-facilitator{border-top:1px solid var(--school-line);margin-top:24px}
+.apc-school-minimal .school-contact-context .school-facilitator{padding-top:24px}
+.apc-school-minimal .school-facilitator p.school-credential{font-size:.85rem;line-height:1.6;margin:12px auto;color:#435d58}
+.apc-school-minimal .school-facilitator p.school-scope-visible{font-size:.85rem;line-height:1.6;margin:12px auto}
+.apc-school-minimal .school-scope summary{cursor:pointer;min-height:44px;padding:10px 0;box-sizing:border-box;font-size:.85rem}
+.apc-school-minimal .school-contact-layout .minimal-enquiry{padding:28px;border-radius:18px;background:#edf3ec}
+.apc-school-minimal .school-contact-layout .svc-title h2{max-width:none;font-size:2rem}
+.apc-school-minimal .school-required-note{padding-bottom:16px;border-bottom:1px solid #d6e1d5}
+.apc-school-minimal main>#sf-success{width:min(760px,100%);box-sizing:border-box;margin:28px auto 0;padding:28px;border:1px solid #d4e2d5;border-radius:18px;background:#edf3ec;box-shadow:0 14px 30px -24px #07373466}
+.apc-school-minimal #sf-success h3{font-size:1.5rem}
+.apc-school-minimal #school-message-preview{font-size:1rem;line-height:1.6;min-height:288px}
+.apc-school-minimal .school-review-actions{padding-top:4px}
+.apc-school-minimal main>.minimal-closing{border-top:1px solid var(--school-line);margin-top:36px;padding:24px 0 0;text-align:left}
+.apc-school-minimal .minimal-closing h2{font-family:'DM Sans',sans-serif!important;font-size:.8rem!important;letter-spacing:.08em;text-transform:uppercase;font-weight:600!important;color:#435d58}
+.apc-school-minimal .minimal-closing .audience-actions{justify-content:flex-start;margin-top:12px;gap:12px 28px}
+.apc-school-minimal .minimal-closing a{font-size:.95rem;min-height:44px}
+.apc-school-minimal>.section-rail,.apc-school-minimal>.apc-scroll-progress{display:none!important}
+@media(hover:hover){.apc-school-minimal .school-choice summary:hover .school-choice-arrow{background:#0f766e}.apc-school-minimal .school-format-select:hover,.apc-school-minimal .minimal-closing a:hover{text-decoration-thickness:2px}}
+@media(min-width:761px) and (max-width:1000px){
+.apc-school-minimal .school-motion-hero .audience-hero-copy{padding:28px}
+.apc-school-minimal .school-motion-hero h1{font-size:2.5rem}
+.apc-school-minimal .school-choice-title{font-size:.95rem;padding:16px 12px}
+.apc-school-minimal .school-choice-art svg{height:180px}
+.apc-school-minimal .school-contact-layout{gap:24px}
+.apc-school-minimal .school-contact-layout .minimal-enquiry{padding:24px 20px}
+}
+@media(max-width:760px){
+.apc-school-minimal main{width:calc(100% - 32px);padding-bottom:24px}
+.apc-school-minimal .school-breadcrumb{padding:0 0 4px}
+.apc-school-minimal main>.school-motion-hero{border-radius:18px}
+.apc-school-minimal .school-motion-hero .audience-hero-copy{padding:24px}
+.apc-school-minimal .school-motion-hero h1{font-size:clamp(2.2rem,9vw,3rem);max-width:17ch}
+.apc-school-minimal .school-motion-hero .audience-actions{gap:8px}
+.apc-school-minimal .school-motion-hero .audience-actions>a{width:100%;justify-content:center}
+.apc-school-minimal .school-path-visual img{height:auto;aspect-ratio:2;object-fit:cover}
+.apc-school-minimal .school-visual-label{font-size:.72rem;padding:6px 10px}
+.apc-school-minimal main>.school-choice-section{padding:28px 0 20px}
+.apc-school-minimal .school-choice-title{min-height:0;font-size:1rem}
+.apc-school-minimal .school-choice-art svg{height:132px}
+.apc-school-minimal main>.school-takeaway{padding:28px 0;gap:20px}
+.apc-school-minimal .school-takeaway h2{font-size:2rem}
+.apc-school-minimal .school-contact-layout{padding-top:28px;gap:28px}
+.apc-school-minimal .school-contact-layout .minimal-enquiry{padding:24px 16px}
+.apc-school-minimal main>#sf-success{padding:24px 16px;margin-top:24px}
+.apc-school-minimal #school-message-preview{padding:12px}
+.apc-school-minimal .school-contact-context .minimal-faq h2,.apc-school-minimal .school-contact-layout .svc-title h2{font-size:1.8rem}
+.apc-school-minimal .minimal-closing .audience-actions{display:grid;gap:4px}
+}
+
