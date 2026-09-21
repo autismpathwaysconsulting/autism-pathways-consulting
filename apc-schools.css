@@ -99,7 +99,7 @@
 .apc-school-minimal .school-selected:not([hidden]){display:inline-block;margin:6px 0 0;padding:3px 8px;border-radius:5px;background:#d2e6d8;color:#073734;font:600 .75rem/1.4 'DM Sans',sans-serif;letter-spacing:0}
 .apc-school-minimal .school-selected[hidden],.apc-school-minimal #sf-success[hidden],.apc-school-minimal #school-copy-message[hidden]{display:none!important}
 .apc-school-minimal #sf-success{margin-top:24px;padding-top:24px;border-top:1px solid #cddbcc;text-align:left}
-.apc-school-minimal #sf-success h3{margin:0 0 8px;font-size:1.15rem}
+.apc-school-minimal #sf-success h2{margin:0 0 8px;font-size:1.15rem}
 .apc-school-minimal #sf-success p{font-size:.9rem;line-height:1.55;margin:8px 0 16px}
 .apc-school-minimal #school-message-preview{display:block;width:100%;box-sizing:border-box;padding:16px;min-height:264px;background:#fffdf9;color:#253532;font:400 .95rem/1.6 'DM Sans',sans-serif;border:1px solid #cad9ce;resize:vertical}
 .apc-school-minimal .school-review-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
@@ -116,7 +116,7 @@
 .apc-school-minimal .school-breadcrumb a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
 .apc-school-minimal main>.school-motion-hero{border-radius:24px;overflow:hidden;box-shadow:0 16px 34px -28px #07373455}
 .apc-school-minimal .school-motion-hero .audience-hero-copy{padding:36px}
-.apc-school-minimal .school-motion-hero h1{font-size:clamp(2.4rem,4.1vw,3.6rem);max-width:17ch;line-height:1.08;letter-spacing:-.035em;margin:14px 0 20px}
+.apc-school-minimal .school-motion-hero h1{font-size:clamp(2.4rem,4.1vw,3.6rem);max-width:17ch;text-wrap:balance;line-height:1.08;letter-spacing:-.035em;margin:14px 0 20px}
 .apc-school-minimal .school-motion-hero .audience-hero-copy>p:not(.eyebrow){font-size:1.06rem;line-height:1.6;max-width:36ch}
 .apc-school-minimal .school-path-visual{align-self:stretch;min-height:0}
 .apc-school-minimal .school-path-visual img{height:100%;min-height:0;object-fit:cover}
@@ -137,7 +137,7 @@
 .apc-school-minimal .school-contact-layout .svc-title h2{max-width:none;font-size:2rem}
 .apc-school-minimal .school-required-note{padding-bottom:16px;border-bottom:1px solid #d6e1d5}
 .apc-school-minimal main>#sf-success{width:min(760px,100%);box-sizing:border-box;margin:28px auto 0;padding:28px;border:1px solid #d4e2d5;border-radius:18px;background:#edf3ec;box-shadow:0 14px 30px -24px #07373466}
-.apc-school-minimal #sf-success h3{font-size:1.5rem}
+.apc-school-minimal #sf-success h2{font-size:1.5rem}
 .apc-school-minimal #school-message-preview{font-size:1rem;line-height:1.6;min-height:288px}
 .apc-school-minimal .school-review-actions{padding-top:4px}
 .apc-school-minimal main>.minimal-closing{border-top:1px solid var(--school-line);margin-top:36px;padding:24px 0 0;text-align:left}
