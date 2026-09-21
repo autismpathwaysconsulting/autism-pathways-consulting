@@ -24,7 +24,8 @@
   <link rel="icon" type="image/png" href="/favicon-32x32.png">
   <style>
     :where(a,button,summary):focus-visible{outline:3px solid #0f766e;outline-offset:3px}
-    .learning-intro{max-width:760px}
+    .services-hero{max-width:none;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:40px;align-items:start}
+    .learning-intro{max-width:720px}
     .learning-status{font-size:.86rem;font-weight:600;color:#23766e;letter-spacing:.02em}
     .learning-card p{max-width:42ch}
     .learning-card .audience-actions{margin-top:auto}
@@ -32,6 +33,7 @@
     .learning-grid .audience-card{display:flex;flex-direction:column}
     .learning-note{background:#f2f7f5;border-radius:24px;padding:clamp(24px,4vw,40px);margin-top:42px}
     .learning-note h2{max-width:18ch}
+    @media(max-width:760px){.services-hero{grid-template-columns:1fr;gap:24px}.learning-note{padding:24px}.learning-grid{gap:14px}}
   </style>
 </head>
 <body class="apc-v2 apc-audience-theme apc-audience-page apc-minimal-page">
