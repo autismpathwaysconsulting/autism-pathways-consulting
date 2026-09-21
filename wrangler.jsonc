@@ -3,12 +3,15 @@
   "name": "autism-pathways-consulting",
   "pages_build_output_dir": "dist",
   "compatibility_date": "2026-09-01",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "vars": {
     "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "false",
     "APC_CONTENT_OS_ENVIRONMENT": "local",
     "APC_CONTENT_OS_AUTOMATION_ENABLED": "false",
-    "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false"
+    "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false",
+    "APC_PROGRAMME_INTEREST_ENABLED": "false"
   },
   "kv_namespaces": [],
   "d1_databases": [],
@@ -18,7 +21,8 @@
         "APC_CONTENT_OS_PREVIEW_AUTH_ENABLED": "true",
         "APC_CONTENT_OS_ENVIRONMENT": "preview",
         "APC_CONTENT_OS_AUTOMATION_ENABLED": "false",
-        "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false"
+        "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false",
+        "APC_PROGRAMME_INTEREST_ENABLED": "false"
       },
       "kv_namespaces": [
         {
@@ -38,7 +42,8 @@
         "APC_CONTENT_OS_GITHUB_REPOSITORY_ID": "1327407191",
         "APC_CONTENT_OS_GITHUB_REPOSITORY": "autismpathwaysconsulting/APC-AI-OS",
         "APC_CONTENT_OS_GITHUB_ISSUE_LABEL": "apc-dashboard-feed",
-        "APC_CONTENT_OS_GITHUB_ALLOWED_SENDER": "autismpathwaysconsulting"
+        "APC_CONTENT_OS_GITHUB_ALLOWED_SENDER": "autismpathwaysconsulting",
+        "APC_PROGRAMME_INTEREST_ENABLED": "false"
       },
       "kv_namespaces": [],
       "services": [

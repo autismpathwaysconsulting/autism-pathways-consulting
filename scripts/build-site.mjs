@@ -11,6 +11,12 @@ import { fileURLToPath } from "node:url";
 
 export const PUBLIC_FILES = Object.freeze([
   "404.html",
+  "programmes.html",
+  "programmes.css",
+  "programme-interest.js",
+  "content-os/programmes/index.html",
+  "content-os/programmes/app.js",
+  "content-os/programmes/style.css",
   "guide-visual-mornings.svg",
   "guide-visual-bedtime.svg",
   "guide-visual-mealtimes.svg",
@@ -300,3 +306,4 @@ if (invokedPath === fileURLToPath(import.meta.url)) {
   const result = await buildSite();
   console.log("Built " + result.files.length + " allowlisted public files in dist.");
 }
+

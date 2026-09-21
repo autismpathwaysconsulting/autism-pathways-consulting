@@ -4,7 +4,8 @@
     "/content-os",
     "/content-os/*",
     "/api/content-os/*",
-    "/api/site-metrics"
+    "/api/site-metrics",
+    "/api/programme-interest"
   ],
   "exclude": []
 }
