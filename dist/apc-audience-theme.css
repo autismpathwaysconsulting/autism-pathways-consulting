@@ -188,4 +188,7 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
   .apc-audience-theme .offer-card { padding: 24px 20px; }
 }
 
-.apc-audience-theme .offer-actions :is(.btn-primary, .service-request-link) { font-size: .96rem; text-decoration: none; }
+.apc-audience-theme .offer-actions :is(.btn-primary, .service-request-link) { font-size: .96rem !important; line-height: 1.4 !important; min-height: 50px; text-decoration: none; }
+
+.apc-audience-theme .offer-card:hover,
+.apc-audience-theme .parent-offers .audience-card:hover { transform: none !important; }
