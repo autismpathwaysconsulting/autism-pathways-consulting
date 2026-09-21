@@ -4,6 +4,8 @@ on:
     paths:
       - 'programmes*'
       - 'programme-interest.js'
+      - 'programme-explorer.js'
+      - 'programme-*.webp'
       - 'functions/**'
       - 'content-os/programmes/**'
       - 'migrations/0012_programme_interest.sql'
