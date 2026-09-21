@@ -79,8 +79,32 @@ test("browser counters ignore form payloads, deduplicate callbacks, and respect 
   assert.deepEqual(JSON.parse(active.calls[1][1].body), { page: "services", event: "booking_submitted" });
   assert.equal(active.calls[1][1].credentials, "omit");
   assert.equal(active.calls[1][1].referrerPolicy, "no-referrer");
+  for (const event of ["school_enquiry_prepared", "school_whatsapp_click"]) {
+    vm.runInContext(`recordSiteMetric("${event}"); recordSiteMetric("${event}");`, active.context);
+    assert.deepEqual(JSON.parse(active.calls.at(-1)[1].body), {page:"services",event});
+    assert.ok(validMetric(JSON.parse(active.calls.at(-1)[1].body)));
+  }
+  assert.equal(active.calls.length,4);
   assert.equal(browser({ doNotTrack: "1" }).calls.length, 0);
   assert.equal(browser({ globalPrivacyControl: true }).calls.length, 0);
   assert.equal(browser({}, "/privacy").calls.length, 0);
   assert.match(source, /action: "bookingSuccessfulV2",\s*callback: \(\) => recordSiteMetric\("booking_submitted"\)/);
+});
+
+
+test("school migration preserves historical counts and new counters round-trip without identities", async () => {
+ const storage=database();
+ storage.db.exec(await readFile(new URL('../site-metrics-migrations/0001_daily_counts.sql',import.meta.url),'utf8'));
+ storage.db.exec("INSERT INTO daily_counts VALUES (date('now'),'home','page_view',42)");
+ storage.db.exec(await readFile(new URL('../site-metrics-migrations/0002_school_enquiries.sql',import.meta.url),'utf8'));
+ assert.equal(storage.db.prepare("SELECT count FROM daily_counts WHERE page='home'").get().count,42);
+ const env={APC_CONTENT_OS_ENVIRONMENT:'production',APC_SITE_METRICS_DB:storage};
+ for(const event of ['school_enquiry_prepared','school_whatsapp_click']) {
+  assert.equal((await onRequest({request:requestFor({page:'services',event}),env})).status,204);
+  assert.equal((await onRequest({request:requestFor({page:'home',event}),env})).status,400);
+  assert.equal((await onRequest({request:requestFor({page:'services',event,message:'private'}),env})).status,400);
+ }
+ const result=await report({request:new Request('https://autismpathwaysconsulting.com/api/content-os/site-metrics'),env});
+ const rows=(await result.json()).rows;assert.equal(rows.length,3);assert.ok(rows.some(r=>r.event==='school_whatsapp_click'&&r.count===1));
+ storage.db.close();
 });

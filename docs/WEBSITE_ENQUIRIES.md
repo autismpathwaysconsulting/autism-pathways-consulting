@@ -28,3 +28,14 @@ Run `node --test tests/site-metrics.test.mjs` and the existing build and authori
 To stop collection, revert this release through a PR or remove its production `APC_SITE_METRICS_DB` binding and deploy. An unavailable collector never blocks navigation or booking. Retain the separate database for recovery; no client or episode database migration is involved.
 
 References: https://cal.com/help/embedding/embed-events and https://developers.cloudflare.com/d1/worker-api/prepared-statements/.
+
+
+## School enquiry extension, 21 September 2026
+
+Draft implementation adds `school_enquiry_prepared` and `school_whatsapp_click` under the existing `services` category. The first fires only after valid local message preparation. The second fires only from a current prepared-message review. Both use the existing once-per-page-load counter, production-origin guard, DNT/GPC opt-outs, omitted credentials/referrer and daily aggregate retention. No topic, message, name, phone, school, booking identifier or payment information is sent.
+
+The Content OS report labels these separately. Neither event proves a sent message, booked appointment or payment. Email, copied-message sends and offline handoffs remain outside the counters. Historical combined service page views cannot provide a school-specific conversion denominator.
+
+Release dependency: apply `site-metrics-migrations/0002_school_enquiries.sql` to the separate `apc-site-metrics` database before production deployment. It expands the allowed action names while copying all existing totals. The migration is tested locally for preservation and new-event collection. Production migration and deployment have not been performed. Preview requests remain uncounted. Do not treat preview verification as proof of live collection.
+
+School journey: enquire privately; agree suitability, capacity, availability, focus, delivery arrangements, duration and fees; receive written permission, payment instructions and cancellation terms; send payment proof privately; CJ verifies payment and confirms the booking. The website implements the enquiry handoff and explanatory copy, not an automatic appointment or payment workflow. Actual message delivery, payment verification and confirmation delivery require a separate agreed operational test.

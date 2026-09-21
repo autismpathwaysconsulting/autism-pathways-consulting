@@ -202,3 +202,10 @@
 .apc-school-minimal .school-email-alternative{font-size:.85rem;line-height:1.5;margin:14px 0 0}
 .apc-school-minimal .school-email-alternative a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
 @media(max-width:760px){.apc-school-minimal .school-format-options .school-format-heading{font-size:1.7rem;gap:16px}}
+
+/* Booking handoff remains readable when text grows or the layout narrows. */
+.apc-school-minimal .school-booking-links{font-size:.85rem;line-height:1.6;margin:0 0 20px}
+.apc-school-minimal .school-booking-links a{display:inline-flex;align-items:center;min-height:44px}
+.apc-school-minimal .school-process li{min-width:0;overflow-wrap:anywhere}
+.apc-school-minimal main>.minimal-faq h2{grid-row:1/5}
+@media(max-width:380px){.apc-school-minimal .school-hero-image figcaption{flex-wrap:wrap}.apc-school-minimal .school-sample-sheet figcaption{flex-wrap:wrap}.apc-school-minimal .school-sample-tag{white-space:normal}}

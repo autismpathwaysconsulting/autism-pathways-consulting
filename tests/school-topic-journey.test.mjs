@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFile } from 'node:fs/promises';
 const code = await readFile(new URL('../apc-school-enquiry.js', import.meta.url), 'utf8');
-function setup() {
+function setup(recordSiteMetric) {
   const fields = {};
   for (const id of ['school-extra-details','school-message-preview','school-copy-message','school-copy-status','school-topic-selected-0','school-topic-selected-1','school-topic-selected-2','school-format-selected-0','school-format-selected-1','school-format-selected-2','school-training-form','school-whatsapp-link','sf-success','sf-name','sf-school','sf-role','sf-phone','sf-message','sf-topic','sf-format','sf-team-size','school-format-0','school-format-1','school-format-2','school-topic-0','school-topic-1','school-topic-2']) {
     fields[id] = { value:'', events:{}, hidden:true, open:false, validationMessage:'',
@@ -20,7 +20,7 @@ function setup() {
   fields['sf-name'].value='Teacher'; fields['sf-school'].value='School'; fields['sf-phone'].value='+60 12 345 6789';
   fields['sf-message'].value='Keep my existing description.';
   fields['school-training-form'].reportValidity=()=>['sf-name','sf-school','sf-phone'].every(id=>!fields[id].validationMessage);
-  vm.runInNewContext(code,{document:{getElementById:id=>fields[id]},encodeURIComponent});
+  vm.runInNewContext(code,{document:{getElementById:id=>fields[id]},encodeURIComponent,recordSiteMetric});
   return fields;
 }
 test('each visual topic carries through to enquiry without overwriting typed details',()=>{
@@ -113,4 +113,16 @@ test('blank identities and malformed numbers cannot prepare an enquiry; correcti
  for (const number of ['011-1234 5678','+60 (11) 1234-5678','+65 8123 4567']) {
   f['sf-phone'].value=number;form.events.input();form.events.submit({preventDefault(){}});assert.equal(f['sf-success'].hidden,false);
  }
+});
+
+
+test('school events contain no form data and analytics failure cannot block preparation',()=>{
+ const actions=[],f=setup((...args)=>actions.push(args)),form=f['school-training-form'];
+ f['sf-name'].value=' ';form.events.submit({preventDefault(){}});assert.equal(actions.length,0);
+ f['sf-name'].value='Private test name';form.events.submit({preventDefault(){}});
+ f['school-whatsapp-link'].events.click();
+ assert.deepEqual(actions,[['school_enquiry_prepared'],['school_whatsapp_click']]);
+ form.events.input();f['school-whatsapp-link'].events.click();assert.equal(actions.length,2);
+ const broken=setup(()=>{throw Error('Unavailable');});
+ broken['school-training-form'].events.submit({preventDefault(){}});assert.equal(broken['sf-success'].hidden,false);
 });
