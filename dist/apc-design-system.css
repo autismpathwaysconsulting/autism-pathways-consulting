@@ -322,7 +322,7 @@ body.apc-v2 {
   color: rgba(255, 255, 255, 0.82) !important;
 }
 
-.apc-v2 .apc-footer-logo,
+.apc-v2 .apc-footer a.apc-footer-logo,
 .apc-v2 .footer-brand,
 .apc-v2 > footer .footer-inner > span:first-child {
   color: #fff !important;
@@ -5226,4 +5226,25 @@ html.apc-site-snap {
 
 .apc-choice-carousel.is-enhanced [data-carousel-track] > [data-carousel-slide][hidden] {
   display: none !important;
+}
+
+/* Audit: content-led homepage spacing, without forced full-screen sections. */
+html.apc-home-snap { scroll-snap-type: none !important; }
+.apc-home-page main > section {
+  min-height: 0 !important;
+  height: auto !important;
+  scroll-snap-align: none;
+  padding-block: clamp(40px, 5vw, 64px) !important;
+}
+.apc-tier-a.apc-home-page main > .hero {
+  height: auto !important;
+  min-height: 0 !important;
+  padding-block: clamp(32px, 4vw, 56px) !important;
+}
+.apc-home-page main .quote blockquote::before { content: none; }
+@media (max-width: 640px) {
+  .apc-home-page .hero-copy .lead { font-size: 1rem !important; line-height: 1.6 !important; }
+  .apc-home-page .hero-actions .button { min-height: 46px; font-size: .9rem; }
+  .apc-home-page .hero-actions .text-action { display: inline-flex; align-items: center; min-height: 44px; font-size: .9rem; }
+  .apc-v2 .apc-footer-column a { display: inline-flex; align-items: center; min-height: 44px !important; }
 }

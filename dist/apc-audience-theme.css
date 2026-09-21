@@ -149,3 +149,41 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
   .apc-audience-theme main h1 { font-size: clamp(2.4rem, 9vw, 3.1rem) !important; }
   .apc-audience-theme .parent-process ol { grid-template-columns: 1fr; gap: 24px; }
 }
+
+/* Audit: compact comparisons and readable supporting information. */
+.apc-audience-theme .offer-card h2 { min-height: 2.4em; }
+.apc-audience-theme .best-if { min-height: 4.95em; margin-bottom: 16px; }
+.apc-audience-theme .offer-meta { min-height: 64px; }
+.apc-audience-theme .offer-card { display: flex; flex-direction: column; }
+.apc-audience-theme .offer-card-detail { margin-top: auto; }
+.apc-audience-theme .offer-card-intro > .condition { margin-bottom: 18px; }
+.apc-audience-theme .parent-resources .audience-card { display: flex; flex-direction: column; align-items: flex-start; }
+.apc-audience-theme .parent-resources .audience-card > span { margin-top: auto; padding-top: 18px; }
+.apc-audience-theme main > .parent-hero { padding-bottom: 32px; }
+.apc-audience-theme main > #support { padding-top: 40px; }
+.apc-audience-theme .parent-small,
+.apc-audience-theme .parent-guide .audience-author p { font-size: .9rem; }
+.apc-audience-theme .parent-offers article > a { min-height: 44px; }
+.apc-audience-theme .school-hero .school-hero-note,
+.apc-audience-theme .school-format-compare .format-fit,
+.apc-audience-theme .school-format-terms,
+.apc-audience-theme .school-sample-note,
+.apc-audience-theme .school-credential,
+.apc-audience-theme .school-scope-visible,
+.apc-audience-theme .school-scope summary,
+.apc-audience-theme .school-scope p,
+.apc-audience-theme .school-required-note,
+.apc-audience-theme .school-field-note,
+.apc-audience-theme .form-note,
+.apc-audience-theme .school-booking-links,
+.apc-audience-theme .school-email-alternative { font-size: .9rem !important; }
+@media (max-width: 900px) {
+  .apc-audience-theme .offer-card h2,
+  .apc-audience-theme .best-if,
+  .apc-audience-theme .offer-meta { min-height: 0; }
+}
+@media (max-width: 760px) {
+  .apc-audience-theme main > #support { padding-top: 24px; }
+  .apc-audience-theme .parent-offers .audience-card,
+  .apc-audience-theme .offer-card { padding: 24px 20px; }
+}

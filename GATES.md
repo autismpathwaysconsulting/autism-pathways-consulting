@@ -22,3 +22,13 @@ Completion status: PASS for all three defined checks. This is a reviewed preview
 Final repair: scoped Services process-panel rules to Services so the school booking disclosure keeps its neutral background and readable text.
 
 Final verification: implementation 2d0d0e35df063fcb4add000467343a022bb48523, preview https://c35e5cc0.autism-pathways-consulting.pages.dev. Schools booking disclosure opened in browser; dark teal summary and strong labels sit on the cream page with no overflow. Repaired section visually inspected. Cloudflare Pages and pathways-qa both succeeded. Build and all 31 focused tests rerun after this repair and pass.
+
+## Follow-up audit: spacing and decision barriers
+Scope: Homepage, Parents, Schools and Services. Retain offer facts and preview-only release.
+- [ ] A1: Reduce artificial space without clipping content; keep consistent typography and readable supporting text.
+  EVIDENCE: pending
+- [ ] A2: Each support route has an actionable next step; booking feedback does not imply loading forever.
+  EVIDENCE: pending
+- [ ] A3: Build and focused regression checks pass; inspect repaired pages in the published browser.
+  EVIDENCE: pending
+Known browser limit: phone, tablet and 200% zoom emulation remain unavailable. Source breakpoint review is not a rendered-device check.
