@@ -25,10 +25,10 @@ Final verification: implementation 2d0d0e35df063fcb4add000467343a022bb48523, pre
 
 ## Follow-up audit: spacing and decision barriers
 Scope: Homepage, Parents, Schools and Services. Retain offer facts and preview-only release.
-- [ ] A1: Reduce artificial space without clipping content; keep consistent typography and readable supporting text.
-  EVIDENCE: pending
-- [ ] A2: Each support route has an actionable next step; booking feedback does not imply loading forever.
-  EVIDENCE: pending
-- [ ] A3: Build and focused regression checks pass; inspect repaired pages in the published browser.
-  EVIDENCE: pending
+- [x] A1: Reduce artificial space without clipping content; keep consistent typography and readable supporting text.
+  EVIDENCE: Browser inspection on reviewed previews: homepage sections changed from 859px each to content-led 403-643px. Services comparison cards reduced from 668px to about 592px; aligned parent resource links; removed misleading hover lift on informational offer cards. Important school and parent notes enlarged; footer brand restored from 14.08px to 21.6px. Final action type is 15.36px, targets 48-50px. Four routes have no desktop horizontal overflow. Responsive breakpoint rules reviewed in source; real phone/zoom remains unverified.
+- [x] A2: Each support route has an actionable next step; booking feedback does not imply loading forever.
+  EVIDENCE: Homepage RM350 panel now has the existing WhatsApp request link and a separated 44px details link, with permission-before-payment conditions visible. Parents hero links to support options. Services FAQ correctly distinguishes direct RM350 requests from free-call routing. All homepage tabs exercised; only selected panel visible. Calendar loaded with corrected neutral status. School missing-name/school validation, message preparation and stale-message removal exercised without sending.
+- [x] A3: Build and focused regression checks pass; inspect repaired pages in the published browser.
+  EVIDENCE: Build emits 135 files; 29 Node plus 2 Python focused checks pass after repairs. Unique IDs, one H1, anchors, asset versions, no em dashes and git diff checks pass. Unrelated route HTML differences are cache-version updates only. Implementation ca5c2664b3e4e6aff1a4b917a5c0a40264ad1df4 deployed successfully at https://ae06aa80.autism-pathways-consulting.pages.dev; Cloudflare and pathways-qa pass. Final comparison cards rendered with stable transforms and consistent font size. No production change.
 Known browser limit: phone, tablet and 200% zoom emulation remain unavailable. Source breakpoint review is not a rendered-device check.
