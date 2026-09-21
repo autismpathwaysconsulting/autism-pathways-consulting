@@ -2,7 +2,7 @@
 OWNS: Parents, Schools and Services theme consistency
 Scope: Unify visual language with the homepage; preserve approved support routes and school enquiries. Publish the existing review preview only.
 
-- [ ] G1: Visual consistency at the published preview
+- [x] G1: Visual consistency at the published preview
   CHECK: manual browser inspection of homepage and all three audience pages
   EXPECT: shared cream palette, serif headings, teal actions, consistent cards and footer; no desktop overflow or unloaded imagery
   EVIDENCE: Published implementation 8a2a7e62a95e1024568816459657412489222454 at https://bf37e27e.autism-pathways-consulting.pages.dev. Homepage and three audience routes inspected. All use DM Serif Display H1 and rgb(251, 248, 242) background, with no desktop overflow. Hero images loaded. Shared footer matches homepage HTML. Inspected offer cards, resources, process bands, school formats and enquiry layout. Repaired old Services 780px width restriction, dark-panel eyebrow contrast, card alignment and process-heading alignment.
@@ -17,6 +17,8 @@ Scope: Unify visual language with the homepage; preserve approved support routes
 
 Limits: The browser environment has no viewport emulation. Real mobile and 200% zoom rendering are not included in the three checks. No production deployment or external form submission.
 
-Completion status: Final school disclosure repair awaiting published recheck. This is a reviewed preview, not a production release. Existing production migration and release gates remain outside this visual-theme task.
+Completion status: PASS for all three defined checks. This is a reviewed preview, not a production release. Existing production migration and release gates remain outside this visual-theme task.
 
 Final repair: scoped Services process-panel rules to Services so the school booking disclosure keeps its neutral background and readable text.
+
+Final verification: implementation 2d0d0e35df063fcb4add000467343a022bb48523, preview https://c35e5cc0.autism-pathways-consulting.pages.dev. Schools booking disclosure opened in browser; dark teal summary and strong labels sit on the cream page with no overflow. Repaired section visually inspected. Cloudflare Pages and pathways-qa both succeeded. Build and all 31 focused tests rerun after this repair and pass.
