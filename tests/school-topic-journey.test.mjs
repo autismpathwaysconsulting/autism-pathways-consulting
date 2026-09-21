@@ -126,3 +126,20 @@ test('school events contain no form data and analytics failure cannot block prep
  const broken=setup(()=>{throw Error('Unavailable');});
  broken['school-training-form'].events.submit({preventDefault(){}});assert.equal(broken['sf-success'].hidden,false);
 });
+
+
+test('an omitted alternative number is valid; a supplied number is preserved and validated',()=>{
+ const f=setup(), form=f['school-training-form'];
+ for (const number of ['', '   ']) {
+  f['sf-phone'].value=number; form.events.input();form.events.submit({preventDefault(){}});
+  assert.equal(f['sf-success'].hidden,false);
+  const message=new URL(f['school-whatsapp-link'].href).searchParams.get('text');
+  assert.ok(!message.includes('Alternative contact number:'));
+  assert.ok(!message.includes('WhatsApp:'));
+ }
+ f['sf-phone'].value='+60 12 345 6789';form.events.input();form.events.submit({preventDefault(){}});
+ assert.match(f['school-message-preview'].value,/Alternative contact number: \+60 12 345 6789/);
+ f['sf-phone'].value='not a number';form.events.input();form.events.submit({preventDefault(){}});
+ assert.equal(f['sf-success'].hidden,true);
+ assert.ok(f['sf-phone'].validationMessage);
+});

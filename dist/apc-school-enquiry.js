@@ -15,7 +15,7 @@ if (schoolForm) {
     const phone = document.getElementById('sf-phone');
     const text = phone.value.trim();
     const digits = text.replace(/\D/g, '');
-    const valid = /^\+?[0-9\s().-]+$/.test(text) && digits.length >= 7 && digits.length <= 15;
+    const valid = !text || (/^\+?[0-9\s().-]+$/.test(text) && digits.length >= 7 && digits.length <= 15);
     phone.setCustomValidity(valid ? '' : 'Enter a phone number with 7 to 15 digits. Spaces, +, brackets and hyphens are allowed.');
   };
 
@@ -107,7 +107,7 @@ if (schoolForm) {
       `Name: ${value('sf-name')}`,
       `School / centre: ${value('sf-school')}`,
       `Role: ${value('sf-role') || 'Not specified'}`,
-      `WhatsApp: ${value('sf-phone')}`,
+      ...(value('sf-phone') ? [`Alternative contact number: ${value('sf-phone')}`] : []),
       ...(topic ? [`Training focus: ${topic.value || 'Help me choose'}`] : []),
       ...(format ? [`Preferred format: ${format.value || 'Help me choose'}`] : []),
       ...(document.getElementById('sf-team-size') ? [`Team size: ${value('sf-team-size') || 'To discuss'}`] : []),

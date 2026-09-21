@@ -22,6 +22,7 @@ export const PUBLIC_FILES = Object.freeze([
   "guide-visual-sensory-public.svg",
   "guide-visual-task-initiation.svg",
 
+  "APC-School-Training-Overview.pdf",
   "apc-school-enquiry.js",
   "apc-schools.css",
   "school-materials-v2-480.webp",
