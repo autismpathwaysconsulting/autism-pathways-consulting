@@ -32,12 +32,12 @@ with TemporaryDirectory() as tmp:
  text(325,799,'SCHOOLS & EDUCATORS',8.2,'Bold')
  text(325,785,'Malaysia · Training overview',8.2,color=muted)
  c.setFillColor(teal);c.rect(0,600,595.276,163,fill=1,stroke=0)
- text(48,735,'STAFF WORKSHOPS WITH CJ LIM',8.5,'Bold',HexColor('#A7D9C8'))
+ text(48,735,'TRAINING OPTIONS TO DISCUSS',8.5,'Bold',HexColor('#A7D9C8'))
  text(48,693,'One classroom focus.',29,'Display',cream)
  text(48,658,'Shared next steps.',29,'Display',cream)
  para(48,639,'Practical discussion for teachers, shadow aides and school teams.',490,10.5,14,color=HexColor('#D7E8DF'))
- text(48,574,'Build around your team’s everyday questions.',16,'Display')
- para(48,557,'Choose a focus such as understanding distress, clearer communication or smoother transitions. Explore classroom examples together and discuss what your team could try.',size=10.7)
+ text(48,574,'Training shaped around your school.',16,'Display')
+ para(48,557,'The topics and activities below illustrate possible training. Share your team’s needs with CJ, then agree a suitable focus, format and scope. These are not fixed workshop packages.',size=10.7)
  # Three parallel activities, with simple numbered markers.
  rows=[('01','Notice the situation','Describe what happens in a classroom routine and what remains unclear.'),('02','Explore an adjustment','Discuss a practical change to instructions, support or the environment.'),('03','Plan what to review','Choose what to observe and discuss together after trying an adjustment.')]
  top=494
@@ -49,7 +49,7 @@ with TemporaryDirectory() as tmp:
  c.setStrokeColor(HexColor('#D6E1D8'));c.line(48,318,547,318)
  text(48,293,'Plan the right session',15,'Display')
  para(48,279,'Share your school, team size, main focus and preferred dates. CJ reviews fit and availability, then discusses delivery arrangements, duration, fees and any materials or follow-up. These are agreed before booking.',size=10.3,leading=14.7)
- para(48,225,'Team discussion and educator &amp; aide guidance are also available to discuss.',size=9.8,leading=14)
+ para(48,225,'Possible formats: staff workshop, team discussion or educator &amp; aide guidance.',size=9.8,leading=14)
  c.drawImage(ImageReader(str(root/'cj-photo-224.webp')),48,125,width=62,height=62,mask='auto')
  text(126,176,'CJ Lim',13,'Bold');text(126,160,'Autism Educator & Founder of APC',9.5)
  text(126,144,'M.A. Special and Inclusive Education',9,color=muted)
