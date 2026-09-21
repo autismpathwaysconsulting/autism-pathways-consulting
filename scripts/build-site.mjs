@@ -30,6 +30,7 @@ export const PUBLIC_FILES = Object.freeze([
   "apc-navigation.js",
   "apc-navigation.css",
   "apc-audience-pages.css",
+  "apc-audience-theme.css",
   "blog.html",
   "parents.html",
   "apc-parent-minimal.css",
