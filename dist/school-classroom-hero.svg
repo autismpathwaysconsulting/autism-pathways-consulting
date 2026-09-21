@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+<title id="title">Inclusive classroom learning scene</title>
+<desc id="desc">A teacher supports three students in a calm classroom with a visual schedule, whiteboard, books and learning materials.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8f4ec"/><stop offset="1" stop-color="#e8f3ef"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#073734" flood-opacity=".12"/></filter>
+</defs>
+<rect width="960" height="640" rx="38" fill="url(#bg)"/>
+<rect x="58" y="58" width="844" height="520" rx="30" fill="#fffdf8" stroke="#cbded8" stroke-width="3"/>
+<rect x="100" y="98" width="760" height="72" rx="16" fill="#dceee8"/>
+<rect x="126" y="119" width="120" height="30" rx="8" fill="#073734" opacity=".9"/>
+<circle cx="805" cy="134" r="18" fill="#e8997a"/>
+<path d="M783 134h44" stroke="#073734" stroke-width="4" stroke-linecap="round"/>
+<rect x="112" y="208" width="270" height="178" rx="18" fill="#eff7f4" stroke="#8fbab1" stroke-width="3"/>
+<rect x="140" y="234" width="214" height="34" rx="8" fill="#073734"/>
+<rect x="140" y="286" width="58" height="58" rx="10" fill="#f3d4c2"/>
+<rect x="210" y="286" width="58" height="58" rx="10" fill="#d6eadf"/>
+<rect x="280" y="286" width="58" height="58" rx="10" fill="#f1df9b"/>
+<path d="M157 313h24m41 0h24m41 0h24" stroke="#073734" stroke-width="6" stroke-linecap="round"/>
+<text x="140" y="372" font-family="Arial, sans-serif" font-size="18" fill="#496a66">visual schedule</text>
+<g filter="url(#shadow)">
+  <rect x="430" y="204" width="374" height="144" rx="18" fill="#fff" stroke="#cbded8" stroke-width="3"/>
+  <path d="M460 248h136m-136 34h204m-204 34h168" stroke="#6a8d87" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="742" cy="270" r="28" fill="#d4e7dc"/>
+  <path d="M730 270l9 9 18-22" fill="none" stroke="#0f766e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g>
+  <circle cx="444" cy="418" r="31" fill="#c78462"/>
+  <path d="M413 463q31-35 62 0v78h-62z" fill="#0f766e"/>
+  <path d="M425 409q16-25 40 0" fill="none" stroke="#073734" stroke-width="10" stroke-linecap="round"/>
+  <path d="M474 475l64-60" stroke="#0f766e" stroke-width="10" stroke-linecap="round"/>
+</g>
+<g>
+  <rect x="518" y="442" width="300" height="24" rx="12" fill="#c48e62"/>
+  <path d="M548 466v72m240-72v72" stroke="#7a5c43" stroke-width="14" stroke-linecap="round"/>
+</g>
+<g>
+  <circle cx="568" cy="402" r="27" fill="#9b664c"/>
+  <path d="M542 443q26-30 52 0v58h-52z" fill="#e8997a"/>
+  <rect x="548" y="472" width="42" height="24" rx="6" fill="#f7e9d0"/>
+</g>
+<g>
+  <circle cx="665" cy="402" r="27" fill="#d8a17d"/>
+  <path d="M639 443q26-30 52 0v58h-52z" fill="#6b9e7a"/>
+  <rect x="645" y="472" width="42" height="24" rx="6" fill="#f7e9d0"/>
+</g>
+<g>
+  <circle cx="762" cy="402" r="27" fill="#b77d5e"/>
+  <path d="M736 443q26-30 52 0v58h-52z" fill="#658aa3"/>
+  <rect x="742" y="472" width="42" height="24" rx="6" fill="#f7e9d0"/>
+</g>
+<g>
+  <rect x="126" y="425" width="226" height="112" rx="16" fill="#f7efe3"/>
+  <rect x="148" y="446" width="34" height="70" rx="5" fill="#0f766e"/>
+  <rect x="188" y="458" width="30" height="58" rx="5" fill="#e8997a"/>
+  <rect x="224" y="438" width="40" height="78" rx="5" fill="#6b9e7a"/>
+  <rect x="270" y="464" width="54" height="52" rx="8" fill="#f1df9b"/>
+</g>
+</svg>
