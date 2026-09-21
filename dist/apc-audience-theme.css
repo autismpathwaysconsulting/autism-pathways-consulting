@@ -1,6 +1,6 @@
 /* Shared audience-page theme. Homepage colours, type and editorial rhythm. */
-body.apc-audience-theme {
-  background: #fbf8f2;
+body.apc-v2.apc-audience-theme {
+  background: #fbf8f2 !important;
   color: #073734;
   --school-paper: #fbf8f2;
 }
@@ -50,6 +50,7 @@ body.apc-audience-theme {
   gap: 48px;
   padding: 28px 0 56px;
   min-height: 0;
+  max-width: none;
   text-align: left;
 }
 .apc-audience-theme .parent-intro,
@@ -68,14 +69,14 @@ body.apc-audience-theme {
 .apc-audience-theme .services-route-panel h2 { color: #fff9f1 !important; font-size: 1.85rem; margin: 10px 0; }
 .apc-audience-theme .audience-hero-visual p { color: #e3ece5; margin: 8px 0 0; line-height: 1.6; }
 .apc-audience-theme .audience-hero-visual .eyebrow,
-.apc-audience-theme .services-route-panel .eyebrow { color: #a6d3c7; }
+.apc-audience-theme .services-route-panel .eyebrow { color: #a6d3c7 !important; }
 .apc-audience-theme .services-route-panel { border-radius: 24px; }
 .apc-audience-theme .services-route-panel a { display: flex; justify-content: space-between; gap: 18px; align-items: center; padding: 18px 0; border-bottom: 1px solid #ffffff30; color: #fff9f1; min-height: 44px; text-decoration: none; }
 .apc-audience-theme .services-route-panel a:last-child { border-bottom: 0; padding-bottom: 4px; }
 .apc-audience-theme .services-route-panel a:hover { color: #2dd4bf; }
 .apc-audience-theme .school-hero-image { border-radius: 24px; min-height: 420px; }
 .apc-audience-theme .school-hero-image figcaption { border-radius: 12px; }
-.apc-audience-theme main .audience-primary,
+body.apc-v2.apc-audience-theme main .audience-primary,
 .apc-audience-theme main .btn-primary,
 .apc-audience-theme main .service-request-link {
   background: #0f766e !important;
@@ -89,7 +90,7 @@ body.apc-audience-theme {
   box-shadow: none !important;
   text-align: center;
 }
-.apc-audience-theme main .audience-primary:hover,
+body.apc-v2.apc-audience-theme main .audience-primary:hover,
 .apc-audience-theme main .btn-primary:hover,
 .apc-audience-theme main .service-request-link:hover { background: #073734 !important; text-decoration: none; }
 .apc-audience-theme .audience-card,
@@ -109,6 +110,8 @@ body.apc-audience-theme {
 .apc-audience-theme .offer-card:nth-child(2) .parent-icon { background: #f3d4c2; }
 .apc-audience-theme .parent-offers article:nth-child(3) .parent-icon,
 .apc-audience-theme .offer-card:nth-child(3) .parent-icon { background: #c9e7df; }
+.apc-audience-theme .offer-grid { align-items: stretch; }
+.apc-audience-theme .minimal-process .section-heading { text-align: left; }
 .apc-audience-theme .offer-card .parent-icon { margin-bottom: 20px; }
 .apc-audience-theme #support > h2 { text-align: left; }
 .apc-audience-theme main > .parent-process,
