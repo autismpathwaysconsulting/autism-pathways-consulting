@@ -10,7 +10,7 @@
     "source_authority_version": "1.2",
     "source_candidate_commit": "b7206744965929ce1469295129661a863bbdf733",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
+    "governed_projection_sha256": "sha256:b2a7adecc620ce4276f27cc77e326e807853c5b6b2fa0fce11b9d4de0e305b1e",
     "generation_method": "Founder-approved website projection update from canonical mirror"
   },
   "offers": {
@@ -54,7 +54,7 @@
       "direct_booking_permitted": true,
       "first_step_call_rule": "REQUIRED_ONLY_WHERE_SUITABILITY_OR_SCOPE_IS_UNCERTAIN",
       "bindings": {
-        "services.html": {
+        "parents.html": {
           "kind": "article",
           "signals": [
             "One-Concern Parent Session",
@@ -65,15 +65,6 @@
         },
         "terms.html": {
           "kind": "li",
-          "signals": [
-            "One-Concern Parent Session",
-            "RM350",
-            "45-minute",
-            "online"
-          ]
-        },
-        "pay/index.html": {
-          "kind": "article",
           "signals": [
             "One-Concern Parent Session",
             "RM350",
@@ -119,7 +110,7 @@
         "Wise bank transfer"
       ],
       "bindings": {
-        "services.html": {
+        "parents.html": {
           "kind": "article",
           "signals": [
             "APC Home Support Programme",
@@ -133,14 +124,6 @@
             "APC Home Support Programme",
             "RM1,800",
             "four sessions"
-          ]
-        },
-        "pay/index.html": {
-          "kind": "article",
-          "signals": [
-            "APC Home Support Programme",
-            "RM1,800",
-            "Four sessions"
           ]
         }
       }
