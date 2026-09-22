@@ -79,8 +79,69 @@ test("browser counters ignore form payloads, deduplicate callbacks, and respect 
   assert.deepEqual(JSON.parse(active.calls[1][1].body), { page: "services", event: "booking_submitted" });
   assert.equal(active.calls[1][1].credentials, "omit");
   assert.equal(active.calls[1][1].referrerPolicy, "no-referrer");
+  for (const event of ["school_enquiry_prepared", "school_whatsapp_click"]) {
+    vm.runInContext(`recordSiteMetric("${event}"); recordSiteMetric("${event}");`, active.context);
+    assert.deepEqual(JSON.parse(active.calls.at(-1)[1].body), {page:"services",event});
+    assert.ok(validMetric(JSON.parse(active.calls.at(-1)[1].body)));
+  }
+  assert.equal(active.calls.length,4);
   assert.equal(browser({ doNotTrack: "1" }).calls.length, 0);
   assert.equal(browser({ globalPrivacyControl: true }).calls.length, 0);
   assert.equal(browser({}, "/privacy").calls.length, 0);
   assert.match(source, /action: "bookingSuccessfulV2",\s*callback: \(\) => recordSiteMetric\("booking_submitted"\)/);
+});
+
+
+test("school migration preserves historical counts and new counters round-trip without identities", async () => {
+ const storage=database();
+ storage.db.exec(await readFile(new URL('../site-metrics-migrations/0001_daily_counts.sql',import.meta.url),'utf8'));
+ storage.db.exec("INSERT INTO daily_counts VALUES (date('now'),'home','page_view',42)");
+ storage.db.exec(await readFile(new URL('../site-metrics-migrations/0002_school_enquiries.sql',import.meta.url),'utf8'));
+ assert.equal(storage.db.prepare("SELECT count FROM daily_counts WHERE page='home'").get().count,42);
+ const env={APC_CONTENT_OS_ENVIRONMENT:'production',APC_SITE_METRICS_DB:storage};
+ for(const event of ['school_enquiry_prepared','school_whatsapp_click']) {
+  assert.equal((await onRequest({request:requestFor({page:'services',event}),env})).status,204);
+  assert.equal((await onRequest({request:requestFor({page:'home',event}),env})).status,400);
+  assert.equal((await onRequest({request:requestFor({page:'services',event,message:'private'}),env})).status,400);
+ }
+ const result=await report({request:new Request('https://autismpathwaysconsulting.com/api/content-os/site-metrics'),env});
+ const rows=(await result.json()).rows;assert.equal(rows.length,3);assert.ok(rows.some(r=>r.event==='school_whatsapp_click'&&r.count===1));
+ storage.db.close();
+});
+
+test("school counters respect both privacy signals, previews and an unmigrated database", async () => {
+ const storage=database();
+ storage.db.exec(await readFile(new URL('../site-metrics-migrations/0001_daily_counts.sql',import.meta.url),'utf8'));
+ const env={APC_CONTENT_OS_ENVIRONMENT:'production',APC_SITE_METRICS_DB:storage};
+ for(const event of ['school_enquiry_prepared','school_whatsapp_click']) {
+  for(const headers of [{DNT:'1'},{'Sec-GPC':'1'}])
+   assert.equal((await onRequest({request:requestFor({page:'services',event},headers),env})).status,204);
+  assert.equal((await onRequest({request:requestFor({page:'services',event}),env:{...env,APC_CONTENT_OS_ENVIRONMENT:'preview'}})).status,503);
+  assert.equal((await onRequest({request:requestFor({page:'services',event}),env})).status,503);
+ }
+ assert.equal(storage.db.prepare('SELECT COUNT(*) AS total FROM daily_counts').get().total,0);
+ assert.equal((await onRequest({request:requestFor({page:'home',event:'page_view'}),env})).status,204);
+ assert.equal(storage.db.prepare('SELECT count FROM daily_counts').get().count,1);
+ storage.db.close();
+});
+
+test("migration preserves every existing row and rolls back a failed transactional attempt", async () => {
+ const storage=database(), db=storage.db;
+ db.exec(await readFile(new URL('../site-metrics-migrations/0001_daily_counts.sql',import.meta.url),'utf8'));
+ const migration=await readFile(new URL('../site-metrics-migrations/0002_school_enquiries.sql',import.meta.url),'utf8');
+ for(const page of ['home','services','start','about','resources'])for(const event of ['page_view','booking_click','calendar_open','booking_submitted'])
+  db.prepare('INSERT INTO daily_counts VALUES (?,?,?,?)').run('2026-09-20',page,event,event==='page_view'?1000000:0);
+ const before=db.prepare('SELECT * FROM daily_counts ORDER BY day,page,event').all();
+ db.exec('CREATE TABLE unrelated (value TEXT); INSERT INTO unrelated VALUES (\'keep\');');
+ db.exec('BEGIN');
+ assert.throws(()=>db.exec(migration+' INSERT INTO missing_test_table VALUES (1);'));
+ db.exec('ROLLBACK');
+ assert.deepEqual(db.prepare('SELECT * FROM daily_counts ORDER BY day,page,event').all(),before);
+ assert.throws(()=>db.prepare("INSERT INTO daily_counts VALUES ('2026-09-21','services','school_enquiry_prepared',1)").run());
+ db.exec('BEGIN');db.exec(migration);db.exec('COMMIT');
+ assert.deepEqual(db.prepare('SELECT * FROM daily_counts ORDER BY day,page,event').all(),before);
+ assert.equal(db.prepare('SELECT value FROM unrelated').get().value,'keep');
+ assert.throws(()=>db.prepare("INSERT INTO daily_counts VALUES ('2026-09-21','services','unknown',1)").run());
+ assert.throws(()=>db.prepare("INSERT INTO daily_counts VALUES ('2026-09-21','services','page_view',1000001)").run());
+ db.close();
 });
