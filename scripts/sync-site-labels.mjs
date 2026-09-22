@@ -15,6 +15,12 @@ for(const file of PUBLIC_FILES.filter(p=>p.endsWith('.html')&&!p.startsWith('con
  next=next.replace(/APC Calm(?: Companion)?(?![\w])/g,'APC Calm App').replace(/APC Calm App App/g,'APC Calm App');
  next=next.replace(/>Parent support</g,'>Parent Home Support<').replace(/>Explore parent support</g,'>Explore Parent Home Support<');
  next=next.replace(/<footer\b[\s\S]*?<\/footer>/g,footer=>footer.replace(/<a href="\/services">Services<\/a>/g,'<a href="/services">Learning &amp; Workshops</a>').replace(/(<a href="\/resources">Resources<\/a>)(?!<a href="\/programmes">)/g,'$1<a href="/programmes">Upcoming Programmes</a>'));
+ next=next.replace(/<footer\b[\s\S]*?<\/footer>/g,footer=>footer.replace(/<a\b([^>]*?)href="([^"]+)"([^>]*)>([\s\S]*?)<\/a>/g,(all,before,href,after)=>{const route=config.services.find(([path])=>path===href);return route?`<a${before}href="${href}"${after}>${route[1]}</a>`:all;}));
+ if(file==='programmes.html')for(const [id,name]of Object.entries(config.programmes)){
+  const label=name.replace(/&/g,'&amp;');
+  next=next.replace(new RegExp(`(<input[^>]*name="programmes"[^>]*value="${id}"[^>]*>)[^<]*`),`$1${label}`);
+  next=next.replace(new RegExp(`(id="tab-${id}"[\\s\\S]*?<strong>)[^<]*`),`$1${label}`);
+ }
  if(next!==old){changed.push(file);if(!process.argv.includes('--check'))await fs.writeFile(url,next);}
 }
 for(const [file,variable] of [['programme-interest.js','names'],['content-os/programmes/app.js','labels']]){
