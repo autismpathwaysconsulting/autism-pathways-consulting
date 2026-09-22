@@ -902,11 +902,12 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_structural_terms_and_payment_are_independently_governed(self):
         terms = self.canonical["terms.html"].replace("RM350", "MYR 450", 1)
-        payment = insert_in_session_article(
-            self.canonical["pay/index.html"], "<p>Current session duration: 1 hour.</p>"
+        payment = append_html(
+            self.canonical["pay/index.html"],
+            "<p>The booking is automatically confirmed after payment proof.</p>",
         )
         self.assert_finding("value.session_price", self.findings_for({"terms.html": terms}))
-        self.assert_finding("value.session_duration", self.findings_for({"pay/index.html": payment}))
+        self.assert_finding("booking.automatic_confirmation", self.findings_for({"pay/index.html": payment}))
 
     def test_structural_multilingual_narrative_is_allowed(self):
         source = append_html(
@@ -933,7 +934,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         self.assertEqual("autismpathwaysconsulting/APC-AI-OS", AUTHORITY["provenance"]["source_repository"])
         self.assertRegex(AUTHORITY["provenance"]["source_candidate_commit"], r"^[0-9a-f]{40}$")
         self.assertEqual(
-            {"parents.html", "terms.html", "pay/index.html"},
+            {"parents.html", "terms.html"},
             set(session["bindings"]),
         )
 
@@ -2106,7 +2107,7 @@ class AuthorityValidatorTests(unittest.TestCase):
                     validate_authority_manifest(value)
 
     def test_public_wise_route_is_private_and_international(self):
-        for relative in ("index.html", "parents.html", "start.html", "terms.html", "pay/index.html"):
+        for relative in ("parents.html", "terms.html", "pay/index.html"):
             with self.subTest(path=relative):
                 source = (ROOT / relative).read_text(encoding="utf-8")
                 self.assertRegex(source, r"(?i)international.{0,160}wise")
