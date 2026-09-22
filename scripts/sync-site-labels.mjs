@@ -23,6 +23,16 @@ for(const file of PUBLIC_FILES.filter(p=>p.endsWith('.html')&&!p.startsWith('con
  }
  if(next!==old){changed.push(file);if(!process.argv.includes('--check'))await fs.writeFile(url,next);}
 }
+// Private planning labels share the public programme-name source.
+{
+ const file='content-os/programmes/resources.html',url=new URL(file,root);
+ const old=await fs.readFile(url,'utf8');
+ const next=old.replace(/(<span data-programme-name="([^"]+)">)[^<]*(<\/span>)/g,(all,open,id,close)=>{
+  if(!config.programmes[id])throw Error('Unknown programme name: '+id);
+  return open+config.programmes[id].replace(/&/g,'&amp;')+close;
+ });
+ if(next!==old){changed.push(file);if(!process.argv.includes('--check'))await fs.writeFile(url,next);}
+}
 for(const [file,variable] of [['programme-interest.js','names'],['content-os/programmes/app.js','labels']]){
  const url=new URL(file,root),old=await fs.readFile(url,'utf8');
  const next=old.replace(new RegExp(`const ${variable}\\s*=\\s*\\{[^;]+;`),`const ${variable} = ${JSON.stringify(config.programmes)};`);

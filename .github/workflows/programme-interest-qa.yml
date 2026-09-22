@@ -2,20 +2,21 @@ name: Programme interest QA
 on:
   pull_request:
     paths:
-      - 'programmes*'
-      - 'resources.html'
-      - 'programme-interest.js'
-      - 'programme-explorer.js'
-      - 'programme-*.webp'
+      - '**.html'
+      - '**.css'
+      - '**.js'
+      - '**.mjs'
+      - '**.cjs'
+      - '**.webp'
+      - 'scripts/**'
+      - 'tests/**'
       - 'functions/**'
-      - 'content-os/programmes/**'
       - 'migrations/0012_programme_interest.sql'
-      - 'tests/*authority*.py'
-      - 'tests/website_authority.json'
       - 'wrangler.jsonc'
-      - 'tests/programme*'
-      - 'tests/programmes/**'
-      - 'scripts/check-programme-live.mjs'
+      - '_headers'
+      - '_redirects'
+      - '_routes.json'
+      - 'package.json'
       - '.github/workflows/programme-interest-qa.yml'
 permissions:
   contents: read
@@ -29,7 +30,7 @@ jobs:
         with:
           node-version: 24
       - run: npm run build
-      - run: node --test tests/programme-interest.test.mjs tests/programme-resources.test.mjs tests/site-build-output.test.mjs tests/audience-navigation.test.mjs tests/school-topic-journey.test.mjs
+      - run: node --test tests/programme-interest.test.mjs tests/programme-resources.test.mjs tests/site-build-output.test.mjs tests/audience-navigation.test.mjs tests/school-topic-journey.test.mjs tests/site-audit-regression.test.mjs
       - name: Install browser test tools outside the repository
         run: npm install --prefix /tmp/apc-browser playwright@1.61.0
       - run: /tmp/apc-browser/node_modules/.bin/playwright install --with-deps chromium
