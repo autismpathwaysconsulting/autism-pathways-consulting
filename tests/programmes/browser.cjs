@@ -34,6 +34,35 @@ await page.locator('[name=name]').fill('QA Parent');await page.locator('[name=em
 // A failed save must leave all answers available and show no confirmation.
 let fail=true;await page.route('**/api/programme-interest',async route=>{if(route.request().method()==='POST'&&fail){fail=false;return route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'We could not confirm your request was saved. Please try again.'})});}return route.continue();});
 await page.locator('#interest-submit').click();await page.waitForFunction(()=>document.querySelector('#form-status').textContent.includes('could not confirm')||!document.querySelector('#interest-submit').disabled);assert.equal(await page.locator('[name=email]').inputValue(),'mobile@example.test');assert.equal(await page.locator('#interest-confirmation').isVisible(),false);await page.waitForFunction(()=>!document.querySelector('#interest-submit').disabled);assert.match(await page.locator('#form-status').textContent(),/could not confirm/);await page.locator('#interest-submit').click();await page.locator('#interest-confirmation').waitFor({state:'visible'});assert.match(await page.locator('#interest-confirmation').textContent(),/no automatic email/);assert.equal(await page.locator('.explorer-actions').isVisible(),false);await page.screenshot({path:path.join(output,'programmes-confirmation-mobile.png'),fullPage:true});
+// Failed POST followed by a stalled replacement challenge must expose a bounded retry.
+const recovery=await context.newPage();await recovery.clock.install();
+await recovery.goto('http://localhost:8899/programmes');
+await recovery.clock.fastForward(100);
+await recovery.waitForFunction(()=>!document.querySelector('#interest-submit').disabled);
+await recovery.locator('[name=name]').fill('Recovery test');
+await recovery.locator('[name=email]').fill('recovery@example.test');
+await recovery.locator('[name=programmes][value=volunteering]').check();
+await recovery.locator('[name=firstChoice]').selectOption('volunteering');
+await recovery.locator('[name=ages][value="6-8"]').check();
+await recovery.locator('[name=location]').fill('Petaling Jaya');
+await recovery.locator('[name=saturday]').selectOption('either');
+await recovery.locator('[name=adultAvailability]').selectOption('yes');
+await recovery.locator('[name=adult]').check();await recovery.locator('[name=consent]').check();
+await recovery.evaluate(()=>{window.staleCallback=window.qaOptions.callback;window.turnstile.render=()=>2;});
+await recovery.route('**/api/programme-interest',route=>route.request().method()==='POST'?route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'Test save failure'})}):route.continue());
+await recovery.locator('#interest-submit').click();
+await recovery.waitForFunction(()=>document.querySelector('#form-status').textContent.includes('Test save failure'));
+await recovery.clock.fastForward(21000);
+await recovery.locator('#interest-retry').waitFor({state:'visible'});
+assert.equal(await recovery.locator('[name=email]').inputValue(),'recovery@example.test');
+assert.equal(await recovery.locator('#interest-confirmation').isVisible(),false);
+await recovery.evaluate(()=>window.staleCallback('stale-token'));
+assert.equal(await recovery.locator('#interest-submit').isDisabled(),true);
+await recovery.evaluate(()=>window.turnstile.render=(target,opts)=>{opts.callback('local-qa-recovered');return 3;});
+await recovery.locator('#interest-retry').click();
+await recovery.waitForFunction(()=>!document.querySelector('#interest-submit').disabled);
+assert.equal(await recovery.locator('[name=email]').inputValue(),'recovery@example.test');
+await recovery.close();
 const admin=await browser.newContext({viewport:{width:1280,height:900}});const adminPage=await admin.newPage();await adminPage.goto('http://localhost:8899/content-os/programmes/');await adminPage.locator('#password').fill('local-review-only');await adminPage.getByRole('button',{name:'Sign in',exact:true}).click();await adminPage.locator('#records article').waitFor();assert.match(await adminPage.locator('#summary').textContent(),/1 stored contact records · 0 verified households/);adminPage.on('dialog',dialog=>dialog.accept());await adminPage.locator('article select').selectOption('verified');await adminPage.getByRole('button',{name:'Save review'}).click();await adminPage.waitForFunction(()=>document.querySelector('#summary').textContent.includes('1 verified households'));assert.match(await adminPage.locator('#summary').textContent(),/Community Volunteering: 1 verified interested · 1 first choice/);assert.match(await adminPage.locator('#summary').textContent(),/Everyday Money Skills: 1 verified interested · 0 first choice/);await adminPage.locator('article input[type=date]').fill('2020-01-01');await adminPage.getByRole('button',{name:'Save review'}).click();await adminPage.waitForFunction(()=>document.querySelector('#summary').textContent.includes('1 follow-ups due'));await adminPage.locator('#filter').selectOption('due');assert.equal(await adminPage.locator('#records article').count(),1);await adminPage.screenshot({path:path.join(output,'programmes-tracker.png'),fullPage:true});await adminPage.locator('#filter').selectOption('no-date');assert.equal(await adminPage.locator('#records article').count(),0);await adminPage.locator('#filter').selectOption('all');await adminPage.goto('http://localhost:8899/content-os/programmes/follow-up');await adminPage.waitForFunction(()=>document.querySelector('#follow-up-status').textContent.includes('Counts loaded'));assert.match(await adminPage.locator('#follow-up-totals').textContent(),/Follow-ups due: 1/);await adminPage.screenshot({path:path.join(output,'follow-up-overview.png'),fullPage:true});await adminPage.goto('http://localhost:8899/content-os/programmes/');await adminPage.locator('#records article').waitFor();await adminPage.getByRole('button',{name:'Delete record'}).click();await adminPage.waitForFunction(()=>document.querySelector('#summary').textContent.includes('0 stored contact records'));
 await page.goto('http://localhost:8899/programmes');await page.waitForFunction(()=>!document.querySelector('#interest-submit').disabled);await page.setViewportSize({width:320,height:800});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.setViewportSize({width:1440,height:1000});await page.screenshot({path:path.join(output,'programmes-desktop.png'),fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
 const nojs=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});const np=await nojs.newPage();await np.goto('http://localhost:8899/programmes');assert.equal(await np.locator('noscript').isVisible(),true);assert.equal(await np.locator('[data-panel]:visible').count(),3);assert.equal(await np.locator('[data-coaching]:visible').count(),4);assert.equal(await np.locator('#interest-submit').isDisabled(),true);assert.equal(errors.length,0,errors.join('\n'));

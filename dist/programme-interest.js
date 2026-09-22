@@ -33,13 +33,13 @@ async function init() {
  clearTimeout(securityTimer); token=''; ready=false; button.disabled=true; retry.hidden=true;
  try { if(widget!==null)window.turnstile?.remove(widget); } catch {}
  widget=null; securityScript?.remove(); document.querySelector('#programme-security').replaceChildren();
- message('Checking interest-list availability...');
+ if(!submissionError)message('Checking interest-list availability...');
  try {
   const response=await fetch('/api/programme-interest',{cache:'no-store',signal:AbortSignal.timeout(15000)}); if(!response.ok)throw new Error();
   const config=await response.json(); if(current!==attempt)return;
   if(!config.enabled){fields.disabled=true;availability.textContent='The interest list is not open yet. Explore the programmes or email CJ with an enquiry.';message('Online submissions are not open yet.');return;}
   fields.disabled=false;availability.textContent='The interest list is open. Sharing interest does not reserve a place.';
-  message('Loading the security check. Your answers will stay here if you need to retry.');
+  if(!submissionError)message('Loading the security check. Your answers will stay here if you need to retry.');
   securityTimer=setTimeout(()=>{if(current===attempt){attempt++;securityFailure();}},20000);
   const render=()=>{if(current!==attempt)return;try{
    widget=window.turnstile.render('#programme-security',{sitekey:config.sitekey,action:'programme-interest',callback:value=>{if(current!==attempt)return;clearTimeout(securityTimer);token=value;ready=true;retry.hidden=true;button.disabled=busy;if(!submissionError)message('Ready to send when you have completed the form.');},'expired-callback':()=>{if(current!==attempt)return;securityFailure();},'error-callback':()=>{if(current!==attempt)return;attempt++;securityFailure();}});
@@ -63,7 +63,13 @@ form.addEventListener('submit',async event=>{
   const response=await fetch('/api/programme-interest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(20000)});
   const result=await response.json();if(!response.ok||result.received!==true)throw new Error(result.error||'We could not confirm your request was saved. Please try again or email CJ.');
   form.hidden=true;document.querySelector('.explorer-actions').hidden=true;availability.textContent='Your request has been received. See the confirmation beside this note.';const confirmation=document.querySelector('#interest-confirmation');confirmation.hidden=false;confirmation.focus();
- } catch(error) {submissionError=error.name==='TimeoutError'?'We could not confirm your request was saved. Your answers are still here. Please try again or email CJ.':error.message;message(submissionError);token='';ready=false;try{window.turnstile.reset(widget);}catch{securityFailure();}}
+ } catch(error) {
+  submissionError=error.name==='TimeoutError'?'We could not confirm your request was saved. Your answers are still here. Please try again or email CJ.':error.message;
+  message(submissionError);token='';ready=false;
+  // Recreate the check with a new attempt and timer. Late callbacks from the
+  // failed attempt cannot re-enable submission, and a stalled retry is bounded.
+  await init();
+ }
  finally {busy=false;button.disabled=!token;button.textContent='Send my interest';}
 });
 window.addEventListener('pageshow',updateFirstChoice);
