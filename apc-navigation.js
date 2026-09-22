@@ -42,6 +42,11 @@ for (const link of document.querySelectorAll('.apc-shell-nav a, .apc-footer-colu
       link.textContent = 'Parent Home Support';
     }
   }
+  if (target.origin === window.location.origin && path === '/schools') {
+    if (label === 'Schools & educator training' || label === 'School & Educator Support') {
+      link.textContent = 'Schools & Educator Training';
+    }
+  }
 }
 
 // Match both origin and path: APC Calm must not appear current on the home page.
