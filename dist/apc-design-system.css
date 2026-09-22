@@ -4068,7 +4068,8 @@ html {
 .apc-v2 .apc-footer-minimal-links {
   display: flex;
   justify-content: flex-end;
-  gap: clamp(14px, 2vw, 24px);
+  flex-wrap: wrap;
+  gap: 4px clamp(14px, 2vw, 24px);
 }
 
 .apc-v2 .apc-footer-minimal-links a {
