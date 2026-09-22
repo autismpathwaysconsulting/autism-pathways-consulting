@@ -170,7 +170,7 @@ RETIRED_MUTATORS = frozenset(
 )
 
 PAGE_REQUIREMENTS: Mapping[str, tuple[Requirement, ...]] = {
-    "services.html": (
+    "parents.html": (
         Requirement("session_name", r"\bone-concern parent session\b"),
         Requirement("session_price", r"\brm\s*350\b"),
         Requirement("session_duration", r"\b45(?:-|\s)minute(?:s)?\b"),
@@ -186,7 +186,7 @@ PAGE_REQUIREMENTS: Mapping[str, tuple[Requirement, ...]] = {
         Requirement("home_frequency", r"\bonce every two weeks\b"),
         Requirement("home_whatsapp", r"\bwhatsapp clarification throughout the active programme\b"),
         Requirement("home_checkin", r"\bone check-in about a month after the final session\b"),
-        Requirement("positioning", r"\bchoose the level of support that fits what you need right now\b"),
+        Requirement("positioning", r"\bsupport that starts where you are\b"),
         Requirement("first_step_boundary", r"\bnot a consultation, assessment, diagnostic service, or advice session\b"),
         Requirement("rm350_promise", r"\bone repeated concern\. one clear next step\b"),
         Requirement("rm350_working_understanding", r"\bworking understanding of the pattern\b"),

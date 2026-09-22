@@ -8,7 +8,7 @@
     "authority_version": "1.2",
     "canonical_state": "CANDIDATE",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:a06364128950ed255be223b1df7ae701d12c607e260453bf51668d36f34e14e6",
+    "governed_projection_sha256": "sha256:47d85d09dd457b645a5f67f22be29887c324890e160dabd475805c59167f37c4",
     "website_repository": "autismpathwaysconsulting/autism-pathways-consulting",
     "website_main_commit": "01b9565fc2891dd9354985c1acd4fd43adabe1b9",
     "website_pr14_candidate_commit": "7e62a470db496942e640267b52acaf6c3c312ece"

@@ -52,7 +52,7 @@ function enquiry(valid) {
   const form = new Target(); form.reportValidity = () => valid;
   const link = new Target(); const success = { hidden:true };
   const fields = { 'school-training-form':form, 'school-whatsapp-link':link, 'sf-success':success };
-  for (const [id,value] of Object.entries({'sf-name':' A & B ','sf-school':'School + Centre','sf-role':'Teacher','sf-phone':'+60 123','sf-message':'Line 1\nLine 2? & #'})) fields[id]={value};
+  for (const [id,value] of Object.entries({'sf-name':' A & B ','sf-school':'School + Centre','sf-role':'Teacher','sf-phone':'+60 12 345 6789','sf-message':'Line 1\nLine 2? & #'})) fields[id]={value,setCustomValidity(message){this.validationMessage=message;}};
   const document = { getElementById:id=>fields[id] };
   vm.runInNewContext(formCode,{document,encodeURIComponent});
   let prevented = false; form.fire('submit',{preventDefault:()=>{prevented=true;}});
@@ -81,3 +81,4 @@ test('all shared public headers provide native disclosures and both audience rou
   }
   assert.equal(count,32);
 });
+

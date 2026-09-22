@@ -1,5 +1,5 @@
 const endpoint='/api/content-os/programmes';
-const labels={volunteering:'Community Crew',money:'Everyday Money',camp:'Adventure Camp'};
+const labels = {"volunteering":"Community Volunteering","money":"Everyday Money Skills","camp":"Fitness & Adventure Camp"};
 let records=[];
 const status=document.querySelector('#status');
 function el(tag,text){const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;}

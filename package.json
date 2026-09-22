@@ -11,6 +11,8 @@
     "test:content-os": "node --test tests/content-os*.test.mjs",
     "test:episode-workflow": "node --test tests/content-os-episode-workflow.test.mjs",
     "test:pathways-lab": "node --test tests/pathways-lab.test.mjs tests/pathways-bootstrap.test.mjs",
-    "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics && npm run test:pathways-lab"
+    "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics && npm run test:pathways-lab",
+    "sync:site-labels": "node scripts/sync-site-labels.mjs",
+    "prebuild": "node scripts/sync-site-labels.mjs --check"
   }
 }
