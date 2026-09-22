@@ -184,6 +184,30 @@ class InterimContainmentTests(unittest.TestCase):
             self.findings_with_html("pay/index.html", "<form></form>"),
         )
 
+    def test_extra_programme_form_fails(self):
+        self.assertIn(
+            "containment.form_inventory_changed",
+            self.findings_with_html("programmes.html", "<form></form>"),
+        )
+
+    def test_programme_form_lookalike_fails(self):
+        sources = dict(self.sources)
+        path = "programmes-copy.html"
+        sources[path] = "<html><body><h1>Unapproved</h1><form></form></body></html>"
+        self.assertIn(
+            "containment.form_inventory_changed",
+            validate_surfaces(sources, set(self.paths) | {path}),
+        )
+
+    def test_programme_upload_and_payment_remain_blocked(self):
+        findings = self.findings_with_html(
+            "programmes.html",
+            '<input type="file"><a href="/pay/350">Pay now</a>',
+        )
+        self.assertIn("containment.public_file_input:programmes.html", findings)
+        self.assertIn("containment.direct_payment_route", findings)
+        self.assertIn("containment.immediate_payment_permission", findings)
+
     def test_file_upload_control_fails(self):
         findings = self.findings_with_html(
             "pay/index.html", '<form><input type="file"></form>'
