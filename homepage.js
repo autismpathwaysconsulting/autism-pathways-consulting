@@ -111,7 +111,7 @@ const calInline = document.querySelector("[data-cal-inline]");
 
 // Only broad page categories and action names leave the browser.
 // Audience routes share existing service/resource counters; no per-article or identity data.
-const metricPage = ({ "/": "home", "/services": "services", "/start": "start", "/about": "about", "/resources": "resources", "/parents": "services", "/schools": "services", "/blog": "resources" })[window.location.pathname.replace(/\/$/, "") || "/"];
+const metricPage = ({ "/": "home", "/services": "services", "/start": "start", "/about": "about", "/resources": "resources", "/parents": "services", "/schools": "services", "/blog": "resources", "/big-reactions": "big_reactions", "/thank-you-big-reactions": "big_reactions" })[window.location.pathname.replace(/\/$/, "") || "/"];
 const recordedMetrics = new Set();
 function recordSiteMetric(event) {
   if (!metricPage || window.location.origin !== "https://autismpathwaysconsulting.com" ||
@@ -136,6 +136,21 @@ document.addEventListener("click", event => {
       (target.origin === "https://cal.com" && target.pathname === "/autismpathwaysconsulting/first-step-call")) {
     recordSiteMetric("booking_click");
   }
+});
+
+document.addEventListener("focusin", event => {
+  if (event.target.closest?.("[data-big-reactions-form]")) recordSiteMetric("form_start");
+}, { once: true });
+
+document.addEventListener("submit", event => {
+  if (event.target.matches?.("[data-big-reactions-form]")) recordSiteMetric("form_submit");
+});
+
+document.addEventListener("click", event => {
+  const tracked = event.target.closest?.("[data-site-metric]");
+  if (!tracked) return;
+  const eventName = tracked.dataset.siteMetric;
+  if (["download_click", "parent_support_click"].includes(eventName)) recordSiteMetric(eventName);
 });
 
 const bookingLoad = document.querySelector("[data-booking-load]");
