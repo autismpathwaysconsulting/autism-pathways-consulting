@@ -129,6 +129,11 @@ function recordPageView() {
 recordPageView();
 document.addEventListener("visibilitychange", recordPageView);
 document.addEventListener("click", event => {
+  const tracked = event.target.closest?.("[data-site-metric]");
+  if (tracked) {
+    const eventName = tracked.dataset.siteMetric;
+    if (["download_click", "parent_support_click"].includes(eventName)) recordSiteMetric(eventName);
+  }
   const link = event.target.closest?.("a[href]");
   if (!link) return;
   const target = new URL(link.href, window.location.href);
@@ -146,12 +151,6 @@ document.addEventListener("submit", event => {
   if (event.target.matches?.("[data-big-reactions-form]")) recordSiteMetric("form_submit");
 });
 
-document.addEventListener("click", event => {
-  const tracked = event.target.closest?.("[data-site-metric]");
-  if (!tracked) return;
-  const eventName = tracked.dataset.siteMetric;
-  if (["download_click", "parent_support_click"].includes(eventName)) recordSiteMetric(eventName);
-});
 
 const bookingLoad = document.querySelector("[data-booking-load]");
 if (calInline && bookingLoad) bookingLoad.hidden = false;
