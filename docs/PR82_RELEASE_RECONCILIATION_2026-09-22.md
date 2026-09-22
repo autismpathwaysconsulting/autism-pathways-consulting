@@ -23,3 +23,7 @@
 ## Independent remaining gates
 
 Production programme submission and saved-record verification remain unverified. Automated journeys use local SQLite and simulated Turnstile. No real booking, payment, WhatsApp message or interest submission was made. PR 91 production database backup/migration/row verification is a separate release gate. Browser surface used for manual inspection cannot resize viewport; new-head responsive evidence must come from CI.
+
+## Final static handoff correction
+
+A further comparison recovered an unreconciled safety fix from the old PR: direct opening of the First Step Call page must not claim an appointment is confirmed. Restore the conditional confirmation wording and the two booking-handoff regression checks. The current school's payment sequence already passes that check. Also align the school breadcrumb (visible and structured data) and programme eyebrow with the locked page labels. These corrections are static source/dist changes.
