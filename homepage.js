@@ -147,7 +147,7 @@ bookingLoad?.addEventListener("click", () => {
   bookingLoad.disabled = true;
   bookingLoad.textContent = "Calendar requested below";
   const status = document.querySelector("[data-booking-status]");
-  status.textContent = "Use the calendar below to choose a time, or open booking directly on Cal.com.";
+  status.textContent = "Loading Cal.com. If the calendar does not appear, use the direct booking link.";
   ((root, source, namespace) => {
     const enqueue = (api, args) => api.q.push(args);
     const documentRef = root.document;

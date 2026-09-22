@@ -10,7 +10,7 @@
     "source_authority_version": "1.2",
     "source_candidate_commit": "b7206744965929ce1469295129661a863bbdf733",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:b2a7adecc620ce4276f27cc77e326e807853c5b6b2fa0fce11b9d4de0e305b1e",
+    "governed_projection_sha256": "sha256:47d85d09dd457b645a5f67f22be29887c324890e160dabd475805c59167f37c4",
     "generation_method": "Founder-approved website projection update from canonical mirror"
   },
   "offers": {
@@ -54,15 +54,6 @@
       "direct_booking_permitted": true,
       "first_step_call_rule": "REQUIRED_ONLY_WHERE_SUITABILITY_OR_SCOPE_IS_UNCERTAIN",
       "bindings": {
-        "parents.html": {
-          "kind": "article",
-          "signals": [
-            "One-Concern Parent Session",
-            "RM350",
-            "45 minutes",
-            "Online"
-          ]
-        },
         "terms.html": {
           "kind": "li",
           "signals": [
@@ -70,6 +61,24 @@
             "RM350",
             "45-minute",
             "online"
+          ]
+        },
+        "pay/index.html": {
+          "kind": "article",
+          "signals": [
+            "One-Concern Parent Session",
+            "RM350",
+            "45-minute",
+            "online"
+          ]
+        },
+        "parents.html": {
+          "kind": "article",
+          "signals": [
+            "One-Concern Parent Session",
+            "RM350",
+            "45 minutes",
+            "Online"
           ]
         }
       }
@@ -110,7 +119,15 @@
         "Wise bank transfer"
       ],
       "bindings": {
-        "parents.html": {
+        "terms.html": {
+          "kind": "li",
+          "signals": [
+            "APC Home Support Programme",
+            "RM1,800",
+            "four sessions"
+          ]
+        },
+        "pay/index.html": {
           "kind": "article",
           "signals": [
             "APC Home Support Programme",
@@ -118,12 +135,12 @@
             "Four sessions"
           ]
         },
-        "terms.html": {
-          "kind": "li",
+        "parents.html": {
+          "kind": "article",
           "signals": [
             "APC Home Support Programme",
             "RM1,800",
-            "four sessions"
+            "Four sessions"
           ]
         }
       }

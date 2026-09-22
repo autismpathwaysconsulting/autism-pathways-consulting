@@ -116,17 +116,11 @@ test('blank identities and malformed numbers cannot prepare an enquiry; correcti
 });
 
 
-test('school events contain no form data and analytics failure cannot block preparation',()=>{
- const actions=[],f=setup((...args)=>actions.push(args)),form=f['school-training-form'];
- f['sf-name'].value=' ';form.events.submit({preventDefault(){}});assert.equal(actions.length,0);
- f['sf-name'].value='Private test name';form.events.submit({preventDefault(){}});
- f['school-whatsapp-link'].events.click();
- assert.deepEqual(actions,[['school_enquiry_prepared'],['school_whatsapp_click']]);
- form.events.input();f['school-whatsapp-link'].events.click();assert.equal(actions.length,2);
- const broken=setup(()=>{throw Error('Unavailable');});
- broken['school-training-form'].events.submit({preventDefault(){}});assert.equal(broken['sf-success'].hidden,false);
+test('enquiry preparation makes no analytics calls while integration is deferred',()=>{
+ const actions=[],f=setup((...args)=>actions.push(args));
+ f['school-training-form'].events.submit({preventDefault(){}});
+ assert.equal(f['sf-success'].hidden,false);assert.deepEqual(actions,[]);
 });
-
 
 test('an omitted alternative number is valid; a supplied number is preserved and validated',()=>{
  const f=setup(), form=f['school-training-form'];
@@ -143,3 +137,4 @@ test('an omitted alternative number is valid; a supplied number is preserved and
  assert.equal(f['sf-success'].hidden,true);
  assert.ok(f['sf-phone'].validationMessage);
 });
+

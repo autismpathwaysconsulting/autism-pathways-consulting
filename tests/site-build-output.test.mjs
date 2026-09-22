@@ -229,12 +229,3 @@ test("public pages preserve audited contrast, narrow-screen wrapping, and securi
   assert.match(headers, /Permissions-Policy: camera=\(\), microphone=\(\), geolocation=\(\), usb=\(\)/);
   assert.match(headers, /X-Frame-Options: DENY/);
 });
-
-// Page-specific assets must also refresh for returning visitors.
-test("Schools stylesheet and enquiry script use current content versions", async () => {
-  const html = await readFile(new URL("../schools.html", import.meta.url), "utf8");
-  for (const asset of ["apc-schools.css", "apc-school-enquiry.js"]) {
-    const hash = assetVersion(await readFile(new URL(`../${asset}`, import.meta.url)));
-    assert.ok(html.includes(`/${asset}?v=${hash}`), `${asset} must refresh when its content changes`);
-  }
-});

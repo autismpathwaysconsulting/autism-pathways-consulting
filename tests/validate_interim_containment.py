@@ -17,7 +17,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = Path(__file__).with_name("interim_containment.json")
 AUTHORITY_PATH = Path(__file__).with_name("website_authority.json")
-NOTICE_PAGES = ("parents.html", "terms.html", "pay/index.html")
+NOTICE_PAGES = ("index.html", "parents.html", "start.html", "terms.html", "pay/index.html")
 FORBIDDEN_PAYMENT_PATHS = frozenset({"QR_Payment.JPG", "pay.html.backup-payment-price"})
 PAID_CAL_PATH = "cal.com/autismpathwaysconsulting/parent-strategy-session"
 FREE_CAL_URL = "https://cal.com/autismpathwaysconsulting/first-step-call"
@@ -59,7 +59,7 @@ EXPECTED_PROVENANCE = {
     "authority_version": "1.2",
     "canonical_state": "CANDIDATE",
     "canonical_source_sha256": "sha256:3c8a9ea6dd7fc0f85769c87a8a9a4cfd961c9eec4f913ca5707869871fbd560f",
-    "governed_projection_sha256": "sha256:b2a7adecc620ce4276f27cc77e326e807853c5b6b2fa0fce11b9d4de0e305b1e",
+    "governed_projection_sha256": "sha256:47d85d09dd457b645a5f67f22be29887c324890e160dabd475805c59167f37c4",
     "website_repository": "autismpathwaysconsulting/autism-pathways-consulting",
     "website_main_commit": "01b9565fc2891dd9354985c1acd4fd43adabe1b9",
     "website_pr14_candidate_commit": "7e62a470db496942e640267b52acaf6c3c312ece",
@@ -354,6 +354,7 @@ def validate_surfaces(sources: Mapping[str, str], present_paths: set[str]) -> li
 
     first_step_pages = (
         "index.html",
+        "parents.html",
         "start.html",
         "about.html",
         "resources.html",

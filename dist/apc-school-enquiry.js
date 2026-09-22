@@ -1,11 +1,5 @@
 const schoolForm = document.getElementById('school-training-form');
 if (schoolForm) {
-  // Send only fixed action names to the existing aggregate counter. Never pass form values.
-  const countAction = event => {
-    try {
-      if (typeof recordSiteMetric === 'function') recordSiteMetric(event);
-    } catch { /* Measurement must never prevent an enquiry. */ }
-  };
   const topic = document.getElementById('sf-topic');
   const validateContact = () => {
     for (const [id, message] of [['sf-name', 'Enter your name.'], ['sf-school', 'Enter your school or centre name.']]) {
@@ -25,9 +19,6 @@ if (schoolForm) {
     if (extraDetails?.contains(event.target)) extraDetails.open = true;
   }, true);
   const preparedLink = document.getElementById('school-whatsapp-link');
-  preparedLink.addEventListener('click', () => {
-    if (!preparedState.hidden && messagePreview?.value) countAction('school_whatsapp_click');
-  });
   const preparedState = document.getElementById('sf-success');
   const messagePreview = document.getElementById('school-message-preview');
   const copyButton = document.getElementById('school-copy-message');
@@ -119,6 +110,6 @@ if (schoolForm) {
     if (copyStatus) copyStatus.textContent = '';
     document.getElementById('sf-success').hidden = false;
     link.focus();
-    countAction('school_enquiry_prepared');
   });
 }
+

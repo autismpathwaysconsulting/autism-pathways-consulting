@@ -1,5 +1,5 @@
 const pages = { home: "Home", services: "Parent & school services", start: "Start Here", about: "About", resources: "Resources & blog" };
-const events = { page_view: "Page views", booking_click: "Booking clicks", calendar_open: "Calendar opens", booking_submitted: "Submitted bookings (embed)", school_enquiry_prepared: "School enquiries prepared", school_whatsapp_click: "School WhatsApp opens requested" };
+const events = { page_view: "Page views", booking_click: "Booking clicks", calendar_open: "Calendar opens", booking_submitted: "Submitted bookings (embed)" };
 const status = document.getElementById("status");
 const counts = document.getElementById("counts");
 const refresh = document.getElementById("refresh");
@@ -17,7 +17,6 @@ async function loadCounts() {
       const heading = document.createElement("h3"); heading.textContent = label; card.append(heading);
       const list = document.createElement("dl");
       for (const [event, title] of Object.entries(events)) {
-        if (event.startsWith("school_") && page !== "services") continue;
         if (!["home", "services"].includes(page) && ["calendar_open", "booking_submitted"].includes(event)) continue;
         const term = document.createElement("dt"); term.textContent = title;
         const value = document.createElement("dd"); value.textContent = String(data.rows.find(row => row.page === page && row.event === event)?.count ?? 0);

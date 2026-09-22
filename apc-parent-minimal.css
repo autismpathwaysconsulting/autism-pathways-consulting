@@ -81,3 +81,4 @@ body.apc-parent-minimal { margin:0;background:#fffdf9; }
 /* Keep offer disclosures independent from the header navigation. */
 .apc-parent-minimal .apc-shell-nav > a,.apc-parent-minimal .apc-nav-dropdown > summary { white-space:nowrap; }
 .apc-parent-minimal .apc-shell-nav > * { flex-shrink:0; }
+

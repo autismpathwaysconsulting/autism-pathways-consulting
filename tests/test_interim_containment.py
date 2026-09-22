@@ -34,25 +34,25 @@ class InterimContainmentTests(unittest.TestCase):
     def test_wise_public_wording_fails(self):
         self.assertIn(
             "containment.wise_public_wording",
-            self.findings_with_html("services.html", "<p>Wise payment is supported.</p>"),
+            self.findings_with_html("parents.html", "<p>Wise payment is supported.</p>"),
         )
 
     def test_international_availability_fails(self):
         self.assertIn(
             "containment.international_availability",
-            self.findings_with_html("services.html", "<p>International services are available.</p>"),
+            self.findings_with_html("parents.html", "<p>International services are available.</p>"),
         )
 
     def test_direct_payment_route_fails(self):
         self.assertIn(
             "containment.direct_payment_route",
-            self.findings_with_html("services.html", '<a href="/pay/350">Pay</a>'),
+            self.findings_with_html("parents.html", '<a href="/pay/350">Pay</a>'),
         )
 
     def test_immediate_payment_permission_fails(self):
         self.assertIn(
             "containment.immediate_payment_permission",
-            self.findings_with_html("services.html", "<p>Pay now.</p>"),
+            self.findings_with_html("parents.html", "<p>Pay now.</p>"),
         )
 
     def test_public_payment_asset_fails(self):
@@ -70,11 +70,11 @@ class InterimContainmentTests(unittest.TestCase):
 
     def test_review_notice_removal_fails(self):
         sources = dict(self.sources)
-        sources["parents.html"] = re.sub(
-            r"Paid support is subject to", "Paid support", sources["parents.html"], flags=re.IGNORECASE
+        sources["index.html"] = re.sub(
+            r"Paid support is subject to", "Paid support", sources["index.html"], flags=re.IGNORECASE
         )
         self.assertIn(
-            "containment.review_notice_missing:parents.html",
+            "containment.review_notice_missing:index.html",
             validate_surfaces(sources, set(self.paths)),
         )
 
@@ -122,17 +122,17 @@ class InterimContainmentTests(unittest.TestCase):
 
     def test_paid_calcom_route_fails(self):
         findings = self.findings_with_html(
-            "services.html",
+            "parents.html",
             '<a href="https://cal.com/autismpathwaysconsulting/parent-strategy-session">Book</a>',
         )
         self.assertIn("containment.paid_cal_link", findings)
-        self.assertIn("containment.unapproved_cal_url:services.html", findings)
+        self.assertIn("containment.unapproved_cal_url:parents.html", findings)
 
     def test_any_unapproved_calcom_event_fails(self):
         findings = self.findings_with_html(
-            "services.html", '<a href="https://cal.com/autismpathwaysconsulting/other">Book</a>'
+            "parents.html", '<a href="https://cal.com/autismpathwaysconsulting/other">Book</a>'
         )
-        self.assertIn("containment.unapproved_cal_url:services.html", findings)
+        self.assertIn("containment.unapproved_cal_url:parents.html", findings)
 
     def test_legacy_confirmation_language_fails(self):
         findings = self.findings_with_html(
@@ -175,7 +175,7 @@ class InterimContainmentTests(unittest.TestCase):
     def test_public_receipt_request_fails(self):
         self.assertIn(
             "containment.public_receipt_request",
-            self.findings_with_html("services.html", "<p>Send your receipt.</p>"),
+            self.findings_with_html("parents.html", "<p>Send your receipt.</p>"),
         )
 
     def test_new_public_form_fails(self):
@@ -322,3 +322,4 @@ class InterimContainmentTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
