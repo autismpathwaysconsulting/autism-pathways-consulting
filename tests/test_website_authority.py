@@ -571,7 +571,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             "The Founder records payment before confirming the booking",
         )
         self.assert_finding(
-            "required.parents.html.booking_sequence",
+            "required.parents.html.manual_after_verification",
             self.findings_for({"parents.html": source}),
         )
 
