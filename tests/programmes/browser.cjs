@@ -3,10 +3,19 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
 await context.route('https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit',route=>route.fulfill({contentType:'text/javascript',body:`window.turnstile={render:(target,opts)=>{window.qaOptions=opts;document.querySelector(target).textContent='Security check (local test)';setTimeout(()=>opts.callback('local-qa-'+crypto.randomUUID()),10);return 1;},reset:()=>setTimeout(()=>window.qaOptions.callback('local-qa-'+crypto.randomUUID()),10)};`}));
 await page.goto('http://localhost:8899/programmes');await page.waitForFunction(()=>!document.querySelector('#interest-submit').disabled);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.match(await page.locator('#availability-status').textContent(),/list is open/);assert.equal(await page.locator('[name=email]').isEnabled(),true);await page.screenshot({path:path.join(output,'programmes-mobile.png'),fullPage:true});
 
+
+// Shared text-input rules must not stretch native checkboxes or inflate row spacing.
+for (const width of [320,390,1440]) {
+ await page.setViewportSize({width,height:900});
+ const rows=await page.locator('input[name=programmes]').evaluateAll(inputs=>inputs.map(input=>{const box=input.getBoundingClientRect(),row=input.closest('label').getBoundingClientRect();return {boxHeight:box.height,boxWidth:box.width,rowHeight:row.height,top:box.top-row.top};}));
+ for(const row of rows){assert.equal(row.boxHeight,21);assert.equal(row.boxWidth,21);assert.ok(row.rowHeight>=44&&row.rowHeight<=68);assert.ok(row.top>=10&&row.top<=12);}
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+}
+await page.setViewportSize({width:390,height:844});
 // Explore without changing interest until the parent explicitly adds a choice.
 await page.locator('#tab-money').click();assert.equal(await page.locator('#panel-money').isVisible(),true);assert.equal(await page.locator('[name=programmes][value=money]').isChecked(),false);
 await page.locator('#add-programme').click();assert.equal(await page.locator('[name=programmes][value=money]').isChecked(),true);assert.equal(await page.locator('[name=firstChoice]').inputValue(),'money');
-await page.locator('#tab-camp').click();await page.locator('#add-programme').click();assert.equal(await page.locator('[name=firstChoice]').inputValue(),'money');assert.match(await page.locator('#form-selection-summary').textContent(),/Everyday money, Adventure camp/);
+await page.locator('#tab-camp').click();await page.locator('#add-programme').click();assert.equal(await page.locator('[name=firstChoice]').inputValue(),'money');assert.match(await page.locator('#form-selection-summary').textContent(),/Everyday Money Skills, Fitness & Adventure Camp/);
 await page.locator('[name=programmes][value=camp]').uncheck();assert.equal(await page.locator('#add-programme').getAttribute('aria-pressed'),'false');
 await page.locator('#tab-camp').focus();await page.keyboard.press('Home');assert.equal(await page.locator('#tab-volunteering').getAttribute('aria-selected'),'true');
 await page.locator('#step-2').click();assert.equal(await page.locator('#coaching-2').isVisible(),true);await page.locator('#step-2').focus();await page.keyboard.press('End');assert.equal(await page.locator('#coaching-3').isVisible(),true);await page.keyboard.press('Home');
