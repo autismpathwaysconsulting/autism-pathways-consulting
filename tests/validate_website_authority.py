@@ -668,7 +668,7 @@ JAVASCRIPT_MIME_ESSENCES = frozenset(
 ASCII_WHITESPACE = "\t\n\f\r "
 JAVASCRIPT_URL_SCHEME = re.compile(r"^[\t\n\f\r ]*javascript:", FLAGS)
 EXECUTABLE_AUTHORITY_CONTEXT_WORDS = frozenset(
-    {"name", "offer", "service", "product", "title"}
+    {"offer", "service", "product"}
 )
 EXECUTABLE_AUTHORITY_FACT_WORDS = frozenset(
     {
@@ -710,10 +710,15 @@ EXECUTABLE_AUTHORITY_STRONG_IDENTIFIERS = frozenset(
         "availabilitystate",
     }
 )
-EXECUTABLE_AUTHORITY_PROPERTY = re.compile(
-    r"(?:^|[,{;])\s*(?:get\s+|set\s+)?(?:\[\s*)?['\"]?"
+EXECUTABLE_AUTHORITY_PROPERTY_NAME = (
     r"(?:price|currency|duration|delivery|payment|booking|confirmation|scope|launch|availability)"
-    r"['\"]?(?:\s*\])?\s*(?::|\()",
+)
+EXECUTABLE_AUTHORITY_PROPERTY = re.compile(
+    r"(?:^|[,{;])\s*(?:get\s+|set\s+)?(?:\[\s*)?"
+    r"(?:" + EXECUTABLE_AUTHORITY_PROPERTY_NAME
+    + r"|'" + EXECUTABLE_AUTHORITY_PROPERTY_NAME + r"'"
+    + r'|"' + EXECUTABLE_AUTHORITY_PROPERTY_NAME + r'")'
+    + r"(?:\s*\])?\s*(?::|\()",
     FLAGS,
 )
 EXECUTABLE_AUTHORITY_PHRASES = tuple(
@@ -785,6 +790,8 @@ def _javascript_authority_text(source: str) -> str:
 
 def _executable_javascript_contains_authority(source: str) -> bool:
     """Recognize a bounded authority surface without interpreting JavaScript."""
+    # Generic person names and UI titles are not business context. Explicit
+    # authority properties, identifiers and phrases remain independently gated.
     uncommented = _javascript_without_comments(source)
     authority_text = _javascript_authority_text(source)
     words = frozenset(authority_text.split())

@@ -2,15 +2,15 @@
 
 Prepared 22 September 2026. Scope: collect interest for all three ideas, with Community Crew first to develop. No booking, payment, confirmed Saturday, host partnership or project place is created by this release.
 
-**Current state: preparation complete for account setup, release blocked.** PR #83 remains draft; capture is disabled in every committed environment. Cloudflare account access, production configuration, database schema and real Turnstile have not been verified. Local and CI results are not evidence of a working live form.
+**Current state: release authorized, capture closed pending deployment checks.** CJ explicitly authorized execution with “okay execute now.” The production binding `APC_CONTENT_OS_DB` to `apc-content-os` and the complete table/index definition were confirmed from supplied dashboard screenshots. CJ confirmed saving the production Turnstile secret; the public site key is committed. Real Turnstile and live storage remain unverified. Local and CI results are not evidence of a working live form.
 
 ## 1. Resolve the release gate and confirm access
 
 Owner: CJ for the release decision; repository maintainer for the technical gate.
 
 - [ ] Review the latest PR head and any intervening main-branch changes. Record the exact approved commit and latest CI results.
-- [ ] Resolve `authority.executable_javascript_forbidden` through maintainer review. The broad detector flags ordinary form/API code and existing Pathways Lab files. Do not bypass it, rename files to evade it, or treat functional QA as a waiver.
-- [ ] Obtain CJ's separate authorization for merge/deployment and interest-list activation. Repository `CLAUDE.md` requires this; “get ready” does not authorize publication.
+- [ ] Verify the detector repair and adversarial regression suite at the release head. Generic person names/UI titles no longer establish business context alone, and quoted property names require paired quotes. Explicit authority properties, identifiers and business claims remain gated. No file exclusions or business-authority changes are introduced.
+- [x] CJ authorized execution after setup preparation with “okay execute now.” Proceed under that authorization once technical gates pass; do not treat it as evidence that the programme itself is ready to run.
 - [ ] Use an authenticated Cloudflare dashboard or operator terminal. Keep account credentials, API tokens and Turnstile secret out of chat, screenshots, source and issue comments. Preserve existing Content OS authentication.
 - [ ] Verify the actual Pages project, production branch, custom domain, build command/output, current deployment and bindings. Record a known-good deployment ID privately. The repository declares project `autism-pathways-consulting` and output `dist`; confirm these against the account.
 
@@ -109,3 +109,7 @@ Owner: CJ manages contacts; helper supports scouting and blank-resource preparat
 The readiness repair checks the full column contract with a zero-row query: no household data is returned or changed. It catches a missing table, incomplete columns or unavailable storage. It does not prove write permission, constraints, real Turnstile or live delivery; the migration review and real save test cover those separately.
 
 Prepared automated coverage includes 23 focused API/navigation/resource tests, local migration idempotence and unrelated-data preservation, full browser journeys and the read-only deployment check. Exact CI results belong to the final PR head. Production access and all live checks remain outstanding until completed in the account.
+
+## Account setup evidence, 22 September 2026
+
+CJ applied only the reviewed table/index SQL through the D1 console. The returned `sqlite_master` definition matches all 16 columns, constraints and the created-at index. This manual application does not populate the migrations ledger; reconcile it before future bulk migration operations. The supplied Time Travel screen showed a seven-day restore window; a saved bookmark or separate export has not been independently verified. No database restoration was performed. The production binding was confirmed by screenshot and CJ's follow-up. The secret was confirmed by CJ, not read by the assistant. Cloudflare dashboard automation remains blocked by human verification, so account setup evidence is distinguished from subsequent production checks.

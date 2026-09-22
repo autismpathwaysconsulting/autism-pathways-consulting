@@ -10,6 +10,9 @@ on:
       - 'functions/**'
       - 'content-os/programmes/**'
       - 'migrations/0012_programme_interest.sql'
+      - 'tests/*authority*.py'
+      - 'tests/website_authority.json'
+      - 'wrangler.jsonc'
       - 'tests/programme*'
       - 'tests/programmes/**'
       - 'scripts/check-programme-live.mjs'
@@ -19,12 +22,14 @@ permissions:
 jobs:
   programme-interest:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - run: python3 tests/validate_website_authority.py
+      - run: python3 tests/run_authority_tests.py
       - run: npm run build
       - run: node --test tests/programme-interest.test.mjs tests/programme-resources.test.mjs tests/site-build-output.test.mjs
       - name: Install browser test tools outside the repository

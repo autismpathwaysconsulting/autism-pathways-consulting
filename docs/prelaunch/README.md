@@ -42,7 +42,7 @@ Use [the live setup runbook](live-setup.md) for account checks, exact environmen
 
 The feature is deliberately disabled in every committed environment. Missing configuration fails closed, the form says it is not open and does not claim a save.
 
-After separate Founder release authorization and resolution of release checks:
+CJ authorized release execution with “okay execute now.” Complete the remaining technical checks under that authorization:
 
 1. Check the applied migration history and back up the existing D1 database. Apply only the new reviewed `migrations/0012_programme_interest.sql` to the existing `APC_CONTENT_OS_DB` binding. Do not blindly apply other pending migrations from unrelated work.
 2. Create or approve a Turnstile widget for the intended production hostname. Set `APC_PROGRAMME_TURNSTILE_SITEKEY` and the server-only secret `APC_PROGRAMME_TURNSTILE_SECRET` in the correct environment. Never commit a secret. Test environments need their own database and approved hostname; do not bind a public preview to production family data.
@@ -69,9 +69,13 @@ python3 tests/validate_website_authority.py
 
 The added GitHub workflow runs a full build and browser tests without publishing anything. Browser QA output contains synthetic records only.
 
-## Authority review remains a release condition
+## Authority validation
 
-The existing authority validator reports `authority.executable_javascript_forbidden` for the public interest handler, shared validation module, form script and related test scripts. Its broad detector combines ordinary form `name` and HTTP `method` words. It also reports the existing Pathways Lab `app.js` and `model.js` files. These findings require an explicit maintainer review of the detector and application boundary. This change does not loosen the validator, alter offer authority, close existing holds or treat a passing browser test as permission to publish. Keep the PR in draft until the required checks and Founder release decision are resolved.
+The detector repair removes false positives caused by combining generic person names/UI titles with HTTP methods or application labels, and by treating an unpaired quote in a report label as an object property. Explicit authority properties, identifiers and business phrases remain gated. Regression coverage checks ordinary application code, all supported quoted/computed property forms and authority claims alongside intake code. The workflow runs the authority gate and full adversarial suite before build and programme QA. No canonical offer facts, authority manifests, existing holds or file exemptions are changed.
+
+## Account setup evidence
+
+CJ confirmed the production binding `APC_CONTENT_OS_DB` to `apc-content-os`; a supplied D1 screenshot verifies the complete `programme_interest` definition and index after manual SQL application. The public Turnstile site key is committed and CJ confirmed saving the matching encrypted production secret. Real Turnstile and a production save remain unverified. Capture stays closed for the first deployment and must pass the runbook's live checks before the interest link is shared. Manual SQL application does not update the migration ledger.
 
 ## References
 
