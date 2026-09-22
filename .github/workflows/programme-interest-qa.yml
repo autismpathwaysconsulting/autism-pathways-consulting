@@ -11,6 +11,7 @@ on:
       - 'content-os/programmes/**'
       - 'migrations/0012_programme_interest.sql'
       - 'tests/*authority*.py'
+      - 'tests/*containment*'
       - 'tests/website_authority.json'
       - 'wrangler.jsonc'
       - 'tests/programme*'

@@ -21,7 +21,9 @@ NOTICE_PAGES = ("index.html", "services.html", "start.html", "terms.html", "pay/
 FORBIDDEN_PAYMENT_PATHS = frozenset({"QR_Payment.JPG", "pay.html.backup-payment-price"})
 PAID_CAL_PATH = "cal.com/autismpathwaysconsulting/parent-strategy-session"
 FREE_CAL_URL = "https://cal.com/autismpathwaysconsulting/first-step-call"
-EXPECTED_FORM_COUNTS = {"schools.html": 1}
+# Founder-approved programme interest collection, PR #83. This does not permit bookings or payments.
+# Pathways Lab forms already exist on main (6e916bd); keep exact counts for every approved page.
+EXPECTED_FORM_COUNTS = {"schools.html": 1, "pathways-lab/index.html": 3, "programmes.html": 1}
 PRIVATE_AUTHENTICATED_HTML_PREFIXES = ("content-os/",)
 NON_SOURCE_DIRECTORIES = frozenset(
     {".git", "dist", "node_modules", ".wrangler", ".Codex", "_local_backups", "backups"}
