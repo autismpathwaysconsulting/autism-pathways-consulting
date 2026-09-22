@@ -86,5 +86,8 @@ test("browser counters ignore form payloads, deduplicate callbacks, and respect 
   assert.equal(validMetric({ page: "big_reactions", event: "parent_support_click" }), true);
   assert.equal(validMetric({ page: "big_reactions", event: "form_start" }), true);
   assert.equal(validMetric({ page: "big_reactions", event: "form_submit" }), true);
+  assert.equal(validMetric({ page: "big_reactions", event: "campaign_correction" }), true);
+  assert.equal(validMetric({ page: "resources", event: "download_click" }), false);
+  assert.equal(validMetric({ page: "home", event: "campaign_correction" }), false);
   assert.match(source, /action: "bookingSuccessfulV2",\s*callback: \(\) => recordSiteMetric\("booking_submitted"\)/);
 });
