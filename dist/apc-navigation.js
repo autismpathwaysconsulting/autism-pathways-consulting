@@ -49,6 +49,13 @@ for (const link of document.querySelectorAll('.apc-shell-nav a, .apc-footer-colu
   }
 }
 
+// Keep shared footer language broad enough for family, learning and school pages.
+const footerDescription = document.querySelector('.apc-footer-brand > p:not(.apc-footer-small)');
+if (footerDescription) footerDescription.textContent = 'Practical autism education and support for families, educators and schools.';
+const footerBottom = document.querySelectorAll('.apc-footer-bottom p');
+if (footerBottom[0]) footerBottom[0].textContent = '© 2026 Autism Pathways Consulting. Education and guidance, not therapy or diagnosis.';
+if (footerBottom[1]) footerBottom[1].textContent = 'APC supports practical understanding and implementation alongside existing professional care.';
+
 // Match both origin and path: APC Calm must not appear current on the home page.
 const currentURL = new URL(window.location.href);
 for (const link of document.querySelectorAll('.apc-shell-nav a')) {
