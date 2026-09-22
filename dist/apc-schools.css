@@ -220,3 +220,9 @@
 .apc-school-minimal .school-field-note{font-size:.78rem;line-height:1.5;margin:8px 0 0;color:#435d58}
 @media(max-width:760px){.apc-school-minimal .school-share-overview{display:block;padding:20px 0}.apc-school-minimal .school-share-overview>a{margin-top:10px}.apc-school-minimal .school-workshop-intro{font-size:.95rem;margin-top:16px}}
 
+
+/* Preserve the complete classroom illustration and keep its caption outside the artwork. */
+.apc-audience-theme.apc-school-minimal .school-hero-image{min-height:0;align-self:center;background:#f3f5ee}
+.apc-audience-theme.apc-school-minimal .school-hero-image img{height:auto;aspect-ratio:3/2;object-fit:contain;object-position:center}
+.apc-audience-theme.apc-school-minimal .school-hero-image figcaption{position:static;padding:14px 16px;flex-wrap:wrap}
+.audience-actions a>span[aria-hidden]{margin-left:5px}
