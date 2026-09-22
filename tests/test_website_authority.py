@@ -567,8 +567,8 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_required_booking_flow_order_is_page_scoped(self):
         source = self.canonical["parents.html"].replace(
-            "The Founder verifies payment before confirming the booking",
-            "The Founder records payment before confirming the booking",
+            "verifies payment before confirming the booking",
+            "records payment before confirming the booking",
         )
         self.assert_finding(
             "required.parents.html.booking_sequence",
