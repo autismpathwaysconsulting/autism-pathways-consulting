@@ -11,3 +11,8 @@ body.programmes-page{margin:0;background:#f8f5ef}.programmes-page main .visual-h
 /* Review improvements: visible next steps and capture availability. */
 .programmes-page .next-section{border-top:1px solid #d5ded8}.programmes-page .next-sequence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;padding-left:22px;margin:28px 0 0}.programmes-page .next-sequence li{padding-left:6px;color:#0f766e}.programmes-page .next-sequence strong,.programmes-page .next-sequence span{display:block}.programmes-page .next-sequence strong{color:#073734;margin-bottom:10px}.programmes-page .next-sequence span{color:#5b6b68;line-height:1.65;font-size:16px}.programmes-page #availability-status{font-size:15px;border-left:3px solid #6b9e7a;padding-left:14px}.programmes-page .form-legend{font-size:20px;margin-bottom:16px}.programmes-page #interest-fields:disabled{opacity:.6}.programmes-page #interest-fields{margin:0}.programmes-page .interest-intro a{display:inline-block;min-height:44px}
 @media(max-width:760px){.programmes-page .next-sequence{grid-template-columns:1fr;gap:22px}.programmes-page .next-sequence strong{margin-bottom:4px}}
+
+
+/* Keep native checkboxes square despite the shared text-input minimum size. */
+.programmes-page form label.check{min-height:44px;margin:0 0 4px;padding:10px 0;gap:10px;line-height:24px;cursor:pointer}
+.programmes-page form input[type=checkbox]{width:21px;height:21px;min-height:21px!important;padding:0!important;margin:1px 0 0;flex:0 0 21px}
