@@ -1,6 +1,6 @@
 // These are aggregate categories: services includes /parents and /schools; resources includes /blog.
-export const PAGES = Object.freeze(["home", "services", "start", "about", "resources"]);
-export const EVENTS = Object.freeze(["page_view", "booking_click", "calendar_open", "booking_submitted"]);
+export const PAGES = Object.freeze(["home", "services", "start", "about", "resources", "big_reactions"]);
+export const EVENTS = Object.freeze(["page_view", "booking_click", "calendar_open", "booking_submitted", "form_start", "form_submit", "download_click", "parent_support_click"]);
 
 export function validMetric(value) {
   return value && typeof value === "object" && !Array.isArray(value) &&
