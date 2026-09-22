@@ -128,6 +128,21 @@ function recordPageView() {
 }
 recordPageView();
 document.addEventListener("visibilitychange", recordPageView);
+
+if (metricPage === "big_reactions") {
+  const campaign = new URLSearchParams(window.location.search);
+  if (campaign.get("utm_campaign") === "big_reactions_quick_check") {
+    const campaignEvents = {
+      correction_angle: "campaign_correction",
+      "30_seconds_before": "campaign_30_seconds",
+      inconsistency_angle: "campaign_inconsistency",
+      resource_page: "campaign_resource_page",
+      meltdown_guide: "campaign_meltdown_guide",
+    };
+    const campaignEvent = campaignEvents[campaign.get("utm_content")];
+    if (campaignEvent) recordSiteMetric(campaignEvent);
+  }
+}
 document.addEventListener("click", event => {
   const tracked = event.target.closest?.("[data-site-metric]");
   if (tracked) {
