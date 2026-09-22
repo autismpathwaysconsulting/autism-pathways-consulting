@@ -1,59 +1,116 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
 <title id="title">Inclusive classroom learning scene</title>
-<desc id="desc">A teacher supports three students in a calm classroom with a visual schedule, whiteboard, books and learning materials.</desc>
+<desc id="desc">A teacher and three students share a classroom task, with a visual schedule, a clear whiteboard and accessible learning materials.</desc>
 <defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8f4ec"/><stop offset="1" stop-color="#e8f3ef"/></linearGradient>
-  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#073734" flood-opacity=".12"/></filter>
+ <linearGradient id="back" x2="1" y2="1"><stop stop-color="#084f49"/><stop offset="1" stop-color="#032f2d"/></linearGradient>
+ <linearGradient id="wall" x2=".7" y2="1"><stop stop-color="#fffdf5"/><stop offset="1" stop-color="#dcece2"/></linearGradient>
+ <linearGradient id="teal" x2=".8" y2="1"><stop stop-color="#24aa96"/><stop offset="1" stop-color="#08655d"/></linearGradient>
+ <linearGradient id="coral" x2=".6" y2="1"><stop stop-color="#ffbd92"/><stop offset="1" stop-color="#dc795c"/></linearGradient>
+ <linearGradient id="sage" x2=".8" y2="1"><stop stop-color="#a8cbaa"/><stop offset="1" stop-color="#4b8468"/></linearGradient>
+ <linearGradient id="blue" x2="1" y2="1"><stop stop-color="#8dc1cb"/><stop offset="1" stop-color="#397990"/></linearGradient>
+ <linearGradient id="wood" x2="0" y2="1"><stop stop-color="#efc394"/><stop offset="1" stop-color="#b57f56"/></linearGradient>
+ <linearGradient id="paper" x2=".6" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#e6efe6"/></linearGradient>
+ <radialGradient id="light"><stop stop-color="#88d7b8" stop-opacity=".48"/><stop offset="1" stop-color="#88d7b8" stop-opacity="0"/></radialGradient>
+ <filter id="roomShadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="0" dy="15" stdDeviation="15" flood-color="#001c1a" flood-opacity=".28"/></filter>
+ <filter id="lift" x="-25%" y="-25%" width="160%" height="170%"><feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#073734" flood-opacity=".2"/></filter>
 </defs>
-<rect width="960" height="640" rx="38" fill="url(#bg)"/>
-<rect x="58" y="58" width="844" height="520" rx="30" fill="#fffdf8" stroke="#cbded8" stroke-width="3"/>
-<rect x="100" y="98" width="760" height="72" rx="16" fill="#dceee8"/>
-<rect x="126" y="119" width="120" height="30" rx="8" fill="#073734" opacity=".9"/>
-<circle cx="805" cy="134" r="18" fill="#e8997a"/>
-<path d="M783 134h44" stroke="#073734" stroke-width="4" stroke-linecap="round"/>
-<rect x="112" y="208" width="270" height="178" rx="18" fill="#eff7f4" stroke="#8fbab1" stroke-width="3"/>
-<rect x="140" y="234" width="214" height="34" rx="8" fill="#073734"/>
-<rect x="140" y="286" width="58" height="58" rx="10" fill="#f3d4c2"/>
-<rect x="210" y="286" width="58" height="58" rx="10" fill="#d6eadf"/>
-<rect x="280" y="286" width="58" height="58" rx="10" fill="#f1df9b"/>
-<path d="M157 313h24m41 0h24m41 0h24" stroke="#073734" stroke-width="6" stroke-linecap="round"/>
-<text x="140" y="372" font-family="Arial, sans-serif" font-size="18" fill="#496a66">visual schedule</text>
-<g filter="url(#shadow)">
-  <rect x="430" y="204" width="374" height="144" rx="18" fill="#fff" stroke="#cbded8" stroke-width="3"/>
-  <path d="M460 248h136m-136 34h204m-204 34h168" stroke="#6a8d87" stroke-width="10" stroke-linecap="round"/>
-  <circle cx="742" cy="270" r="28" fill="#d4e7dc"/>
-  <path d="M730 270l9 9 18-22" fill="none" stroke="#0f766e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<rect width="960" height="640" rx="38" fill="url(#back)"/>
+<ellipse cx="705" cy="125" rx="400" ry="300" fill="url(#light)"/>
+<path d="M-20 555Q300 418 640 590T1000 540" fill="none" stroke="#6bc9ad" stroke-opacity=".16" stroke-width="2"/>
+<g filter="url(#roomShadow)">
+ <rect x="48" y="46" width="864" height="538" rx="30" fill="url(#wall)"/>
+ <path d="M48 461h864v93a30 30 0 0 1-30 30H78a30 30 0 0 1-30-30z" fill="#c3dbce"/>
+ <path d="M48 461h864" stroke="#9cbaab" stroke-width="3"/>
+ <path d="m180 463-46 121m215-121-17 121m218-121 22 121m190-121 64 121M48 522h864" stroke="#a9c5b5" stroke-width="2" opacity=".6"/>
+ <rect x="76" y="72" width="808" height="90" rx="18" fill="url(#back)"/>
+ <rect x="99" y="94" width="12" height="44" rx="6" fill="#f2ac87"/>
+ <rect x="126" y="96" width="198" height="14" rx="7" fill="#fff9ec"/>
+ <rect x="126" y="120" width="126" height="8" rx="4" fill="#85cbb9"/>
+ <circle cx="822" cy="117" r="28" fill="#fff5dc" stroke="#e4b68b" stroke-width="4"/>
+ <path d="M822 100v18l12 7" stroke="#0a544c" stroke-width="4" fill="none" stroke-linecap="round"/>
+ <circle cx="822" cy="117" r="3" fill="#0a544c"/>
 </g>
-<g>
-  <circle cx="444" cy="418" r="31" fill="#c78462"/>
-  <path d="M413 463q31-35 62 0v78h-62z" fill="#0f766e"/>
-  <path d="M425 409q16-25 40 0" fill="none" stroke="#073734" stroke-width="10" stroke-linecap="round"/>
-  <path d="M474 475l64-60" stroke="#0f766e" stroke-width="10" stroke-linecap="round"/>
+<!-- Visual schedule: three concrete steps, each on a raised card. -->
+<g filter="url(#lift)">
+ <rect x="89" y="193" width="262" height="211" rx="18" fill="#f8fbf4" stroke="#9bbcab" stroke-width="2"/>
+ <path d="M107 193h226a18 18 0 0 1 18 18v32H89v-32a18 18 0 0 1 18-18z" fill="url(#teal)"/>
+ <text x="111" y="225" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#fff">Our next steps</text>
+ <rect x="108" y="261" width="62" height="79" rx="10" fill="url(#coral)"/>
+ <rect x="189" y="261" width="62" height="79" rx="10" fill="url(#sage)"/>
+ <rect x="270" y="261" width="62" height="79" rx="10" fill="#e7c568"/>
+ <g stroke="#073734" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M120 277q10-4 19 2 9-6 19-2v31q-10-4-19 2-9-6-19-2zM139 279v31"/>
+  <path d="m203 306 2-11 22-22 8 8-22 22-10 3m22-31 8 8"/>
+  <path d="m285 291 11 11 20-23"/>
+ </g>
+ <path d="M112 325h20m65 0h20m65 0h20" stroke="#073734" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/>
+ <path d="m177 296 5 5-5 5m81-10 5 5-5 5" stroke="#0f766e" stroke-width="3" fill="none" stroke-linecap="round"/>
+ <text x="111" y="377" font-family="Arial,sans-serif" font-size="18" fill="#214b40">One step. Time to respond.</text>
 </g>
-<g>
-  <rect x="518" y="442" width="300" height="24" rx="12" fill="#c48e62"/>
-  <path d="M548 466v72m240-72v72" stroke="#7a5c43" stroke-width="14" stroke-linecap="round"/>
+<!-- Clear board with a single task and a visible help cue. -->
+<g filter="url(#lift)">
+ <rect x="387" y="188" width="456" height="186" rx="18" fill="#719b87"/>
+ <rect x="397" y="197" width="436" height="163" rx="12" fill="url(#paper)"/>
+ <rect x="419" y="217" width="144" height="13" rx="6" fill="#0d665b"/>
+ <path d="M421 252h203m-203 28h159" stroke="#80a194" stroke-width="8" stroke-linecap="round"/>
+ <rect x="419" y="307" width="89" height="28" rx="8" fill="#d8eade"/>
+ <path d="m434 322 5 5 10-13m13 8h29" stroke="#0d665b" stroke-width="3" stroke-linecap="round" fill="none"/>
+ <circle cx="758" cy="264" r="41" fill="url(#teal)"/>
+ <path d="m738 264 14 14 26-31" fill="none" stroke="#fff8e9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M409 372h411" stroke="#3d7462" stroke-width="9" stroke-linecap="round"/>
+ <rect x="674" y="357" width="54" height="10" rx="4" fill="#efad86"/>
 </g>
-<g>
-  <circle cx="568" cy="402" r="27" fill="#9b664c"/>
-  <path d="M542 443q26-30 52 0v58h-52z" fill="#e8997a"/>
-  <rect x="548" y="472" width="42" height="24" rx="6" fill="#f7e9d0"/>
+<ellipse cx="607" cy="552" rx="232" ry="20" fill="#426d57" opacity=".17"/>
+<!-- Teacher beside the learners, offering a visual cue. -->
+<g filter="url(#lift)">
+ <path d="M355 471q16-42 53-38 33 1 48 37l-9 76h-84z" fill="url(#teal)"/>
+ <path d="M380 451v72" stroke="#71d0b3" stroke-width="3" opacity=".55"/>
+ <circle cx="404" cy="405" r="32" fill="#c98c67"/>
+ <path d="M373 406q-6-39 27-42 38-2 37 35-23-3-35-15-7 19-29 22" fill="#173e35"/>
+ <path d="M391 416q10 8 19 0" stroke="#81513d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ <circle cx="394" cy="405" r="2.4" fill="#173e35"/><circle cx="415" cy="405" r="2.4" fill="#173e35"/>
+ <path d="m442 464 31-29 33 8" fill="none" stroke="#158678" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="m491 440 14 3" stroke="#c98c67" stroke-width="13" stroke-linecap="round"/>
+ <rect x="489" y="413" width="37" height="31" rx="5" fill="#fff7df" stroke="#ddbc8d" stroke-width="2" transform="rotate(9 507 428)"/>
+ <path d="m499 427 5 6 12-12" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
 </g>
-<g>
-  <circle cx="665" cy="402" r="27" fill="#d8a17d"/>
-  <path d="M639 443q26-30 52 0v58h-52z" fill="#6b9e7a"/>
-  <rect x="645" y="472" width="42" height="24" rx="6" fill="#f7e9d0"/>
+<!-- Three learners with different skin tones, sharing a supported task. -->
+<g filter="url(#lift)">
+ <path d="M525 463q5-41 38-41t38 41v62h-76z" fill="url(#coral)"/>
+ <circle cx="563" cy="398" r="28" fill="#936044"/>
+ <path d="M535 396q-4-33 26-34 33-2 31 32-18-2-29-13-10 13-28 15" fill="#382f29"/>
+ <circle cx="553" cy="399" r="2.4" fill="#382f29"/><circle cx="574" cy="399" r="2.4" fill="#382f29"/>
+ <path d="M556 412q7 5 14-1" stroke="#633d2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ <path d="M633 463q5-41 38-41t38 41v62h-76z" fill="url(#sage)"/>
+ <circle cx="671" cy="398" r="28" fill="#e1ad86"/>
+ <path d="M644 394q-7-29 22-33 35-3 34 34-13-16-21-18-17 18-35 17" fill="#674331"/>
+ <circle cx="661" cy="400" r="2.4" fill="#473a2d"/><circle cx="682" cy="400" r="2.4" fill="#473a2d"/>
+ <path d="M664 412q7 5 14-1" stroke="#a46e50" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ <path d="M741 463q5-41 38-41t38 41v62h-76z" fill="url(#blue)"/>
+ <circle cx="779" cy="398" r="28" fill="#b77d5e"/>
+ <path d="M751 397q-5-32 27-35 31-1 31 31l-10-14q-20 8-48 18" fill="#203d39"/>
+ <circle cx="769" cy="400" r="2.4" fill="#203d39"/><circle cx="790" cy="400" r="2.4" fill="#203d39"/>
+ <path d="M772 412q7 5 14-1" stroke="#794b39" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 </g>
-<g>
-  <circle cx="762" cy="402" r="27" fill="#b77d5e"/>
-  <path d="M736 443q26-30 52 0v58h-52z" fill="#658aa3"/>
-  <rect x="742" y="472" width="42" height="24" rx="6" fill="#f7e9d0"/>
+<!-- Table and tactile learning materials. -->
+<g filter="url(#lift)">
+ <path d="M527 490h274l35 36H495z" fill="#f0c89d" stroke="#bd936c" stroke-width="2"/>
+ <path d="M495 526h341v13H495z" fill="url(#wood)"/>
+ <path d="M513 538v35m303-35v35" stroke="#79553d" stroke-width="12" stroke-linecap="round"/>
+ <path d="m607 505 48-5 24 17-48 5z" fill="#fffdf3" stroke="#b6c7ac" stroke-width="2"/>
+ <path d="m656 500 45 2 20 19-42-4z" fill="#e7eedc" stroke="#b6c7ac" stroke-width="2"/>
+ <path d="m656 500 23 17" stroke="#94af98" stroke-width="2"/>
+ <path d="m541 489 21 7 24-4m63-3 23 5m83-5 22 6" stroke="#b47c57" stroke-width="10" fill="none" stroke-linecap="round"/>
+ <rect x="733" y="506" width="22" height="15" rx="4" fill="#08796e"/><rect x="762" y="511" width="19" height="13" rx="3" fill="#e48562"/>
 </g>
-<g>
-  <rect x="126" y="425" width="226" height="112" rx="16" fill="#f7efe3"/>
-  <rect x="148" y="446" width="34" height="70" rx="5" fill="#0f766e"/>
-  <rect x="188" y="458" width="30" height="58" rx="5" fill="#e8997a"/>
-  <rect x="224" y="438" width="40" height="78" rx="5" fill="#6b9e7a"/>
-  <rect x="270" y="464" width="54" height="52" rx="8" fill="#f1df9b"/>
+<g filter="url(#lift)">
+ <rect x="98" y="437" width="225" height="109" rx="12" fill="#d3ab7c"/>
+ <rect x="108" y="447" width="205" height="88" rx="7" fill="#f9eedb"/>
+ <rect x="123" y="466" width="27" height="61" rx="4" fill="url(#teal)"/><path d="M131 478v36" stroke="#8ed2b5" stroke-width="3"/>
+ <rect x="155" y="476" width="26" height="51" rx="4" fill="url(#coral)"/><path d="M163 488v26" stroke="#ffdbc0" stroke-width="3"/>
+ <rect x="188" y="458" width="34" height="69" rx="4" fill="url(#sage)"/><path d="M197 473v40" stroke="#d9edc8" stroke-width="3"/>
+ <rect x="236" y="486" width="56" height="41" rx="8" fill="#e7c568"/>
+ <path d="M249 500h30" stroke="#967d36" stroke-width="3" stroke-linecap="round"/>
 </g>
+<rect x="49" y="47" width="862" height="536" rx="29" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>
 </svg>

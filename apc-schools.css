@@ -226,3 +226,32 @@
 .apc-audience-theme.apc-school-minimal .school-hero-image img{height:auto;aspect-ratio:3/2;object-fit:contain;object-position:center}
 .apc-audience-theme.apc-school-minimal .school-hero-image figcaption{position:static;padding:14px 16px;flex-wrap:wrap}
 .audience-actions a>span[aria-hidden]{margin-left:5px}
+
+/* Stronger classroom artwork and duotone icons; existing geometry is retained. */
+.apc-audience-theme.apc-school-minimal .school-hero-image{
+ background:#e4eee4;
+ box-shadow:0 18px 38px -24px #07373488,0 0 0 1px #0f766e20;
+}
+.apc-school-minimal .school-choice-art{
+ background:linear-gradient(145deg,#198c7c,#064b45);
+ box-shadow:inset 0 1px 0 #ffffff50,inset 0 -3px 0 #002e2b35,0 7px 12px -8px #07373480;
+}
+.apc-school-minimal .choice-0 .school-choice-art{background:linear-gradient(145deg,#f4b18c,#d98464)}
+.apc-school-minimal .choice-1 .school-choice-art{background:linear-gradient(145deg,#209889,#075c54)}
+.apc-school-minimal .choice-2 .school-choice-art{background:linear-gradient(145deg,#b7d6b3,#75a184)}
+.apc-school-minimal .school-choice-art svg{stroke-width:2.8;filter:drop-shadow(0 2px 1px #07373420)}
+.apc-school-minimal .choice-0 .school-choice-art svg path:first-child{fill:#fff3d8}
+.apc-school-minimal .choice-1 .school-choice-art svg{stroke:#fff8e8}
+.apc-school-minimal .choice-1 .school-choice-art svg rect{fill:#0b645b}
+.apc-school-minimal .choice-2 .school-choice-art svg rect:first-child{fill:#fff5de}
+.apc-school-minimal .choice-2 .school-choice-art svg rect:nth-child(2){fill:#efab86}
+.apc-school-minimal .format-symbol{
+ box-shadow:inset 0 1px 0 #ffffff88,0 4px 9px #001f2440;
+ background:linear-gradient(145deg,#e0f0c7,#8db792);
+}
+.apc-school-minimal .format-symbol-1{background:linear-gradient(145deg,#ffd1a5,#e58e70)}
+.apc-school-minimal .format-symbol-2{background:linear-gradient(145deg,#a8e8d6,#44ad99)}
+.apc-school-minimal .format-symbol svg{stroke-width:2.5}
+.apc-school-minimal .format-symbol-0 svg rect{fill:#fff9e8}
+.apc-school-minimal .format-symbol-1 svg path:first-child{fill:#fff3de}
+.apc-school-minimal .format-symbol-2 svg circle{fill:#fff6de}
