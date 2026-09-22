@@ -116,10 +116,18 @@ test('blank identities and malformed numbers cannot prepare an enquiry; correcti
 });
 
 
-test('enquiry preparation makes no analytics calls while integration is deferred',()=>{
- const actions=[],f=setup((...args)=>actions.push(args));
+test('school actions send fixed event names only and ignore invalid or stale drafts',()=>{
+ const actions=[], f=setup((...args)=>actions.push(args)), form=f['school-training-form'];
+ f['sf-name'].value='';form.events.submit({preventDefault(){}});assert.deepEqual(actions,[]);
+ f['sf-name'].value='Teacher';form.events.submit({preventDefault(){}});
+ assert.deepEqual(actions,[['school_enquiry_prepared']]);
+ f['school-whatsapp-link'].events.click();assert.deepEqual(actions.at(-1),['school_whatsapp_click']);
+ form.events.input();f['school-whatsapp-link'].events.click();assert.equal(actions.length,2);
+});
+test('measurement failure cannot block preparing a school enquiry',()=>{
+ const f=setup(()=>{throw Error('Analytics unavailable');});
  f['school-training-form'].events.submit({preventDefault(){}});
- assert.equal(f['sf-success'].hidden,false);assert.deepEqual(actions,[]);
+ assert.equal(f['sf-success'].hidden,false);assert.ok(f['school-whatsapp-link'].href);
 });
 
 test('an omitted alternative number is valid; a supplied number is preserved and validated',()=>{
