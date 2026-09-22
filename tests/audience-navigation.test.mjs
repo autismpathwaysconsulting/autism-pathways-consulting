@@ -79,5 +79,5 @@ test('all shared public headers provide native disclosures and both audience rou
     assert.ok(text.includes('/apc-navigation.js?v='),path);
     assert.ok(text.includes('/apc-navigation.css?v='),path); count++;
   }
-  assert.equal(count,31);
+  assert.equal(count,32);
 });
