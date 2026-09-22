@@ -27,3 +27,7 @@ Prompt direction: photorealistic editorial still life, tactile wood and linen, c
 - Run the repository build and public-build tests in the PR workflow.
 
 Publication remains subject to the release conditions already recorded in README.md.
+
+## Founder direction for the next image revision
+
+On 22 September 2026, CJ approved the current build for now and requested images that feel less artificial and less perfect in a future revision. The existing concept images are temporary. Prioritise natural light, ordinary working surfaces, practical equipment and believable signs of use. Avoid immaculate prop arrangements, matching every object to the palette or implying that staged scenes document a real APC event. Where suitable permission-cleared photographs become available from scouting, prefer those. Do not include identifiable children, beneficiaries or private records without the appropriate permission.

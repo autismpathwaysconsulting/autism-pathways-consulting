@@ -246,7 +246,7 @@ export async function onRequest(context) {
     if (!valid) {
       if (isContentOsPage && context.request.method === "GET") {
         const login = new URL("/content-os/login/", url);
-        if (url.search) login.searchParams.set("next", url.pathname + url.search);
+        login.searchParams.set("next", url.pathname + url.search);
         return securityHeaders(Response.redirect(login, 302));
       }
       return authResponse(401, "Authentication required.");

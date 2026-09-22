@@ -10,6 +10,12 @@ Prepared for CJ's approved five-part prelaunch task. This change does not publis
 4. The separately supplied six-page Saturday scouting pack includes observation records, host questions, staffing responsibilities, coaching activities, proceed/adapt/postpone criteria and an action log with disruption scenarios.
 5. The separately supplied one-page partner brief can be taken to a scouting discussion. It makes no confirmed-partner or launch claims.
 
+## Connected resources
+
+Open **Programme planning** in Content OS to reach `/content-os/programmes/resources`. The hub links to the public programme page and interest form, the private tracker, the interactive readiness checklist, and the reviewed scouting pack and partner brief in PDF and editable Word formats. The four blank documents live under `/content-os/programmes/files/` and are covered by the existing protected route and no-store response headers. Only blank planning resources belong in this repository; completed participant or site records stay in the agreed private records location.
+
+The resource hub clearly distinguishes these available scouting materials from the venue-specific participant information and consent documents to prepare after scouting. The authentication return path preserves the requested page or download after sign-in.
+
 ## How interest is counted
 
 One case-insensitive email address has one record. A repeated anonymous submission receives the same acknowledgement but cannot overwrite the original answers or consent. A person cannot discover whether another email already exists. To change an entry, CJ verifies the request, deletes the old record and invites a fresh submission. This preserves explicit consent rather than inferring it.
