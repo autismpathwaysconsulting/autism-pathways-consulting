@@ -64,7 +64,7 @@ test("browser counters ignore form payloads, deduplicate callbacks, and respect 
     vm.createContext(context); vm.runInContext(source.slice(start, end), context);
     return { calls, context, listeners };
   }
-  for (const [pathname, page] of [["/parents", "services"], ["/schools", "services"], ["/blog/", "resources"]]) {
+  for (const [pathname, page] of [["/parents", "services"], ["/schools", "services"], ["/blog/", "resources"], ["/big-reactions", "big_reactions"], ["/thank-you-big-reactions", "big_reactions"]]) {
     const visitor = browser({}, pathname);
     assert.deepEqual(JSON.parse(visitor.calls[0][1].body), { page, event: "page_view" });
     visitor.listeners.click({ target: { closest: () => ({ href: "https://cal.com/autismpathwaysconsulting/first-step-call" }) } });
@@ -82,5 +82,9 @@ test("browser counters ignore form payloads, deduplicate callbacks, and respect 
   assert.equal(browser({ doNotTrack: "1" }).calls.length, 0);
   assert.equal(browser({ globalPrivacyControl: true }).calls.length, 0);
   assert.equal(browser({}, "/privacy").calls.length, 0);
+  assert.equal(validMetric({ page: "big_reactions", event: "download_click" }), true);
+  assert.equal(validMetric({ page: "big_reactions", event: "parent_support_click" }), true);
+  assert.equal(validMetric({ page: "big_reactions", event: "form_start" }), true);
+  assert.equal(validMetric({ page: "big_reactions", event: "form_submit" }), true);
   assert.match(source, /action: "bookingSuccessfulV2",\s*callback: \(\) => recordSiteMetric\("booking_submitted"\)/);
 });
