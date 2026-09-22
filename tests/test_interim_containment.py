@@ -70,11 +70,11 @@ class InterimContainmentTests(unittest.TestCase):
 
     def test_review_notice_removal_fails(self):
         sources = dict(self.sources)
-        sources["index.html"] = re.sub(
-            r"Paid support is subject to", "Paid support", sources["index.html"], flags=re.IGNORECASE
+        sources["parents.html"] = re.sub(
+            r"Paid support is subject to", "Paid support", sources["parents.html"], flags=re.IGNORECASE
         )
         self.assertIn(
-            "containment.review_notice_missing:index.html",
+            "containment.review_notice_missing:parents.html",
             validate_surfaces(sources, set(self.paths)),
         )
 
