@@ -43,7 +43,7 @@
         "APC_CONTENT_OS_GITHUB_REPOSITORY": "autismpathwaysconsulting/APC-AI-OS",
         "APC_CONTENT_OS_GITHUB_ISSUE_LABEL": "apc-dashboard-feed",
         "APC_CONTENT_OS_GITHUB_ALLOWED_SENDER": "autismpathwaysconsulting",
-        "APC_PROGRAMME_INTEREST_ENABLED": "false",
+        "APC_PROGRAMME_INTEREST_ENABLED": "true",
         "APC_PROGRAMME_TURNSTILE_SITEKEY": "0x4AAAAAAE_dkMay3o7WmVFh"
       },
       "kv_namespaces": [],
