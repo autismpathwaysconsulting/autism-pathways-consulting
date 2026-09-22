@@ -12,6 +12,7 @@ on:
       - 'migrations/0012_programme_interest.sql'
       - 'tests/programme*'
       - 'tests/programmes/**'
+      - 'scripts/check-programme-live.mjs'
       - '.github/workflows/programme-interest-qa.yml'
 permissions:
   contents: read
@@ -36,6 +37,7 @@ jobs:
         run: |
           node tests/programmes/preview.mjs > /tmp/apc-programme-preview.log 2>&1 &
           node tests/programmes/browser.cjs
+          node scripts/check-programme-live.mjs http://localhost:8899 open
       - uses: actions/upload-artifact@v4
         if: always()
         with:

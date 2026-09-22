@@ -38,6 +38,8 @@ The programme page shows the accompanying-adult condition before the form and ex
 
 ## Infrastructure and activation
 
+Use [the live setup runbook](live-setup.md) for account checks, exact environment settings, reviewed database commands, private access checks, activation acceptance and rollback. `scripts/check-programme-live.mjs` performs read-only availability and anonymous-access checks after deployment; it does not submit a record or prove real Turnstile works.
+
 The feature is deliberately disabled in every committed environment. Missing configuration fails closed, the form says it is not open and does not claim a save.
 
 After separate Founder release authorization and resolution of release checks:

@@ -1,7 +1,19 @@
 import {CONSENT_VERSION, reply, readBody, sameOrigin, validate, purgeExpired} from '../lib/programmes/interest.js';
+async function storageReady(db) {
+ try {
+  // Compile the complete storage contract without reading any household records.
+  await db.prepare(`SELECT id,email,name,phone,programmes,first_choice,ages,location,saturday,
+   accompanying_adult,support_discussion,updates,consent_version,created_at,status,next_followup
+   FROM programme_interest LIMIT 0`).all();
+  return true;
+ } catch { return false; }
+}
 export async function onRequest({request, env}) {
  const enabled = env.APC_PROGRAMME_INTEREST_ENABLED === 'true' && !!env.APC_CONTENT_OS_DB && !!env.APC_PROGRAMME_TURNSTILE_SITEKEY && !!env.APC_PROGRAMME_TURNSTILE_SECRET;
- if (request.method === 'GET') return reply({enabled, sitekey:enabled ? env.APC_PROGRAMME_TURNSTILE_SITEKEY : null, consentVersion:CONSENT_VERSION});
+ if (request.method === 'GET') {
+  const ready = enabled && await storageReady(env.APC_CONTENT_OS_DB);
+  return reply({enabled:ready, sitekey:ready ? env.APC_PROGRAMME_TURNSTILE_SITEKEY : null, consentVersion:CONSENT_VERSION});
+ }
  if (request.method !== 'POST') return reply({error:'Method not allowed.'},405);
  if (!enabled) return reply({error:'The interest list is not open yet. Please email CJ if you would like to enquire.'},503);
  if (!sameOrigin(request)) return reply({error:'Please submit using the APC programme page.'},403);
