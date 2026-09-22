@@ -11,6 +11,19 @@ import { fileURLToPath } from "node:url";
 
 export const PUBLIC_FILES = Object.freeze([
   "404.html",
+  "apc-parent-minimal.css",
+  "apc-minimal-pages.css",
+  "apc-audience-theme.css",
+  "apc-schools.css",
+  "school-classroom-hero.svg",
+  "home-support-materials-480.webp",
+  "home-support-materials-960.webp",
+  "first-step-call-materials-480.webp",
+  "one-concern-session-materials-480.webp",
+  "APC-School-Training-Overview.pdf",
+  "content-os/programmes/follow-up.html",
+  "content-os/programmes/follow-up.js",
+
   "programmes.html",
   "programmes.css",
   "programme-interest.js",

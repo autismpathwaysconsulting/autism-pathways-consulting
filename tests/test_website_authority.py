@@ -151,14 +151,14 @@ class AuthorityValidatorTests(unittest.TestCase):
         self.assertIn(identifier, {finding.identifier for finding in findings})
 
     def findings_from_script(self, payload: str, script_type: str = ""):
-        source = append_script(self.canonical["services.html"], payload, script_type)
-        return self.findings_for({"services.html": source})
+        source = append_script(self.canonical["parents.html"], payload, script_type)
+        return self.findings_for({"parents.html": source})
 
     def findings_from_markup(self, markup: str):
-        source = self.canonical["services.html"].replace(
+        source = self.canonical["parents.html"].replace(
             "</body>", markup + "</body>", 1
         )
-        return self.findings_for({"services.html": source})
+        return self.findings_for({"parents.html": source})
 
     def test_semantic_fixture_insertion_ignores_decorative_markup(self):
         source = (
@@ -208,13 +208,13 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_required_contradictions_fail_separately(self):
         cases = {
-            "scope.repeated_pattern": ("services.html", "The RM350 session uses repeated-pattern positioning."),
-            "booking.automatic_confirmation": ("services.html", "The RM350 booking is automatically confirmed on submission."),
-            "booking.direct_confirmation": ("services.html", "The RM350 booking receives direct confirmation on submission."),
-            "payment.before_permission": ("services.html", "Pay RM350 before the Founder reviews suitability and availability."),
-            "payment.unsupported_rm350_method": ("services.html", "The RM350 session can be paid by Stripe."),
-            "value.session_price": ("services.html", "The One-Concern Parent Session costs RM450."),
-            "value.session_duration": ("services.html", "The RM350 One-Concern Parent Session lasts 60 minutes."),
+            "scope.repeated_pattern": ("parents.html", "The RM350 session uses repeated-pattern positioning."),
+            "booking.automatic_confirmation": ("parents.html", "The RM350 booking is automatically confirmed on submission."),
+            "booking.direct_confirmation": ("parents.html", "The RM350 booking receives direct confirmation on submission."),
+            "payment.before_permission": ("parents.html", "Pay RM350 before the Founder reviews suitability and availability."),
+            "payment.unsupported_rm350_method": ("parents.html", "The RM350 session can be paid by Stripe."),
+            "value.session_price": ("parents.html", "The One-Concern Parent Session costs RM450."),
+            "value.session_duration": ("parents.html", "The RM350 One-Concern Parent Session lasts 60 minutes."),
             "launch.authorized": ("index.html", "APC is authorised for public launch now."),
         }
         for expected, (path, claim) in cases.items():
@@ -230,11 +230,11 @@ class AuthorityValidatorTests(unittest.TestCase):
             "The RM350 session accepts card, Stripe, and Wise.",
             "The One-Concern Parent Session costs RM450 and lasts 60 minutes.",
         )
-        services = self.canonical["services.html"]
+        services = self.canonical["parents.html"]
         for claim in claims:
             services = append_html(services, claim)
         index = append_html(self.canonical["index.html"], "Public launch is approved and live.")
-        identifiers = {item.identifier for item in self.findings_for({"services.html": services, "index.html": index})}
+        identifiers = {item.identifier for item in self.findings_for({"parents.html": services, "index.html": index})}
         expected = {
             "scope.repeated_pattern",
             "booking.automatic_confirmation",
@@ -250,18 +250,18 @@ class AuthorityValidatorTests(unittest.TestCase):
         for before in (True, False):
             with self.subTest(before=before):
                 source = append_html(
-                    self.canonical["services.html"],
+                    self.canonical["parents.html"],
                     "The current RM350 wording covers one repeated concern.",
                     before=before,
                 )
-                self.assertEqual([], self.findings_for({"services.html": source}))
+                self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_case_and_whitespace_variations_fail(self):
         source = append_html(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "The RM350 wording covers ONE   REPEATED\nCONCERN and the booking is AUTOMATICALLY   CONFIRMED.",
         )
-        findings = self.findings_for({"services.html": source})
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("booking.automatic_confirmation", findings)
 
     def test_html_and_jsonld_contradictions_fail(self):
@@ -271,8 +271,8 @@ class AuthorityValidatorTests(unittest.TestCase):
             '"description":"one repeated concern","price":"RM450"}'
             "</script>"
         )
-        source = self.canonical["services.html"].replace("</body>", jsonld + "\n</body>", 1)
-        findings = self.findings_for({"services.html": source})
+        source = self.canonical["parents.html"].replace("</body>", jsonld + "\n</body>", 1)
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("value.session_price", findings)
 
     def test_embedded_javascript_data_contradiction_fails(self):
@@ -280,18 +280,18 @@ class AuthorityValidatorTests(unittest.TestCase):
             "<script>const authorityConflict = "
             "{name:'One-Concern Parent Session', delivery:'online'};</script>"
         )
-        source = self.canonical["services.html"].replace("</body>", script + "\n</body>", 1)
+        source = self.canonical["parents.html"].replace("</body>", script + "\n</body>", 1)
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_price_and_duration_conflicts_fail(self):
         source = append_html(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "The RM350 One-Concern Parent Session also costs RM450 and lasts 75 minutes.",
         )
-        findings = self.findings_for({"services.html": source})
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("value.session_price", findings)
         self.assert_finding("value.session_duration", findings)
 
@@ -299,12 +299,12 @@ class AuthorityValidatorTests(unittest.TestCase):
         for method in ("card", "Stripe", "Wise"):
             with self.subTest(method=method):
                 source = append_html(
-                    self.canonical["services.html"],
+                    self.canonical["parents.html"],
                     f"The RM350 One-Concern Parent Session accepts {method} payment.",
                 )
                 self.assert_finding(
                     "payment.unsupported_rm350_method",
-                    self.findings_for({"services.html": source}),
+                    self.findings_for({"parents.html": source}),
                 )
 
     def test_launch_state_conflict_fails(self):
@@ -312,24 +312,24 @@ class AuthorityValidatorTests(unittest.TestCase):
         self.assert_finding("launch.authorized", self.findings_for({"index.html": source}))
 
     def test_required_authority_is_page_scoped(self):
-        source = self.canonical["services.html"].replace("RM350", "session fee")
-        findings = self.findings_for({"services.html": source})
-        self.assert_finding("required.services.html.session_price", findings)
+        source = self.canonical["parents.html"].replace("RM350", "session fee")
+        findings = self.findings_for({"parents.html": source})
+        self.assert_finding("required.parents.html.session_price", findings)
 
     def test_parent_strategy_session_output_fails(self):
-        source = append_html(self.canonical["services.html"], "Parent Strategy Session")
-        self.assert_finding("retired.parent_strategy_session", self.findings_for({"services.html": source}))
+        source = append_html(self.canonical["parents.html"], "Parent Strategy Session")
+        self.assert_finding("retired.parent_strategy_session", self.findings_for({"parents.html": source}))
 
     def test_active_free_discovery_route_fails(self):
-        source = self.canonical["services.html"].replace(
+        source = self.canonical["parents.html"].replace(
             "</body>",
             '<a href="https://cal.com/autismpathwaysconsulting/free-discovery-call">Book</a></body>',
             1,
         )
-        self.assert_finding("retired.free_discovery_call", self.findings_for({"services.html": source}))
+        self.assert_finding("retired.free_discovery_call", self.findings_for({"parents.html": source}))
 
     def test_explicit_prohibitions_do_not_fail(self):
-        source = self.canonical["services.html"]
+        source = self.canonical["parents.html"]
         for claim in (
             "The RM350 session cannot be paid by Wise.",
             "There is no additional post-programme check-in.",
@@ -341,7 +341,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             "RM950 is not offered.",
         ):
             source = append_html(source, claim)
-        identifiers = {item.identifier for item in self.findings_for({"services.html": source})}
+        identifiers = {item.identifier for item in self.findings_for({"parents.html": source})}
         self.assertNotIn("payment.unsupported_rm350_method", identifiers)
         self.assertNotIn("home.additional_checkin", identifiers)
         self.assertNotIn("booking.automatic_confirmation", identifiers)
@@ -365,11 +365,11 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_historical_descriptions_are_not_customer_output(self):
         source = append_html(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "This was previously called Parent Strategy Session, a retired historical label.",
         )
         additions = {"docs/history.md": "Historically called Parent Strategy Session."}
-        self.assertEqual([], self.findings_for({"services.html": source}, additions))
+        self.assertEqual([], self.findings_for({"parents.html": source}, additions))
 
     def test_validator_fixtures_are_not_customer_output(self):
         additions = {
@@ -401,37 +401,37 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_secondwave_nested_inline_online_passes(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The RM350 delivery platform is <span>on<strong>line</strong></span>.</p>",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_secondwave_paypal_for_rm350_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The session accepts PayPal.</p>",
         )
         self.assert_finding(
             "payment.unsupported_rm350_method",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_secondwave_context_light_price_fails(self):
-        source = append_html(self.canonical["services.html"], "Current session price: RM450.")
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        source = append_html(self.canonical["parents.html"], "Current session price: RM450.")
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_context_light_duration_fails(self):
-        source = append_html(self.canonical["services.html"], "Current session duration: 60 minutes.")
-        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+        source = append_html(self.canonical["parents.html"], "Current session duration: 60 minutes.")
+        self.assert_finding("value.session_duration", self.findings_for({"parents.html": source}))
 
     def test_secondwave_zoom_delivery_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The delivery platform is Zoom.</p>",
         )
         self.assert_finding(
             "delivery.unapproved_platform",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_secondwave_public_availability_fails(self):
@@ -446,24 +446,24 @@ class AuthorityValidatorTests(unittest.TestCase):
         ):
             with self.subTest(split_price=split_price):
                 source = insert_in_session_article(
-                    self.canonical["services.html"],
+                    self.canonical["parents.html"],
                     f"<p>Current session price: {split_price}.</p>",
                 )
-                self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+                self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_secondwave_pay_first_then_approval_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Pay first, then request approval.</p>",
         )
         self.assert_finding(
             "booking.sequence_reordered",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_all_secondwave_cases_fail_together(self):
         services = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Current session price: <span>R</span><span>M450</span>. "
             "The RM350 delivery platform is <span>on<strong>line</strong></span>.</p>",
         )
@@ -477,7 +477,7 @@ class AuthorityValidatorTests(unittest.TestCase):
         index = append_html(self.canonical["index.html"], "The pilot is now publicly available.")
         identifiers = {
             finding.identifier
-            for finding in self.findings_for({"services.html": services, "index.html": index})
+            for finding in self.findings_for({"parents.html": services, "index.html": index})
         }
         expected = {
             "payment.unsupported_rm350_method",
@@ -496,26 +496,26 @@ class AuthorityValidatorTests(unittest.TestCase):
         for variant in variants:
             with self.subTest(variant=variant):
                 source = insert_in_session_article(
-                    self.canonical["services.html"],
+                    self.canonical["parents.html"],
                     f"<p>The RM350 delivery platform is {variant}.</p>",
                 )
-                self.assertEqual([], self.findings_for({"services.html": source}))
+                self.assertEqual([], self.findings_for({"parents.html": source}))
         duration = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Current session duration: <span>6</span><em>0</em> minutes.</p>",
         )
-        self.assert_finding("value.session_duration", self.findings_for({"services.html": duration}))
+        self.assert_finding("value.session_duration", self.findings_for({"parents.html": duration}))
 
     def test_alternative_payment_method_allowlist(self):
         for method in ("PayPal", "cash", "credit card", "cryptocurrency", "Maybank transfer or PayPal"):
             with self.subTest(method=method):
                 source = insert_in_session_article(
-                    self.canonical["services.html"],
+                    self.canonical["parents.html"],
                     f"<p>The session accepts {method} payment.</p>",
                 )
                 self.assert_finding(
                     "payment.unsupported_rm350_method",
-                    self.findings_for({"services.html": source}),
+                    self.findings_for({"parents.html": source}),
                 )
         for claim in (
             "PayPal is offered for RM350.",
@@ -523,24 +523,24 @@ class AuthorityValidatorTests(unittest.TestCase):
         ):
             with self.subTest(claim=claim):
                 source = insert_in_session_article(
-                    self.canonical["services.html"],
+                    self.canonical["parents.html"],
                     f"<p>{claim}</p>",
                 )
                 self.assert_finding(
                     "payment.unsupported_rm350_method",
-                    self.findings_for({"services.html": source}),
+                    self.findings_for({"parents.html": source}),
                 )
 
     def test_alternative_delivery_platform_allowlist(self):
         for platform in ("Zoom", "Microsoft Teams", "Webex", "Google Meet or Zoom"):
             with self.subTest(platform=platform):
                 source = insert_in_session_article(
-                    self.canonical["services.html"],
+                    self.canonical["parents.html"],
                     f"<p>The delivery platform is {platform}.</p>",
                 )
                 self.assert_finding(
                     "delivery.unapproved_platform",
-                    self.findings_for({"services.html": source}),
+                    self.findings_for({"parents.html": source}),
                 )
 
     def test_public_availability_equivalents_fail(self):
@@ -557,30 +557,30 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_confirmation_first_sequence_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Confirm the booking first, before payment proof verification.</p>",
         )
         self.assert_finding(
             "booking.sequence_reordered",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_required_booking_flow_order_is_page_scoped(self):
-        source = self.canonical["services.html"].replace(
-            "The Founder verifies payment before confirming the booking",
-            "The Founder records payment before confirming the booking",
+        source = self.canonical["parents.html"].replace(
+            "verifies payment before confirming the booking",
+            "records payment before confirming the booking",
         )
         self.assert_finding(
-            "required.services.html.booking_sequence",
-            self.findings_for({"services.html": source}),
+            "required.parents.html.booking_sequence",
+            self.findings_for({"parents.html": source}),
         )
 
     def test_current_payment_and_delivery_allowlists_pass(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The session is delivered via Google Meet. Pay by Maybank transfer or DuitNow QR only.</p>",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_home_support_wise_is_allowed_for_international_clients(self):
         source = append_html(
@@ -591,80 +591,80 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_structural_01_approved_bank_transfer_passes(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The RM350 session accepts bank transfer.</p>",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_structural_02_paypal_supported_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>PayPal is supported for this session.</p>",
         )
-        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"parents.html": source}))
 
     def test_structural_03_settle_rm350_through_paypal_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Settle the RM350 fee through PayPal.</p>",
         )
-        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"parents.html": source}))
 
     def test_structural_04_paypal_checkout_link_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '<a href="https://paypal.example/checkout">Pay RM350 now</a>',
         )
-        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"parents.html": source}))
 
     def test_structural_05_payment_unrelated_negation_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The session is not free, and PayPal is accepted for payment.</p>",
         )
-        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"parents.html": source}))
 
     def test_structural_06_google_meet_or_facetime_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The RM350 session is delivered via Google Meet or FaceTime.</p>",
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_structural_07_whatsapp_video_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The RM350 session is delivered via WhatsApp video.</p>",
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_structural_08_google_meet_or_in_person_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The RM350 session is delivered via Google Meet or in-person.</p>",
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_structural_09_google_meet_or_hybrid_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The RM350 session is delivered via Google Meet or hybrid.</p>",
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_structural_10_generic_video_call_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The RM350 session is delivered by video call.</p>",
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_structural_11_myr_450_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Current session price: MYR 450.</p>",
         )
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_structural_12_numeric_jsonld_price_fails(self):
         script = (
@@ -672,23 +672,23 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"@type":"Offer","name":"One-Concern Parent Session",'
             '"price":450,"priceCurrency":"MYR"}</script>'
         )
-        source = self.canonical["services.html"].replace("</body>", script + "\n</body>", 1)
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        source = self.canonical["parents.html"].replace("</body>", script + "\n</body>", 1)
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_structural_13_numeric_javascript_price_fails(self):
         script = '<script>const offer={name:"One-Concern Parent Session",price:450};</script>'
-        source = self.canonical["services.html"].replace("</body>", script + "\n</body>", 1)
+        source = self.canonical["parents.html"].replace("</body>", script + "\n</body>", 1)
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_structural_14_one_hour_duration_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Current session duration: 1 hour.</p>",
         )
-        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_duration", self.findings_for({"parents.html": source}))
 
     def test_structural_15_enrolment_open_fails(self):
         source = append_html(self.canonical["index.html"], "Enrolment is now open.")
@@ -720,37 +720,37 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_structural_20_review_after_payment_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>We review your request after receiving payment.</p>",
         )
-        self.assert_finding("booking.sequence_reordered", self.findings_for({"services.html": source}))
+        self.assert_finding("booking.sequence_reordered", self.findings_for({"parents.html": source}))
 
     def test_structural_21_approval_after_payment_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Approval is requested after payment.</p>",
         )
-        self.assert_finding("booking.sequence_reordered", self.findings_for({"services.html": source}))
+        self.assert_finding("booking.sequence_reordered", self.findings_for({"parents.html": source}))
 
     def test_structural_22_confirmation_before_proof_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>Your booking is confirmed immediately; payment proof is checked afterwards.</p>",
         )
-        self.assert_finding("booking.sequence_reordered", self.findings_for({"services.html": source}))
+        self.assert_finding("booking.sequence_reordered", self.findings_for({"parents.html": source}))
 
     def test_structural_23_automatic_unrelated_negation_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The booking is not delayed and is automatically confirmed.</p>",
         )
         self.assert_finding(
             "booking.automatic_confirmation",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_structural_all_23_cases_fail_together(self):
-        services = self.canonical["services.html"]
+        services = self.canonical["parents.html"]
         for markup in (
             "<p>The RM350 session accepts bank transfer.</p>",
             "<p>PayPal is supported for this session.</p>",
@@ -791,7 +791,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             index = append_html(index, claim)
         identifiers = {
             finding.identifier
-            for finding in self.findings_for({"services.html": services, "index.html": index})
+            for finding in self.findings_for({"parents.html": services, "index.html": index})
         }
         expected = {
             "payment.unsupported_rm350_method",
@@ -806,15 +806,15 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_structural_unknown_payment_method_fails_closed(self):
         source = insert_in_session_article(
-            self.canonical["services.html"], "<p>Pay RM350 through BlueBank.</p>"
+            self.canonical["parents.html"], "<p>Pay RM350 through BlueBank.</p>"
         )
-        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"services.html": source}))
+        self.assert_finding("payment.unsupported_rm350_method", self.findings_for({"parents.html": source}))
 
     def test_structural_unknown_delivery_platform_fails_closed(self):
         source = insert_in_session_article(
-            self.canonical["services.html"], "<p>The delivery platform is BlueJeans.</p>"
+            self.canonical["parents.html"], "<p>The delivery platform is BlueJeans.</p>"
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_structural_currency_and_iso_duration_fields_fail(self):
         script = (
@@ -822,33 +822,33 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"@type":"Offer","name":"One-Concern Parent Session",'
             '"price":350,"priceCurrency":"USD","duration":"PT1H"}</script>'
         )
-        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
-        findings = self.findings_for({"services.html": source})
+        source = self.canonical["parents.html"].replace("</body>", script + "</body>", 1)
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("value.session_currency", findings)
         self.assert_finding("value.session_duration", findings)
 
     def test_structural_relevant_data_attribute_price_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"], '<span data-price="450">Special fee</span>'
+            self.canonical["parents.html"], '<span data-price="450">Special fee</span>'
         )
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_structural_relevant_aria_delivery_fails(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '<span aria-label="The RM350 session is delivered via FaceTime">Details</span>',
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_structural_javascript_confirmation_field_fails(self):
         script = (
             '<script>const offer={name:"One-Concern Parent Session",'
             'confirmation:"automatic"};</script>'
         )
-        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
+        source = self.canonical["parents.html"].replace("</body>", script + "</body>", 1)
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_structural_jsonld_availability_field_fails(self):
@@ -857,44 +857,44 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"@type":"Offer","name":"One-Concern Parent Session",'
             '"availability":"InStock"}</script>'
         )
-        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
-        self.assert_finding("launch.public_availability", self.findings_for({"services.html": source}))
+        source = self.canonical["parents.html"].replace("</body>", script + "</body>", 1)
+        self.assert_finding("launch.public_availability", self.findings_for({"parents.html": source}))
 
     def test_structural_targeted_negations_pass(self):
-        services = self.canonical["services.html"]
+        services = self.canonical["parents.html"]
         for markup in (
             "<p>PayPal is not accepted.</p>",
             "<p>The booking is not automatically confirmed.</p>",
         ):
             services = insert_in_session_article(services, markup)
         index = append_html(self.canonical["index.html"], "APC is not publicly available.")
-        self.assertEqual([], self.findings_for({"services.html": services, "index.html": index}))
+        self.assertEqual([], self.findings_for({"parents.html": services, "index.html": index}))
 
     def test_structural_missing_governed_block_fails_closed(self):
-        source = self.canonical["services.html"].replace(
+        source = self.canonical["parents.html"].replace(
             "One-Concern Parent Session", "Unnamed parent session"
         )
-        self.assert_finding("binding.one_concern.missing", self.findings_for({"services.html": source}))
+        self.assert_finding("binding.one_concern.missing", self.findings_for({"parents.html": source}))
 
     def test_structural_duplicate_governed_block_fails_closed(self):
         duplicate = (
             "<article><h2>One-Concern Parent Session</h2>"
             "<p>RM350 · 45 minutes · Online</p></article>"
         )
-        source = append_html(self.canonical["services.html"], duplicate)
-        self.assert_finding("binding.one_concern.duplicate", self.findings_for({"services.html": source}))
+        source = append_html(self.canonical["parents.html"], duplicate)
+        self.assert_finding("binding.one_concern.duplicate", self.findings_for({"parents.html": source}))
 
     def test_structural_binding_ignores_semantic_punctuation_and_whitespace(self):
-        source = self.canonical["services.html"].replace(
+        source = self.canonical["parents.html"].replace(
             "One-Concern Parent Session", "One Concern Parent Session"
         ).replace("RM350", "RM 350")
-        identifiers = {finding.identifier for finding in self.findings_for({"services.html": source})}
+        identifiers = {finding.identifier for finding in self.findings_for({"parents.html": source})}
         self.assertNotIn("binding.one_concern.missing", identifiers)
         self.assertNotIn("binding.one_concern.duplicate", identifiers)
 
     def test_structural_malformed_governed_page_fails_closed(self):
-        source = self.canonical["services.html"].replace("</article>", "", 1)
-        self.assert_finding("syntax.html_invalid", self.findings_for({"services.html": source}))
+        source = self.canonical["parents.html"].replace("</article>", "", 1)
+        self.assert_finding("syntax.html_invalid", self.findings_for({"parents.html": source}))
 
     def test_structural_required_preparation_states_fail_closed(self):
         source = self.canonical["CLAUDE.md"].replace("NOT_AUTHORISED", "STATE_REMOVED")
@@ -933,17 +933,17 @@ class AuthorityValidatorTests(unittest.TestCase):
         self.assertEqual("autismpathwaysconsulting/APC-AI-OS", AUTHORITY["provenance"]["source_repository"])
         self.assertRegex(AUTHORITY["provenance"]["source_candidate_commit"], r"^[0-9a-f]{40}$")
         self.assertEqual(
-            {"services.html", "terms.html", "pay/index.html"},
+            {"parents.html", "terms.html", "pay/index.html"},
             set(session["bindings"]),
         )
 
     def test_structural_action_and_value_attributes_fail(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '<form action="https://paypal.example/checkout">'
             '<input value="MYR 450"><button>Pay RM350 now</button></form>',
         )
-        findings = self.findings_for({"services.html": source})
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("payment.unsupported_rm350_method", findings)
         self.assert_finding("value.session_price", findings)
 
@@ -953,115 +953,115 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"@type":"Offer","name":"One-Concern Parent Session",'
             '"paymentMethod":"PayPal","deliveryPlatform":"FaceTime"}</script>'
         )
-        source = self.canonical["services.html"].replace("</body>", script + "</body>", 1)
-        findings = self.findings_for({"services.html": source})
+        source = self.canonical["parents.html"].replace("</body>", script + "</body>", 1)
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("payment.unsupported_rm350_method", findings)
         self.assert_finding("delivery.unapproved_platform", findings)
 
     def test_structural_ranges_and_alternatives_fail(self):
         source = insert_in_session_article(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "<p>The session costs RM350 or MYR 450 and lasts 45 or 60 minutes.</p>",
         )
-        findings = self.findings_for({"services.html": source})
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("value.session_price", findings)
         self.assert_finding("value.session_duration", findings)
 
     def test_nested_jsonld_conflicting_price_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","offers":{"price":450}}',
             "application/ld+json",
         )
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_nested_jsonld_conflicting_currency_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","offers":{"priceCurrency":"USD"}}',
             "application/ld+json",
         )
-        self.assert_finding("value.session_currency", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_currency", self.findings_for({"parents.html": source}))
 
     def test_nested_jsonld_conflicting_duration_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","terms":{"duration":"PT1H"}}',
             "application/ld+json",
         )
-        self.assert_finding("value.session_duration", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_duration", self.findings_for({"parents.html": source}))
 
     def test_nested_jsonld_conflicting_delivery_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","terms":{"deliveryPlatform":"Zoom"}}',
             "application/ld+json",
         )
-        self.assert_finding("delivery.unapproved_platform", self.findings_for({"services.html": source}))
+        self.assert_finding("delivery.unapproved_platform", self.findings_for({"parents.html": source}))
 
     def test_nested_jsonld_conflicting_payment_method_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","terms":{"paymentMethod":"PayPal"}}',
             "application/ld+json",
         )
         self.assert_finding(
-            "payment.unsupported_rm350_method", self.findings_for({"services.html": source})
+            "payment.unsupported_rm350_method", self.findings_for({"parents.html": source})
         )
 
     def test_nested_javascript_conflicting_price_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             'const offer={name:"One-Concern Parent Session",terms:{price:450}};',
         )
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_nested_javascript_conflicting_currency_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             'const offer={name:"One-Concern Parent Session",terms:{priceCurrency:"USD"}};',
         )
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_nested_javascript_conflicting_duration_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             'const offer={name:"One-Concern Parent Session",terms:{durationMinutes:60}};',
         )
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_nested_javascript_conflicting_delivery_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             'const offer={name:"One-Concern Parent Session",terms:{deliveryPlatform:"Zoom"}};',
         )
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_nested_javascript_conflicting_payment_method_fails(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             'const offer={name:"One-Concern Parent Session",terms:{paymentMethod:"PayPal"}};',
         )
         self.assert_finding(
             "authority.executable_javascript_forbidden",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_nested_structured_multiple_object_levels_fail(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","catalog":{"terms":{"offers":{"price":450}}}}',
             "application/ld+json",
         )
@@ -1071,11 +1071,11 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"offers":{"price":450}}}}',
             "application/json",
         )
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_nested_structured_arrays_retain_context(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","catalog":[{"offers":[{"price":450}]}]}',
             "application/ld+json",
         )
@@ -1085,23 +1085,23 @@ class AuthorityValidatorTests(unittest.TestCase):
             '[{"offers":[{"price":450}]}]}',
             "application/json",
         )
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_nested_structured_sibling_children_share_context(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","pricing":{"price":450},'
             '"meeting":{"deliveryPlatform":"Zoom"},"payment":{"paymentMethod":"PayPal"}}',
             "application/ld+json",
         )
-        findings = self.findings_for({"services.html": source})
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("value.session_price", findings)
         self.assert_finding("delivery.unapproved_platform", findings)
         self.assert_finding("payment.unsupported_rm350_method", findings)
 
     def test_canonical_nested_structured_values_pass(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","offers":{"price":350,'
             '"priceCurrency":"MYR","durationMinutes":45,"deliveryPlatform":"Google Meet",'
             '"paymentMethod":"Maybank bank transfer"}}',
@@ -1114,11 +1114,11 @@ class AuthorityValidatorTests(unittest.TestCase):
             '"deliveryPlatform":"Google Meet","paymentMethod":"DuitNow QR"}}',
             "application/json",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_unrelated_nested_structured_data_passes(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"Unrelated webinar","offers":{"price":450,"priceCurrency":"USD",'
             '"durationMinutes":60,"deliveryPlatform":"Zoom","paymentMethod":"PayPal"}}',
             "application/ld+json",
@@ -1129,7 +1129,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             '"durationMinutes":60,"deliveryPlatform":"Zoom","paymentMethod":"PayPal"}}',
             "application/json",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_nested_home_support_wise_is_allowed(self):
         source = append_script(
@@ -1214,7 +1214,7 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_scalar_array_canonical_singleton_and_multi_values_pass(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","terms":{"price":[350],'
             '"priceCurrency":["MYR"],"durationMinutes":[45],'
             '"deliveryPlatform":["Google Meet"],'
@@ -1229,11 +1229,11 @@ class AuthorityValidatorTests(unittest.TestCase):
             '"paymentMethods":["Maybank bank transfer","DuitNow QR"]}}',
             "application/json",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_scalar_array_mixed_authorised_and_conflicting_values_fail(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","terms":{"price":[350,450],'
             '"paymentMethods":["Maybank bank transfer","PayPal"]}}',
             "application/ld+json",
@@ -1244,7 +1244,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             '"paymentMethods":["DuitNow QR","PayPal"]}}',
             "application/json",
         )
-        findings = self.findings_for({"services.html": source})
+        findings = self.findings_for({"parents.html": source})
         self.assert_finding("value.session_price", findings)
         self.assert_finding("payment.unsupported_rm350_method", findings)
 
@@ -1288,7 +1288,7 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_scalar_array_multiple_object_levels_fail(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","catalog":{"details":{"terms":'
             '{"deliveryPlatform":["Zoom"]}}}}',
             "application/ld+json",
@@ -1301,12 +1301,12 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assert_finding(
             "delivery.unapproved_platform",
-            self.findings_for({"services.html": source}),
+            self.findings_for({"parents.html": source}),
         )
 
     def test_scalar_array_mixed_scalars_and_child_records_fail(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","terms":{"price":[350,{"value":450}]}}',
             "application/ld+json",
         )
@@ -1316,7 +1316,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             '{"price":[350,{"value":450}]}}',
             "application/json",
         )
-        self.assert_finding("value.session_price", self.findings_for({"services.html": source}))
+        self.assert_finding("value.session_price", self.findings_for({"parents.html": source}))
 
     def test_scalar_array_empty_values_fail_closed(self):
         expected = {
@@ -1366,7 +1366,7 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_scalar_array_unrelated_structured_arrays_pass(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"Unrelated webinar","terms":{"price":[450],"priceCurrency":["USD"],'
             '"durationMinutes":[60],"deliveryPlatform":["Zoom"],'
             '"paymentMethods":["PayPal"]}}',
@@ -1379,7 +1379,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             '"deliveryPlatform":["Zoom"],"paymentMethods":["PayPal"]}}',
             "application/json",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_scalar_array_home_support_wise_is_allowed(self):
         source = append_script(
@@ -1405,7 +1405,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             "payment.unsupported_rm350_method",
         }
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             '{"name":"One-Concern Parent Session","terms":{"price":[450],'
             '"priceCurrency":["USD"],"durationMinutes":[60],'
             '"deliveryPlatform":["Zoom"],"paymentMethods":["PayPal"]}}',
@@ -1419,7 +1419,7 @@ class AuthorityValidatorTests(unittest.TestCase):
             "application/json",
         )
         identifiers = {
-            finding.identifier for finding in self.findings_for({"services.html": source})
+            finding.identifier for finding in self.findings_for({"parents.html": source})
         }
         self.assertTrue(expected.issubset(identifiers), expected - identifiers)
 
@@ -1794,13 +1794,13 @@ class AuthorityValidatorTests(unittest.TestCase):
 
     def test_javascript_ordinary_application_code_is_not_governed(self):
         source = append_script(
-            self.canonical["services.html"],
+            self.canonical["parents.html"],
             "function renderCard(item){const model={name:item.name,title:item.title,"
             "render(){return true}};return model;}"
             "const selection=new URLSearchParams(location.search).get('s');"
             "document.body.dataset.mode=selection;",
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_application_names_and_ui_labels_do_not_create_business_context(self):
         cases = (
@@ -2054,10 +2054,10 @@ class AuthorityValidatorTests(unittest.TestCase):
             '"deliveryPlatform":"Google Meet","paymentMethods":"DuitNow QR"}'
             '</script>',
         )
-        source = self.canonical["services.html"].replace(
+        source = self.canonical["parents.html"].replace(
             "</body>", "".join(scripts) + "</body>", 1
         )
-        self.assertEqual([], self.findings_for({"services.html": source}))
+        self.assertEqual([], self.findings_for({"parents.html": source}))
 
     def test_application_json_is_authorised_and_malformed_data_fails_closed(self):
         canonical = self.findings_from_script(
@@ -2106,7 +2106,7 @@ class AuthorityValidatorTests(unittest.TestCase):
                     validate_authority_manifest(value)
 
     def test_public_wise_route_is_private_and_international(self):
-        for relative in ("index.html", "services.html", "start.html", "terms.html", "pay/index.html"):
+        for relative in ("index.html", "parents.html", "start.html", "terms.html", "pay/index.html"):
             with self.subTest(path=relative):
                 source = (ROOT / relative).read_text(encoding="utf-8")
                 self.assertRegex(source, r"(?i)international.{0,160}wise")

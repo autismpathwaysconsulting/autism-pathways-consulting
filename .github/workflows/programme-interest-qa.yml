@@ -11,7 +11,6 @@ on:
       - 'content-os/programmes/**'
       - 'migrations/0012_programme_interest.sql'
       - 'tests/*authority*.py'
-      - 'tests/*containment*'
       - 'tests/website_authority.json'
       - 'wrangler.jsonc'
       - 'tests/programme*'
@@ -29,10 +28,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: python3 tests/validate_website_authority.py
-      - run: python3 tests/run_authority_tests.py
       - run: npm run build
-      - run: node --test tests/programme-interest.test.mjs tests/programme-resources.test.mjs tests/site-build-output.test.mjs
+      - run: node --test tests/programme-interest.test.mjs tests/programme-resources.test.mjs tests/site-build-output.test.mjs tests/audience-navigation.test.mjs tests/school-topic-journey.test.mjs
       - name: Install browser test tools outside the repository
         run: npm install --prefix /tmp/apc-browser playwright@1.61.0
       - run: /tmp/apc-browser/node_modules/.bin/playwright install --with-deps chromium
@@ -43,7 +40,10 @@ jobs:
         run: |
           node tests/programmes/preview.mjs > /tmp/apc-programme-preview.log 2>&1 &
           node tests/programmes/browser.cjs
+          node tests/programmes/site-sync-browser.cjs
           node scripts/check-programme-live.mjs http://localhost:8899 open
+      - run: python3 tests/validate_website_authority.py
+      - run: python3 tests/run_authority_tests.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
