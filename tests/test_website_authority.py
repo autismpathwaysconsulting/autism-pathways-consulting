@@ -1802,6 +1802,45 @@ class AuthorityValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], self.findings_for({"services.html": source}))
 
+    def test_application_names_and_ui_labels_do_not_create_business_context(self):
+        cases = (
+            'const person={name:input.name}; fetch(url,{method:"POST"});',
+            'const person={name:input.name,adultAvailability:input.adultAvailability};',
+            'const title=button.title; root.querySelectorAll(":scope > button");',
+            "const title=report.title; lines.push('', 'Scope: objective counts include dated pilot records.');",
+            'const title=dialog.title; show("Check availability and confirmation");',
+        )
+        for payload in cases:
+            with self.subTest(payload=payload):
+                self.assertEqual([], self.findings_from_script(payload))
+                self.assertEqual([], self.findings_for(additions={"assets/intake.js": payload}))
+
+    def test_authority_properties_remain_blocked_with_all_supported_key_forms(self):
+        for field in ("price", "currency", "duration", "delivery", "payment",
+                      "booking", "confirmation", "scope", "launch", "availability"):
+            for key in (field, f"'{field}'", f'"{field}"', f"['{field}']", f'["{field}"]'):
+                for payload in (f"const record={{{key}:getValue()}};",
+                                f"const record={{get {key}(){{return getValue()}}}};"):
+                    with self.subTest(payload=payload):
+                        self.assert_finding("authority.executable_javascript_forbidden",
+                                            self.findings_from_script(payload))
+
+    def test_business_context_and_claims_remain_blocked_beside_intake_code(self):
+        ordinary = 'const person={name:input.name}; fetch(url,{method:"POST"});'
+        for payload in (
+            'const service={name:getName()}; const method=getMethod();',
+            'const product={title:getTitle()}; const availability=getAvailability();',
+            'const offer={name:getName()}; const scope=getScope();',
+            'const record={name:getName(),scope:getScope()};',
+            'const paymentMethods=getMethods();',
+            'const label="One-Concern Parent Session";',
+            'const message="bookings open";',
+            'const record={name:getName(),price:450};',
+        ):
+            with self.subTest(payload=payload):
+                self.assert_finding("authority.executable_javascript_forbidden",
+                                    self.findings_from_script(ordinary + payload))
+
     def test_javascript_unsupported_siblings_do_not_hide_supported_conflicts(self):
         identifiers = {
             finding.identifier
