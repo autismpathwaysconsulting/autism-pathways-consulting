@@ -45,3 +45,6 @@ body .apc-section-visual>.apc-section-emblem svg{width:64px;height:64px}
 @media(forced-colors:active){body .apc-section-emblem{border:1px solid CanvasText;color:CanvasText;background:Canvas;box-shadow:none}}
 
 body .final-card>.apc-section-photo{float:right;width:32%;max-width:340px;margin:0 0 24px 32px}body .final-card::after{content:"";display:block;clear:both}body .apc-article-emblem{width:52px;height:52px;border-radius:15px;margin:0 0 14px}body .apc-article-emblem svg{width:36px;height:36px}@media(max-width:760px){body .final-card>.apc-section-photo{float:none;width:100%;margin:0 0 24px}}
+
+/* Keep blog text and grid children within narrow screens, including long links. */
+body.apc-blog-page main{overflow-wrap:anywhere}body.apc-blog-page .blog-feature{grid-template-columns:minmax(0,220px) minmax(0,1fr)}body.apc-blog-page .blog-feature>div,body.apc-blog-page .audience-author p{min-width:0}@media(max-width:760px){body.apc-blog-page .blog-feature{grid-template-columns:minmax(0,1fr)}}
