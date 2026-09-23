@@ -6,20 +6,23 @@
 .credential .apc-section-emblem{grid-row:span 2}
 .credential strong{line-height:1.25}
 .credential br{display:none}
-#story .split{align-items:center;gap:clamp(28px,5vw,76px)}
-#story .apc-section-photo{margin-top:18px;max-height:260px;object-fit:cover}
+#story .split{align-items:stretch;gap:clamp(28px,5vw,76px)}
+#story .split>div{display:flex;flex-direction:column;justify-content:center}
+#story .apc-section-photo{margin-top:18px;min-height:360px;aspect-ratio:4/3;object-fit:cover}
 #scope .scope{display:grid;grid-template-columns:auto 1fr;column-gap:20px;align-items:start;max-width:920px}
 #scope .scope>*:not(.apc-section-emblem){grid-column:2}
 #scope .scope .eyebrow{margin-top:4px}
 #scope .scope h2{margin:0 0 16px;max-width:700px}
 #scope .scope p{max-width:760px;margin-bottom:12px}
 .parent-offers{align-items:stretch}
-.parent-offers .audience-card{display:flex;flex-direction:column;min-height:100%}
+.parent-offers{grid-auto-rows:1fr}
+.parent-offers .audience-card{display:flex;flex-direction:column;height:100%;min-height:100%}
 .parent-offers .offer-cta{margin-top:auto}
 .parent-offers .support-material-image{aspect-ratio:3/2;object-fit:cover}
 .parent-booking-details-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .parent-booking-details-body p{margin:0;padding:16px;border-radius:14px;background:#f1f7f3}
 .parent-booking-details-body p:last-child{grid-column:1/-1;background:#fff5ef}
+.parent-booking-full{grid-column:1/-1;margin-top:2px}.parent-booking-full summary{font-weight:700;color:#0d7f78}.parent-booking-full p{margin-top:12px!important;background:#fff!important}
 .parent-closing .apc-section-composition{align-items:center}
 .parent-closing .apc-section-copy{max-width:620px}
 .parent-closing .audience-actions{justify-content:flex-start}
@@ -37,10 +40,10 @@
 .activity-pair p{margin:6px 0 0;font-size:.95rem;line-height:1.5}
 .coaching-panels>[data-coaching]{display:grid;grid-template-columns:minmax(180px,.72fr) minmax(0,1.28fr);column-gap:28px;align-items:start}
 .coaching-panels>[data-coaching]::before{content:"";grid-row:1/6;width:100%;min-height:220px;border-radius:18px;background:linear-gradient(145deg,#dbe8dc,#f6c5a9);background-size:cover;background-position:center}
-.coaching-panels>[data-coaching="0"]::before{background-image:url('/programme-volunteering-480.webp')}
-.coaching-panels>[data-coaching="1"]::before{background-image:url('/programme-money-480.webp')}
-.coaching-panels>[data-coaching="2"]::before{background-image:url('/programme-camp-480.webp')}
-.coaching-panels>[data-coaching="3"]::before{background-image:url('/home-support-materials-480.webp')}
+.coaching-panels>[data-coaching="0"]::before{background-image:url('/coaching-get-ready-480.webp')}
+.coaching-panels>[data-coaching="1"]::before{background-image:url('/coaching-show-480.webp')}
+.coaching-panels>[data-coaching="2"]::before{background-image:url('/coaching-try-480.webp')}
+.coaching-panels>[data-coaching="3"]::before{background-image:url('/coaching-review-480.webp')}
 .coaching-panels>[data-coaching]>:not(.eyebrow){grid-column:2}
 .start-choice-hub{padding:clamp(22px,4vw,56px);border-radius:30px;background:linear-gradient(135deg,#f1f7f3,#fff8f1);border:1px solid rgba(7,55,52,.12)}
 .start-choice-hub .start-hero{padding:0;margin:0 0 clamp(22px,4vw,44px);background:transparent;box-shadow:none;text-align:left}
@@ -48,4 +51,5 @@
 .start-choice-hub .apc-choice-carousel{margin:0}
 .start-choice-hub .route-grid{padding:0}
 .article-hero-image{max-width:900px;margin:26px auto 42px}.article-hero-image img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:24px}.article-hero-image figcaption{margin-top:8px;color:#49635f;font-size:.86rem}
+.school-hero-copy>p:not(.eyebrow):not(.school-hero-note){max-width:520px}.school-hero-note{margin-top:18px;font-size:.92rem}.school-formats{margin-bottom:26px}.school-format-terms{margin:26px auto 0;max-width:1100px;padding-top:24px;border-top:1px solid rgba(255,255,255,.26)}.school-share-overview{margin-top:28px;padding-top:26px;border-top:1px solid rgba(7,55,52,.14)}.school-takeaway-photo{display:block;width:min(100%,360px);aspect-ratio:3/2;object-fit:cover;border-radius:20px;margin:20px 0}.school-takeaway-copy{align-self:center}
 @media (max-width:760px){.parent-booking-details-body,.activity-panel,.coaching-panels>[data-coaching]{grid-template-columns:1fr}.coaching-panels>[data-coaching]::before{grid-row:auto;min-height:160px}.coaching-panels>[data-coaching]>:not(.eyebrow){grid-column:auto}.start-choice-hub{padding:18px;border-radius:22px}}
