@@ -61,6 +61,7 @@ export const PUBLIC_FILES = Object.freeze([
   "course-study-960.webp",
   "school-classroom-hero.svg",
   "home-support-materials-480.webp",
+  "testimonial-routine-independence-480.webp",
   "home-support-materials-960.webp",
   "first-step-call-materials-480.webp",
   "one-concern-session-materials-480.webp",
