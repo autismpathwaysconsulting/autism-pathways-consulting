@@ -1,5 +1,5 @@
 /* Compact offer information; preserve the existing carousel and page grids. */
-body .offer-facts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;}
+body .offer-facts{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 18px;}
 body .offer-facts span,body .parent-offers .parent-price{background:#e7f1eb;color:#164e46!important;border-radius:10px;padding:8px 12px;font-weight:700;font-size:15px;line-height:1.45;}
 body #route-slide-session .offer-facts span:first-child{background:#fbe2d5;}
 body .offer-points{padding-left:22px;margin:12px 0 20px;display:grid;gap:10px;list-style:disc;}
