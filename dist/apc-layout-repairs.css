@@ -1,0 +1,38 @@
+/* Repairs from the six Founder screenshots. */
+body.apc-waitlist-page footer nav{background:transparent!important;border:0!important;}
+body.apc-waitlist-page .course-contact-fallback{font-size:14px;}
+body .parent-process{padding:clamp(24px,3.5vw,40px)!important;}
+body .parent-process h2{margin:0 0 24px!important;}
+body .parent-process ol{gap:28px!important;}
+body .parent-process .process-step-top{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+body .parent-process .process-step-top .apc-section-emblem{display:flex!important;width:64px!important;height:64px!important;border-radius:18px!important;margin:0!important;background:linear-gradient(145deg,#bedaba,#79a48a)!important;color:#073734!important;}
+body .parent-process .apc-section-emblem svg{width:42px;height:42px;}
+body .parent-process .process-step-number{display:block!important;width:auto!important;height:auto!important;border:0!important;background:none!important;box-shadow:none!important;color:#b8d8ce!important;font-size:14px;font-weight:700;letter-spacing:.1em;margin:0!important;}
+body .parent-process li:nth-child(2) .apc-section-emblem{background:linear-gradient(145deg,#f6c49f,#df9271)!important;}
+body .parent-process li:nth-child(3) .apc-section-emblem{background:linear-gradient(145deg,#d9eee4,#a1cbb7)!important;}
+body .parent-process h3{margin:0 0 8px!important;}
+body .parent-process p{margin:0;line-height:1.65;}
+body.apc-blog-page .audience-hero{max-width:none;padding:24px 0 30px;}
+body.apc-blog-page .audience-hero .apc-section-composition{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:36px;}
+body.apc-blog-page .audience-hero h1{font-size:clamp(34px,3.7vw,48px)!important;line-height:1.12!important;margin:12px 0 18px;max-width:23ch;}
+body.apc-blog-page .audience-hero .apc-section-photo{aspect-ratio:4/3;}
+body.apc-blog-page .blog-category-links{gap:4px 18px;margin-top:12px;}
+body.apc-blog-page .audience-grid{gap:20px;margin:20px 0 0;}
+body.apc-blog-page .audience-card{padding:20px;border-radius:18px;}
+body.apc-blog-page .guide-card-visual{aspect-ratio:16/10;object-fit:cover;max-height:190px;margin:0 0 16px;border-radius:12px;}
+body.apc-blog-page .audience-card h3{font-size:21px;line-height:1.3;margin:0 0 12px;}
+body.apc-blog-page .audience-card p{font-size:15px;line-height:1.65;margin:0;}
+body.apc-blog-page .audience-author{margin:24px 0 18px;}
+body.apc-blog-page main>.apc-blog-closing{padding:28px!important;margin:0 0 20px;background:#eef4ef;border:1px solid #dbe5df;border-radius:22px;}
+body.apc-blog-page .apc-blog-closing .apc-section-composition{grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:32px;align-items:start;}
+body.apc-blog-page .apc-blog-closing h2{font-size:clamp(28px,2.8vw,36px)!important;line-height:1.15!important;margin:0 0 16px;}
+body.apc-blog-page .apc-blog-closing .apc-section-photo{aspect-ratio:1/1;}
+body.apc-blog-page .apc-blog-closing p{margin:0 0 16px;font-size:15px;line-height:1.65;}
+body.apc-blog-page .apc-blog-closing .audience-actions{gap:8px 18px;margin:18px 0;}
+@media(max-width:760px){
+body.apc-blog-page .audience-hero .apc-section-composition,body.apc-blog-page .apc-blog-closing .apc-section-composition{grid-template-columns:minmax(0,1fr);gap:22px;}
+body.apc-blog-page .audience-hero .apc-section-photo{max-height:260px;aspect-ratio:3/2;}
+body.apc-blog-page .apc-blog-closing .apc-section-photo{max-height:220px;aspect-ratio:3/2;}
+body.apc-blog-page main>.apc-blog-closing{padding:22px!important;}
+body.apc-blog-page .guide-card-visual{max-height:220px;}
+}
