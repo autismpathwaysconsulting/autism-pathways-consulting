@@ -1,0 +1,56 @@
+/* Section-level visual support. Content and navigation remain native HTML. */
+body .apc-section-composition{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+body .apc-section-copy,body .apc-section-visual{min-width:0}
+body .apc-section-visual{display:flex;justify-content:center;align-items:center}
+body .apc-section-photo{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:20px;box-shadow:0 18px 30px -24px #07373499}
+body .apc-section-portrait{display:block;width:min(100%,224px);height:auto;border-radius:24px}
+body .apc-section-emblem{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:72px;height:72px;border-radius:20px;background:linear-gradient(145deg,#209889,#075c54);color:#fff8e8;box-shadow:inset 0 1px 0 #ffffff60,0 8px 16px -12px #073734aa;margin:0 0 16px}
+body .apc-section-emblem svg{display:block;width:48px;height:48px}
+body .apc-emblem-sage{background:linear-gradient(145deg,#bedaba,#79a48a);color:#073734}
+body .apc-emblem-coral{background:linear-gradient(145deg,#f6c49f,#df9271);color:#073734}
+body .apc-section-visual>.apc-section-emblem{width:132px;height:132px;border-radius:32px;margin:0}
+body .apc-section-visual>.apc-section-emblem svg{width:88px;height:88px}
+body .learning-note{padding:clamp(24px,4vw,48px)!important}
+body .learning-note .apc-section-copy>h2{max-width:20ch}
+body .learning-note .apc-section-photo{aspect-ratio:1/1;max-width:380px}
+body .parent-closing .apc-section-copy{text-align:left}
+body .parent-closing .audience-actions{justify-content:flex-start}
+body .route-actions>.apc-section-photo{max-width:340px;justify-self:center}
+body .apc-quote-visual>.apc-section-photo{float:right;width:30%;margin:0 0 24px 40px}
+body .apc-quote-visual::after{content:"";display:block;clear:both}
+body .apc-section-emblem+.number{margin-left:12px}
+body .school-share-overview>.apc-section-emblem{margin:0}
+body .minimal-closing .audience-actions{align-items:stretch}
+body .minimal-closing .audience-actions>a{display:flex;flex:1 1 0;flex-direction:column;align-items:flex-start;min-width:0;gap:12px}
+body .apc-link-visual{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;border-radius:14px}
+body .apc-duration-visual{width:100%;padding:28px;background:#e8f0e8;border:1px solid #c9daca;border-radius:24px;text-align:center;color:#073734}
+body .apc-duration-visual strong{display:block;font-size:48px;line-height:1.2}
+body .apc-duration-visual>span:last-child{display:block;font-size:14px}
+body .credential>.apc-section-emblem{float:left;width:48px;height:48px;border-radius:14px;margin:0 16px 8px 0}
+body .credential>.apc-section-emblem svg{width:32px;height:32px}
+body .work-step>.apc-section-emblem{display:flex}
+body #story .apc-section-photo{max-width:480px;margin:24px 0}
+body .next-sequence .apc-section-emblem{display:flex;width:56px;height:56px;margin-top:16px}
+body .next-sequence .apc-section-emblem svg{width:38px;height:38px}
+@media(max-width:760px){
+body .apc-section-composition{grid-template-columns:minmax(0,1fr);gap:24px}
+body .apc-section-visual>.apc-section-photo{max-height:300px}
+body .apc-quote-visual>.apc-section-photo{float:none;width:100%;max-width:360px;margin:0 0 24px}
+body .minimal-closing .audience-actions{flex-direction:column}
+body .minimal-closing .audience-actions>a{width:100%}
+body .school-share-overview{flex-wrap:wrap}
+body .apc-section-visual>.apc-section-emblem{width:96px;height:96px}
+body .apc-section-visual>.apc-section-emblem svg{width:64px;height:64px}
+}
+@media(forced-colors:active){body .apc-section-emblem{border:1px solid CanvasText;color:CanvasText;background:Canvas;box-shadow:none}}
+
+body .final-card>.apc-section-photo{float:right;width:32%;max-width:340px;margin:0 0 24px 32px}body .final-card::after{content:"";display:block;clear:both}body .apc-article-emblem{width:52px;height:52px;border-radius:15px;margin:0 0 14px}body .apc-article-emblem svg{width:36px;height:36px}@media(max-width:760px){body .final-card>.apc-section-photo{float:none;width:100%;margin:0 0 24px}}
+
+/* Keep blog text and grid children within narrow screens, including long links. */
+body.apc-blog-page main{overflow-wrap:anywhere}body.apc-blog-page .blog-feature{grid-template-columns:minmax(0,220px) minmax(0,1fr)}body.apc-blog-page .blog-feature>div,body.apc-blog-page .audience-author p{min-width:0}@media(max-width:760px){body.apc-blog-page .blog-feature{grid-template-columns:minmax(0,1fr)}}
+
+body.apc-free-tool-page .free-final-card.apc-section-composition{width:100%;max-width:1080px!important;text-align:left}body.apc-free-tool-page .free-final-card .apc-section-copy{text-align:left}body.apc-free-tool-page .free-final-card h2{font-size:clamp(28px,3.2vw,42px)!important;line-height:1.15!important}
+
+/* This standalone page does not inherit the legacy body reset. */
+body.apc-blog-page{margin:0}
+

@@ -1,0 +1,20 @@
+/* APC shared visual language: school-page palette and dimensional icon tiles.
+   Decorative only. Content, control states and page grids remain authoritative. */
+.apc-visual-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;border-radius:12px;color:#fff8e8;background:linear-gradient(145deg,#209889,#075c54);box-shadow:inset 0 1px 0 #ffffff60,inset 0 -3px 0 #002e2b35,0 7px 12px -8px #07373480;vertical-align:middle}
+.apc-visual-icon svg{display:block;width:32px;height:32px;filter:drop-shadow(0 2px 1px #07373420)}
+.apc-icon-coral{color:#073734;background:linear-gradient(145deg,#f4b18c,#d98464)}
+.apc-icon-sage{color:#073734;background:linear-gradient(145deg,#b7d6b3,#75a184)}
+.apc-visual-heading,.apc-route-label{display:flex;align-items:center;gap:14px}
+.apc-visual-heading>span:last-child,.apc-route-label>span:last-child{min-width:0}
+.services-route-panel .apc-visual-icon{flex-basis:38px;width:38px;height:38px;border-radius:10px}
+.services-route-panel .apc-visual-icon svg{width:28px;height:28px}
+body .services-route-panel{background:radial-gradient(ellipse at top right,#217a6a55,transparent 65%),linear-gradient(145deg,#0b4e48,#073734);box-shadow:0 18px 38px -24px #07373488,inset 0 1px 0 #ffffff30}
+body .audience-hero-visual,body .hero-activity{box-shadow:0 18px 38px -24px #07373488,0 0 0 1px #0f766e20}
+body .support-material-image,body .guide-card-visual{box-shadow:0 8px 18px -12px #07373488}
+body.apc-free-tool-page .free-preview-card{background:radial-gradient(ellipse at top right,#257f7066,transparent 70%),linear-gradient(145deg,#0b4e48,#073734) !important;color:#fff8e8;box-shadow:0 18px 38px -24px #07373488,inset 0 1px 0 #ffffff30}
+body.apc-free-tool-page .free-preview-card .preview-label{color:#e4eee4}
+body.apc-free-tool-page .free-preview-card .preview-row{background:#fff9ec;color:#073734;border-color:#b7d6b3;box-shadow:0 3px 7px #002e2b25}
+body.apc-free-tool-page .free-preview-card .preview-row:nth-of-type(2n){background:#f6dbc5}
+body .coaching-steps button>span,body .next-sequence li::before,body .grid-5 .number{background:linear-gradient(145deg,#209889,#075c54);color:#fff8e8;box-shadow:inset 0 1px 0 #ffffff50,0 4px 8px -5px #07373470}
+@media(max-width:600px){.apc-visual-heading{gap:10px}.apc-visual-heading .apc-visual-icon{flex-basis:38px;width:38px;height:38px}.apc-visual-heading .apc-visual-icon svg{width:28px;height:28px}}
+@media(forced-colors:active){.apc-visual-icon{border:1px solid CanvasText;color:CanvasText;background:Canvas;box-shadow:none}.apc-visual-icon svg{filter:none}}
