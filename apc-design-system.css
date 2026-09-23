@@ -5227,3 +5227,49 @@ html.apc-site-snap {
 .apc-choice-carousel.is-enhanced [data-carousel-track] > [data-carousel-slide][hidden] {
   display: none !important;
 }
+
+/* Homepage process cards: keep the numbered step and title on one scan line. */
+.apc-home-page #how-apc-helps .apc-process-five .card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: center;
+}
+
+.apc-home-page #how-apc-helps .apc-process-five .card > .apc-section-emblem {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-bottom: 16px;
+}
+
+.apc-home-page #how-apc-helps .apc-process-five .number {
+  grid-column: 1;
+  margin-bottom: 0 !important;
+  align-self: center;
+}
+
+.apc-home-page #how-apc-helps .apc-process-five h3 {
+  grid-column: 2;
+  margin: 0 !important;
+  align-self: center;
+}
+
+.apc-home-page #how-apc-helps .apc-process-five p {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+}
+
+@media (max-width: 640px) {
+  .apc-home-page #how-apc-helps .apc-process-five .card {
+    column-gap: 9px;
+  }
+
+  .apc-home-page #how-apc-helps .apc-process-five .card > .apc-section-emblem {
+    margin-bottom: 9px;
+  }
+
+  .apc-home-page #how-apc-helps .apc-process-five p {
+    margin-top: 7px;
+  }
+}
+
