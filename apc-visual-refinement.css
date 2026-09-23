@@ -47,4 +47,5 @@
 .start-choice-hub .start-hero h1{max-width:900px;margin-bottom:12px}
 .start-choice-hub .apc-choice-carousel{margin:0}
 .start-choice-hub .route-grid{padding:0}
+.article-hero-image{max-width:900px;margin:26px auto 42px}.article-hero-image img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:24px}.article-hero-image figcaption{margin-top:8px;color:#49635f;font-size:.86rem}
 @media (max-width:760px){.parent-booking-details-body,.activity-panel,.coaching-panels>[data-coaching]{grid-template-columns:1fr}.coaching-panels>[data-coaching]::before{grid-row:auto;min-height:160px}.coaching-panels>[data-coaching]>:not(.eyebrow){grid-column:auto}.start-choice-hub{padding:18px;border-radius:22px}}
