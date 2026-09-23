@@ -17,3 +17,5 @@ Shared prompt: one landscape 3:2 editorial photograph; realistic everyday home, 
 - `guide-sensory-public-{480,960}.webp`: Teal ear defenders resting on a backpack on a quiet indoor bench, softly blurred shopping mall walkway in background, a pause away from a busy outing, no identifiable people or branding.
 
 Changes: workshop WhatsApp/email choices; course interest contact/next-step cards; topic photos on all ten practical guides and their cover cards; compact resource headings, group thumbnails and expanded link thumbnails. Native details and links retained. Course remains in development and enquiries do not reserve places.
+
+Browser QA exposed section snapping hiding expanded resource group targets beneath the sticky header. Resources now uses normal free scrolling with header-aware summary offsets.

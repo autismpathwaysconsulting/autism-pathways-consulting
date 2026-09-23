@@ -39,3 +39,7 @@ body.apc-waitlist-page .apc-interest-card{padding:22px;}
 body .apc-topic-summary{gap:10px;}
 body .apc-topic-summary>img{width:64px;height:54px;flex-basis:64px;}
 }
+
+/* Resource groups need free scrolling when expanded or keyboard-focused. */
+html:has(body.apc-topic-resources){scroll-snap-type:none!important}
+body.apc-topic-resources #browse-all summary{scroll-margin-top:130px}
