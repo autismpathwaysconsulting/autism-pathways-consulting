@@ -1681,11 +1681,16 @@ html.apc-home-snap {
 }
 
 .apc-home-page #support-options .section-head {
-  max-width: 920px !important;
+  max-width: none !important;
+}
+
+.apc-home-page #support-options .section-head > .eyebrow,
+.apc-home-page #support-options .section-head > h2 {
+  max-width: 920px;
 }
 
 .apc-home-page #support-options .section-head h2 {
-  max-width: none;
+  max-width: 920px;
 }
 
 .apc-home-page #support-options .section-head > p:last-child {
@@ -2399,7 +2404,8 @@ html.apc-home-snap {
 }
 
 .apc-home-page .availability-note {
-  max-width: 900px;
+  width: 100%;
+  max-width: none;
   margin-top: 16px;
   border: 1px solid rgba(232, 153, 122, .34);
   border-radius: 16px;
