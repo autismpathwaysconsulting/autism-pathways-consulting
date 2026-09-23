@@ -94,6 +94,7 @@ export const PUBLIC_FILES = Object.freeze([
   "places-yl-gelateria.webp",
 
   "bedtime.html",
+  "big-reactions.html",
   "booking-confirmed-call.html",
   "booking-confirmed-session.html",
   "cancellation-policy.html",
@@ -126,6 +127,7 @@ export const PUBLIC_FILES = Object.freeze([
   "start.html",
   "task-initiation.html",
   "terms.html",
+  "thank-you-big-reactions.html",
   "thank-you-free-guide.html",
   "apc-design-system.css",
   "apc-article-layout.css",

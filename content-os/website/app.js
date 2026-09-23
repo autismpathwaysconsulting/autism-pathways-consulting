@@ -1,5 +1,5 @@
-const pages = { home: "Home", services: "Parent & school services", start: "Start Here", about: "About", resources: "Resources & blog" };
-const events = { page_view: "Page views", booking_click: "Booking clicks", calendar_open: "Calendar opens", booking_submitted: "Submitted bookings (embed)" };
+const pages = { home: "Home", services: "Parent & school services", start: "Start Here", about: "About", resources: "Resources & blog", big_reactions: "Big Reactions Quick Check" };
+const events = { page_view: "Page views", booking_click: "Booking clicks", calendar_open: "Calendar opens", booking_submitted: "Submitted bookings (embed)", form_start: "Form starts", form_submit: "Form submissions", download_click: "Download clicks", parent_support_click: "Parent support clicks", campaign_correction: "Visits: correction angle", campaign_30_seconds: "Visits: 30 seconds before", campaign_inconsistency: "Visits: inconsistency angle", campaign_resource_page: "Visits: Resources page", campaign_meltdown_guide: "Visits: meltdown guide" };
 const status = document.getElementById("status");
 const counts = document.getElementById("counts");
 const refresh = document.getElementById("refresh");
@@ -17,7 +17,9 @@ async function loadCounts() {
       const heading = document.createElement("h3"); heading.textContent = label; card.append(heading);
       const list = document.createElement("dl");
       for (const [event, title] of Object.entries(events)) {
-        if (!["home", "services"].includes(page) && ["calendar_open", "booking_submitted"].includes(event)) continue;
+        if (page === "big_reactions" && !["page_view", "form_start", "form_submit", "download_click", "parent_support_click", "campaign_correction", "campaign_30_seconds", "campaign_inconsistency", "campaign_resource_page", "campaign_meltdown_guide"].includes(event)) continue;
+        if (page !== "big_reactions" && ["form_start", "form_submit", "download_click", "parent_support_click", "campaign_correction", "campaign_30_seconds", "campaign_inconsistency", "campaign_resource_page", "campaign_meltdown_guide"].includes(event)) continue;
+        if (![ "home", "services" ].includes(page) && ["calendar_open", "booking_submitted"].includes(event)) continue;
         const term = document.createElement("dt"); term.textContent = title;
         const value = document.createElement("dd"); value.textContent = String(data.rows.find(row => row.page === page && row.event === event)?.count ?? 0);
         list.append(term, value);
