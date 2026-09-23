@@ -17,6 +17,7 @@ export const PUBLIC_FILES = Object.freeze([
   "apc-schools.css",
   "apc-visual-language.css",
   "apc-image-led.css",
+  "apc-section-visuals.css",
   "learning-workshop-480.webp",
   "learning-workshop-960.webp",
   "school-classroom-480.webp",
