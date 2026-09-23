@@ -1,0 +1,43 @@
+/* Compact offer information; preserve the existing carousel and page grids. */
+body .offer-facts{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 18px;}
+body .offer-facts span,body .parent-offers .parent-price{background:#e7f1eb;color:#164e46!important;border-radius:10px;padding:8px 12px;font-weight:700;font-size:15px;line-height:1.45;}
+body #route-slide-session .offer-facts span:first-child{background:#fbe2d5;}
+body .offer-points{padding-left:22px;margin:12px 0 20px;display:grid;gap:10px;list-style:disc;}
+body .offer-points li{padding-left:3px;line-height:1.5;font-size:16px;}
+body .offer-points li::marker{color:#0f766e;}
+body a.offer-cta{display:inline-flex!important;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 18px!important;border-radius:12px;background:#0f766e!important;color:#fff!important;text-decoration:none!important;font-weight:700;line-height:1.4;text-align:center;white-space:normal;max-width:100%;width:fit-content;}
+body a.offer-cta:hover{background:#094f4a!important;}
+body a.offer-cta:focus-visible{outline:3px solid #d67f5d;outline-offset:4px;}
+body .offer-boundary{font-size:14px!important;line-height:1.55!important;color:#49625c!important;margin:14px 0!important;}
+body .offer-secondary{display:block;width:fit-content;margin-top:14px;font-weight:600;text-underline-offset:4px;}
+body .route-card-detail .offer-name{font-size:clamp(24px,2.3vw,32px);line-height:1.2;color:#073734;margin:0 0 16px;}
+body.apc-start-page-v2 .route-card-detail .offer-lead{margin:0 0 12px;font-weight:700;}
+body.apc-start-page-v2 .route-card-detail .offer-points{margin:0 0 22px;}
+body.apc-start-page-v2 .route-card-detail .offer-points li{font-size:16px;}
+body.apc-start-page-v2 .route-card-detail .offer-cta{margin-top:0;width:fit-content;}
+body .offer-payment{margin:14px 0 0;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;}
+body .offer-payment summary{cursor:pointer;min-height:44px;padding:10px 0;font-size:14px;font-weight:600;color:#0f766e;}
+body.apc-start-page-v2 .route-card-detail .offer-payment p{font-size:14px;line-height:1.6;margin:8px 0;}
+body .route-number.apc-route-label{display:flex!important;align-items:center;gap:14px;}
+body .parent-offers{align-items:start;}
+body .parent-offers .audience-card{height:auto;min-height:0;}
+body .parent-offers .audience-card>a.offer-cta{margin-top:16px;padding-top:12px;}
+body .parent-offers .offer-points{margin:8px 0 4px;}
+body .parent-offers .offer-points li{font-size:15px;}
+body .parent-offers .support-material-image{margin-bottom:18px;}
+body .parent-process .process-step-top{gap:12px;margin-bottom:14px;}
+body .parent-process .process-step-top h3{margin:0!important;}
+body .parent-process .process-step-top .apc-section-emblem{width:48px!important;height:48px!important;border-radius:14px!important;flex-shrink:0;}
+body .parent-process .apc-section-emblem svg{width:32px;height:32px;}
+body .parent-process p{font-size:16px;line-height:1.6;}
+body .learning-grid{align-items:start;}
+body .learning-grid .learning-card{min-height:0;height:auto;padding:24px;gap:0;}
+body .learning-card .apc-card-photo{margin:0 0 18px;}
+body .learning-card .learning-status{margin:0 0 12px;font-size:13px;color:#245d50;font-weight:700;}
+body .learning-card h3{margin:0 0 16px;font-size:24px;}
+body .learning-card p{margin:0 0 16px;font-size:16px;line-height:1.6;}
+body .learning-card .audience-actions{margin:8px 0 0!important;gap:12px;align-items:flex-start;flex-direction:column;}
+body .learning-card .apc-contact-note{margin:16px 0 0;font-size:13px;}
+body .learning-card .offer-points{margin:0 0 16px;}
+@media(max-width:760px){body a.offer-cta{width:100%;}body.apc-start-page-v2 .route-card-detail .offer-cta{width:100%;}body .learning-grid .learning-card{padding:20px;}body .parent-process ol{gap:24px!important;}}
+
