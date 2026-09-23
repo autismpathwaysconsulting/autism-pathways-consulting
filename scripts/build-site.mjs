@@ -12,6 +12,11 @@ import { fileURLToPath } from "node:url";
 export const PUBLIC_FILES = Object.freeze([
   "apc-layout-repairs.css",
   "apc-offer-scan.css",
+  "apc-visual-refinement.css",
+  "consultation-guidance-480.webp",
+  "consultation-guidance-960.webp",
+  "guide-meltdowns-home-480.webp",
+  "guide-meltdowns-home-960.webp",
   "apc-topic-images.css",
   "course-escalation-480.webp",
   "course-escalation-960.webp",
