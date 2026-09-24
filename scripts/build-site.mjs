@@ -18,6 +18,8 @@ export const PUBLIC_FILES = Object.freeze([
   "guide-meltdowns-home-480.webp",
   "guide-meltdowns-home-960.webp",
   "guide-meltdowns-comforting-parent-960.webp",
+  "blog-parent-guide-960.webp",
+  "parent-home-support-960.webp",
   "guide-meltdowns-home-hd.webp",
   "coaching-get-ready-480.webp",
   "coaching-show-480.webp",
