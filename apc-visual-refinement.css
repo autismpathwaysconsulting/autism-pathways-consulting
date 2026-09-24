@@ -244,3 +244,6 @@ body.apc-resources-refined .resource-hero>.wrap{
     object-fit:cover;
   }
 }
+body.apc-resources-refined main>.resource-hero.apc-snap-stop{
+  min-height:0;
+}
