@@ -54,3 +54,122 @@ body.apc-free-tool-page .free-final-card.apc-section-composition{width:100%;max-
 /* This standalone page does not inherit the legacy body reset. */
 body.apc-blog-page{margin:0}
 
+
+
+/* 2026-09-24 approved visual cleanup: testimonial + blog card organisation. */
+body .apc-quote-visual{
+  display:grid;
+  grid-template-columns:minmax(0,1.42fr) minmax(320px,.78fr);
+  grid-template-areas:
+    "eyebrow photo"
+    "quote photo"
+    "cite photo";
+  column-gap:clamp(34px,5vw,72px);
+  row-gap:18px;
+  align-items:center;
+  padding:clamp(32px,4.8vw,64px);
+  border:1px solid rgba(7,55,52,.12);
+  border-radius:30px;
+  background:#fffdf9;
+  overflow:hidden;
+}
+body .apc-quote-visual>.eyebrow{grid-area:eyebrow;margin:0;align-self:end}
+body .apc-quote-visual>blockquote{
+  grid-area:quote;
+  max-width:20ch;
+  margin:0;
+  font-size:clamp(2rem,3.25vw,3.55rem);
+  line-height:1.1;
+  letter-spacing:-.025em;
+}
+body .apc-quote-visual>cite{
+  grid-area:cite;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin:8px 0 0;
+  font-style:normal;
+  font-weight:700;
+}
+body .apc-quote-visual>cite::before{
+  content:"";
+  width:44px;
+  height:2px;
+  flex:0 0 44px;
+  background:#e8997a;
+}
+body .apc-quote-visual>.apc-section-photo{
+  grid-area:photo;
+  float:none;
+  width:100%;
+  height:auto;
+  max-height:420px;
+  aspect-ratio:4/3;
+  margin:0;
+  object-fit:cover;
+  object-position:center;
+  border-radius:24px;
+  box-shadow:0 20px 44px -30px rgba(7,55,52,.55);
+}
+body .apc-quote-visual::after{content:none;display:none}
+
+body.apc-blog-page .audience-grid{align-items:stretch}
+body.apc-blog-page .audience-card{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  min-height:0;
+  padding:20px;
+  border:1px solid rgba(7,55,52,.12);
+  border-radius:20px;
+  background:#fffdf9;
+}
+body.apc-blog-page .guide-card-visual{
+  width:100%;
+  max-height:none;
+  aspect-ratio:16/10;
+  object-fit:cover;
+  border-radius:14px;
+  margin:0 0 18px;
+}
+body.apc-blog-page .audience-card h3{
+  margin:0 0 12px;
+  font-size:clamp(1.28rem,1.7vw,1.55rem);
+  line-height:1.22;
+}
+body.apc-blog-page .audience-card h3 a{
+  color:#0f766e;
+  text-decoration-thickness:1px;
+  text-underline-offset:4px;
+}
+body.apc-blog-page .audience-card p{
+  margin:0;
+  font-size:.98rem;
+  line-height:1.65;
+  color:#2d3d3a;
+}
+@media(max-width:800px){
+  body .apc-quote-visual{
+    grid-template-columns:1fr;
+    grid-template-areas:
+      "eyebrow"
+      "photo"
+      "quote"
+      "cite";
+    row-gap:20px;
+    padding:24px;
+  }
+  body .apc-quote-visual>blockquote{
+    max-width:none;
+    font-size:clamp(1.8rem,7vw,2.6rem);
+  }
+  body .apc-quote-visual>.apc-section-photo{
+    max-height:none;
+    aspect-ratio:16/10;
+  }
+}
+@media(max-width:520px){
+  body .apc-quote-visual{padding:20px;border-radius:22px}
+  body.apc-blog-page .audience-card{padding:16px;border-radius:18px}
+  body.apc-blog-page .guide-card-visual{margin-bottom:16px}
+}
