@@ -79,6 +79,8 @@ export const PUBLIC_FILES = Object.freeze([
   "one-concern-session-materials-480.webp",
   "APC-School-Training-Overview.pdf",
   "APC-Big-Reactions-Quick-Check.pdf",
+  "APC-Big-Reactions-Quick-Check-page-1.webp",
+  "APC-Big-Reactions-Quick-Check-page-2.webp",
   "big-reactions-quick-check.html",
   "big-reactions-quick-check.css",
   "big-reactions-quick-check.js",
