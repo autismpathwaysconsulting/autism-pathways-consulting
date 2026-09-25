@@ -231,3 +231,19 @@ body.apc-resources-refined .support-note{
     padding:22px;
   }
 }
+
+/* Keep the first useful choices visible without a viewport-height hero. */
+body.apc-resources-refined .resource-hero>.wrap{
+  min-height:0;
+}
+
+/* Match the learning hero's image panel to the surrounding audience pages. */
+@media(min-width:761px){
+  body.apc-minimal-page .services-hero .apc-learning-visual>.apc-editorial-image{
+    aspect-ratio:2/1;
+    object-fit:cover;
+  }
+}
+body.apc-resources-refined main>.resource-hero.apc-snap-stop{
+  min-height:0;
+}
