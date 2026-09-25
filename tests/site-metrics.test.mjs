@@ -25,21 +25,26 @@ const requestFor = (body, headers = {}) => new Request("https://autismpathwaysco
 test("counters aggregate without identity, expire old totals, and expose a bounded report", async () => {
   const storage = database();
   storage.db.exec(await readFile(new URL("../site-metrics-migrations/0001_daily_counts.sql", import.meta.url), "utf8"));
+  storage.db.exec(await readFile(new URL("../site-metrics-migrations/0002_quick_check_attribution.sql", import.meta.url), "utf8"));
   storage.db.exec("INSERT INTO daily_counts VALUES ('2020-01-01','home','page_view',1)");
   const env = { APC_CONTENT_OS_ENVIRONMENT: "production", APC_SITE_METRICS_DB: storage };
   for (let i = 0; i < 2; i++) assert.equal((await onRequest({ request: requestFor({ page: "services", event: "page_view" }), env })).status, 204);
   const rows = storage.db.prepare("SELECT * FROM daily_counts").all();
   assert.equal(rows.length, 1); assert.equal(rows[0].count, 2);
   assert.deepEqual(Object.keys(rows[0]), ["day", "page", "event", "count"]);
+  const quickCheckMetric = { page: "quick_check", event: "form_open", attribution: { source: "instagram", medium: "organic_social", campaign: "big_reactions" } };
+  assert.equal((await onRequest({ request: requestFor(quickCheckMetric), env })).status, 204);
   const result = await report({ request: new Request("https://autismpathwaysconsulting.com/api/content-os/site-metrics"), env });
-  assert.equal((await result.json()).rows[0].count, 2);
+  const data = await result.json();
+  assert.equal(data.rows[0].count, 2);
+  assert.deepEqual(data.quickCheck[0], { event: "form_open", source: "instagram", medium: "organic_social", campaign: "big_reactions", count: 1 });
   storage.db.close();
 });
 
 test("collector rejects unsupported data, respects privacy signals and has no preview writes", async () => {
   let writes = 0;
   const env = { APC_CONTENT_OS_ENVIRONMENT: "production", APC_SITE_METRICS_DB: { prepare() { writes++; throw Error(); } } };
-  for (const body of [{ page: "services", event: "page_view", email: "test@example.com" }, { page: "/private", event: "page_view" }, { page: "about", event: "booking_submitted" }, null]) {
+  for (const body of [{ page: "services", event: "page_view", email: "test@example.com" }, { page: "/private", event: "page_view" }, { page: "about", event: "booking_submitted" }, { page: "quick_check", event: "download", attribution: { source: "unbounded", medium: "social", campaign: "big_reactions" } }, null]) {
     assert.equal((await onRequest({ request: requestFor(body), env })).status, 400);
   }
   assert.equal((await onRequest({ request: requestFor({ page: "home", event: "page_view" }, { DNT: "1" }), env })).status, 204);
