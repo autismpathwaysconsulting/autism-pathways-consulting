@@ -209,3 +209,14 @@ body.apc-home-page .apc-booking-guide span{color:#45625e;font-size:.9rem}
 body.apc-home-page [data-cal-inline]{margin-top:24px}
 body.apc-home-page [data-cal-inline][hidden]{display:none!important}
 @media(max-width:800px){body.apc-home-page .apc-booking-panel{grid-template-columns:1fr}body.apc-home-page .apc-booking-actions .button{width:100%}}
+
+/* Align the two long homepage headings with their full sections. */
+body.apc-home-page #how-apc-helps .section-head{max-width:860px!important;margin-inline:auto;text-align:center}
+body.apc-home-page #how-apc-helps .section-head h2{max-width:23ch;margin-inline:auto;text-wrap:balance}
+body.apc-home-page #how-apc-helps .section-head>p:last-child{max-width:68ch;margin-inline:auto;text-wrap:pretty}
+body.apc-home-page .apc-booking-panel{grid-template-areas:"heading heading" "copy guide";align-items:start;row-gap:clamp(20px,3vw,34px)}
+body.apc-home-page .apc-booking-heading{grid-area:heading;text-align:center;max-width:760px;margin-inline:auto}
+body.apc-home-page .apc-booking-heading h2{max-width:23ch;margin:0 auto;font-size:clamp(2.25rem,3.4vw,3.4rem);line-height:1.1;text-wrap:balance}
+body.apc-home-page .apc-booking-intro{grid-area:copy;align-self:center}
+body.apc-home-page .apc-booking-guide{grid-area:guide}
+@media(max-width:800px){body.apc-home-page #how-apc-helps .section-head{text-align:left}body.apc-home-page #how-apc-helps .section-head h2,body.apc-home-page #how-apc-helps .section-head>p:last-child{margin-inline:0}body.apc-home-page .apc-booking-panel{grid-template-areas:"heading" "copy" "guide"}body.apc-home-page .apc-booking-heading{text-align:left;margin-inline:0}body.apc-home-page .apc-booking-heading h2{margin-inline:0;font-size:clamp(2rem,8vw,2.7rem)}}
