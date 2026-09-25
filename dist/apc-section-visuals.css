@@ -220,3 +220,7 @@ body.apc-home-page .apc-booking-panel{grid-template-columns:minmax(0,1.15fr) min
 body.apc-home-page .apc-booking-intro h2{max-width:20ch;font-size:clamp(2.25rem,3vw,3rem);line-height:1.1;text-wrap:balance}
 body.apc-home-page .apc-booking-actions{margin-top:20px}
 @media(max-width:800px){body.apc-home-page #how-apc-helps .section-head{display:block;max-width:100%!important;margin-bottom:16px!important}body.apc-home-page #how-apc-helps .section-head h2{margin-bottom:10px}body.apc-home-page .apc-booking-panel{grid-template-columns:1fr}body.apc-home-page .apc-booking-intro h2{font-size:clamp(2rem,8vw,2.7rem)}}
+/* These two sections do not need a full viewport of empty space. */
+body.apc-tier-a.apc-home-page main > #how-apc-helps,
+body.apc-tier-a.apc-home-page main > #book-first-step{min-height:0;align-items:initial;padding-block:clamp(44px,5vw,68px)!important}
+@media(max-width:800px){body.apc-tier-a.apc-home-page main > #how-apc-helps,body.apc-tier-a.apc-home-page main > #book-first-step{padding-block:36px!important}}
