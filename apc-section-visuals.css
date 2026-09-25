@@ -210,13 +210,13 @@ body.apc-home-page [data-cal-inline]{margin-top:24px}
 body.apc-home-page [data-cal-inline][hidden]{display:none!important}
 @media(max-width:800px){body.apc-home-page .apc-booking-panel{grid-template-columns:1fr}body.apc-home-page .apc-booking-actions .button{width:100%}}
 
-/* Align the two long homepage headings with their full sections. */
-body.apc-home-page #how-apc-helps .section-head{max-width:860px!important;margin-inline:auto;text-align:center}
-body.apc-home-page #how-apc-helps .section-head h2{max-width:23ch;margin-inline:auto;text-wrap:balance}
-body.apc-home-page #how-apc-helps .section-head>p:last-child{max-width:68ch;margin-inline:auto;text-wrap:pretty}
-body.apc-home-page .apc-booking-panel{grid-template-areas:"heading heading" "copy guide";align-items:start;row-gap:clamp(20px,3vw,34px)}
-body.apc-home-page .apc-booking-heading{grid-area:heading;text-align:center;max-width:760px;margin-inline:auto}
-body.apc-home-page .apc-booking-heading h2{max-width:23ch;margin:0 auto;font-size:clamp(2.25rem,3.4vw,3.4rem);line-height:1.1;text-wrap:balance}
-body.apc-home-page .apc-booking-intro{grid-area:copy;align-self:center}
-body.apc-home-page .apc-booking-guide{grid-area:guide}
-@media(max-width:800px){body.apc-home-page #how-apc-helps .section-head{text-align:left}body.apc-home-page #how-apc-helps .section-head h2,body.apc-home-page #how-apc-helps .section-head>p:last-child{margin-inline:0}body.apc-home-page .apc-booking-panel{grid-template-areas:"heading" "copy" "guide"}body.apc-home-page .apc-booking-heading{text-align:left;margin-inline:0}body.apc-home-page .apc-booking-heading h2{margin-inline:0;font-size:clamp(2rem,8vw,2.7rem)}}
+/* Put the process explanation beside its heading and keep the cards close below. */
+body.apc-home-page #how-apc-helps .section-head{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:0 clamp(24px,4vw,54px);align-items:center;max-width:980px!important;margin:0 auto 22px!important;text-align:left}
+body.apc-home-page #how-apc-helps .section-head>.eyebrow{grid-column:1;align-self:end}
+body.apc-home-page #how-apc-helps .section-head h2{grid-column:1;max-width:20ch;margin-bottom:0;text-wrap:balance}
+body.apc-home-page #how-apc-helps .section-head>p:last-child{grid-column:2;grid-row:1 / span 2;max-width:50ch;margin:0;align-self:center;text-wrap:pretty}
+/* The booking title belongs with its explanation, alongside the next-step guide. */
+body.apc-home-page .apc-booking-panel{grid-template-columns:minmax(0,1.15fr) minmax(290px,.85fr);gap:clamp(28px,4vw,52px);align-items:center}
+body.apc-home-page .apc-booking-intro h2{max-width:20ch;font-size:clamp(2.25rem,3vw,3rem);line-height:1.1;text-wrap:balance}
+body.apc-home-page .apc-booking-actions{margin-top:20px}
+@media(max-width:800px){body.apc-home-page #how-apc-helps .section-head{display:block;max-width:100%!important;margin-bottom:16px!important}body.apc-home-page #how-apc-helps .section-head h2{margin-bottom:10px}body.apc-home-page .apc-booking-panel{grid-template-columns:1fr}body.apc-home-page .apc-booking-intro h2{font-size:clamp(2rem,8vw,2.7rem)}}
