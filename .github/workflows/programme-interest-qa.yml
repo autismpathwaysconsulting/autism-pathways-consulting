@@ -43,6 +43,7 @@ jobs:
           node tests/programmes/preview.mjs > /tmp/apc-programme-preview.log 2>&1 &
           node tests/programmes/browser.cjs
           node tests/programmes/site-sync-browser.cjs
+          node tests/big-reactions-browser.cjs
           node scripts/check-programme-live.mjs http://localhost:8899 open
       - run: python3 tests/validate_website_authority.py
       - run: python3 tests/run_authority_tests.py
