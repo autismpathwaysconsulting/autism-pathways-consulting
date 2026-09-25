@@ -260,7 +260,7 @@ body.apc-tier-a.apc-about-page main > .section{
   align-items:initial;
   padding-block:clamp(42px,5vw,68px)!important;
 }
-body.apc-tier-a.apc-about-page main > .hero{padding-block:0!important}
+body.apc-tier-a.apc-about-page main > .hero{min-height:0;padding-block:0!important}
 body.apc-about-page .hero-grid{
   min-height:0!important;
   padding-block:clamp(38px,4.5vw,58px)!important;
