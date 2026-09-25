@@ -28,7 +28,13 @@
       const allowSource = new Set(['instagram','facebook','google','email','whatsapp','direct','other']);
       const allowMedium = new Set(['social','paid_social','organic_social','email','referral','direct','other']);
       const clean = (value, allowed, fallback) => { const normal = String(value || '').toLowerCase().replace(/[^a-z0-9_-]/g,'_').slice(0,32); return allowed.has(normal) ? normal : fallback; };
-      const attribution = {source:clean(params.get('utm_source'),allowSource,'direct'),medium:clean(params.get('utm_medium'),allowMedium,'direct'),campaign:params.get('utm_campaign') === 'big_reactions' ? 'big_reactions' : 'unspecified'};
+      let saved = {};
+      try { saved = JSON.parse(sessionStorage.getItem('apc.quick_check_attribution') || '{}'); } catch {}
+      const attribution = {
+        source: clean(params.get('utm_source') || saved.source, allowSource, 'direct'),
+        medium: clean(params.get('utm_medium') || saved.medium, allowMedium, 'direct'),
+        campaign: (params.get('utm_campaign') || saved.campaign) === 'big_reactions' ? 'big_reactions' : 'unspecified'
+      };
       const recorded = new Set();
       const record = event => {
         if (recorded.has(event) || location.origin !== 'https://autismpathwaysconsulting.com' || navigator.doNotTrack === '1' || navigator.globalPrivacyControl === true) return;

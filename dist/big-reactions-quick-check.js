@@ -15,6 +15,12 @@ const attribution = {
   campaign: query.get("utm_campaign") === "big_reactions" ? "big_reactions" : "unspecified",
 };
 
+try {
+  window.sessionStorage.setItem("apc.quick_check_attribution", JSON.stringify(attribution));
+} catch {
+  // Analytics must never block the page or form.
+}
+
 const recorded = new Set();
 function recordMetric(event) {
   if (window.location.origin !== "https://autismpathwaysconsulting.com" || navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true || recorded.has(event)) return;
