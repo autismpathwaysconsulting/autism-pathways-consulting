@@ -24,6 +24,14 @@ test('Quick Check route uses the shared APC page shell', async () => {
   assert.match(html, /class="apc-footer-bottom"/);
 });
 
+test('Quick Check route previews both actual PDF pages', async () => {
+  const html = await source('big-reactions-quick-check.html');
+  assert.match(html, /APC-Big-Reactions-Quick-Check-page-1\.webp/);
+  assert.match(html, /APC-Big-Reactions-Quick-Check-page-2\.webp/);
+  assert.ok((await stat(new URL('APC-Big-Reactions-Quick-Check-page-1.webp', root))).size > 50000);
+  assert.ok((await stat(new URL('APC-Big-Reactions-Quick-Check-page-2.webp', root))).size > 50000);
+});
+
 test('UTM attribution is bounded and analytics never include form fields or arbitrary campaigns', async () => {
   const [script, metrics, thankYou] = await Promise.all([source('big-reactions-quick-check.js'), source('functions/lib/site-metrics.js'), source('thank-you-big-reactions.js')]);
   assert.match(script, /slice\(0, 32\)/);
