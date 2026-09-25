@@ -15,6 +15,15 @@ test('Quick Check route uses the dedicated verified Brevo form and transparent c
   assert.doesNotMatch(html, /Communication Course|Get Your Free Parent Guide/);
 });
 
+test('Quick Check route uses the shared APC page shell', async () => {
+  const html = await source('big-reactions-quick-check.html');
+  assert.match(html, /href="\/apc-design-system\.css\?v=/);
+  assert.match(html, /<body class="[^"]*apc-v2[^"]*">/);
+  assert.match(html, /class="apc-site-header"/);
+  assert.match(html, /class="apc-footer-inner"/);
+  assert.match(html, /class="apc-footer-bottom"/);
+});
+
 test('UTM attribution is bounded and analytics never include form fields or arbitrary campaigns', async () => {
   const [script, metrics, thankYou] = await Promise.all([source('big-reactions-quick-check.js'), source('functions/lib/site-metrics.js'), source('thank-you-big-reactions.js')]);
   assert.match(script, /slice\(0, 32\)/);
