@@ -174,11 +174,8 @@ body.apc-blog-page .audience-card p{
   body.apc-blog-page .guide-card-visual{margin-bottom:16px}
 }
 
-/* Homepage examples: human scene first, explanatory artwork later. */
+/* Homepage examples and parent story. */
 body.apc-home-page .hero-visual .hero-approach{top:auto;bottom:clamp(14px,2vw,24px)}
-body.apc-home-page .home-path-art{display:grid;grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:center;gap:24px;margin:clamp(32px,5vw,56px) 0 0}
-body.apc-home-page .home-path-art img{display:block;width:100%;height:auto;border-radius:20px}
-body.apc-home-page .home-path-art figcaption{max-width:52ch;color:#5b6b68;line-height:1.6}
 body.apc-home-page .home-shift{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,64px);align-items:center}
 body.apc-home-page .home-shift-copy h2{max-width:16ch}
 body.apc-home-page .home-shift-copy p{max-width:48ch;line-height:1.65}
@@ -186,9 +183,11 @@ body.apc-home-page .home-shift-note{font-size:.88rem;color:#5b6b68}
 body.apc-home-page .home-shift-figure{margin:0}
 body.apc-home-page .home-shift-figure img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:24px}
 body.apc-home-page .home-shift-figure figcaption{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;color:#073734;font-size:.9rem;font-weight:700}
-@media(max-width:800px){body.apc-home-page .home-shift{grid-template-columns:1fr}body.apc-home-page .home-path-art{grid-template-columns:1fr}body.apc-home-page .home-path-art img{max-width:300px}body.apc-home-page .hero-visual .hero-approach{position:relative;bottom:auto;right:auto;width:100%;margin-top:12px}}
+@media(max-width:800px){body.apc-home-page .home-shift{grid-template-columns:1fr}body.apc-home-page .hero-visual .hero-approach{position:relative;bottom:auto;right:auto;width:100%;margin-top:12px}}
 
 body.apc-home-page .apc-quote-visual>.home-testimonial-image-note{grid-area:photo;align-self:end;z-index:1;margin:0 12px 12px;justify-self:end;padding:6px 10px;border-radius:8px;background:#fffdf9ed;color:#253532;font-size:.72rem}
 body.apc-home-page .apc-quote-visual{grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);gap:clamp(28px,4vw,52px)}
 body.apc-home-page .apc-quote-visual>blockquote{max-width:31ch;font-size:clamp(1.65rem,2.25vw,2.25rem);line-height:1.2}
 @media(max-width:800px){body.apc-home-page .apc-quote-visual{grid-template-columns:1fr;gap:18px}body.apc-home-page .apc-quote-visual>blockquote{max-width:none;font-size:clamp(1.7rem,6.5vw,2.2rem)}}
+
+body.apc-home-page #start .route-actions>.apc-section-photo{aspect-ratio:3/2;object-fit:cover;object-position:center;max-width:340px}
