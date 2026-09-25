@@ -305,6 +305,11 @@ body.apc-parent-minimal #support .support-material-image{aspect-ratio:16/9}
 body.apc-minimal-page #learning-options{padding-bottom:clamp(28px,4vw,52px)}
 body.programmes-page #interest{padding-block:clamp(38px,4vw,52px)}
 @media(min-width:761px){body.programmes-page #interest .interest-intro{position:sticky;top:100px;align-self:start}}
+/* A closed interest list has an email route, so do not display an unusable form. */
+body.programmes-page #interest:has(#interest-fields:disabled){grid-template-columns:1fr}
+body.programmes-page #interest:has(#interest-fields:disabled) #programme-form,
+body.programmes-page #interest:has(#interest-fields:disabled) .interest-open-only{display:none}
+body.programmes-page #interest:has(#interest-fields:disabled) .interest-intro{position:static}
 
 @media(max-width:800px){
   body.apc-tier-a.apc-home-page main > #parent-story,
