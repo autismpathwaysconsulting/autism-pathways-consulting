@@ -282,11 +282,36 @@ body.apc-about-page #how-i-work .work-step{
 }
 body.apc-about-page #how-i-work .work-step>.apc-section-emblem{margin-bottom:2px}
 
+/* Lead with the parent's own words, and preserve the complete account on demand. */
+body.apc-home-page #parent-story .apc-quote-visual{
+  grid-template-areas:"eyebrow photo" "quote photo" "full photo" "cite photo";
+  align-items:start;
+  row-gap:12px;
+}
+body.apc-home-page #parent-story .apc-quote-visual>blockquote{max-width:35ch}
+body.apc-home-page #parent-story .home-testimonial-full{grid-area:full;max-width:55ch;font-family:'DM Sans',sans-serif;color:#314d49}
+body.apc-home-page #parent-story .home-testimonial-full summary{width:fit-content;min-height:44px;display:flex;align-items:center;cursor:pointer;color:#0a655e;font-size:.92rem;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+body.apc-home-page #parent-story .home-testimonial-full p{margin:6px 0 0;font-size:.94rem;line-height:1.65}
+body.apc-home-page #parent-story .apc-quote-visual>cite{margin:0}
+
+/* Let the real-life photographs carry the Resources and Schools introductions. */
+body.apc-resources-page .resource-visual picture{border-radius:24px}
+body.apc-resources-page .resource-visual img{aspect-ratio:3/2;object-position:center}
+body.apc-resources-page .resource-image-note{position:absolute;right:12px;bottom:12px;padding:5px 9px;border-radius:8px;background:#fffdf9eb;color:#253532;font-size:.72rem}
+
+/* Keep long choices and forms legible without adding full-screen gaps. */
+body.apc-parent-minimal #support{padding-block:clamp(36px,4vw,52px)}
+body.apc-parent-minimal #support .support-material-image{aspect-ratio:16/9}
+body.apc-minimal-page #learning-options{padding-bottom:clamp(28px,4vw,52px)}
+body.programmes-page #interest{padding-block:clamp(38px,4vw,52px)}
+@media(min-width:761px){body.programmes-page #interest .interest-intro{position:sticky;top:100px;align-self:start}}
+
 @media(max-width:800px){
   body.apc-tier-a.apc-home-page main > #parent-story,
   body.apc-tier-a.apc-about-page main > .section{padding-block:36px!important}
   body.apc-home-page #parent-story .apc-quote-visual{grid-template-columns:1fr;gap:16px;padding:24px}
   body.apc-home-page #parent-story .apc-quote-visual>blockquote{font-size:clamp(1.4rem,5vw,1.85rem)}
+  body.apc-home-page #parent-story .apc-quote-visual{grid-template-areas:"eyebrow" "photo" "quote" "full" "cite"}
   body.apc-about-page #how-i-work .work-steps{grid-template-columns:1fr}
   body.apc-about-page #how-i-work .work-step{padding:16px!important}
 }
