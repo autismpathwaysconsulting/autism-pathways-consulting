@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Your Big Reactions Quick Check | Autism Pathways Consulting</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="preload" href="/dm-sans-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/dm-serif-display-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/big-reactions-quick-check.css">
+</head>
+<body>
+  <main id="main-content" class="quick-thanks">
+    <section class="quick-wrap text-measure">
+      <p class="eyebrow">Your Quick Check is ready</p>
+      <h1>Start with one recent moment.</h1>
+      <p class="lead">Your download should begin automatically. If it does not, use the button below.</p>
+      <p><a class="button primary" id="quick-check-download" href="/APC-Big-Reactions-Quick-Check.pdf" download>Download the Big Reactions Quick Check</a></p>
+      <p class="quiet-note">Keep your notes private unless you choose to share them. You do not need to complete both pages today.</p>
+      <p><a href="/resources">Browse more APC parent resources</a></p>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const link = document.getElementById('quick-check-download');
+      const params = new URLSearchParams(location.search);
+      const allowSource = new Set(['instagram','facebook','google','email','whatsapp','direct','other']);
+      const allowMedium = new Set(['social','paid_social','organic_social','email','referral','direct','other']);
+      const clean = (value, allowed, fallback) => { const normal = String(value || '').toLowerCase().replace(/[^a-z0-9_-]/g,'_').slice(0,32); return allowed.has(normal) ? normal : fallback; };
+      const attribution = {source:clean(params.get('utm_source'),allowSource,'direct'),medium:clean(params.get('utm_medium'),allowMedium,'direct'),campaign:params.get('utm_campaign') === 'big_reactions' ? 'big_reactions' : 'unspecified'};
+      const recorded = new Set();
+      const record = event => {
+        if (recorded.has(event) || location.origin !== 'https://autismpathwaysconsulting.com' || navigator.doNotTrack === '1' || navigator.globalPrivacyControl === true) return;
+        recorded.add(event);
+        fetch('/api/site-metrics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:'quick_check',event,attribution}),credentials:'omit',referrerPolicy:'no-referrer',keepalive:true}).catch(()=>{});
+      };
+      record('form_submitted');
+      link.addEventListener('click', () => record('download'), {once:true});
+      window.setTimeout(() => { record('download'); link.click(); }, 500);
+    })();
+  </script>
+</body>
+</html>

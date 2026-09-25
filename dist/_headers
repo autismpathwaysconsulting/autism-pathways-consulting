@@ -96,6 +96,12 @@
 /thank-you-free-guide
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
+/big-reactions-quick-check
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/thank-you-big-reactions
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
 /connect/
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
