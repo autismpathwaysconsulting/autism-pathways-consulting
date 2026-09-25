@@ -209,3 +209,21 @@ body.apc-home-page .apc-booking-guide span{color:#45625e;font-size:.9rem}
 body.apc-home-page [data-cal-inline]{margin-top:24px}
 body.apc-home-page [data-cal-inline][hidden]{display:none!important}
 @media(max-width:800px){body.apc-home-page .apc-booking-panel{grid-template-columns:1fr}body.apc-home-page .apc-booking-actions .button{width:100%}}
+
+/* Put the process explanation beside its heading and keep the cards close below. */
+body.apc-home-page #how-apc-helps .section-head{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:0 clamp(24px,4vw,54px);align-items:center;max-width:980px!important;margin:0 auto 22px!important;text-align:left}
+body.apc-home-page #how-apc-helps .section-head>.eyebrow{grid-column:1;align-self:end}
+body.apc-home-page #how-apc-helps .section-head h2{grid-column:1;max-width:20ch;margin-bottom:0;text-wrap:balance}
+body.apc-home-page #how-apc-helps .section-head>p:last-child{grid-column:2;grid-row:1 / span 2;max-width:50ch;margin:0;align-self:center;text-wrap:pretty}
+/* The booking title belongs with its explanation, alongside the next-step guide. */
+body.apc-home-page .apc-booking-panel{grid-template-columns:minmax(0,1.15fr) minmax(290px,.85fr);gap:clamp(28px,4vw,52px);align-items:center}
+body.apc-home-page .apc-booking-intro h2{max-width:20ch;font-size:clamp(2.25rem,3vw,3rem);line-height:1.1;text-wrap:balance}
+body.apc-home-page .apc-booking-actions{margin-top:20px}
+@media(max-width:800px){body.apc-home-page #how-apc-helps .section-head{display:block;max-width:100%!important;margin-bottom:16px!important}body.apc-home-page #how-apc-helps .section-head h2{margin-bottom:10px}body.apc-home-page .apc-booking-panel{grid-template-columns:1fr}body.apc-home-page .apc-booking-intro h2{font-size:clamp(2rem,8vw,2.7rem)}}
+/* These two sections do not need a full viewport of empty space. */
+body.apc-tier-a.apc-home-page main > #how-apc-helps,
+body.apc-tier-a.apc-home-page main > #book-first-step{min-height:0;align-items:initial;padding-block:clamp(44px,5vw,68px)!important}
+@media(max-width:800px){body.apc-tier-a.apc-home-page main > #how-apc-helps,body.apc-tier-a.apc-home-page main > #book-first-step{padding-block:36px!important}}
+/* Show support options directly after the shorter process section. */
+body.apc-tier-a.apc-home-page main > #support-options{min-height:0;align-items:initial;padding-block:clamp(44px,5vw,68px)!important}
+@media(max-width:800px){body.apc-tier-a.apc-home-page main > #support-options{padding-block:36px!important}}
