@@ -293,6 +293,11 @@ body.apc-home-page #parent-story .home-testimonial-full{grid-area:full;max-width
 body.apc-home-page #parent-story .home-testimonial-full summary{width:fit-content;min-height:44px;display:flex;align-items:center;cursor:pointer;color:#0a655e;font-size:.92rem;font-weight:700;text-decoration:underline;text-underline-offset:3px}
 body.apc-home-page #parent-story .home-testimonial-full p{margin:6px 0 0;font-size:.94rem;line-height:1.65}
 body.apc-home-page #parent-story .apc-quote-visual>cite{margin:0}
+/* Optional compact row for one or two additional approved parent accounts. */
+body.apc-home-page #parent-story .home-testimonial-more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}
+body.apc-home-page #parent-story .home-testimonial-small{margin:0;padding:clamp(22px,3vw,32px);border:1px solid rgba(7,55,52,.12);border-radius:22px;background:#fffdf9}
+body.apc-home-page #parent-story .home-testimonial-small blockquote{margin:0 0 18px;font-family:'DM Serif Display',serif;font-size:clamp(1.25rem,1.7vw,1.6rem);line-height:1.3;color:#073734}
+body.apc-home-page #parent-story .home-testimonial-small figcaption{font-size:.88rem;font-weight:700;color:#314d49}
 
 /* Let the real-life photographs carry the Resources and Schools introductions. */
 body.apc-resources-page .resource-visual picture{border-radius:24px}
@@ -317,6 +322,7 @@ body.programmes-page #interest:has(#interest-fields:disabled) .interest-intro{po
   body.apc-home-page #parent-story .apc-quote-visual{grid-template-columns:1fr;gap:16px;padding:24px}
   body.apc-home-page #parent-story .apc-quote-visual>blockquote{font-size:clamp(1.4rem,5vw,1.85rem)}
   body.apc-home-page #parent-story .apc-quote-visual{grid-template-areas:"eyebrow" "photo" "quote" "full" "cite"}
+  body.apc-home-page #parent-story .home-testimonial-more{grid-template-columns:1fr}
   body.apc-about-page #how-i-work .work-steps{grid-template-columns:1fr}
   body.apc-about-page #how-i-work .work-step{padding:16px!important}
 }
