@@ -173,3 +173,39 @@ body.apc-blog-page .audience-card p{
   body.apc-blog-page .audience-card{padding:16px;border-radius:18px}
   body.apc-blog-page .guide-card-visual{margin-bottom:16px}
 }
+
+/* Homepage examples and parent story. */
+body.apc-home-page .hero-visual .hero-approach{top:auto;bottom:clamp(14px,2vw,24px)}
+body.apc-home-page .home-shift{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,64px);align-items:center}
+body.apc-home-page .home-shift-copy h2{max-width:16ch}
+body.apc-home-page .home-shift-copy p{max-width:48ch;line-height:1.65}
+body.apc-home-page .home-shift-note{font-size:.88rem;color:#5b6b68}
+body.apc-home-page .home-shift-figure{margin:0}
+body.apc-home-page .home-shift-figure img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:24px}
+body.apc-home-page .home-shift-figure figcaption{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;color:#073734;font-size:.9rem;font-weight:700}
+@media(max-width:800px){body.apc-home-page .home-shift{grid-template-columns:1fr}body.apc-home-page .hero-visual .hero-approach{position:relative;bottom:auto;right:auto;width:100%;margin-top:12px}}
+
+body.apc-home-page .apc-quote-visual>.home-testimonial-image-note{grid-area:photo;align-self:end;z-index:1;margin:0 12px 12px;justify-self:end;padding:6px 10px;border-radius:8px;background:#fffdf9ed;color:#253532;font-size:.72rem}
+body.apc-home-page .apc-quote-visual{grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);gap:clamp(28px,4vw,52px)}
+body.apc-home-page .apc-quote-visual>blockquote{max-width:31ch;font-size:clamp(1.65rem,2.25vw,2.25rem);line-height:1.2}
+@media(max-width:800px){body.apc-home-page .apc-quote-visual{grid-template-columns:1fr;gap:18px}body.apc-home-page .apc-quote-visual>blockquote{max-width:none;font-size:clamp(1.7rem,6.5vw,2.2rem)}}
+
+body.apc-home-page #start .route-actions>.apc-section-photo{aspect-ratio:3/2;object-fit:cover;object-position:center;max-width:340px}
+
+/* Keep the booking invitation useful even when the third-party calendar is unavailable. */
+body.apc-home-page .apc-booking-panel{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,.75fr);gap:clamp(30px,5vw,70px);align-items:center;background:#fffdf9;border:1px solid #dbe7e4;border-radius:28px;padding:clamp(28px,5vw,58px);box-shadow:0 20px 54px -42px #0737347a}
+body.apc-home-page .apc-booking-intro{margin:0}
+body.apc-home-page .apc-booking-intro h2{max-width:14ch}
+body.apc-home-page .apc-booking-intro>p{max-width:58ch}
+body.apc-home-page .apc-booking-boundary{color:#45625e;font-size:.92rem}
+body.apc-home-page .apc-booking-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+body.apc-home-page .apc-booking-actions .button{font:inherit;cursor:pointer;text-align:center}
+body.apc-home-page .apc-booking-guide{background:#f2f7f5;border-radius:22px;padding:clamp(24px,3vw,36px)}
+body.apc-home-page .apc-booking-guide ol{list-style:none;counter-reset:booking;margin:0;padding:0}
+body.apc-home-page .apc-booking-guide li{counter-increment:booking;display:grid;grid-template-columns:36px 1fr;gap:0 12px;padding:16px 0;border-bottom:1px solid #d6e5e1}
+body.apc-home-page .apc-booking-guide li:last-child{border-bottom:0;padding-bottom:0}
+body.apc-home-page .apc-booking-guide li::before{content:counter(booking);grid-row:span 2;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#dff8f4;color:#073734;font-weight:700}
+body.apc-home-page .apc-booking-guide span{color:#45625e;font-size:.9rem}
+body.apc-home-page [data-cal-inline]{margin-top:24px}
+body.apc-home-page [data-cal-inline][hidden]{display:none!important}
+@media(max-width:800px){body.apc-home-page .apc-booking-panel{grid-template-columns:1fr}body.apc-home-page .apc-booking-actions .button{width:100%}}

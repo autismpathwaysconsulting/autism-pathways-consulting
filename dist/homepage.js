@@ -145,9 +145,35 @@ bookingLoad?.addEventListener("click", () => {
   if (bookingLoad.disabled) return;
   recordSiteMetric("calendar_open");
   bookingLoad.disabled = true;
-  bookingLoad.textContent = "Calendar requested below";
+  bookingLoad.textContent = "Opening calendar…";
+  calInline.hidden = false;
   const status = document.querySelector("[data-booking-status]");
-  status.textContent = "Loading Cal.com. If the calendar does not appear, use the direct booking link.";
+  status.textContent = "Opening the calendar below. If it does not appear, use Choose a time on Cal.com.";
+  const timeout = window.setTimeout(() => {
+    if (!calInline.querySelector("iframe")) {
+      calInline.hidden = true;
+      bookingLoad.disabled = false;
+      bookingLoad.textContent = "Try viewing calendar here again";
+      status.textContent = "The calendar could not load here. Choose a time on Cal.com instead.";
+    }
+  }, 9000);
+  const observer = new MutationObserver(() => {
+    if (calInline.querySelector("iframe")) {
+      window.clearTimeout(timeout);
+      observer.disconnect();
+      bookingLoad.hidden = true;
+      status.textContent = "Available times are shown below. You can also open Cal.com in a new tab.";
+    }
+  });
+  observer.observe(calInline, { childList: true, subtree: true });
+  const scriptError = () => {
+    window.clearTimeout(timeout);
+    observer.disconnect();
+    calInline.hidden = true;
+    bookingLoad.disabled = false;
+    bookingLoad.textContent = "Try viewing calendar here again";
+    status.textContent = "The calendar could not load here. Choose a time on Cal.com instead.";
+  };
   ((root, source, namespace) => {
     const enqueue = (api, args) => api.q.push(args);
     const documentRef = root.document;
@@ -159,6 +185,7 @@ bookingLoad?.addEventListener("click", () => {
         const script = documentRef.createElement("script");
         script.src = source;
         documentRef.head.appendChild(script);
+        script.addEventListener("error", scriptError, { once: true });
         api.loaded = true;
       }
       if (args[0] === namespace) {
