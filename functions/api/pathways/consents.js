@@ -36,7 +36,7 @@ function dateHasNotExpired(value, now, timeZone) {
   return Number.isFinite(instant) && instant >= now.getTime();
 }
 
-function projectConsentStatus(row, now, timeZone) {
+export function projectConsentStatus(row, now, timeZone) {
   const recordedStatus = row.status;
   let status = recordedStatus;
   if (['granted','not-required'].includes(recordedStatus)) {
@@ -52,6 +52,7 @@ export async function onRequestGet({ request, env }) {
   const studentId = new URL(request.url).searchParams.get('studentId') || '';
   const access = await getStudentAccess(auth, studentId, { write: false });
   if (!access.ok) return json({ error: access.error }, access.status);
+  if (access.role === 'viewer') return json({ error: 'Consent records are restricted to support staff.' }, 403);
   const organization = await auth.db.prepare('SELECT timezone FROM pathways_organizations WHERE organization_id = ?')
     .bind(access.student.organization_id)
     .first();

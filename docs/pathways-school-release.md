@@ -52,3 +52,29 @@ Demonstrate a 15-minute synthetic journey: teacher preparation, aide observation
 Proceed to a bounded four-week pilot with 3–5 students only after access, privacy, recovery and support gates are met. Agree success measures with the school: time spent reporting, consistency of records, follow-up completion and whether staff can find the relevant goal and evidence. Subscription pricing and ongoing consultancy scope remain proposals until agreed.
 
 Cloudflare access remains paused until CJ confirms hotspot availability for the next deployment or live verification session.
+
+## Increment 2: reviewed summaries and staff-viewer boundaries (local, not deployed)
+
+Implemented after approval of the quality-improvement sequence. Based on deployed commit `bc291ec` in branch `codex/pathways-reviewed-sharing`.
+
+- Existing `viewer` accounts now mean **Staff summary viewer**. They must be assigned to the student and see only explicitly reviewed teacher-summary text and minimal student identification. This is a narrowing of existing viewer access, not a new parent role.
+- Direct viewer requests for raw state, revision lists, individual revisions, complete exports, consent records, assignments and audit records are denied. The student roster excludes unnecessary identifiers and metadata for viewers.
+- Authorized editors select Parent or Teacher output, choose **Review and edit highlights**, remove irrelevant/private content and confirm review. Full notes remain intact. This is human editing, not automated summarization.
+- Review metadata is stamped by the server. Ordinary state saves cannot forge or modify it. Each review goes through the existing atomic revision/audit mechanism.
+- Copying a Parent or Teacher update fetches the reviewed text from the server. Parent copying and WhatsApp preparation both require current effective family-sharing authority. This does not prevent authorized full-record staff manually copying information elsewhere.
+- Any underlying state edit invalidates summaries until reviewed again. This includes changes on another day or to goals/preparation. Saving another summary does not invalidate existing summaries. Import, reset and historical restore clear reviews. This conservative first version does not yet offer independent historical publications or per-day invalidation.
+- Summary retrieval and creation require current school-use authority for non-demo records. Synthetic demo provenance does not waive family-sharing authority.
+- Viewer access is read-only. Teacher comments, teacher preparation permissions, parent accounts, invitations, Google sign-in, iSAMS integration, dashboard redesign, SENCO follow-up, richer IEP measurement and student voice remain subsequent work.
+- No database migration is required. Reviewed text is an optional field within existing versioned student state and is subject to its size limit.
+
+### Release checks still needed
+
+Local verification passed: 78/78 Pathways tests (including 11 summary endpoint/database tests and browser-state isolation checks), 8/8 site-build tests, JavaScript syntax checks and git diff whitespace checks. These are automated code checks, not a visual or live-school acceptance test. Before deployment, visually review the full-staff and viewer flows on laptop/iPad and verify live review/save/reload with synthetic data. Cloudflare requires CJ's hotspot confirmation. Do not describe this local increment as deployed or fully school-ready.
+
+## Function review and daily navigation follow-up (local)
+
+Reviewed the summary handlers, authority checks, viewer access and asynchronous browser flows. Reopening a reviewed summary previously regenerated its full draft and discarded the saved selection. The editor now starts with the saved highlights; **Use latest lesson draft** explicitly confirms replacement. The editor is locked while a review save is pending to avoid losing edits during the subsequent reload.
+
+The daily screen now has four direct actions: **Prepare a lesson**, **Record observations**, **Review goals**, **Review updates**. Preparation opens the existing internal lesson form. Other shortcuts scroll to and focus the existing sections. Viewer/read-only restrictions remain enforced. Navigation labels now use Today, Goals & progress and Record history. This is an incremental navigation change; the full profile/follow-up dashboard is not implemented.
+
+Verification: 82/82 Pathways tests and 8/8 site-build tests passed after regeneration of dist. Additional tests cover saved-highlight preservation, explicit regeneration, pending-save locks, shortcut permissions and reduced-motion navigation. No live Cloudflare calls, visual browser inspection or live authenticated writes were performed in this follow-up. Deployment and laptop/iPad review remain pending.

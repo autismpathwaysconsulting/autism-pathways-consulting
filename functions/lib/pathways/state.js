@@ -267,7 +267,7 @@ export async function restoreStudentRevision({ db, student, actorUserId, revisio
     db,
     student,
     actorUserId,
-    state: historic.state,
+    state: { ...historic.state, reviewedSummaries: {} },
     expectedRevision,
     action: `restore:${revision}`,
     requestId,

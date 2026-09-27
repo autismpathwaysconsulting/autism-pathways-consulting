@@ -82,6 +82,7 @@ export async function onRequestGet({ request, env }) {
   const studentId = url.searchParams.get('studentId') || '';
   const access = await getStudentAccess(auth, studentId, { write: false });
   if (!access.ok) return json({ error: access.error }, access.status);
+  if (access.role === 'viewer') return json({ error: 'This account can read reviewed staff summaries only.' }, 403);
   try {
     if (url.searchParams.has('revision')) {
       const revision = Number(url.searchParams.get('revision'));
@@ -122,6 +123,11 @@ export async function onRequestPut({ request, env }) {
     return json({ error: 'Only an administrator or SENCO can import or reset a student record.' }, 403);
   }
   try {
+    const current = await readStudentState(auth.db, studentId);
+    if (['import','reset'].includes(action) && payload.state && typeof payload.state === 'object') payload.state.reviewedSummaries = {};
+    if (!['import','reset'].includes(action) && JSON.stringify(payload.state?.reviewedSummaries || {}) !== JSON.stringify(current?.state?.reviewedSummaries || {})) {
+      return json({ error: 'Reviewed summaries must be saved through the review endpoint.' }, 403);
+    }
     const result = await writeStudentState({
       db: auth.db,
       student: access.student,

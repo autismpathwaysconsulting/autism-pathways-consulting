@@ -41,9 +41,9 @@
 
     <div class="shell">
       <aside class="sidebar">
-        <button class="nav active" data-screen="daily">Today & reports</button>
-        <button class="nav" data-screen="history">History</button>
-        <button class="nav" data-screen="objectives">Objectives</button>
+        <button class="nav active" data-screen="daily">Today</button>
+        <button class="nav" data-screen="history">Record history</button>
+        <button class="nav" data-screen="objectives">Goals & progress</button>
         <button id="adminNav" class="nav hidden" data-screen="admin">Administration</button>
         <div class="sidebar-foot">
           <strong id="userName"></strong>
@@ -62,7 +62,7 @@
             <div>
               <p class="eyebrow">Daily support workflow</p>
               <h1 id="studentHeading">Student</h1>
-              <p class="muted">Report once. Structure underneath.</p>
+              <p class="muted">Prepare for lessons, record support and review the next step.</p>
             </div>
             <div class="week-controls">
               <button id="prevWeek" class="btn secondary small">← Previous</button>
@@ -75,15 +75,21 @@
           <div id="authorityWarning" class="notice warn hidden"><strong>Use authority required.</strong> An administrator or SENCO must record the school's pilot/school-record authority before support data can be saved for this non-synthetic workspace.</div>
           <div id="readOnlyWarning" class="notice hidden"><strong>Read-only.</strong> Your account can view this workspace but cannot edit it.</div>
 
+          <nav id="dailyActions" class="daily-actions" aria-label="Daily support actions">
+            <button id="prepareLessonBtn" type="button" class="workflow-action" data-workflow="prepare"><strong>Prepare a lesson</strong><span>Task, outcome and planned support</span></button>
+            <button type="button" class="workflow-action" data-workflow="record"><strong>Record observations</strong><span>What happened and support used</span></button>
+            <button type="button" class="workflow-action" data-workflow="goals"><strong>Review goals</strong><span>Evidence against agreed targets</span></button>
+            <button type="button" class="workflow-action" data-workflow="updates"><strong>Review updates</strong><span>Select highlights for each audience</span></button>
+          </nav>
           <nav id="dayTabs" class="days" aria-label="School days"></nav>
 
           <section class="card padded persistent">
-            <div class="section-head"><div><p class="eyebrow">Persistent items</p><h2>Homework, upcoming & announcements</h2></div><button id="addPinBtn" class="btn secondary small">+ Add</button></div>
+            <div class="section-head"><div><p class="eyebrow">Planning & reminders</p><h2>Upcoming lessons and tasks</h2></div><button id="addPinBtn" class="btn secondary small">+ Add</button></div>
             <div id="pinList" class="list"></div>
           </section>
 
           <div class="daily-grid">
-            <section>
+            <section id="lessonRecords" tabindex="-1">
               <div class="section-head"><div><p class="eyebrow">Daily timetable</p><h2 id="dayHeading">Monday</h2></div><span id="savedCount" class="muted"></span></div>
               <div id="subjectList" class="list subjects"></div>
             </section>
@@ -96,25 +102,28 @@
                 <button id="saveOverviewBtn" class="btn primary full">Save overview</button>
               </section>
 
-              <section class="card padded">
-                <div class="section-head"><div><p class="eyebrow">Measurable objectives</p><h2>Active objectives</h2></div><button id="quickObjectiveBtn" class="btn secondary small">+ Add</button></div>
+              <section id="goalsOverview" tabindex="-1" class="card padded">
+                <div class="section-head"><div><p class="eyebrow">IEP evidence</p><h2>Active goals</h2></div><button id="quickObjectiveBtn" class="btn secondary small">+ Add</button></div>
                 <div id="objectiveSummary" class="list compact-list"></div>
               </section>
 
-              <section class="card padded">
-                <p class="eyebrow">Generated from confirmed data</p><h2>Output</h2>
+              <section id="reviewUpdates" tabindex="-1" class="card padded">
+                <p class="eyebrow">Review before sharing</p><h2>Updates for the team</h2>
                 <div class="output-tabs">
-                  <button class="output-tab active" data-output="parent">Parent / WhatsApp</button>
-                  <button class="output-tab" data-output="teacher">Teacher</button>
+                  <button class="output-tab active" data-output="parent">Family update</button>
+                  <button class="output-tab" data-output="teacher">Teacher update</button>
                   <button class="output-tab" data-output="iep">IEP / SEN</button>
                 </div>
-                <pre id="outputText" class="output"></pre>
+                <p id="summaryStatus" class="muted"></p><pre id="outputText" class="output"></pre>
+                <button id="reviewSummary" class="btn secondary" type="button">Review and edit highlights</button>
+                <div id="summaryEditor" hidden><button id="latestSummaryDraft" type="button" class="btn ghost small">Use latest lesson draft</button><label>Keep only details relevant to this audience<textarea id="summaryDraft" rows="8" maxlength="12000"></textarea></label><p class="muted">Check accuracy and remove private details. Saving makes the teacher summary available to assigned summary viewers. Family updates still require sharing authority.</p><button id="saveSummary" class="btn primary" type="button">Confirm reviewed and save</button></div>
                 <div class="row"><button id="copyOutput" class="btn secondary">Copy</button><button id="openWhatsApp" class="btn whatsapp">Open WhatsApp</button></div>
               </section>
             </aside>
           </div>
         </section>
 
+        <section id="summaryScreen" class="screen hidden"><div class="card padded"><h2>Reviewed staff updates</h2><label>Date<input id="summaryDate" type="date"></label><p id="viewerSummaryStatus" class="muted"></p><pre id="viewerSummaryText" class="output"></pre></div></section>
         <section id="historyScreen" class="screen hidden">
           <div class="screen-head"><div><p class="eyebrow">Record history</p><h1>History & recovery</h1><p class="muted">Review saved revisions. Historical records are read-only unless an authorised administrator restores one.</p></div><button id="refreshHistory" class="btn secondary">Refresh</button></div>
           <div class="two-col">
@@ -158,13 +167,13 @@
     <div class="dialog-actions"><button id="notReportedBtn" type="button" class="btn ghost">Not reported today</button><button id="saveSubjectBtn" type="button" class="btn primary">Save subject</button></div>
   </form></dialog>
 
-  <dialog id="pinDialog"><form method="dialog"><div class="dialog-head"><h2>Add persistent item</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><div class="two"><label>Type<select id="pinType"><option>Homework</option><option>Upcoming task / assessment</option><option>Announcement</option><option>Materials / bring item</option><option>Reminder</option></select></label><label>Subject<input id="pinSubject"></label></div><label class="check-row"><input id="pinPrepare" type="checkbox">Prepare a lesson (internal)</label><div id="preparationFields" hidden><p>Record planned support here. Record support actually used after the lesson.</p><label>Topic<textarea id="prepTopic" maxlength="1200" rows="2"></textarea></label><label>Task<textarea id="prepTask" maxlength="1200" rows="2"></textarea></label><label>Intended learning outcome<textarea id="prepOutcome" maxlength="1200" rows="2"></textarea></label><label>Materials reference (optional)<textarea id="prepMaterials" maxlength="1200" rows="2" placeholder="Reference to existing slides or worksheet; no file upload"></textarea></label><label>Planned differentiated work (optional)<textarea id="prepDifferentiated" maxlength="1200" rows="2"></textarea></label><label>Planned aide support (optional)<textarea id="prepSupport" maxlength="1200" rows="2"></textarea></label></div><label>Title<input id="pinTitle" required></label><label>Details<textarea id="pinDetails" rows="2"></textarea></label><div class="two"><label>Due / expiry<input id="pinDue" type="date"></label><label>Parent report?<select id="pinParent"><option value="yes">Yes</option><option value="no">No</option></select></label></div></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="savePinBtn" type="button" class="btn primary">Save</button></div></form></dialog>
+  <dialog id="pinDialog"><form method="dialog"><div class="dialog-head"><h2>Add lesson preparation or reminder</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><div class="two"><label>Type<select id="pinType"><option>Homework</option><option>Upcoming task / assessment</option><option>Announcement</option><option>Materials / bring item</option><option>Reminder</option></select></label><label>Subject<input id="pinSubject"></label></div><label class="check-row"><input id="pinPrepare" type="checkbox">Prepare a lesson (internal)</label><div id="preparationFields" hidden><p>Record planned support here. Record support actually used after the lesson.</p><label>Topic<textarea id="prepTopic" maxlength="1200" rows="2"></textarea></label><label>Task<textarea id="prepTask" maxlength="1200" rows="2"></textarea></label><label>Intended learning outcome<textarea id="prepOutcome" maxlength="1200" rows="2"></textarea></label><label>Materials reference (optional)<textarea id="prepMaterials" maxlength="1200" rows="2" placeholder="Reference to existing slides or worksheet; no file upload"></textarea></label><label>Planned differentiated work (optional)<textarea id="prepDifferentiated" maxlength="1200" rows="2"></textarea></label><label>Planned aide support (optional)<textarea id="prepSupport" maxlength="1200" rows="2"></textarea></label></div><label>Title<input id="pinTitle" required></label><label>Details<textarea id="pinDetails" rows="2"></textarea></label><div class="two"><label>Due / expiry<input id="pinDue" type="date"></label><label>Parent report?<select id="pinParent"><option value="yes">Yes</option><option value="no">No</option></select></label></div></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="savePinBtn" type="button" class="btn primary">Save</button></div></form></dialog>
 
   <dialog id="objectiveDialog"><form method="dialog"><div class="dialog-head"><h2 id="objectiveDialogTitle">Add measurable objective</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><div class="two"><label>Domain<select id="objDomain"></select></label><label>Status<select id="objStatus"><option value="active">Active</option><option value="achieved">Achieved / no longer priority</option><option value="archived">Archived</option><option value="replaced">Replaced</option></select></label></div><label>Observable target<input id="objTarget"></label><label>Context / condition<input id="objCondition"></label><label>Allowed support<input id="objSupport"></label><label>Measurable criterion<input id="objCriterion"></label><div class="two"><label>Measurement type<select id="objMeasure"><option value="criterion">Opportunity / criterion</option><option value="latency">Latency</option><option value="duration">Duration</option><option value="frequency">Frequency</option><option value="accuracy">Accuracy / percentage</option></select></label><label>Review date<input id="objReview" type="date"></label></div></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="saveObjectiveDialogBtn" type="button" class="btn primary">Save objective</button></div></form></dialog>
 
   <dialog id="studentDialog"><form method="dialog"><div class="dialog-head"><h2>Create student workspace</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Display name / pilot alias<input id="newStudentName" required></label><label>School reference (optional)<input id="newStudentRef"></label><label>Year group (optional)<input id="newStudentYear"></label><p class="notice warn"><strong>Privacy:</strong> only enter identifiable details if your organisation has an appropriate authority and the deployment has been approved for that use.</p></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="createStudentBtn" type="button" class="btn primary">Create</button></div></form></dialog>
 
-  <dialog id="userDialog"><form method="dialog"><div class="dialog-head"><h2>Add staff user</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Name<input id="newUserName" required></label><label>Email<input id="newUserEmail" type="email" required></label><label>Role<select id="newUserRole"><option value="support">Support staff / aide</option><option value="viewer">Viewer</option><option value="senco">SENCO</option><option value="admin">Administrator</option></select></label><label>Temporary password<input id="newUserPassword" type="password" minlength="12" required></label><p class="tiny muted">The user can change this password from Account after first sign-in.</p></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="createUserBtn" type="button" class="btn primary">Create user</button></div></form></dialog>
+  <dialog id="userDialog"><form method="dialog"><div class="dialog-head"><h2>Add staff user</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Name<input id="newUserName" required></label><label>Email<input id="newUserEmail" type="email" required></label><label>Role<select id="newUserRole"><option value="support">Support staff / aide</option><option value="viewer">Staff summary viewer</option><option value="senco">SENCO</option><option value="admin">Administrator</option></select></label><label>Temporary password<input id="newUserPassword" type="password" minlength="12" required></label><p class="tiny muted">The user can change this password from Account after first sign-in.</p></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="createUserBtn" type="button" class="btn primary">Create user</button></div></form></dialog>
 
   <dialog id="consentDialog"><form method="dialog"><div class="dialog-head"><h2>Record use authority</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Type<select id="consentType"><option value="pilot-use">Pilot use</option><option value="school-record">School record</option><option value="family-sharing">Family sharing</option></select></label><label>Status<select id="consentStatus"><option value="granted">Granted</option><option value="not-required">Not required / other lawful authority recorded by school</option><option value="declined">Declined</option><option value="withdrawn">Withdrawn</option></select></label><div class="two"><label>Granted / effective date (optional)<input id="consentGrantedAt" type="date"></label><label>Expiry date (optional)<input id="consentExpiresAt" type="date"></label></div><label>Authority label / source<input id="consentAuthority" placeholder="e.g. Parent consent form / school lawful basis"></label><label>Reference note<textarea id="consentNote" rows="2" placeholder="Do not paste unnecessary sensitive information."></textarea></label></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="saveConsentBtn" type="button" class="btn primary">Record</button></div></form></dialog>
 

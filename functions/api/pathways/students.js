@@ -67,7 +67,12 @@ export async function onRequestGet({ request, env }) {
     }
     result = { results: rows };
   }
-  return json({ students: result?.results || [] });
+  return json({ students: (result?.results || []).map(student => {
+    if (!auth.user.platformAdmin && membershipFor(auth.user, student.organization_id)?.role === 'viewer') {
+      return { student_id: student.student_id, organization_id: student.organization_id, display_name: student.display_name, year_group: student.year_group };
+    }
+    return student;
+  }) });
 }
 
 export async function onRequestPost({ request, env }) {

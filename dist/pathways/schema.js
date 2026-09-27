@@ -218,6 +218,25 @@ export function assertValidPathwaysState(state) {
   plainObject(state.settings ?? {}, 'settings');
   string(state.settings?.timezone ?? 'Asia/Kuala_Lumpur', 'timezone', 80);
 
+  if (state.reviewedSummaries !== undefined) {
+    plainObject(state.reviewedSummaries, 'reviewed summaries');
+    if (Object.keys(state.reviewedSummaries).length > 366) fail('Too many reviewed summary dates.');
+    for (const [date, audiences] of Object.entries(state.reviewedSummaries)) {
+      if (!DATE_RE.test(date)) fail('Summary date is invalid.');
+      plainObject(audiences, 'summary audiences');
+      for (const [audience, summary] of Object.entries(audiences)) {
+        if (!['parent','teacher'].includes(audience)) fail('Summary audience is invalid.');
+        plainObject(summary, 'reviewed summary');
+        string(summary.text, 'summary text', 12000);
+        if (!summary.text.trim()) fail('Summary text is required.');
+        if (!/^[a-f0-9]{64}$/.test(summary.sourceHash)) fail('Summary source hash is invalid.');
+        safeId(summary.reviewedBy, 'summary reviewer');
+        string(summary.reviewedAt, 'summary review time', 40);
+        if (!Number.isFinite(Date.parse(summary.reviewedAt))) fail('Summary review time is invalid.');
+      }
+    }
+  }
+
   const bytes = new TextEncoder().encode(JSON.stringify(state)).byteLength;
   if (bytes > LIMITS.jsonBytes) fail('Pathways student state exceeds the supported size limit.');
   return true;

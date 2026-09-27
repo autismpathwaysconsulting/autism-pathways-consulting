@@ -13,7 +13,7 @@ function deferred(){ let resolve,reject;const promise=new Promise((yes,no)=>{res
 function harness(){
   const elements=new Map(),requests=[],opened=[],errors=[];
   const element=id=>{if(!elements.has(id))elements.set(id,{textContent:'',innerHTML:'',value:'',disabled:false,classList:{add(){},remove(){},toggle(){}},setAttribute(){}});return elements.get(id)};
-  const context=vm.createContext({console,Date,URL,crypto:webcrypto,PATHWAYS_WEEKDAYS:['Monday'],startOfWeek:()=>new Date(),document:{getElementById:element,querySelectorAll:()=>[],querySelector:()=>null},window:{alert:m=>errors.push(m),location:{assign:u=>opened.push(u)}}});
+  const context=vm.createContext({console,Date,URL,crypto:webcrypto,PATHWAYS_WEEKDAYS:['Monday'],startOfWeek:()=>new Date(),datedDayKey:()=> '2026-09-18',document:{getElementById:element,querySelectorAll:()=>[],querySelector:()=>null},window:{alert:m=>errors.push(m),location:{assign:u=>opened.push(u)}}});
   vm.runInContext(app,context);
   context.request=(path,options)=>{const task=deferred();requests.push({path,options,...task});return task.promise};
   vm.runInContext("api=request; renderAll=()=>{}; updateAuthorityWarning=()=>{}; outputFor=()=>JSON.stringify(state); user={id:'user-a'}; organizationId='org-a'; studentId='student-a';",context);
@@ -44,21 +44,33 @@ test('a late save result cannot install the previous student into the current vi
   h.run("studentId='student-b'");const loading=h.run('loadStudent()');answer(h,1,'b');await loading;
   h.requests[0].resolve({record:{revision:1,state:{owner:'a'}}});assert.equal(await saving,false);assert.equal(h.run('state.owner'),'b');
 });
-test('WhatsApp requires a fresh decisive grant and never shares on missing, revoked or failed checks',async()=>{
-  for(const status of ['withdrawn','expired','pending-effective','declined',null,'failure']){
-    const h=harness();h.run("state={owner:'a'};currentConsents=[{consent_type:'family-sharing',decision_sequence:1,status:'granted'}]");
-    const share=h.run('openWhatsApp()');assert.equal(h.opened.length,0);assert.match(h.requests[0].path,/consents\?studentId=student-a/);
-    if(status==='failure')h.requests[0].reject(new Error('network failed'));
-    else h.requests[0].resolve({consents:status?[{consent_type:'family-sharing',decision_sequence:1,status:'granted'},{consent_type:'family-sharing',decision_sequence:2,status}]:[]});
-    await share;assert.equal(h.opened.length,0,status);assert.equal(h.elements.get('openWhatsApp').disabled,true);
+test('WhatsApp never shares when the server refuses or cannot verify the reviewed update',async()=>{
+  for(const reason of ['revoked authority','expired authority','no reviewed update','network failed']){
+    const h=harness();h.run("state={owner:'a'}");
+    const share=h.run('openWhatsApp()');assert.equal(h.opened.length,0);assert.match(h.requests[0].path,/summaries\?studentId=student-a.*audience=parent/);
+    h.requests[0].reject(new Error(reason));await share;assert.equal(h.opened.length,0,reason);
   }
 });
-test('WhatsApp permits a fresh grant but discards checks for a different student or session',async()=>{
+test('WhatsApp uses server-reviewed text and discards results for a different student or session',async()=>{
   for(const change of ['',"studentId='student-b'","resetProtectedUi()"]){
-    const h=harness();h.run("state={owner:'a'}");const share=h.run('openWhatsApp()');if(change)h.run(change);
-    h.requests[0].resolve({consents:[{consent_type:'family-sharing',decision_sequence:1,status:'granted'}]});await share;
+    const h=harness();h.run("state={owner:'private raw text'}");const share=h.run('openWhatsApp()');if(change)h.run(change);
+    h.requests[0].resolve({text:'Selected family highlight'});await share;
     assert.equal(h.opened.length,change?0:1);
+    if(!change){assert.match(h.opened[0],/Selected%20family%20highlight/);assert.ok(!h.opened[0].includes('private'))}
   }
+});
+test('copying a family update uses the same server authority boundary as WhatsApp',async()=>{
+  const h=harness();h.run("state={owner:'private raw text'}");const copying=h.run('copyReviewedOutput()');
+  assert.match(h.requests[0].path,/summaries\?studentId=student-a.*audience=parent/);
+  h.requests[0].reject(new Error('Family authority withdrawn'));await copying;
+  assert.ok(h.errors.includes('Family authority withdrawn'));
+});
+test('summary viewer requests only the curated teacher endpoint',async()=>{
+  const h=harness();h.run("user={memberships:[{organization_id:'org-a',role:'viewer'}]}");
+  const pending=h.run('loadStudent()');assert.equal(h.requests.length,1);assert.match(h.requests[0].path,/summaries\?.*audience=teacher/);
+  h.requests[0].resolve({student:{displayName:'Student A'},text:'Reviewed teacher highlight',reviewedAt:'2026-09-18'});await pending;
+  assert.equal(h.run('state'),null);assert.equal(h.elements.get('viewerSummaryText').textContent,'Reviewed teacher highlight');
+  h.run('resetProtectedUi()');assert.equal(h.elements.get('viewerSummaryText').textContent,'');
 });
 test('stale history and admin panel responses do not expose a previous student',async()=>{
   for(const call of ['loadRevision(1)','renderStudentAdminPanel()']){
@@ -184,5 +196,42 @@ test('bootstrap and login work under the hosted PBKDF2 cap without downgrading o
     assert.notEqual(record.passwordHash,account.password_hash);
   } finally {
     Object.defineProperty(globalThis,'crypto',{configurable:true,value:original});
+  }
+});
+test('a late summary save cannot reload another student, and failed reviews retain draft text',async()=>{
+  for(const mode of ['changed-student','failure']){
+    const h=harness();h.run("record={revision:3,permission:'edit'};state={owner:'a'};summaryReview={context:captureStudentContext(),date:'2026-09-18',audience:'parent',revision:3}");
+    h.elements.set('summaryDraft',{value:'Selected family details'});
+    const pending=h.run('saveReviewedSummary()');assert.equal(h.requests.length,1);
+    assert.equal(h.requests[0].options.body.expectedRevision,3);
+    if(mode==='changed-student'){h.run("studentId='student-b'");h.requests[0].resolve({ok:true})}
+    else h.requests[0].reject(new Error('Record changed. Reload and review again.'));
+    await pending;assert.equal(h.requests.length,1);assert.equal(h.elements.get('summaryDraft').value,'Selected family details');
+    assert.equal(h.elements.get('saveSummary').disabled,false);
+  }
+});
+test('reopening a summary preserves selected highlights until regeneration is confirmed',()=>{
+  const h=harness();h.run("record={revision:4,permission:'edit'};state={private:'internal lesson detail',reviewedSummaries:{'2026-09-18':{parent:{text:'Selected highlight'}}}};reviewSummary()");
+  assert.equal(h.elements.get('summaryDraft').value,'Selected highlight');
+  h.run("window.confirm=()=>false;useLatestSummaryDraft()");assert.equal(h.elements.get('summaryDraft').value,'Selected highlight');
+  h.run("window.confirm=()=>true;outputFor=()=> 'Fresh lesson draft';useLatestSummaryDraft()");assert.equal(h.elements.get('summaryDraft').value,'Fresh lesson draft');
+});
+test('a pending review save locks its editor and restores editing after an error',async()=>{
+  const h=harness();h.run("record={revision:4,permission:'edit'};state={};reviewSummary()");
+  const saved=h.run('saveReviewedSummary()');assert.equal(h.elements.get('summaryDraft').disabled,true);assert.equal(h.elements.get('reviewSummary').disabled,true);
+  h.requests[0].reject(new Error('Please retry'));await saved;
+  assert.equal(h.elements.get('summaryDraft').disabled,false);assert.equal(h.elements.get('reviewSummary').disabled,false);
+});
+test('daily actions cannot open preparation for a read-only or summary-viewer account',()=>{
+  const h=harness();h.run("state={};record={permission:'read'};let preparationOpened=false;openPin=()=>{preparationOpened=true};dashboardAction('prepare')");
+  assert.equal(h.run('preparationOpened'),false);
+  h.run("record={permission:'edit'};user={memberships:[{organization_id:'org-a',role:'viewer'}]};dashboardAction('prepare')");assert.equal(h.run('preparationOpened'),false);
+  h.run("user={memberships:[{organization_id:'org-a',role:'support'}]};dashboardAction('prepare')");assert.equal(h.run('preparationOpened'),true);assert.equal(h.elements.get('pinPrepare').checked,true);assert.equal(h.elements.get('pinParent').value,'no');
+});
+test('daily shortcuts navigate to existing sections and respect reduced motion',()=>{
+  const h=harness();h.run("state={};window.matchMedia=()=>({matches:true})");
+  for(const [action,id] of [['record','lessonRecords'],['goals','goalsOverview'],['updates','reviewUpdates']]){
+    h.run(`$('${id}').scrollIntoView=options=>{$('${id}').scrolled=options.behavior};$('${id}').focus=()=>{$('${id}').focused=true};dashboardAction('${action}')`);
+    assert.equal(h.elements.get(id).scrolled,'auto');assert.equal(h.elements.get(id).focused,true);
   }
 });

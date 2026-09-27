@@ -66,6 +66,7 @@ let currentConsents = [];
 let adminUsers = [];
 let currentAssignments = [];
 let historicalEditConfirmedFor = '';
+let summaryReview = null;
 let sessionEpoch = 0;
 let studentLoadSequence = 0;
 let studentListSequence = 0;
@@ -76,6 +77,10 @@ function captureStudentContext(){
 }
 
 function clearStudentUi(){
+  summaryReview=null;
+  if($('summaryEditor'))$('summaryEditor').hidden=true;
+  for(const id of ['summaryDraft','viewerSummaryText','viewerSummaryStatus','summaryStatus']){if($(id)){$(id).value='';$(id).textContent=''}}
+  if($('summaryScreen'))$('summaryScreen').classList.add('hidden');
   for(const id of ['studentHeading','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','savedCount','studentAdminPanel']){
     if($(id))$(id).textContent='';
   }
@@ -119,6 +124,7 @@ function showError(message){
 }
 
 function clearProtectedDom(){
+  clearStudentUi();
   const textIds=['userName','userRole','studentHeading','weekLabel','savedCount','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','adminStudents','adminUsers','auditList','dayTabs'];
   for(const id of textIds){const el=$(id);if(el)el.textContent=''}
   if($('studentAdminPanel'))$('studentAdminPanel').textContent='Select a student.';
@@ -286,6 +292,8 @@ async function loadStudent(){
   state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
   $('outputText').textContent='';
   updateWhatsAppAvailability();
+  document.querySelectorAll('.nav').forEach(btn=>btn.classList.toggle('hidden',currentRole()==='viewer'||(btn.id==='adminNav'&&!canAdmin())));
+  if(currentRole()==='viewer'){await loadStaffSummary(context);return}
   try{
     const [stateData,consentData]=await Promise.all([
       api(`/api/pathways/state?studentId=${encodeURIComponent(context.studentId)}&history=1&limit=40`),
@@ -347,31 +355,81 @@ function updateWhatsAppAvailability(){
   const allowed=parentView&&Boolean(state)&&familySharingAllowed();
   button.disabled=parentView&&!allowed;
   button.setAttribute('aria-disabled',String(parentView&&!allowed));
-  button.title=allowed?'':'Record current family-sharing authority before sharing this report to WhatsApp. You can still use Copy.';
+  button.title=allowed?'':'Review and save the family update, and record current family-sharing authority before copying or sharing.';
 }
 
+async function fetchReviewedOutput(audience,context,date){
+  const data=await api(`/api/pathways/summaries?studentId=${encodeURIComponent(context.studentId)}&date=${encodeURIComponent(date)}&audience=${audience}`);
+  if(!context.isCurrent()||date!==datedDayKey(currentDay,activeWeek))return null;
+  if(typeof data.text!=='string'||!data.text.trim())throw new Error('No reviewed update was returned.');
+  return data.text;
+}
 async function openWhatsApp(){
   if(!state)return;
-  const context=captureStudentContext();
+  const context=captureStudentContext(),date=datedDayKey(currentDay,activeWeek);
   $('openWhatsApp').disabled=true;
   try{
-    const data=await api(`/api/pathways/consents?studentId=${encodeURIComponent(context.studentId)}`);
-    if(!context.isCurrent()||!state)return;
-    currentConsents=data.consents||[];
-    if(!familySharingAllowed()){
-      showError('WhatsApp sharing is unavailable until current family-sharing authority is recorded. You can still copy the parent report.');
-      return;
-    }
-    const text=outputFor('parent',{state,dayName:currentDay,baseDate:activeWeek});
-    // Same-tab navigation survives the asynchronous authority check without a popup blocker.
-    window.location.assign(`https://wa.me/?text=${encodeURIComponent(text)}`);
-  }catch(error){
-    if(!context.isCurrent())return;
-    currentConsents=[];
-    showError('Current family-sharing authority could not be verified. Nothing was shared.');
-  }finally{
-    if(context.isCurrent())updateWhatsAppAvailability();
+    const text=await fetchReviewedOutput('parent',context,date);
+    if(text!==null)window.location.assign(`https://wa.me/?text=${encodeURIComponent(text)}`);
+  }catch(error){if(context.isCurrent())showError(error.message)}
+  finally{if(context.isCurrent())updateWhatsAppAvailability()}
+}
+async function copyReviewedOutput(){
+  if(!state)return;
+  const context=captureStudentContext(),date=datedDayKey(currentDay,activeWeek),audience=outputView;
+  try{
+    const text=['parent','teacher'].includes(audience)?await fetchReviewedOutput(audience,context,date):outputFor(audience,{state,dayName:currentDay,baseDate:activeWeek});
+    if(text===null||!context.isCurrent()||audience!==outputView)return;
+    await navigator.clipboard.writeText(text);
+  }catch(error){if(context.isCurrent())showError(error.message||'Copy was blocked by the browser.')}
+}
+async function loadStaffSummary(context){
+  ['dailyScreen','historyScreen','objectivesScreen','adminScreen','emptyState'].forEach(id=>$(id).classList.add('hidden'));
+  $('summaryScreen').classList.remove('hidden');
+  $('summaryDate').value=$('summaryDate').value||datedDayKey(currentDay,activeWeek);
+  const date=$('summaryDate').value;
+  $('viewerSummaryText').textContent='';
+  $('viewerSummaryStatus').textContent='Loading reviewed update…';
+  try{
+    const data=await api(`/api/pathways/summaries?studentId=${encodeURIComponent(context.studentId)}&date=${encodeURIComponent(date)}&audience=teacher`);
+    if(!context.isCurrent()||$('summaryDate').value!==date)return;
+    $('studentHeading').textContent=data.student.displayName;
+    $('viewerSummaryText').textContent=data.text;
+    $('viewerSummaryStatus').textContent=`Reviewed ${data.reviewedAt}`;
+    setSaveStatus('saved','Reviewed update');
+  }catch(error){if(context.isCurrent()&&$('summaryDate').value===date){$('viewerSummaryStatus').textContent=error.message;setSaveStatus('','No update')}}
+}
+function reviewSummary(){
+  if($('saveSummary').disabled)return;
+  if(!canEdit()||!['parent','teacher'].includes(outputView))return;
+  summaryReview={context:captureStudentContext(),date:datedDayKey(currentDay,activeWeek),audience:outputView,revision:record.revision};
+  $('summaryDraft').value=state.reviewedSummaries?.[summaryReview.date]?.[outputView]?.text||outputFor(outputView,{state,dayName:currentDay,baseDate:activeWeek});
+  $('summaryEditor').hidden=false;
+}
+function useLatestSummaryDraft(){
+  if(!summaryReview||!summaryReview.context.isCurrent()||$('saveSummary').disabled)return;
+  if(!window.confirm('Replace the text in this editor with the latest lesson draft? Your edits here will be replaced.'))return;
+  $('summaryDraft').value=outputFor(summaryReview.audience,{state,dayName:currentDay,baseDate:activeWeek});
+}
+function dashboardAction(action){
+  if(!state||currentRole()==='viewer')return;
+  if(action==='prepare'){
+    if(!canEdit())return;
+    openPin();$('pinPrepare').checked=true;updatePreparationFields();return;
   }
+  const targets={record:'lessonRecords',goals:'goalsOverview',updates:'reviewUpdates'};
+  const target=$(targets[action]);if(!target)return;
+  target.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});target.focus({preventScroll:true});
+}
+async function saveReviewedSummary(){
+  const review=summaryReview;
+  if(!review||!review.context.isCurrent()||$('saveSummary').disabled)return;
+  $('saveSummary').disabled=true;$('summaryDraft').disabled=true;$('reviewSummary').disabled=true;$('latestSummaryDraft').disabled=true;
+  try{
+    await api('/api/pathways/summaries',{method:'POST',body:{studentId:review.context.studentId,date:review.date,audience:review.audience,text:$('summaryDraft').value,expectedRevision:review.revision,requestId:`review:${crypto.randomUUID()}`}});
+    if(review.context.isCurrent())await loadStudent();
+  }catch(error){if(review.context.isCurrent())showError(error.message)}
+  finally{$('saveSummary').disabled=false;$('summaryDraft').disabled=false;$('reviewSummary').disabled=false;$('latestSummaryDraft').disabled=false}
 }
 
 async function persist(action='edit'){
@@ -408,6 +466,7 @@ async function persist(action='edit'){
 function renderAll(){
   if(!state)return;
   renderWeek();renderDays();renderPins();renderSubjects();renderOverview();renderObjectiveSummary();renderOutput();renderObjectives();renderHistory();
+  $('prepareLessonBtn').disabled=!canEdit();
   $('addPinBtn').disabled=!canEdit();$('quickObjectiveBtn').disabled=!canEdit();$('addObjectiveBtn').disabled=!canEdit();$('saveOverviewBtn').disabled=!canEdit();
 }
 
@@ -456,7 +515,11 @@ function renderObjectiveSummary(){
 }
 
 function renderOutput(){
-  $('outputText').textContent=outputFor(outputView,{state,dayName:currentDay,baseDate:activeWeek});
+  summaryReview=null;$('summaryEditor').hidden=true;
+  const reviewed=state.reviewedSummaries?.[datedDayKey(currentDay,activeWeek)]?.[outputView];
+  $('outputText').textContent=reviewed?.text||outputFor(outputView,{state,dayName:currentDay,baseDate:activeWeek});
+  $('summaryStatus').textContent=outputView==='iep'?'Internal IEP evidence':reviewed?'Saved reviewed version. Copy and sharing check that it is still current.':'Draft only. Review and save before copying or sharing.';
+  $('reviewSummary').classList.toggle('hidden',!canEdit()||outputView==='iep');
   document.querySelectorAll('.output-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.output===outputView));
   updateWhatsAppAvailability();
 }
@@ -732,7 +795,7 @@ function bindStaticEvents(){
   $('overviewChoices').onclick=async event=>{const btn=event.target.closest('[data-overview]');if(!btn||!canEdit())return;const key=datedDayKey(currentDay,activeWeek);state.overview[key]={...(state.overview[key]||{}),choice:btn.dataset.overview};try{if(await persist('edit'))renderAll()}catch(error){showError(error.message)}};$('saveOverviewBtn').onclick=saveOverview;
   $('pinPrepare').onchange=updatePreparationFields;$('addPinBtn').onclick=openPin;$('savePinBtn').onclick=savePin;$('pinList').onclick=event=>{const btn=event.target.closest('[data-pin-done]');if(btn)donePin(btn.dataset.pinDone)};
   $('quickObjectiveBtn').onclick=()=>openObjective();$('addObjectiveBtn').onclick=()=>openObjective();$('objectiveList').onclick=event=>{const btn=event.target.closest('[data-edit-objective]');if(btn)openObjective(btn.dataset.editObjective)};$('saveObjectiveDialogBtn').onclick=saveObjective;
-  document.querySelectorAll('.output-tab').forEach(btn=>btn.onclick=()=>{outputView=btn.dataset.output;renderOutput()});$('copyOutput').onclick=async()=>{try{await navigator.clipboard.writeText($('outputText').textContent);$('copyOutput').textContent='Copied';setTimeout(()=>$('copyOutput').textContent='Copy',1200)}catch{showError('Copy was blocked by the browser.')}};$('openWhatsApp').onclick=openWhatsApp;
+  document.querySelectorAll('.output-tab').forEach(btn=>btn.onclick=()=>{outputView=btn.dataset.output;renderOutput()});$('copyOutput').onclick=copyReviewedOutput;$('openWhatsApp').onclick=openWhatsApp;$('reviewSummary').onclick=reviewSummary;$('saveSummary').onclick=saveReviewedSummary;$('latestSummaryDraft').onclick=useLatestSummaryDraft;$('dailyActions').onclick=event=>{const button=event.target.closest('[data-workflow]');if(button)dashboardAction(button.dataset.workflow)};$('summaryDate').onchange=()=>loadStudent();
   $('revisionList').onclick=event=>{const btn=event.target.closest('[data-revision]');if(btn)loadRevision(Number(btn.dataset.revision))};$('restoreRevision').onclick=restoreRevision;$('refreshHistory').onclick=loadStudent;
   $('newStudentBtn').onclick=()=>{$('studentDialog').querySelector('form').reset();$('studentDialog').showModal()};$('createStudentBtn').onclick=createStudent;$('newUserBtn').onclick=()=>{$('userDialog').querySelector('form').reset();$('userDialog').showModal()};$('createUserBtn').onclick=createUser;$('saveConsentBtn').onclick=saveConsent;$('refreshAudit').onclick=loadAudit;
   $('adminStudents').onclick=async event=>{const btn=event.target.closest('[data-admin-student]');if(!btn)return;studentId=btn.dataset.adminStudent;$('studentSelect').value=studentId;await loadStudent();await renderStudentAdminPanel()};
