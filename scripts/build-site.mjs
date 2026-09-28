@@ -24,6 +24,8 @@ export const PUBLIC_FILES = Object.freeze([
   "resources-parent-guides-960.webp",
   "schools-guided-classroom-480.webp",
   "schools-guided-classroom-960.webp",
+  "about-family-routine-480.webp",
+  "about-family-routine-960.webp",
   "home-parent-listening-480.webp",
   "home-parent-listening-960.webp",
   "home-before-after-960.webp",

@@ -325,3 +325,6 @@ body.programmes-page #interest:has(#interest-fields:disabled) .interest-intro{po
   body.apc-about-page #how-i-work .work-steps{grid-template-columns:1fr}
   body.apc-about-page #how-i-work .work-step{padding:16px!important}
 }
+
+/* Subtle emphasis in About titles, matching the home headline. */
+body.apc-about-page .apc-title-emphasis{color:#0b655d;background:linear-gradient(transparent 70%,rgba(232,153,122,.4) 70%,rgba(232,153,122,.4) 93%,transparent 93%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
