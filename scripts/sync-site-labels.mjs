@@ -9,6 +9,7 @@ for(const file of PUBLIC_FILES.filter(p=>p.endsWith('.html')&&!p.startsWith('con
  const url=new URL(file,root),old=await fs.readFile(url,'utf8');
  let next=old.replace(/<nav class="apc-shell-nav"[\s\S]*?<\/nav>/g,nav);
  next=next.replace(/<a\b([^>]*?)href="\/services(#[^"]*)?"([^>]*)>([\s\S]*?)<\/a>/g,(all,before,fragment,after,label)=>{
+  if(fragment==='#educator-training')return all;
   if(fragment||/support|parent sessions|parent session/i.test(label))return `<a${before}href="/parents${fragment==='#service-slide-session'?'#one-concern':fragment||''}"${after}>${label.replace(/Parent sessions &amp; programmes|Parent Support Options|parent support options|Parent support/g,'Parent Home Support')}</a>`;
   return all;
  });
