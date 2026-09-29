@@ -18,3 +18,10 @@ class DemandValidationTests(unittest.TestCase):
   s=(R/'course-waitlist.html').read_text()
   for text in ['Founding Live Session','Which situation is hardest right now?','does not reserve a place or subscribe you to marketing emails','Dates, duration, fee and final scope are not confirmed']:self.assertIn(text,s)
   for text in ['<form','<iframe','checkout','sibforms.com']:self.assertNotIn(text,s)
+
+ def test_digital_interest_does_not_route_to_live_session(self):
+  from urllib.parse import unquote
+  s=(R/'connect/index.html').read_text()
+  self.assertNotIn('href="/course-waitlist"',s)
+  self.assertIn('self-paced course enquiry',unquote(s))
+  self.assertIn('Which situation is hardest right now?',unquote(s))
