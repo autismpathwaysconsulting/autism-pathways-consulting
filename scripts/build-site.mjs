@@ -10,6 +10,7 @@ import { dirname, join, posix, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const PUBLIC_FILES = Object.freeze([
+  "apc-demand-validation.css",
   "apc-layout-repairs.css",
   "apc-offer-scan.css",
   "apc-visual-refinement.css",
