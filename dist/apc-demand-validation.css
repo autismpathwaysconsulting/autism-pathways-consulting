@@ -36,3 +36,21 @@ body.apc-v2.apc-tier-a.apc-home-page .apc-booking-guide ol{list-style:none;paddi
 .demand-section{padding:36px 0;border-top:1px solid #dce5df}.demand-quick{display:grid;grid-template-columns:1.5fr .7fr;align-items:center;gap:36px}.demand-quick figure{margin:0;max-width:240px;justify-self:center}.demand-quick img{display:block;width:100%;height:auto;max-height:310px;object-fit:contain}.demand-quick figcaption{font-size:12px;color:#536864;margin-top:8px}.demand-question{background:#eef5f0;border-radius:16px;padding:24px;margin-top:24px}.demand-personal-details{margin-top:28px;border-top:1px solid #cddbd3;padding-top:18px}.demand-personal-details>summary{cursor:pointer;color:#174d46;font-weight:600;min-height:44px;padding:10px 0}.demand-personal-details>section{margin-top:24px}.demand-routes{margin-bottom:28px}.demand-routes a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}.apc-demand-home .route-actions .text-action{color:#d5ede5}.apc-demand-home #book-first-step .demand-personal-details{margin-top:0}.apc-demand-home #support-options .demand-personal-details .section-head{margin-top:24px}.demand-limited .parent-closing{margin-top:32px}.demand-section :focus-visible{outline:3px solid #0f766e;outline-offset:4px}@media(max-width:640px){.demand-quick{grid-template-columns:1fr;gap:24px}.demand-quick figure{max-width:190px}.demand-section{padding:28px 0}.demand-question{padding:20px}}
 
 body.apc-v2.apc-audience-page main>.demand-section{min-height:0!important;height:auto!important;display:block;padding:36px 0!important}body.apc-v2.apc-audience-page main>.demand-quick{display:grid}@media(max-width:640px){body.apc-v2.apc-audience-page main>.demand-section{padding:28px 0!important}}
+
+/* Audit corrections: readable type and a simple, predictable entry route. */
+.audit-start-routes{display:grid;gap:16px;margin:0 0 24px;background:transparent;border:0}
+.audit-start-routes>a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;padding:24px;border:1px solid #cddeda;border-radius:16px;text-decoration:none;background:#fff;color:#253532;min-height:44px}
+.audit-start-routes strong{font-family:'DM Serif Display',serif;font-size:1.55rem;font-weight:400;color:#073734}
+.audit-start-routes span{max-width:65ch;line-height:1.6}.audit-start-routes .audit-route-action{grid-column:2;grid-row:1/3;align-self:center;font-weight:700;color:#0f766e}
+.audit-start-routes>a:first-child{border-left:4px solid #0f766e;background:#eef5f0}
+.audit-fit-note{max-width:68ch;font-size:16px;line-height:1.65;margin-bottom:28px}
+.audit-individual{border-top:1px solid #cddeda;margin-bottom:28px;padding-top:16px}
+.audit-individual>summary{cursor:pointer;padding:12px 0;min-height:44px;font-weight:600;color:#0f766e}
+.audit-individual .start-hero{padding-block:24px}.audit-individual .start-hero h2{font-size:2rem}
+.audit-resource-extra{font-size:16px!important;line-height:1.6;margin-top:20px!important}
+.audit-secondary-link{margin-top:20px!important;font-size:16px!important}
+body.apc-home-page #situations .card p{font-size:16px!important;line-height:1.6!important}
+body .apc-contact-note{font-size:14px!important;line-height:1.65!important}
+body.apc-about-page h1,body.apc-about-page .hero h1{max-width:20ch!important}
+.audit-start-routes a:focus-visible,.audit-individual>summary:focus-visible{outline:3px solid #0f766e;outline-offset:4px}
+@media(max-width:640px){.audit-start-routes>a{grid-template-columns:1fr;padding:20px;gap:10px}.audit-start-routes .audit-route-action{grid-column:auto;grid-row:auto}.audit-start-routes strong{font-size:1.4rem}}

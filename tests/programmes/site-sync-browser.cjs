@@ -1,9 +1,9 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');
 (async()=>{const browser=await chromium.launch({headless:true});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));const output=process.env.APC_QA_OUTPUT||'/tmp/apc-sync-qa';fs.mkdirSync(output,{recursive:true});
-for(const width of [320,390,768,1440])for(const route of ['','parents','services','schools','programmes','connect','course-waitlist','resources','start','free-tool','about','blog','mornings']){
+for(const width of [320,390,768,1440])for(const route of ['','parents','services','schools','programmes','connect','course-waitlist','resources','start','free-tool','about','blog','mornings','big-reactions-quick-check']){
  await page.setViewportSize({width,height:900});await page.goto('http://localhost:8899/'+route);await page.evaluate(()=>document.fonts.ready);
  assert.equal(await page.locator('h1').count(),1,route);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`${route} ${width} `+JSON.stringify(await page.evaluate(()=>Array.from(document.querySelectorAll("body,body *")).filter(el=>el.getBoundingClientRect().right>innerWidth).map(el=>({tag:el.tagName,cls:el.className,text:el.textContent.slice(0,60),right:el.getBoundingClientRect().right,scroll:el.scrollWidth,width:el.clientWidth,position:getComputedStyle(el).position})))));
- const nav=page.locator('.apc-shell-nav');for(const name of ['Parent Home Support','Learning & Workshops','Upcoming Programmes','APC Calm App'])assert.ok((await nav.textContent()).includes(name));
+ const nav=page.locator('.apc-shell-nav');for(const name of ['For Parents','Learning & Workshops','Community Programme Ideas','APC Calm App'])assert.ok((await nav.textContent()).includes(name));
  await page.screenshot({path:path.join(output,`sync-${route}-${width}.png`),fullPage:true});
 }
 // Text enlargement and reduced-motion layouts, including the course enquiry route.

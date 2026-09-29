@@ -25,3 +25,28 @@ class DemandValidationTests(unittest.TestCase):
   self.assertNotIn('href="/course-waitlist"',s)
   self.assertIn('self-paced course enquiry',unquote(s))
   self.assertIn('Which situation is hardest right now?',unquote(s))
+
+ def test_start_offers_learning_before_optional_individual_support(self):
+  s=(R/'start.html').read_text()
+  routes=s.split('class="audit-start-routes"')[1].split('</nav>')[0]
+  for route in ['/big-reactions-quick-check','/parents#workshops','/services#educator-training']:self.assertIn('href="'+route+'"',routes)
+  self.assertLess(s.index('class="audit-start-routes"'),s.index('class="audit-individual"'))
+  self.assertEqual(s.count('<h1>'),1)
+  for offer in ['RM350','RM1,800','first-step-call']:self.assertIn(offer,s)
+
+ def test_learning_directory_does_not_confuse_delivery_formats(self):
+  s=(R/'services.html').read_text()
+  digital=s.split('id="self-paced"')[1].split('</article>')[0]
+  live=s.split('id="parent-workshops"')[1].split('</article>')[0]
+  self.assertIn('href="/connect"',digital)
+  self.assertNotIn('/course-waitlist',digital)
+  self.assertIn('href="/parents#workshops"',live)
+
+ def test_indexable_resource_and_private_fulfilment(self):
+  import xml.etree.ElementTree as ET
+  landing=(R/'big-reactions-quick-check.html').read_text()
+  self.assertIn('content="index,follow"',landing)
+  self.assertIn('noindex,nofollow',(R/'thank-you-big-reactions.html').read_text())
+  urls=[x.text for x in ET.parse(R/'sitemap.xml').iter() if x.tag.endswith('}loc')]
+  self.assertIn('https://autismpathwaysconsulting.com/big-reactions-quick-check',urls)
+  self.assertNotIn('https://autismpathwaysconsulting.com/thank-you-big-reactions',urls)
