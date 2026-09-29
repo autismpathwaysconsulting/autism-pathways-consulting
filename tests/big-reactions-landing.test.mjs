@@ -11,7 +11,8 @@ test('Quick Check route uses the dedicated verified Brevo form and transparent c
   assert.match(html, /two short follow-up emails/);
   assert.match(html, /Parent resources and updates are optional/);
   assert.match(html, /APC Privacy Policy/);
-  assert.match(html, /noindex,nofollow/);
+  assert.match(html, /content="index,follow"/);
+  assert.doesNotMatch(html, /noindex/);
   assert.doesNotMatch(html, /Communication Course|Get Your Free Parent Guide/);
 });
 
@@ -44,6 +45,7 @@ test('UTM attribution is bounded and analytics never include form fields or arbi
 
 test('confirmation route starts the same-origin download and keeps a visible fallback', async () => {
   const [html, script] = await Promise.all([source('thank-you-big-reactions.html'), source('thank-you-big-reactions.js')]);
+  assert.match(html, /noindex,nofollow/);
   assert.match(html, /href="\/APC-Big-Reactions-Quick-Check\.pdf" download/);
   assert.match(html, /src="\/thank-you-big-reactions\.js"/);
   assert.match(script, /window\.setTimeout/);
