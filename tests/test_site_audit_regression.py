@@ -28,6 +28,9 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertIn("This is an interest test. Dates, duration, fee and final scope are not confirmed.", thanks)
         self.assertIn("Keep your notes private unless you choose to share them.", thanks)
         self.assertNotIn("Browse more APC parent resources", thanks)
+        self.assertIn('<body class="apc-quick-check-page">', thanks)
+        self.assertIn('.quick-thanks .button{max-width:100%;text-align:center}', thanks)
+        self.assertIn('.quick-thanks .quick-wrap{max-width:680px}', thanks)
 
     def test_current_course_copy_and_metadata(self):
         for page in ("connect/index.html", "course-waitlist.html", "services.html"):

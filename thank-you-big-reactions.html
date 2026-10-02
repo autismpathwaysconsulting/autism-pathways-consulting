@@ -8,9 +8,18 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="preload" href="/dm-sans-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/dm-serif-display-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/big-reactions-quick-check.css">
+  <link rel="stylesheet" href="/big-reactions-quick-check.css?v=79b6eab6cf37">
+  <style>
+    body.apc-quick-check-page{font-family:'DM Sans',sans-serif;background:#fff9f1}
+    .quick-thanks,.quick-thanks *,.quick-thanks *::before,.quick-thanks *::after{box-sizing:border-box}
+    .quick-thanks{padding:clamp(36px,8vw,80px) 0}
+    .quick-thanks .quick-wrap{max-width:680px}
+    .quick-thanks .quiet-note{color:var(--quick-muted);font-size:.94rem}
+    .quick-thanks a:not(.button){color:var(--quick-primary);text-underline-offset:3px}
+    .quick-thanks .button{max-width:100%;text-align:center}
+  </style>
 </head>
-<body>
+<body class="apc-quick-check-page">
   <main id="main-content" class="quick-thanks">
     <section class="quick-wrap text-measure">
       <p class="eyebrow">Your Quick Check is ready</p>
