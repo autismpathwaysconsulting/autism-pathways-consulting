@@ -14,6 +14,24 @@ def read(path):
 
 
 class SiteAuditRegression(unittest.TestCase):
+    def test_quick_check_publication_copy(self):
+        landing = read("big-reactions-quick-check.html")
+        thanks = read("thank-you-big-reactions.html")
+        self.assertIn("Download it and open it in a PDF reader to type, or print it and write by hand.", landing)
+        self.assertIn("Page two of the Big Reactions Quick Check for choosing and reviewing one small next step", landing)
+        self.assertNotIn("for comparing a second situation", landing)
+        self.assertNotIn("Use it on your phone or computer", landing)
+        self.assertRegex(landing, r"APC-Big-Reactions-Quick-Check-page-1\.webp\?v=[a-f0-9]{12}")
+        self.assertRegex(landing, r"APC-Big-Reactions-Quick-Check-page-2\.webp\?v=[a-f0-9]{12}")
+        self.assertIn("To type, download the PDF, open it in a PDF reader, then save a copy.", thanks)
+        self.assertIn('href="/course-waitlist#course-contact">Explore the founding live session (optional)', thanks)
+        self.assertIn("This is an interest test. Dates, duration, fee and final scope are not confirmed.", thanks)
+        self.assertIn("Keep your notes private unless you choose to share them.", thanks)
+        self.assertNotIn("Browse more APC parent resources", thanks)
+        self.assertIn('<body class="apc-quick-check-page">', thanks)
+        self.assertIn('.quick-thanks .button{max-width:100%;text-align:center}', thanks)
+        self.assertIn('.quick-thanks .quick-wrap{max-width:680px}', thanks)
+
     def test_current_course_copy_and_metadata(self):
         for page in ("connect/index.html", "course-waitlist.html", "services.html"):
             with self.subTest(page=page):
