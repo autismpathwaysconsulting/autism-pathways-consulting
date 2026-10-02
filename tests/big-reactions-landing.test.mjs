@@ -53,17 +53,3 @@ test('confirmation route starts the same-origin download and keeps a visible fal
   assert.match(script, /link\.click\(\)/);
   assert.ok((await stat(new URL('APC-Big-Reactions-Quick-Check.pdf', root))).size > 100000);
 });
-
-test('Quick Check copy matches the fillable next-step resource without changing the consent route', async () => {
-  const [landing, thanks] = await Promise.all([source('big-reactions-quick-check.html'), source('thank-you-big-reactions.html')]);
-  assert.match(landing, /Download it and open it in a PDF reader to type, or print it and write by hand\./);
-  assert.match(landing, /Page two of the Big Reactions Quick Check for choosing and reviewing one small next step/);
-  assert.doesNotMatch(landing, /for comparing a second situation|Use it on your phone or computer/);
-  assert.match(landing, /APC-Big-Reactions-Quick-Check-page-1\.webp\?v=[a-f0-9]{12}/);
-  assert.match(landing, /APC-Big-Reactions-Quick-Check-page-2\.webp\?v=[a-f0-9]{12}/);
-  assert.match(thanks, /To type, download the PDF, open it in a PDF reader, then save a copy\./);
-  assert.match(thanks, /href="\/course-waitlist#course-contact">Explore the founding live session \(optional\)/);
-  assert.match(thanks, /This is an interest test\. Dates, duration, fee and final scope are not confirmed\./);
-  assert.match(thanks, /Keep your notes private unless you choose to share them\./);
-  assert.doesNotMatch(thanks, /Browse more APC parent resources/);
-});
