@@ -14,6 +14,27 @@ def read(path):
 
 
 class SiteAuditRegression(unittest.TestCase):
+    def test_home_and_about_experience_claims(self):
+        precise_claim = "Working alongside autistic children and families since 2016, beginning as an intern"
+        home = read("index.html")
+        about = read("about.html")
+        self.assertEqual(home.count(precise_claim), 1)
+        self.assertEqual(about.count(precise_claim), 2)
+        self.assertIn("I have worked alongside autistic children and families since 2016, beginning as an intern.", about)
+        for page in (home, about):
+            self.assertNotRegex(page, r"(?i)over\s+(?:10|ten)\s+years|10\+\s+years")
+        self.assertIn("Meet CJ Lim, autism educator and APC founder.", about)
+        self.assertIn("part-time lecturer with CAE Malaysia", about)
+
+    def test_blog_closing_prioritises_proposed_session(self):
+        closing = read("blog.html").split('id="apply-an-idea"', 1)[1].split("</section>", 1)[0]
+        self.assertIn("Explore the proposed founding live session with CJ, or continue with free parent resources. If you need help choosing individual support, the free First Step Call remains available.", closing)
+        self.assertIn('<a class="audience-primary" href="/parents#workshops">Explore the founding live session</a>', closing)
+        self.assertIn('<a href="https://cal.com/autismpathwaysconsulting/first-step-call">Book a free First Step Call</a>', closing)
+        self.assertEqual(closing.count('class="audience-primary"'), 1)
+        self.assertIn("The call is a fit check, not a consultation or assessment.", closing)
+        self.assertIn('id="workshops"', read("parents.html"))
+
     def test_quick_check_publication_copy(self):
         landing = read("big-reactions-quick-check.html")
         thanks = read("thank-you-big-reactions.html")
