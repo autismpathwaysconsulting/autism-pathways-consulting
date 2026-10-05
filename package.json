@@ -14,6 +14,8 @@
     "test:pathways-lab": "node --test tests/pathways-lab.test.mjs tests/pathways-bootstrap.test.mjs",
     "test": "npm run test:content-os && npm run test:episode-workflow && npm run test:site-metrics && npm run test:big-reactions && npm run test:pathways-lab",
     "sync:site-labels": "node scripts/sync-site-labels.mjs",
-    "prebuild": "node scripts/sync-site-labels.mjs --check"
+    "prebuild": "node scripts/sync-site-labels.mjs --check",
+    "check:video-rules": "node scripts/sync-video-rules.mjs --check",
+    "test:video-rules": "node --test tests/content-os-video-rules-sync.test.mjs tests/content-os-episode-workflow.test.mjs tests/content-os-winner-hook.test.mjs"
   }
 }
