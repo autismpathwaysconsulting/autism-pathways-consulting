@@ -1,0 +1,39 @@
+name: Content video rules QA
+
+on:
+  pull_request:
+    paths:
+      - 'content-os/**'
+      - 'functions/api/content-os/episode-workflow/**'
+      - 'scripts/sync-video-rules.mjs'
+      - 'tests/content-os*.test.mjs'
+      - 'package.json'
+      - '.github/workflows/content-video-rules-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'content-os/**'
+      - 'functions/api/content-os/episode-workflow/**'
+      - 'scripts/sync-video-rules.mjs'
+      - 'tests/content-os*.test.mjs'
+      - 'package.json'
+      - '.github/workflows/content-video-rules-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  content-video-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm run test:video-rules
+      - run: npm run build
+      - run: npm run test:site-build
+
+# No private-repository credentials or master contents are loaded into public CI.
+# Maintainers also run check:video-rules against their authorized master checkout.

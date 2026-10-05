@@ -349,6 +349,88 @@ test("tracked prompts and packs must use the exact canonical master identity", (
   assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: importedPack({ masterRules: { version: "2026-09-06.0", sha256: masterRules.sha256 } }), idempotencyKey: "pack:EP09:forged0001" }), /canonical APC master/i);
 });
 
+const previousMasterRules = {
+  version: "2026-09-06.1",
+  sha256: "84ffc4702deef119897113494be9749077a664eed47adfb97ad0c05f8757ac16",
+};
+
+async function storedHistoricalPack(overrides = {}) {
+  const database = new DatabaseSync(":memory:");
+  await applyMigrations(database);
+  const promptHash = "a".repeat(64);
+  const packHash = "b".repeat(64);
+  const pack = importedPack({ masterRules: previousMasterRules, ...overrides });
+  const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Previously approved prompt", sourceContext: { sourceType: "manual" }, masterRules: { ...previousMasterRules, sourcePath: masterRules.sourcePath } };
+  const record = {
+    schemaVersion: "apc.episode_record.v3", episodeId: "EP09", masterRules: previousMasterRules,
+    prompt: { artifactId: pack.promptBinding.artifactId, version: 1, sha256: promptHash },
+    latestPackage: { artifactId: "historical-pack", version: 1, sha256: packHash, promptSha256: promptHash },
+    package: pack,
+  };
+  database.prepare(`INSERT INTO episodes
+    (id, title, status, production_pack_json, created_at, updated_at, display_number)
+    VALUES ('EP09', 'Historical synthetic episode', 'APPROVED', ?, '2026-09-07T00:00:00Z', '2026-09-07T00:00:00Z', 9)`).run(JSON.stringify(record));
+  database.prepare(`INSERT INTO episode_artifacts
+    (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
+    VALUES (?, 'EP09', 'PROMPT', 1, ?, ?, 'NOT_APPLICABLE', NULL, NULL, '2026-09-07T00:00:00Z')`).run(pack.promptBinding.artifactId, promptHash, JSON.stringify(prompt));
+  database.prepare(`INSERT INTO episode_artifacts
+    (artifact_id, episode_id, artifact_type, version, payload_sha256, payload_json, redteam_status, hook_gate_status, final_decision, created_at)
+    VALUES ('historical-pack', 'EP09', 'PRODUCTION_PACK', 1, ?, ?, ?, ?, ?, '2026-09-07T00:01:00Z')`).run(packHash, JSON.stringify(pack), pack.redteam.result, pack.hookGate.result, pack.finalDecision);
+  return { database, record, pack };
+}
+
+test("master refresh preserves historical pack identity through lock, filming, editing and review", async () => {
+  const { database, record } = await storedHistoricalPack();
+  try {
+    const artifactsBefore = database.prepare("SELECT * FROM episode_artifacts ORDER BY artifact_id").all();
+    let response = await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:historical1" });
+    assert.equal(response.status, 200, await response.text());
+    for (const status of ["FILMED", "EDITING", "REVIEW"]) {
+      response = await postWorkflow(database, { action: "update_episode_status", episodeId: "EP09", status });
+      assert.equal(response.status, 200, await response.text());
+    }
+    response = await postWorkflow(database, { action: "save_review", episodeId: "EP09", manifest: { label: "synthetic historical review", mode: "full", video: { sha256: "f".repeat(64) }, review: { status: "NOT_READY" } } });
+    assert.equal(response.status, 200, await response.text());
+    const episode = database.prepare("SELECT id, title, display_number, production_pack_json FROM episodes WHERE id = 'EP09'").get();
+    assert.equal(episode.id, "EP09");
+    assert.equal(episode.display_number, 9);
+    assert.equal(episode.title, "Historical synthetic episode");
+    assert.deepEqual(JSON.parse(episode.production_pack_json), record);
+    assert.deepEqual(database.prepare("SELECT * FROM episode_artifacts ORDER BY artifact_id").all(), artifactsBefore);
+  } finally { database.close(); }
+});
+
+test("historical compatibility never permits new old-master prompts or imports", () => {
+  const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Old prompt", sourceContext: {}, masterRules: { ...previousMasterRules, sourcePath: masterRules.sourcePath } };
+  assert.match(validateAction({ action: "save_prompt_revision", episodeId: "EP09", prompt, idempotencyKey: "prompt:EP09:oldmaster1" }), /canonical APC master/);
+  assert.match(validateAction({ action: "create_tracked_prompt", episode: { id: "EP09", title: "Synthetic episode", researchItemId: null }, prompt, idempotencyKey: "prompt:EP09:oldmaster2" }), /canonical APC master/);
+  assert.match(validateAction({ action: "import_production_pack", episodeId: "EP09", pack: importedPack({ masterRules: previousMasterRules }), idempotencyKey: "pack:EP09:oldmaster1" }), /canonical APC master/);
+});
+
+test("historical stored packs still fail closed on unknown identity, failed QA or changed prompt", async () => {
+  for (const overrides of [
+    { masterRules: { ...previousMasterRules, sha256: "c".repeat(64) } },
+    { masterRules: { ...previousMasterRules, version: "2026-09-06.0" } },
+    { redteam: { result: "FAIL", score: 4, risks: ["Synthetic unresolved risk"], fixes: [] }, finalDecision: "REVISE" },
+    { hookGate: { result: "FAIL", yesCount: 2, checks: [false, false, false, true, true] } },
+  ]) {
+    const { database } = await storedHistoricalPack(overrides);
+    try {
+      assert.equal((await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:historical2" })).status, 409);
+    } finally { database.close(); }
+  }
+  const { database } = await storedHistoricalPack();
+  try {
+    const prompt = { schemaVersion: "apc.episode_prompt.v1", format: "Talking head", notes: "", text: "Current replacement prompt", sourceContext: {}, masterRules };
+    const response = await postWorkflow(database, { action: "save_prompt_revision", episodeId: "EP09", prompt, idempotencyKey: "prompt:EP09:newmaster1" });
+    assert.equal(response.status, 201, await response.text());
+    assert.equal((await postWorkflow(database, { action: "lock_script", episodeId: "EP09", idempotencyKey: "lock:EP09:historical3" })).status, 409);
+    assert.equal(database.prepare("SELECT COUNT(*) AS count FROM episode_artifacts WHERE artifact_type = 'PRODUCTION_PACK'").get().count, 1);
+    const old = JSON.parse(database.prepare("SELECT payload_json FROM episode_artifacts WHERE artifact_id = 'historical-pack'").get().payload_json);
+    assert.deepEqual(old.masterRules, previousMasterRules);
+  } finally { database.close(); }
+});
+
 test("a prompt revision invalidates the prior pack and prevents stale script locking", async () => {
   const database = new DatabaseSync(":memory:");
   try {
@@ -570,15 +652,15 @@ test("Episode Studio assets are in the public allowlist without exposing operati
 test("Episode Studio uses only the synced APC master rules for filming-pack prompts", async () => {
   const episodeApp = await readFile(new URL("../content-os/episodes/app.js", import.meta.url), "utf8");
   const mainApp = await readFile(new URL("../content-os/app.js", import.meta.url), "utf8");
-  assert.equal(MASTER_VIDEO_RULES.version, "2026-09-06.1");
+  assert.equal(MASTER_VIDEO_RULES.version, "2026-09-27.2");
   assert.equal(MASTER_VIDEO_RULES.legacySourcesAllowed, false);
   assert.match(MASTER_VIDEO_RULES.sha256, /^[a-f0-9]{64}$/);
   for (const instruction of [
     "SOURCE POLICY: Use only this master rule block",
     "REPLICATION POLICY: Follow this approved sequence and production pattern by default",
     "CURRENT AUDIENCE DEFAULT: Create for parents of autistic teenagers",
-    "Begin with \"Can I tell you something?\" followed immediately by one verified statistic or specific number",
-    "CURIOSITY BRIDGE: At approximately 7 to 12 seconds",
+    "Select the strongest truthful hook family for the topic rather than forcing a statistic",
+    "CURIOSITY BRIDGE: At approximately 5 to 12 seconds",
     "VISUAL CARDS: Provide 340 by 605 pixel",
     "Do not create an SRT file",
   ]) {

@@ -8,6 +8,11 @@ const HOOK_RESULTS = new Set(["PASS", "REWORK", "FAIL"]);
 const FINAL_DECISIONS = new Set(["FILM", "PRODUCE", "REVISE"]);
 const CONTENT_TYPES = new Set(["VIDEO", "CAROUSEL"]);
 const PACKAGE_SCHEMA = "apc.episode_pack.v2";
+// Compatibility applies only to immutable packs already stored in D1. New
+// prompts/imports must use MASTER_VIDEO_RULES; never relabel historical artifacts.
+const STORED_PACK_MASTER_IDENTITIES = Object.freeze([
+  Object.freeze({ version: "2026-09-06.1", sha256: "84ffc4702deef119897113494be9749077a664eed47adfb97ad0c05f8757ac16" }),
+]);
 export const MINIMUM_REDTEAM_PASS_SCORE = 9.5;
 
 function json(body, status = 200, headers = {}) {
@@ -80,10 +85,10 @@ function canonicalPromptMaster(masterRules) {
     masterRules.sha256 === MASTER_VIDEO_RULES.sha256 &&
     masterRules.sourcePath === MASTER_VIDEO_RULES.sourcePath;
 }
-function canonicalPackMaster(masterRules) {
+function canonicalPackMaster(masterRules, allowStoredIdentity = false) {
   return exactKeys(masterRules, ["version", "sha256"]) &&
-    masterRules.version === MASTER_VIDEO_RULES.version &&
-    masterRules.sha256 === MASTER_VIDEO_RULES.sha256;
+    [MASTER_VIDEO_RULES, ...(allowStoredIdentity ? STORED_PACK_MASTER_IDENTITIES : [])]
+      .some(identity => masterRules.version === identity.version && masterRules.sha256 === identity.sha256);
 }
 function validatePrompt(prompt) {
   if (!exactKeys(prompt, ["schemaVersion", "format", "notes", "text", "sourceContext", "masterRules"], ["preferredScript"])) return "Tracked prompt does not match the expected schema.";
@@ -97,14 +102,14 @@ function validPromptBinding(binding) {
   return exactKeys(binding, ["artifactId", "sha256"]) &&
     validText(binding.artifactId, 100) && /^[0-9a-f]{64}$/.test(binding.sha256);
 }
-function validateProductionPack(pack, requirePromptBinding = false) {
+function validateProductionPack(pack, requirePromptBinding = false, allowStoredIdentity = false) {
   const keys = ["schemaVersion", "episodeId", "masterRules", "redteam", "hookGate", "finalDecision", "spokenScript", "filmingBoard", "overlays", "hyperframesPrompt", "visualAssets", "editNotes", "sourceNotes", "platformCopy", "claimCautions"];
   if (!exactKeys(pack, keys, ["contentType", "carousel", "promptBinding"])) return "Imported pack does not match the expected schema.";
   if (pack.schemaVersion !== PACKAGE_SCHEMA || !validEpisodeId(pack.episodeId)) return "Imported pack identity is invalid.";
   if ((requirePromptBinding || Object.hasOwn(pack, "promptBinding")) && !validPromptBinding(pack.promptBinding)) return "Imported pack prompt binding is invalid.";
   const contentType = pack.contentType || "VIDEO";
   if (!CONTENT_TYPES.has(contentType)) return "Imported pack content type is invalid.";
-  if (!canonicalPackMaster(pack.masterRules)) return "Imported pack master rule identity does not match the canonical APC master.";
+  if (!canonicalPackMaster(pack.masterRules, allowStoredIdentity)) return "Imported pack master rule identity does not match the canonical APC master.";
   if (!exactKeys(pack.redteam, ["result", "score", "risks", "fixes"]) || !["PASS", "FAIL"].includes(pack.redteam.result) || !Number.isFinite(pack.redteam.score) || pack.redteam.score < 0 || pack.redteam.score > 10 || !validStringArray(pack.redteam.risks) || !validStringArray(pack.redteam.fixes)) return "Imported pack red-team result is invalid. Score must be between 0 and 10.";
   if (pack.redteam.result === "PASS" && pack.redteam.score < MINIMUM_REDTEAM_PASS_SCORE) return `A red-team PASS requires a score of at least ${MINIMUM_REDTEAM_PASS_SCORE}/10.`;
   if (pack.redteam.result === "PASS" && pack.redteam.risks.length) return "Resolve all red-team risks before returning PASS; use FAIL and REVISE while blockers remain.";
@@ -287,7 +292,7 @@ async function activeProductionArtifact(database, episodeId) {
 async function requireGatedPack(database, episodeId) {
   const artifact = await activeProductionArtifact(database, episodeId);
   const pack = artifact ? safeJson(artifact.payload_json) : null;
-  return artifact && pack && validateProductionPack(pack) === null && packGate(pack) ? { artifact, pack } : null;
+  return artifact && pack && validateProductionPack(pack, false, true) === null && packGate(pack) ? { artifact, pack } : null;
 }
 
 export async function onRequestGet({ env }) {

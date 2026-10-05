@@ -46,9 +46,9 @@ test("creative prompts put recognition before mechanism and require the pre-film
   ]);
   assert.match(html, /value="reel">Reel \/ short-form episode package/);
   for (const instruction of [
-    "Begin with \"Can I tell you something?\" followed immediately by one verified statistic or specific number",
-    "connect it to a recognisable parent moment",
-    "CURIOSITY BRIDGE: At approximately 7 to 12 seconds",
+    "Select the strongest truthful hook family for the topic rather than forcing a statistic",
+    "one recognisable parent moment",
+    "CURIOSITY BRIDGE: At approximately 5 to 12 seconds",
     "Explain one plausible mechanism in plain language",
     "Do not use old HTML script boards",
   ]) {
