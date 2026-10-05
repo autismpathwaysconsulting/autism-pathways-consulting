@@ -8,7 +8,7 @@ for(const width of [320,390,768,1440])for(const route of ['','parents','services
 }
 // Text enlargement and reduced-motion layouts, including the course enquiry route.
 await page.emulateMedia({reducedMotion:'reduce'});
-for(const route of ['parents','services','schools','programmes','connect','course-waitlist','start','free-tool']){
+for(const route of ['parents','services','schools','programmes','connect','course-waitlist','start','free-tool','resources']){
  await page.setViewportSize({width:390,height:844});await page.goto('http://localhost:8899/'+route);
  await page.evaluate(async()=>{document.documentElement.style.fontSize='200%';await document.fonts.ready;});
  const overflow=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,elements:[...document.querySelectorAll('main *')].filter(el=>el.getBoundingClientRect().right>innerWidth).map(el=>({tag:el.tagName,text:el.textContent.slice(0,80)}))}));
@@ -31,4 +31,5 @@ await page.goto('http://localhost:8899/parents#one-concern');assert.equal(await 
 await page.goto('http://localhost:8899/services');assert.match(await page.locator('main').textContent(),/In development/);assert.equal(await page.locator('main a[href*="pay"]').count(),0);
 await page.goto('http://localhost:8899/schools');await page.locator('#sf-name').fill('QA Educator');await page.locator('#sf-school').fill('QA School');await page.locator('#school-training-form button[type=submit]').click();await page.locator('#sf-success').waitFor({state:'visible'});assert.match(await page.locator('#school-whatsapp-link').getAttribute('href'),/^https:\/\/wa.me\/601172998168\?text=/);await page.locator('#sf-name').fill('Changed');assert.equal(await page.locator('#sf-success').isVisible(),false);
 const denied=await page.request.get('http://localhost:8899/content-os/programmes/follow-up',{maxRedirects:0});assert.equal(denied.status(),302);
+await require('../resources-browser.cjs')(page,output);
 assert.deepEqual(errors,[]);await browser.close();console.log('Site sync responsive and enquiry checks passed');})().catch(e=>{console.error(e);process.exit(1);});
