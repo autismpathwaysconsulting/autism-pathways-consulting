@@ -32,8 +32,10 @@ module.exports = async function checkResources(page, output) {
     }
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`Resources overflow at ${width}`);
     assert.equal(await page.locator('.resource-topics summary').evaluateAll(nodes=>nodes.every(el=>el.getBoundingClientRect().height>=44)),true);
+    await page.evaluate(()=>{document.activeElement?.blur();window.scrollTo({top:0,behavior:'instant'});});
     await page.screenshot({path:path.join(output,`resources-open-${width}.png`),fullPage:true});
     for(const summary of await page.locator('.resource-topics summary').all()) await summary.click();
+    await page.evaluate(()=>{document.activeElement?.blur();window.scrollTo({top:0,behavior:'instant'});});
     await page.screenshot({path:path.join(output,`resources-closed-${width}.png`),fullPage:true});
     await first.click();
     await page.getByRole('link',{name:'When mornings are chaos',exact:true}).click();
@@ -54,7 +56,7 @@ module.exports = async function checkResources(page, output) {
     assert.match(await contact.last().getAttribute('href'),/^https:\/\/wa.me\/601172998168/);
     assert.equal(await page.locator('.service-action-icon').evaluateAll(nodes=>nodes.every(n=>n.getAttribute('aria-hidden')==='true'&&n.getAttribute('focusable')==='false')),true);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`Services overflow at ${width}`);
-    await page.locator('#educator-training').screenshot({path:path.join(output,`teacher-talk-buttons-${width}.png`)});
+    await page.locator('#educator-training .workshop-contact').screenshot({path:path.join(output,`teacher-talk-buttons-${width}.png`)});
   }
   // Native topic disclosure and the main resource journey remain usable without JavaScript.
   const context=await page.context().browser().newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});

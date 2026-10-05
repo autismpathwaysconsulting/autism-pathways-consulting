@@ -13,6 +13,10 @@ for(const route of ['parents','services','schools','programmes','connect','cours
  await page.evaluate(async()=>{document.documentElement.style.fontSize='200%';await document.fonts.ready;});
  const overflow=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,elements:[...document.querySelectorAll('main *')].filter(el=>el.getBoundingClientRect().right>innerWidth).map(el=>({tag:el.tagName,text:el.textContent.slice(0,80)}))}));
  assert.ok(overflow.scroll<=overflow.width,route+' enlarged text '+JSON.stringify(overflow));
+ if(route==='resources'){
+  const clipped=await page.locator('.apc-footer :is(a,p)').evaluateAll(nodes=>nodes.filter(el=>el.getBoundingClientRect().right>innerWidth+1||el.scrollWidth>el.clientWidth+1).map(el=>el.textContent));
+  assert.deepEqual(clipped,[],'Resources footer content must remain readable at 200% text size');
+ }
  await page.screenshot({path:path.join(output,'large-text-'+route+'.png'),fullPage:true});
 }
 await page.goto('http://localhost:8899/course-waitlist');
