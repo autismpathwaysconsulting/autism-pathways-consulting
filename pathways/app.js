@@ -86,7 +86,7 @@ function clearStudentUi(keepConflictDraft=false){
   if($('summaryEditor'))$('summaryEditor').hidden=true;
   for(const id of ['summaryDraft','viewerSummaryText','viewerSummaryStatus','summaryStatus']){if($(id)){$(id).value='';$(id).textContent=''}}
   if($('summaryScreen'))$('summaryScreen').classList.add('hidden');
-  for(const id of ['studentHeading','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','savedCount','studentAdminPanel']){
+  for(const id of ['studentHeading','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','savedCount','planningCount','updateDate','studentAdminPanel']){
     if($(id))$(id).textContent='';
   }
   if($('overviewNote'))$('overviewNote').value='';
@@ -145,6 +145,12 @@ function clearProtectedDom(){
   document.querySelectorAll('.nav').forEach(item=>item.classList.toggle('active',item.dataset.screen==='daily'));
   document.querySelectorAll('.screen').forEach(screen=>screen.classList.add('hidden'));
   if($('dailyScreen'))$('dailyScreen').classList.remove('hidden');
+  if($('dailyLessons'))$('dailyLessons').classList.remove('hidden');
+  if($('reviewUpdates'))$('reviewUpdates').classList.add('hidden');
+  document.querySelectorAll('[data-workflow]').forEach(button=>{
+    const selected=button.dataset.workflow==='record';
+    button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
+  });
 }
 
 function resetProtectedUi(){
@@ -431,6 +437,19 @@ function dashboardAction(action){
     if(!canEdit())return;
     openPin();$('pinPrepare').checked=true;updatePreparationFields();return;
   }
+  if(action==='record'||action==='updates'){
+    $('dailyLessons').classList.toggle('hidden',action==='updates');
+    $('reviewUpdates').classList.toggle('hidden',action!=='updates');
+    document.querySelectorAll('[data-workflow]').forEach(button=>{
+      const selected=button.dataset.workflow===action;
+      button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
+    });
+  }
+  if(action==='goals'){
+    document.querySelectorAll('.screen').forEach(screen=>screen.classList.add('hidden'));
+    $('objectivesScreen').classList.remove('hidden');$('goalsOverview').open=true;
+    document.querySelectorAll('.nav').forEach(button=>button.classList.toggle('active',button.dataset.screen==='objectives'));
+  }
   const targets={record:'lessonRecords',goals:'goalsOverview',updates:'reviewUpdates'};
   const target=$(targets[action]);if(!target)return;
   target.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});target.focus({preventScroll:true});
@@ -550,10 +569,12 @@ function renderWeek(){
 function renderDays(){
   $('dayTabs').innerHTML=PATHWAYS_WEEKDAYS.map(day=>`<button class="day ${day===currentDay?'active':''}" data-day="${day}">${day.slice(0,3)}</button>`).join('');
   $('dayHeading').textContent=`${currentDay} · ${formatShortDate(dateForDay(currentDay,activeWeek))}`;
+  $('updateDate').textContent=$('dayHeading').textContent;
 }
 
 function renderPins(){
   const visible=(state.pins||[]).filter(pin=>!['Done','Archived'].includes(effectivePinStatus(pin,new Date()))).sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'));
+  $('planningCount').textContent=visible.length?`${visible.length} open`: 'No open items';
   $('pinList').innerHTML=visible.length?visible.map(pin=>{
     const status=effectivePinStatus(pin,new Date());
     return `<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(pin.title)}</div><div class="meta"><span class="pill">${escapeHtml(pin.type)}</span>${pin.subject?`<span>${escapeHtml(pin.subject)}</span>`:''}${pin.due?`<span>${status==='Overdue'?'Overdue · ':''}${escapeHtml(pin.due)}</span>`:''}${pin.parent?'<span class="pill good">Parent-visible</span>':'<span class="pill">Internal</span>'}</div>${pin.details?`<div class="item-copy">${escapeHtml(pin.details)}</div>`:''}${pin.preparation?`<div class="item-copy"><strong>Lesson preparation</strong>${[['Topic','topic'],['Task','task'],['Learning outcome','learningOutcome'],['Materials reference','materials'],['Differentiated work','differentiatedWork'],['Planned support','plannedSupport']].filter(([,key])=>pin.preparation[key]).map(([label,key])=>`<p><strong>${label}:</strong> ${escapeHtml(pin.preparation[key])}</p>`).join('')}</div>`:''}</div>${canEdit()?`<button class="btn secondary small" data-pin-done="${escapeHtml(pin.id)}">Done</button>`:''}</div></div>`;
@@ -565,10 +586,10 @@ function renderSubjects(){
   for(const entry of entries) if(entry.data?.saved)saved++;
   $('savedCount').textContent=`${saved}/${entries.length} saved`;
   $('subjectList').innerHTML=entries.length?entries.map(({time,subject,key,data})=>{
-    const status=data?.saved?'Saved':data?.skipped?'Not reported':'Not saved';
-    const preview=data?.narrative||(data?.skipped?'Not reported today':'Open to add the normal subject report.');
+    const status=data?.saved?'Saved':data?.skipped?'Not reported':'No note yet';
+    const preview=data?.narrative||(data?.skipped?'Not reported today':'Add a brief lesson note.');
     const domains=(data?.domains||[]).map(code=>`<span class="pill" style="border-left:3px solid ${DOMAIN_META[code]?.[1]||'#475569'}">${code}</span>`).join('');
-    return `<article class="item"><div class="time-cell">${escapeHtml(time)}</div><div><div><span class="item-title">${escapeHtml(subject)}</span> <span class="pill ${data?.saved?'good':''}">${status}</span></div><div class="item-copy">${escapeHtml(preview)}</div><div class="meta">${domains}</div></div><button class="btn secondary small" data-subject-key="${escapeHtml(key)}" data-time="${escapeHtml(time)}" data-subject="${escapeHtml(subject)}">${canEdit()?'Open':'View'}</button></article>`;
+    return `<article class="item"><div class="time-cell">${escapeHtml(time)}</div><div><div><span class="item-title">${escapeHtml(subject)}</span> <span class="pill ${data?.saved?'good':''}">${status}</span></div><div class="item-copy">${escapeHtml(preview)}</div><div class="meta">${domains}</div></div><button class="btn secondary small" data-subject-key="${escapeHtml(key)}" data-time="${escapeHtml(time)}" data-subject="${escapeHtml(subject)}">${canEdit()?(data?.saved?'Edit note':'Add note'):'View note'}</button></article>`;
   }).join(''):'<div class="muted-box">No timetable blocks configured for this day. Administrators can set up the timetable from Administration.</div>';
 }
 
@@ -629,6 +650,8 @@ function openSubject(key,time,subject){
   };
   $('subjectTime').textContent=`${time} · ${formatShortDate(dateForDay(currentDay,activeWeek))}`;$('subjectName').textContent=subject;$('narrative').value=formData.narrative;
   $('aideLevel').value=formData.aideLevel;$('supportSource').value=formData.supportSource;$('supportPurpose').value=formData.supportPurpose;$('eventObservation').value=formData.eventObservation;$('eventUncertainty').value=formData.eventUncertainty;
+  $('moreDetail').open=Boolean(existing.participation||existing.eventObservation||existing.eventUncertainty||(existing.autonomy||[]).length||(existing.domains||[]).length||existing.aideLevel&&existing.aideLevel!=='None');
+  $('taskDetails').open=formData.tasks.length>0;
   renderSubjectForm();
   for(const el of $('subjectForm').querySelectorAll('input,textarea,select,button')) if(el.value!=='cancel') el.disabled=!canEdit() && !el.classList.contains('icon-btn');
   $('subjectDialog').showModal();
@@ -867,7 +890,7 @@ function bindStaticEvents(){
   $('taskList').addEventListener('change',event=>{const taskRoot=event.target.closest('[data-task-index]');if(!taskRoot||!canEdit())return;const task=formData.tasks[Number(taskRoot.dataset.taskIndex)];if(event.target.classList.contains('task-type'))task.type=event.target.value;if(event.target.classList.contains('task-outcome'))task.outcome=event.target.value;if(event.target.classList.contains('task-parent'))task.includeParent=event.target.checked;if(event.target.classList.contains('task-result'))task.objectiveResult=event.target.value;if(event.target.classList.contains('task-objective')){task.objectiveId=event.target.value;task.objectiveResult=task.objectiveId?(task.objectiveResult||'Not measured / insufficient opportunity'):'';task.measurementValue=null;const objective=state.objectives.find(item=>item.id===task.objectiveId);task.measurementUnit={latency:'seconds',duration:'minutes',frequency:'count',accuracy:'percent'}[objective?.measureType]||'';renderTasks()}});
   $('saveSubjectBtn').onclick=saveSubject;$('notReportedBtn').onclick=markNotReported;
   $('overviewChoices').onclick=async event=>{const btn=event.target.closest('[data-overview]');if(!btn||!canEdit())return;const key=datedDayKey(currentDay,activeWeek);const choice=btn.dataset.overview;try{if(await persist('edit',next=>{next.overview[key]={...(next.overview[key]||{}),choice}}))renderAll()}catch(error){showError(error.message)}};$('saveOverviewBtn').onclick=saveOverview;
-  $('pinPrepare').onchange=updatePreparationFields;$('addPinBtn').onclick=openPin;$('savePinBtn').onclick=savePin;$('pinList').onclick=event=>{const btn=event.target.closest('[data-pin-done]');if(btn)donePin(btn.dataset.pinDone)};
+  $('prepareLessonBtn').onclick=()=>dashboardAction('prepare');$('pinPrepare').onchange=updatePreparationFields;$('addPinBtn').onclick=openPin;$('savePinBtn').onclick=savePin;$('pinList').onclick=event=>{const btn=event.target.closest('[data-pin-done]');if(btn)donePin(btn.dataset.pinDone)};
   $('quickObjectiveBtn').onclick=()=>openObjective();$('addObjectiveBtn').onclick=()=>openObjective();$('objectiveList').onclick=event=>{const btn=event.target.closest('[data-edit-objective]');if(btn)openObjective(btn.dataset.editObjective)};$('saveObjectiveDialogBtn').onclick=saveObjective;
   document.querySelectorAll('.output-tab').forEach(btn=>btn.onclick=()=>{outputView=btn.dataset.output;renderOutput()});$('copyOutput').onclick=copyReviewedOutput;$('openWhatsApp').onclick=openWhatsApp;$('reviewSummary').onclick=reviewSummary;$('saveSummary').onclick=saveReviewedSummary;$('latestSummaryDraft').onclick=useLatestSummaryDraft;$('dailyActions').onclick=event=>{const button=event.target.closest('[data-workflow]');if(button)dashboardAction(button.dataset.workflow)};$('summaryDate').onchange=()=>loadStudent();
   $('revisionList').onclick=event=>{const btn=event.target.closest('[data-revision]');if(btn)loadRevision(Number(btn.dataset.revision))};$('restoreRevision').onclick=restoreRevision;$('refreshHistory').onclick=loadStudent;

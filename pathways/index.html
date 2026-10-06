@@ -42,8 +42,8 @@
     <div class="shell">
       <aside class="sidebar">
         <button class="nav active" data-screen="daily">Today</button>
-        <button class="nav" data-screen="history">Record history</button>
         <button class="nav" data-screen="objectives">Goals & progress</button>
+        <button class="nav" data-screen="history">Record history</button>
         <button id="adminNav" class="nav hidden" data-screen="admin">Administration</button>
         <div class="sidebar-foot">
           <strong id="userName"></strong>
@@ -65,9 +65,9 @@
         <section id="dailyScreen" class="screen">
           <div class="screen-head">
             <div>
-              <p class="eyebrow">Daily support workflow</p>
+              <p class="eyebrow">Today</p>
               <h1 id="studentHeading">Student</h1>
-              <p class="muted">Prepare for lessons, record support and review the next step.</p>
+              <p class="muted">Your lessons and daily update, in one place.</p>
             </div>
             <div class="week-controls">
               <button id="prevWeek" class="btn secondary small">← Previous</button>
@@ -80,52 +80,40 @@
           <div id="authorityWarning" class="notice warn hidden"><strong>Use authority required.</strong> An administrator or SENCO must record the school's pilot/school-record authority before support data can be saved for this non-synthetic workspace.</div>
           <div id="readOnlyWarning" class="notice hidden"><strong>Read-only.</strong> Your account can view this workspace but cannot edit it.</div>
 
-          <nav id="dailyActions" class="daily-actions" aria-label="Daily support actions">
-            <button id="prepareLessonBtn" type="button" class="workflow-action" data-workflow="prepare"><strong>Prepare a lesson</strong><span>Task, outcome and planned support</span></button>
-            <button type="button" class="workflow-action" data-workflow="record"><strong>Record observations</strong><span>What happened and support used</span></button>
-            <button type="button" class="workflow-action" data-workflow="goals"><strong>Review goals</strong><span>Evidence against agreed targets</span></button>
-            <button type="button" class="workflow-action" data-workflow="updates"><strong>Review updates</strong><span>Select highlights for each audience</span></button>
-          </nav>
           <nav id="dayTabs" class="days" aria-label="School days"></nav>
-
-          <section class="card padded persistent">
-            <div class="section-head"><div><p class="eyebrow">Planning & reminders</p><h2>Upcoming lessons and tasks</h2></div><button id="addPinBtn" class="btn secondary small">+ Add</button></div>
-            <div id="pinList" class="list"></div>
-          </section>
-
-          <div class="daily-grid">
+          <nav id="dailyActions" class="daily-actions" aria-label="Daily workspace">
+            <button type="button" class="workflow-action active" data-workflow="record" aria-pressed="true" aria-controls="dailyLessons">Lessons</button>
+            <button type="button" class="workflow-action" data-workflow="updates" aria-pressed="false" aria-controls="reviewUpdates">Daily update</button>
+          </nav>
+          <div id="dailyLessons">
             <section id="lessonRecords" tabindex="-1">
-              <div class="section-head"><div><p class="eyebrow">Daily timetable</p><h2 id="dayHeading">Monday</h2></div><span id="savedCount" class="muted"></span></div>
+              <div class="section-head"><div><h2 id="dayHeading">Monday</h2><p class="muted">Choose a lesson to add or review your note.</p></div><span id="savedCount" class="muted"></span></div>
               <div id="subjectList" class="list subjects"></div>
             </section>
-
-            <aside class="right-rail">
-              <section class="card padded">
+            <details class="planning-details">
+              <summary>Lesson preparation & reminders <span id="planningCount" class="muted"></span></summary>
+              <div class="section-head"><p class="muted">Check planned tasks and support before a lesson.</p><div class="row"><button id="prepareLessonBtn" type="button" class="btn secondary small">Prepare a lesson</button><button id="addPinBtn" class="btn ghost small">Add reminder</button></div></div>
+              <div id="pinList" class="list"></div>
+            </details>
+          </div>
+          <section id="reviewUpdates" tabindex="-1" class="card padded hidden">
+                <p class="eyebrow">Choose an audience</p><h2>Daily update</h2><p id="updateDate" class="muted"></p>
+                <details class="overview-details"><summary>Add a daily overview <span class="muted">Optional context across lessons</span></summary>
                 <p class="eyebrow">Behaviour & Focus</p><h2>Daily overview</h2>
                 <div id="overviewChoices" class="choice-grid"></div>
                 <label>Optional note<textarea id="overviewNote" rows="2" placeholder="Only add detail if it improves understanding."></textarea></label>
                 <button id="saveOverviewBtn" class="btn primary full">Save overview</button>
-              </section>
-
-              <section id="goalsOverview" tabindex="-1" class="card padded">
-                <div class="section-head"><div><p class="eyebrow">IEP evidence</p><h2>Active goals</h2></div><button id="quickObjectiveBtn" class="btn secondary small">+ Add</button></div>
-                <div id="objectiveSummary" class="list compact-list"></div>
-              </section>
-
-              <section id="reviewUpdates" tabindex="-1" class="card padded">
-                <p class="eyebrow">Review before sharing</p><h2>Updates for the team</h2>
+              </details>
                 <div class="output-tabs">
                   <button class="output-tab active" data-output="parent">Family update</button>
                   <button class="output-tab" data-output="teacher">Teacher update</button>
                   <button class="output-tab" data-output="iep">IEP / SEN</button>
                 </div>
                 <p id="summaryStatus" class="muted"></p><pre id="outputText" class="output"></pre>
-                <button id="reviewSummary" class="btn secondary" type="button">Review and edit highlights</button>
+                <button id="reviewSummary" class="btn secondary" type="button">Review this update</button>
                 <div id="summaryEditor" hidden><button id="latestSummaryDraft" type="button" class="btn ghost small">Use latest lesson draft</button><label>Keep only details relevant to this audience<textarea id="summaryDraft" rows="8" maxlength="12000"></textarea></label><p class="muted">Check accuracy and remove private details. Saving makes the teacher summary available to assigned summary viewers. Family updates still require sharing authority.</p><button id="saveSummary" class="btn primary" type="button">Confirm reviewed and save</button></div>
                 <div class="row"><button id="copyOutput" class="btn secondary">Copy</button><button id="openWhatsApp" class="btn whatsapp">Open WhatsApp</button></div>
               </section>
-            </aside>
-          </div>
         </section>
 
         <section id="summaryScreen" class="screen hidden"><div class="card padded"><h2>Reviewed staff updates</h2><label>Date<input id="summaryDate" type="date"></label><p id="viewerSummaryStatus" class="muted"></p><pre id="viewerSummaryText" class="output"></pre></div></section>
@@ -138,7 +126,11 @@
         </section>
 
         <section id="objectivesScreen" class="screen hidden">
-          <div class="screen-head"><div><p class="eyebrow">Support goals</p><h1>Objectives</h1><p class="muted">Active objectives appear during lesson capture. Historical objectives remain available without cluttering daily entry.</p></div><button id="addObjectiveBtn" class="btn primary">+ Add objective</button></div>
+          <div class="screen-head"><div><p class="eyebrow">Support goals</p><h1>Goals & progress</h1><p class="muted">Active objectives appear during lesson capture. Historical objectives remain available without cluttering daily entry.</p></div><button id="addObjectiveBtn" class="btn primary">+ Add objective</button></div>
+          <details id="goalsOverview" tabindex="-1" class="card padded"><summary>Active goal overview</summary>
+                <div class="section-head"><div><p class="eyebrow">IEP evidence</p><h2>Active goals</h2></div><button id="quickObjectiveBtn" class="btn secondary small">+ Add</button></div>
+                <div id="objectiveSummary" class="list compact-list"></div>
+              </details>
           <div id="objectiveList" class="list"></div>
         </section>
 
@@ -158,10 +150,10 @@
   <dialog id="subjectDialog"><form method="dialog" id="subjectForm">
     <div class="dialog-head"><div><p id="subjectTime" class="eyebrow"></p><h2 id="subjectName"></h2></div><button class="icon-btn" value="cancel" aria-label="Close">×</button></div>
     <div class="dialog-body">
-      <section><h3>Quick status</h3><p class="muted">Choose the closest fit. Routine lessons stay quick.</p><div id="statusChoices" class="choice-grid"></div></section>
-      <section><h3>Subject note</h3><div id="quickNotes" class="chips"></div><label>Parent-readable narrative<textarea id="narrative" rows="4" placeholder="Write the same short report you would normally send."></textarea></label></section>
-      <section><div class="section-head"><div><h3>Tasks in this lesson</h3><p class="muted">Optional. Add only when task-level detail is useful.</p></div><button id="addTaskBtn" type="button" class="btn secondary small">+ Task</button></div><div id="taskList" class="list"></div></section>
-      <details id="moreDetail"><summary>More detail <span class="muted">Participation, support, communication, domains and important event</span></summary>
+      <section><label class="note-label">What happened in this lesson?<textarea id="narrative" rows="5" placeholder="What the student did, what support helped, and anything worth following up."></textarea></label><p class="muted tiny">Rough notes are fine. This text feeds the update draft, so keep private details in the internal task detail below. Review before sharing.</p><details><summary>Suggested phrases</summary><div id="quickNotes" class="chips"></div></details></section>
+      <section><h3>How did the lesson go?</h3><div id="statusChoices" class="choice-grid"></div></section>
+      <details id="taskDetails"><summary>Task details & IEP evidence <span class="muted">Optional. Link an observed opportunity to a goal.</span></summary><div class="section-head"><div><h3>Tasks in this lesson</h3><p class="muted">Optional. Add only when task-level detail is useful.</p></div><button id="addTaskBtn" type="button" class="btn secondary small">+ Task</button></div><div id="taskList" class="list"></div></details>
+      <details id="moreDetail"><summary>Support & other observations <span class="muted">Participation, support, communication, domains and important event</span></summary>
         <section><h3>Participation</h3><div id="participationChoices" class="choice-grid"></div></section>
         <section id="supportSection"><h3>Support used</h3><div class="two"><label>Aide involvement<select id="aideLevel"><option>None</option><option>Light</option><option>Moderate</option><option>High</option></select></label><label>Primary source<select id="supportSource"><option>Student / self</option><option>Teacher</option><option>Aide</option><option>Peer</option><option>Environment / material</option><option>Multiple</option><option>Unclear</option></select></label></div><label>Support purpose<select id="supportPurpose"><option>Task initiation</option><option>Understanding / clarification</option><option>Sequencing / planning</option><option>Organisation</option><option>Communication</option><option>Regulation / sensory access</option><option>Transition</option><option>Social participation</option><option>Safety / access</option><option>Other</option></select></label></section>
         <section><h3>Communication / autonomy</h3><div id="autonomyChoices" class="chips"></div></section>
@@ -169,7 +161,7 @@
         <section><h3>Important event</h3><label>Direct observation<textarea id="eventObservation" rows="2"></textarea></label><label>What remains uncertain?<textarea id="eventUncertainty" rows="2"></textarea></label></section>
       </details>
     </div>
-    <div class="dialog-actions"><button id="notReportedBtn" type="button" class="btn ghost">Not reported today</button><button id="saveSubjectBtn" type="button" class="btn primary">Save subject</button></div>
+    <div class="dialog-actions"><button id="notReportedBtn" type="button" class="btn ghost">Not reported today</button><button id="saveSubjectBtn" type="button" class="btn primary">Save lesson note</button></div>
   </form></dialog>
 
   <dialog id="pinDialog"><form method="dialog"><div class="dialog-head"><h2>Add lesson preparation or reminder</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><div class="two"><label>Type<select id="pinType"><option>Homework</option><option>Upcoming task / assessment</option><option>Announcement</option><option>Materials / bring item</option><option>Reminder</option></select></label><label>Subject<input id="pinSubject"></label></div><label class="check-row"><input id="pinPrepare" type="checkbox">Prepare a lesson (internal)</label><div id="preparationFields" hidden><p>Record planned support here. Record support actually used after the lesson.</p><label>Topic<textarea id="prepTopic" maxlength="1200" rows="2"></textarea></label><label>Task<textarea id="prepTask" maxlength="1200" rows="2"></textarea></label><label>Intended learning outcome<textarea id="prepOutcome" maxlength="1200" rows="2"></textarea></label><label>Materials reference (optional)<textarea id="prepMaterials" maxlength="1200" rows="2" placeholder="Reference to existing slides or worksheet; no file upload"></textarea></label><label>Planned differentiated work (optional)<textarea id="prepDifferentiated" maxlength="1200" rows="2"></textarea></label><label>Planned aide support (optional)<textarea id="prepSupport" maxlength="1200" rows="2"></textarea></label></div><label>Title<input id="pinTitle" required></label><label>Details<textarea id="pinDetails" rows="2"></textarea></label><div class="two"><label>Due / expiry<input id="pinDue" type="date"></label><label>Parent report?<select id="pinParent"><option value="yes">Yes</option><option value="no">No</option></select></label></div></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="savePinBtn" type="button" class="btn primary">Save</button></div></form></dialog>

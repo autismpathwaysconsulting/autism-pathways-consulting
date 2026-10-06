@@ -129,3 +129,22 @@ Reviewed the summary handlers, authority checks, viewer access and asynchronous 
 The daily screen now has four direct actions: **Prepare a lesson**, **Record observations**, **Review goals**, **Review updates**. Preparation opens the existing internal lesson form. Other shortcuts scroll to and focus the existing sections. Viewer/read-only restrictions remain enforced. Navigation labels now use Today, Goals & progress and Record history. This is an incremental navigation change; the full profile/follow-up dashboard is not implemented.
 
 Verification: 82/82 Pathways tests and 8/8 site-build tests passed after regeneration of dist. Additional tests cover saved-highlight preservation, explicit regeneration, pending-save locks, shortcut permissions and reduced-motion navigation. No live Cloudflare calls, visual browser inspection or live authenticated writes were performed in this follow-up. Deployment and laptop/iPad review remain pending.
+
+## 6 October 2026: simpler daily workspace, awaiting visual acceptance
+
+Branch: `codex/pathways-simple-workflow`, based on the five-day validation branch.
+
+Prepared a focused daily interface after CJ reported that the dashboard was overwhelming:
+- Lessons and Daily update are separate views under the same student/date context.
+- Today starts with lesson rows; preparation and reminders expand on demand, with an open-item count.
+- Daily overview is optional within Daily update. Goals live on Goals & progress.
+- Lesson capture begins with the note and lesson status. Suggested phrases, task/IEP evidence and additional support details expand on demand. Existing task evidence opens when editing.
+- Labels distinguish Add note, Edit note and Save lesson note. Updates display the selected date.
+- Calmer typography, fewer competing cards and controls sized for touch.
+- Existing server saving, review, access, consent and conflict recovery remain in place. No schema, authentication or API changes.
+
+Verification: 97 Pathways tests and 8 site-build checks pass, including a new interaction check for daily panel selection, retained review draft and summary-viewer exclusion. JavaScript syntax, unique HTML IDs and diff whitespace checked.
+
+Not verified: actual rendered desktop/iPad layout, complete browser save/reopen path and uncoached human usability. The attempted isolated synthetic Playwright check could not launch because no browser binary was installed; the browser download failed. Do not count the attempted browser check as a pass.
+
+Not deployed. Pause before Cloudflare per CJ's hotspot requirement. Publish an isolated preview, complete visual/interaction review, then update the beta only after acceptance. Current live beta remains 7ad667a. The earlier global review invalidation and temporary conflict-draft limitations remain.

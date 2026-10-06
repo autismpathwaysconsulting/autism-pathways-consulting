@@ -331,3 +331,25 @@ test('revoked student access clears the temporary conflict draft',async()=>{
   const loading=h.run('loadStudent()');h.requests[0].reject(Object.assign(new Error('Access revoked'),{status:403}));h.requests[1].resolve({consents:[]});await loading;
   assert.equal(h.run('conflictDraft'),null);assert.equal(h.elements.get('conflictDraftText').value,'');
 });
+
+
+test('daily panels show only the chosen task and preserve an in-progress reviewed draft',()=>{
+  const h=harness();
+  h.run("state={};user={memberships:[{organization_id:'org-a',role:'support'}]};record={permission:'edit'};summaryReview={audience:'parent'};$('summaryDraft').value='My selected highlights'");
+  for(const id of ['dailyLessons','reviewUpdates']){
+    const el=h.elements.get(id)||h.run(`$('${id}')`);
+    el.hiddenByClass=false;
+    el.classList.toggle=(name,value)=>{if(name==='hidden')el.hiddenByClass=value};
+    el.scrollIntoView=()=>{};el.focus=()=>{};
+  }
+  h.run("$('lessonRecords').scrollIntoView=()=>{};$('lessonRecords').focus=()=>{};dashboardAction('updates')");
+  assert.equal(h.elements.get('dailyLessons').hiddenByClass,true);
+  assert.equal(h.elements.get('reviewUpdates').hiddenByClass,false);
+  h.run("dashboardAction('record')");
+  assert.equal(h.elements.get('dailyLessons').hiddenByClass,false);
+  assert.equal(h.elements.get('reviewUpdates').hiddenByClass,true);
+  assert.equal(h.elements.get('summaryDraft').value,'My selected highlights');
+  assert.equal(h.run('summaryReview.audience'),'parent');
+  h.run("user={memberships:[{organization_id:'org-a',role:'viewer'}]};dashboardAction('updates')");
+  assert.equal(h.elements.get('reviewUpdates').hiddenByClass,true,'summary viewer cannot open the internal daily panel');
+});
