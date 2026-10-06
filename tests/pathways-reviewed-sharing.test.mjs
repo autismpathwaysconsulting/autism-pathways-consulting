@@ -167,3 +167,41 @@ test('retry after a lost save response cannot duplicate a revision or resurrect 
   assert.equal((await h.call(summaries,'viewer','?studentId=student-a&date=2026-09-18&audience=teacher')).status,409);
  }finally{h.sql.close()}
 });
+
+import {trialDays,trialGoal,trialLesson} from './fixtures/pathways-five-day-trial.mjs';
+import {objectiveStats,buildParentReport} from '../pathways/model.js';
+test('five synthetic school days preserve source facts, reviewed audiences, missing evidence and competing edits',async()=>{
+ const h=await setup();try{
+  h.consent('granted');
+  for(const day of trialDays){
+   let record=await readStudentState(h.db,'student-a');
+   const next=structuredClone(record.state);
+   next.objectives=[trialGoal];next.timetable[day.day]=[['09:00–09:50','Mathematics']];
+   const key=day.date+'|09:00–09:50|Mathematics';next.subjects[key]=trialLesson(day);
+   if(day.scenario==='Conflicting edits'){
+    const colleague=structuredClone(record.state);colleague.overview[day.date]={note:'SENCO follow-up: review written steps.'};
+    assert.equal((await h.call(stateApi,'senco','',{studentId:'student-a',expectedRevision:record.revision,requestId:crypto.randomUUID(),action:'edit',state:colleague},'PUT')).status,200);
+    assert.equal((await h.call(stateApi,'support','',{studentId:'student-a',expectedRevision:record.revision,requestId:crypto.randomUUID(),action:'edit',state:next},'PUT')).status,409);
+    record=await readStudentState(h.db,'student-a');
+    next.overview=record.state.overview; // Explicit human-equivalent reconciliation for this fixture, not an automatic app merge.
+   }
+   const save=await h.call(stateApi,'support','',{studentId:'student-a',expectedRevision:record.revision,requestId:crypto.randomUUID(),action:'edit',state:next},'PUT');assert.equal(save.status,200,day.day);
+   record=await readStudentState(h.db,'student-a');assert.deepEqual(record.state.subjects[key],trialLesson(day));
+   const report=buildParentReport({state:record.state,dayName:day.day,baseDate:new Date(2026,9,5,12)});
+   assert.ok(!report.includes('INTERNAL TRIAL ONLY'),day.day);
+   if(day.narrative)assert.ok(report.includes(day.narrative),day.day);
+   const teacher=await h.call(summaries,'support','',{...h.review('teacher',record.revision,day.teacher),date:day.date});assert.equal(teacher.status,200);
+   record=await readStudentState(h.db,'student-a');
+   assert.equal((await h.call(summaries,'support','',{...h.review('parent',record.revision,day.parent),date:day.date})).status,200);
+   for(const [role,audience,expected] of [['viewer','teacher',day.teacher],['support','parent',day.parent]]){
+    const response=await h.call(summaries,role,'?studentId=student-a&date='+day.date+'&audience='+audience);assert.equal(response.status,200);
+    const text=(await response.json()).text;assert.equal(text,expected);assert.ok(!text.includes('INTERNAL TRIAL ONLY'));
+   }
+  }
+  const final=await readStudentState(h.db,'student-a');
+  assert.deepEqual(objectiveStats(final.state.subjects,trialGoal.id),{measured:3,met:1,partial:1,notMet:1,notMeasured:1});
+  assert.equal(final.state.subjects['2026-10-07|09:00–09:50|Mathematics'].saved,false);
+  assert.equal(final.state.overview['2026-10-08'].note,'SENCO follow-up: review written steps.');
+  assert.equal((await h.call(summaries,'viewer','?studentId=student-a&date=2026-10-05&audience=teacher')).status,409,'Earlier reviews become stale after later record edits');
+ }finally{h.sql.close()}
+});

@@ -36,6 +36,12 @@ The draft stays in page memory only. It survives a failed latest-record load and
 
 Verification: 95/95 Pathways tests and 8/8 site-build checks passed. Five new behavior tests cover preservation without overwriting newer state, failed reload/retry, student switching and stale responses, confirmed discard/copy isolation, and revoked access. Source and generated assets match. The recovery dialog uses the existing responsive dialog styles; its live laptop/iPad appearance and clipboard behavior remain unverified because of the browser observation restriction. The previous paragraphs describing lost conflict drafts are historical and superseded by these bounded recovery controls.
 
+### Five-day synthetic validation
+
+Added a five-day synthetic fixture and an integration scenario covering routine task initiation, mixed support, missing observations, concurrent edits and an important event with an uncertain cause. The actual state/summary handlers persist the supplied facts and reviewed audience text through a temporary database. Expected goal evidence is three rated opportunities (one met, one partly/emerging, one not met), one explicitly not measured, and one lesson without an observation. The test also confirms that later record edits invalidate earlier summaries globally, a remaining review-burden limitation.
+
+The full Pathways suite now passes 96/96 tests. These are automated checks, not measured time savings or proof of educational outcomes. `docs/pathways-five-day-trial.md` contains the scenario cards, aide timing sheet, SENCO tasks, device/access checks and decision rules. Human timing, factual review, live session/access checks and laptop/iPad acceptance are still pending. No new application behavior or live student data was introduced by this validation increment.
+
 ### Next blocks
 
 1. Core synthetic workflow: passed for the scenario above.
