@@ -70,6 +70,7 @@ let summaryReview = null;
 let sessionEpoch = 0;
 let studentLoadSequence = 0;
 let studentListSequence = 0;
+let pendingSave = null;
 
 function captureStudentContext(){
   const epoch=sessionEpoch, sequence=studentLoadSequence, org=organizationId, id=studentId;
@@ -183,9 +184,13 @@ async function api(path,{method='GET',body=null}={}){
   const type=response.headers.get('Content-Type')||'';
   const data=type.includes('application/json')?await response.json().catch(()=>({})):{};
   if(response.status===401 && path!=='/api/pathways/login' && requestEpoch===sessionEpoch){
+    const hadSession=Boolean(user);
     resetProtectedUi();
     showLogin();
-    throw new Error(data.error||'Session expired.');
+    if(hadSession){
+      $('loginError').textContent='Your session expired. Sign in again. Any unconfirmed changes may not have been saved.';
+      $('loginError').classList.remove('hidden');
+    }
   }
   if(!response.ok){
     const error=new Error(data.error||`Request failed (${response.status}).`);
@@ -213,9 +218,12 @@ async function init(){
     await loadOrganizations();
     showApp();
   }catch(error){
-    if(error.status!==401) console.error(error);
     resetProtectedUi();
     showLogin();
+    if(error.status!==401){
+      $('loginError').textContent='Pathways could not restore your workspace. Check your connection and reload this page. Your saved records have not been changed.';
+      $('loginError').classList.remove('hidden');
+    }
   }
 }
 
@@ -432,14 +440,18 @@ async function saveReviewedSummary(){
   finally{$('saveSummary').disabled=false;$('summaryDraft').disabled=false;$('reviewSummary').disabled=false;$('latestSummaryDraft').disabled=false}
 }
 
-async function persist(action='edit'){
+async function persist(action='edit',change=()=>{}){
   if(!canEdit()) throw new Error('This workspace is read-only.');
+  if(pendingSave?.isCurrent())throw new Error('A save is still in progress. Wait for it to finish, then save this change.');
   const context=captureStudentContext();
+  const next=clone(state);
+  change(next);
+  pendingSave=context;
   const savedPermission=record.permission,savedRole=record.role;
   setSaveStatus('saving','Saving');
   const requestId=`web:${Date.now()}:${crypto.randomUUID()}`;
   try{
-    const result=await api('/api/pathways/state',{method:'PUT',body:{studentId,expectedRevision:record.revision,requestId,action,state}});
+    const result=await api('/api/pathways/state',{method:'PUT',body:{studentId,expectedRevision:record.revision,requestId,action,state:next}});
     if(!context.isCurrent())return false;
     record={...result.record,permission:savedPermission,role:savedRole};
     state=clone(result.record.state);
@@ -460,6 +472,8 @@ async function persist(action='edit'){
       return false;
     }
     throw error;
+  }finally{
+    if(pendingSave===context)pendingSave=null;
   }
 }
 
@@ -590,20 +604,20 @@ function renderTasks(){
 async function saveSubject(){
   formData.narrative=$('narrative').value.trim();formData.aideLevel=$('aideLevel').value;formData.supportSource=$('supportSource').value;formData.supportPurpose=$('supportPurpose').value;formData.eventObservation=$('eventObservation').value.trim();formData.eventUncertainty=$('eventUncertainty').value.trim();
   if(!formData.participation)formData.participation='Not observed / unclear';
-  state.subjects[editingKey]={...formData,saved:true,skipped:false};
-  try{if(await persist('edit')){$('subjectDialog').close();renderAll()}}catch(error){showError(error.message)}
+  const key=editingKey,draft=clone({...formData,saved:true,skipped:false});
+  try{if(await persist('edit',next=>{next.subjects[key]=draft})){$('subjectDialog').close();renderAll()}}catch(error){showError(error.message)}
 }
 
 async function markNotReported(){
   const existing=state.subjects[editingKey];
   if(existing?.saved&&!window.confirm('This lesson already has a saved report. Replace it with “Not reported today”?'))return;
-  state.subjects[editingKey]={saved:false,skipped:true,status:'',narrative:'',participation:'Not observed / unclear',aideLevel:'None',supportSource:'',supportPurpose:'',autonomy:[],domains:[],eventObservation:'',eventUncertainty:'',tasks:[]};
-  try{if(await persist('edit')){$('subjectDialog').close();renderAll()}}catch(error){showError(error.message)}
+  const key=editingKey,draft={saved:false,skipped:true,status:'',narrative:'',participation:'Not observed / unclear',aideLevel:'None',supportSource:'',supportPurpose:'',autonomy:[],domains:[],eventObservation:'',eventUncertainty:'',tasks:[]};
+  try{if(await persist('edit',next=>{next.subjects[key]=draft})){$('subjectDialog').close();renderAll()}}catch(error){showError(error.message)}
 }
 
 async function saveOverview(){
-  const key=datedDayKey(currentDay,activeWeek);const old=state.overview[key]||{};state.overview[key]={...old,note:$('overviewNote').value.trim()};
-  try{if(await persist('edit'))renderAll()}catch(error){showError(error.message)}
+  const key=datedDayKey(currentDay,activeWeek);const note=$('overviewNote').value.trim();
+  try{if(await persist('edit',next=>{next.overview[key]={...(next.overview[key]||{}),note}}))renderAll()}catch(error){showError(error.message)}
 }
 
 function openPin(){
@@ -626,14 +640,13 @@ async function savePin(){
   }
   const pin={id:uid('pin'),type:preparation?'Upcoming task / assessment':$('pinType').value,subject:$('pinSubject').value.trim(),title,details:$('pinDetails').value.trim(),due:$('pinDue').value,parent:preparation?false:$('pinParent').value==='yes',status:'Open',...(preparation?{preparation}:{})};
   const context=captureStudentContext();
-  state.pins.push(pin);
   $('savePinBtn').disabled=true;
-  try{if(await persist('edit')){$('pinDialog').close();renderAll()}}catch(error){
-    if(context.isCurrent()){state.pins=state.pins.filter(item=>item.id!==pin.id);showError(error.message)}
+  try{if(await persist('edit',next=>{next.pins.push(pin)})){$('pinDialog').close();renderAll()}}catch(error){
+    if(context.isCurrent())showError(error.message)
   }finally{$('savePinBtn').disabled=false}
 }
 async function donePin(id){
-  const pin=state.pins.find(item=>item.id===id);if(!pin)return;pin.status='Done';try{if(await persist('edit'))renderAll()}catch(error){showError(error.message)}
+  const pin=state.pins.find(item=>item.id===id);if(!pin)return;try{if(await persist('edit',next=>{next.pins.find(item=>item.id===id).status='Done'}))renderAll()}catch(error){showError(error.message)}
 }
 
 function openObjective(id=''){
@@ -646,8 +659,7 @@ function openObjective(id=''){
 async function saveObjective(){
   const draft={id:editingObjectiveId||uid('obj'),domain:$('objDomain').value,target:$('objTarget').value.trim(),condition:$('objCondition').value.trim(),support:$('objSupport').value.trim(),criterion:$('objCriterion').value.trim(),review:$('objReview').value,status:$('objStatus').value,measureType:$('objMeasure').value,supersedesId:''};
   if(!draft.target||!draft.condition||!draft.criterion||!draft.review){showError('Target, context/condition, criterion and review date are required.');return}
-  const index=state.objectives.findIndex(item=>item.id===draft.id);if(index>=0)state.objectives[index]=draft;else state.objectives.push(draft);
-  try{if(await persist('edit')){$('objectiveDialog').close();renderAll()}}catch(error){showError(error.message)}
+  try{if(await persist('edit',next=>{const index=next.objectives.findIndex(item=>item.id===draft.id);if(index>=0)next.objectives[index]=draft;else next.objectives.push(draft)})){$('objectiveDialog').close();renderAll()}}catch(error){showError(error.message)}
 }
 
 async function loadRevision(revision){
@@ -771,7 +783,7 @@ async function saveTimetable(){
   for(const [index,line] of lines.entries()){
     const parts=line.split('|').map(item=>item.trim());if(parts.length!==3||!PATHWAYS_WEEKDAYS.includes(parts[0])||!parts[1]||!parts[2]){showError(`Timetable line ${index+1} is invalid.`);return}next[parts[0]].push([parts[1],parts[2]]);
   }
-  state.timetable=next;try{if(await persist('edit')){ensureTimetableDialog().close();renderAll()}}catch(error){showError(error.message)}
+  try{if(await persist('edit',draft=>{draft.timetable=next})){ensureTimetableDialog().close();renderAll()}}catch(error){showError(error.message)}
 }
 
 function bindStaticEvents(){
@@ -792,7 +804,7 @@ function bindStaticEvents(){
   $('taskList').addEventListener('input',event=>{const taskRoot=event.target.closest('[data-task-index]');if(!taskRoot||!canEdit())return;const task=formData.tasks[Number(taskRoot.dataset.taskIndex)];if(event.target.classList.contains('task-label'))task.label=event.target.value;if(event.target.classList.contains('task-detail'))task.detail=event.target.value;if(event.target.classList.contains('task-measure'))task.measurementValue=event.target.value===''?null:Number(event.target.value)});
   $('taskList').addEventListener('change',event=>{const taskRoot=event.target.closest('[data-task-index]');if(!taskRoot||!canEdit())return;const task=formData.tasks[Number(taskRoot.dataset.taskIndex)];if(event.target.classList.contains('task-type'))task.type=event.target.value;if(event.target.classList.contains('task-outcome'))task.outcome=event.target.value;if(event.target.classList.contains('task-parent'))task.includeParent=event.target.checked;if(event.target.classList.contains('task-result'))task.objectiveResult=event.target.value;if(event.target.classList.contains('task-objective')){task.objectiveId=event.target.value;task.objectiveResult=task.objectiveId?(task.objectiveResult||'Not measured / insufficient opportunity'):'';task.measurementValue=null;const objective=state.objectives.find(item=>item.id===task.objectiveId);task.measurementUnit={latency:'seconds',duration:'minutes',frequency:'count',accuracy:'percent'}[objective?.measureType]||'';renderTasks()}});
   $('saveSubjectBtn').onclick=saveSubject;$('notReportedBtn').onclick=markNotReported;
-  $('overviewChoices').onclick=async event=>{const btn=event.target.closest('[data-overview]');if(!btn||!canEdit())return;const key=datedDayKey(currentDay,activeWeek);state.overview[key]={...(state.overview[key]||{}),choice:btn.dataset.overview};try{if(await persist('edit'))renderAll()}catch(error){showError(error.message)}};$('saveOverviewBtn').onclick=saveOverview;
+  $('overviewChoices').onclick=async event=>{const btn=event.target.closest('[data-overview]');if(!btn||!canEdit())return;const key=datedDayKey(currentDay,activeWeek);const choice=btn.dataset.overview;try{if(await persist('edit',next=>{next.overview[key]={...(next.overview[key]||{}),choice}}))renderAll()}catch(error){showError(error.message)}};$('saveOverviewBtn').onclick=saveOverview;
   $('pinPrepare').onchange=updatePreparationFields;$('addPinBtn').onclick=openPin;$('savePinBtn').onclick=savePin;$('pinList').onclick=event=>{const btn=event.target.closest('[data-pin-done]');if(btn)donePin(btn.dataset.pinDone)};
   $('quickObjectiveBtn').onclick=()=>openObjective();$('addObjectiveBtn').onclick=()=>openObjective();$('objectiveList').onclick=event=>{const btn=event.target.closest('[data-edit-objective]');if(btn)openObjective(btn.dataset.editObjective)};$('saveObjectiveDialogBtn').onclick=saveObjective;
   document.querySelectorAll('.output-tab').forEach(btn=>btn.onclick=()=>{outputView=btn.dataset.output;renderOutput()});$('copyOutput').onclick=copyReviewedOutput;$('openWhatsApp').onclick=openWhatsApp;$('reviewSummary').onclick=reviewSummary;$('saveSummary').onclick=saveReviewedSummary;$('latestSummaryDraft').onclick=useLatestSummaryDraft;$('dailyActions').onclick=event=>{const button=event.target.closest('[data-workflow]');if(button)dashboardAction(button.dataset.workflow)};$('summaryDate').onchange=()=>loadStudent();

@@ -16,7 +16,7 @@ function harness(){
   const context=vm.createContext({console,Date,URL,crypto:webcrypto,PATHWAYS_WEEKDAYS:['Monday'],startOfWeek:()=>new Date(),datedDayKey:()=> '2026-09-18',document:{getElementById:element,querySelectorAll:()=>[],querySelector:()=>null},window:{alert:m=>errors.push(m),location:{assign:u=>opened.push(u)}}});
   vm.runInContext(app,context);
   context.request=(path,options)=>{const task=deferred();requests.push({path,options,...task});return task.promise};
-  vm.runInContext("api=request; renderAll=()=>{}; updateAuthorityWarning=()=>{}; outputFor=()=>JSON.stringify(state); user={id:'user-a'}; organizationId='org-a'; studentId='student-a';",context);
+  vm.runInContext("originalApi=api; api=request; renderAll=()=>{}; updateAuthorityWarning=()=>{}; outputFor=()=>JSON.stringify(state); user={id:'user-a'}; organizationId='org-a'; studentId='student-a';",context);
   return {run:code=>vm.runInContext(code,context),requests,elements,opened,errors};
 }
 function answer(h,index,id){h.requests[index].resolve({record:{revision:0,state:{owner:id}},student:{display_name:id},permission:'edit',role:'support',revisions:[]});h.requests[index+1].resolve({consents:[]})}
@@ -234,4 +234,54 @@ test('daily shortcuts navigate to existing sections and respect reduced motion',
     h.run(`$('${id}').scrollIntoView=options=>{$('${id}').scrolled=options.behavior};$('${id}').focus=()=>{$('${id}').focused=true};dashboardAction('${action}')`);
     assert.equal(h.elements.get(id).scrolled,'auto');assert.equal(h.elements.get(id).focused,true);
   }
+});
+
+test('failed objective save keeps the form but cannot leak into an unrelated save or duplicate a retry',async()=>{
+  const h=harness();
+  h.run("record={revision:0,permission:'edit',role:'support'};state={objectives:[],pins:[{id:'p',status:'Open'}]};$('objTarget').value='Begin work';$('objCondition').value='During maths';$('objCriterion').value='Within two minutes';$('objReview').value='2026-11-01';$('objectiveDialog').close=()=>{}");
+  const first=h.run('saveObjective()');h.requests[0].reject(new Error('Offline'));await first;
+  assert.equal(h.run('state.objectives.length'),0);
+  assert.equal(h.elements.get('objTarget').value,'Begin work');
+  const unrelated=h.run("donePin('p')");
+  assert.equal(h.requests[1].options.body.state.objectives.length,0);
+  h.requests[1].reject(new Error('Offline'));await unrelated;
+  assert.equal(h.run('state.pins[0].status'),'Open');
+  const retry=h.run('saveObjective()');
+  assert.equal(h.requests[2].options.body.state.objectives.length,1);
+  h.requests[2].resolve({record:{revision:1,state:h.requests[2].options.body.state}});await retry;
+  assert.equal(h.run('state.objectives.length'),1);
+});
+
+test('overlapping saves do not send competing revisions or alter the pending snapshot',async()=>{
+  const h=harness();h.run("record={revision:0,permission:'edit',role:'support'};state={pins:[{id:'a',status:'Open'},{id:'b',status:'Open'}]}");
+  const first=h.run("donePin('a')");const second=h.run("donePin('b')");
+  assert.equal(h.requests.length,1);await second;
+  assert.equal(h.requests[0].options.body.state.pins[1].status,'Open');
+  h.requests[0].resolve({record:{revision:1,state:h.requests[0].options.body.state}});await first;
+  assert.equal(h.run('state.pins[0].status'),'Done');assert.equal(h.run('state.pins[1].status'),'Open');
+});
+
+test('session expiry clears private records, exposes a useful message and retains the HTTP status',async()=>{
+  const h=harness();h.run("state={private:'student data'};fetch=async()=>({status:401,ok:false,headers:{get:()=> 'application/json'},json:async()=>({error:'Unauthorized'})})");
+  await assert.rejects(h.run("originalApi('/api/pathways/me')"),error=>error.status===401);
+  assert.equal(h.run('state'),null);assert.equal(h.run('user'),null);
+  assert.match(h.elements.get('loginError').textContent,/session expired/);
+});
+
+test('workspace restoration reports a connection failure and a valid session opens without another login',async()=>{
+  const h=harness();h.run('bindStaticEvents=()=>{}');
+  const failed=h.run('init()');h.requests[0].reject(new Error('Offline'));await failed;
+  assert.match(h.elements.get('loginError').textContent,/Check your connection and reload/);
+  assert.equal(h.run('user'),null);
+  h.run("loadOrganizations=async()=>{};showApp=()=>{appOpened=true};appOpened=false");
+  const restored=h.run('init()');h.requests[1].resolve({user:{id:'restored'},csrfToken:'synthetic-csrf'});await restored;
+  assert.equal(h.run('appOpened'),true);assert.equal(h.run('user.id'),'restored');assert.equal(h.run('csrfToken'),'synthetic-csrf');
+});
+
+test('a failed lesson save retains its draft and leaves the last confirmed lesson unchanged',async()=>{
+  const h=harness();h.run("record={revision:0,permission:'edit',role:'support'};state={subjects:{lesson:{narrative:'Confirmed'}}};editingKey='lesson';formData={tasks:[]};$('narrative').value='Unsaved draft';$('subjectDialog').close=()=>{}");
+  const failed=h.run('saveSubject()');h.requests[0].reject(new Error('Offline'));await failed;
+  assert.equal(h.run('state.subjects.lesson.narrative'),'Confirmed');assert.equal(h.run('formData.narrative'),'Unsaved draft');
+  const retry=h.run('saveSubject()');h.requests[1].resolve({record:{revision:1,state:h.requests[1].options.body.state}});await retry;
+  assert.equal(h.run('state.subjects.lesson.narrative'),'Unsaved draft');
 });

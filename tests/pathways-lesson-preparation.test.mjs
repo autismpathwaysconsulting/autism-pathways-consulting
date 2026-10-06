@@ -54,7 +54,7 @@ function saveHarness(persist){
   const elements=Object.fromEntries(Object.entries({pinTitle:'Lesson plan',prepTopic:'Fractions',prepTask:'Compare halves',prepOutcome:'Recognise halves',prepMaterials:'',prepDifferentiated:'',prepSupport:'',pinSubject:'Maths',pinDetails:'',pinDue:''}).map(([key,value])=>[key,{value}]));
   elements.pinPrepare={checked:true};elements.savePinBtn={disabled:false};elements.pinDialog={close(){}};
   const state=createEmptyPathwaysState();let error='';
-  const ctx={state,$:id=>elements[id],canEdit:()=>true,uid:()=> 'prep-test',captureStudentContext:()=>({isCurrent:()=>true}),persist,renderAll(){},showError:value=>{error=value}};
+  const ctx={state,$:id=>elements[id],canEdit:()=>true,uid:()=> 'prep-test',captureStudentContext:()=>({isCurrent:()=>true}),persist:async(action,change)=>{const draft=JSON.parse(JSON.stringify(state));change(draft);const saved=await persist();if(saved)Object.assign(state,draft);return saved},renderAll(){},showError:value=>{error=value}};
   vm.createContext(ctx);vm.runInContext(app.slice(app.indexOf('async function savePin(){'),app.indexOf('async function donePin(')),ctx);
   return {ctx,elements,state,error:()=>error};
 }

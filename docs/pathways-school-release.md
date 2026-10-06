@@ -1,6 +1,35 @@
 # Pathways school release tracker
 
-Updated 18 September 2026. Local implementation evidence only. No Cloudflare access or deployment during this increment.
+Updated 6 October 2026. The dated sections below preserve historical verification; the current checkpoint supersedes their release status.
+
+## Current checkpoint: 6 October 2026
+
+Pathways is scoped to current-school research and a bounded pilot. External-school sales, subscription pricing and integrations remain deferred. Teacher Talk A remains APC's main priority.
+
+The beta branch before this reliability increment was `ad02f74d08294c26e4e5fca1a2fc25b4cb18ed52`. Reviewed summaries, restricted staff viewers and daily navigation were published on 27 September; their older “local” labels below describe the evidence at that time.
+
+Live synthetic checks on 6 October confirmed saving a Mathematics preparation item, a lesson observation and a reviewed teacher summary. All three remained present after signing in again. Internal preparation/task details were excluded from the family draft; WhatsApp was disabled without family-sharing authority. The recorded objective result was Not measured, so this does not verify counted IEP progress. No real student information was used.
+
+### Block 2 reliability increment
+
+Confirmed and repaired failed-save state leakage: edits are now staged separately and installed in the displayed record only after server confirmation. A failed new-objective save retains the form and cannot duplicate the objective on retry or silently ride along with another save. Lesson, overview, timetable and persistent-item edits use the same boundary. Concurrent saves for the same loaded student are refused with a wait-and-retry message. Late responses remain isolated from another student or session.
+
+Session expiry retains the HTTP status, clears protected records and displays a sign-in message. A connection/server failure during workspace restoration now displays a reload instruction instead of silently looking like a normal signed-out state. Cookie policy and session security were not weakened.
+
+Verification before deployment: 88/88 Pathways tests and 8/8 site-build checks passed; the build contains 90 allowlisted public files. New behavioral tests cover failed objective and lesson retries, unrelated-save isolation, overlapping saves, session expiry and workspace restoration. Source and checked-in assets match.
+
+Remaining limitations: the automation browser returned to login on reload and later blocked observation because of native credential protection. The cause is not established; these changes do not claim to fix that observation. Live reload/session persistence, clipboard confirmation, staff-viewer access and laptop/iPad visual checks remain outstanding. A lost save response may still mean the server committed; no automatic retry is added. Existing conflict handling reloads the current version and does not preserve a conflict draft. No offline storage or complete offline recovery is claimed.
+
+### Next blocks
+
+1. Core synthetic workflow: passed for the scenario above.
+2. Login and reliability: local repairs verified; live reload, disconnected/ambiguous-response recovery and conflict checks remain.
+3. Roles and sharing: automated negative checks pass; live assigned-viewer checks remain.
+4. Laptop/iPad usability: pending observation and user acceptance.
+5. Demo: freeze only after the preceding gates; prepare the 15-minute journey and backup recording.
+6. Pilot operations: school owner, privacy boundaries, staff training, backup restoration, incident response and exit procedure remain gates.
+7. Current-school pilot: four weeks, 3–5 students only after the school agrees and real-data gates pass. No real-data launch is certified here.
+
 
 ## Product boundary
 
