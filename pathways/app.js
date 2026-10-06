@@ -71,13 +71,17 @@ let sessionEpoch = 0;
 let studentLoadSequence = 0;
 let studentListSequence = 0;
 let pendingSave = null;
+let conflictDraft = null;
 
 function captureStudentContext(){
   const epoch=sessionEpoch, sequence=studentLoadSequence, org=organizationId, id=studentId;
   return {studentId:id,organizationId:org,isCurrent:()=>epoch===sessionEpoch&&sequence===studentLoadSequence&&org===organizationId&&id===studentId};
 }
 
-function clearStudentUi(){
+function clearStudentUi(keepConflictDraft=false){
+  if(!keepConflictDraft)conflictDraft=null;
+  if($('conflictDraftText'))$('conflictDraftText').value='';
+  if($('conflictDraftNotice'))$('conflictDraftNotice').classList.add('hidden');
   summaryReview=null;
   if($('summaryEditor'))$('summaryEditor').hidden=true;
   for(const id of ['summaryDraft','viewerSummaryText','viewerSummaryStatus','summaryStatus']){if($(id)){$(id).value='';$(id).textContent=''}}
@@ -291,11 +295,11 @@ function renderNoStudent(){
   updateWhatsAppAvailability();
 }
 
-async function loadStudent(){
+async function loadStudent({keepConflictDraft=draftIsCurrent()}={}){
   if(!studentId){renderNoStudent();return}
   studentLoadSequence++;
   const context=captureStudentContext();
-  clearStudentUi();
+  clearStudentUi(keepConflictDraft);
   setSaveStatus('saving','Loading');
   state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
   $('outputText').textContent='';
@@ -320,12 +324,14 @@ async function loadStudent(){
     updateAuthorityWarning(stateData.student);
     renderAll();
     setSaveStatus('saved','Saved');
+    showConflictDraft();
   }catch(error){
     if(!context.isCurrent())return;
     state=null;record=null;revisions=[];currentConsents=[];selectedRevision=null;
     $('outputText').textContent='';
     updateWhatsAppAvailability();
-    setSaveStatus('error','Load error');showError(error.message)
+    if(error.status===403){conflictDraft=null;$('conflictDraftText').value='';$('conflictDraftNotice').classList.add('hidden')}
+    setSaveStatus('error','Load error');showError(error.message);showConflictDraft();
   }
 }
 
@@ -440,8 +446,58 @@ async function saveReviewedSummary(){
   finally{$('saveSummary').disabled=false;$('summaryDraft').disabled=false;$('reviewSummary').disabled=false;$('latestSummaryDraft').disabled=false}
 }
 
+function draftIsCurrent(){
+  return conflictDraft && conflictDraft.epoch===sessionEpoch && conflictDraft.studentId===studentId && conflictDraft.organizationId===organizationId;
+}
+
+function readableDraftValue(value,depth=0){
+  if(value===undefined)return '(removed)';
+  if(value===null||value==='')return '(not recorded)';
+  if(typeof value!=='object')return String(value);
+  const label=key=>key.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/_/g,' ');
+  return Object.entries(value).filter(([key])=>!['id','sourceHash','reviewedBy','reviewedAt'].includes(key)).map(([key,item])=>`${'  '.repeat(depth)}${Array.isArray(value)?'Item '+(Number(key)+1):label(key)}: ${readableDraftValue(item,depth+1)}`).join('\n');
+}
+
+function describeUnsavedChanges(before,after){
+  const sections={subjects:'Lesson',overview:'Daily overview',pins:'Preparation or reminder',objectives:'Goal',timetable:'Timetable'};
+  const parts=[];
+  for(const [section,label] of Object.entries(sections)){
+    const old=before[section]||{},next=after[section]||{};
+    const asMap=value=>Array.isArray(value)?Object.fromEntries(value.map(item=>[item.id,item])):value;
+    const left=asMap(old),right=asMap(next);
+    for(const key of new Set([...Object.keys(left),...Object.keys(right)])){
+      if(JSON.stringify(left[key])===JSON.stringify(right[key]))continue;
+      const name=right[key]?.title||right[key]?.target||left[key]?.title||left[key]?.target||key;
+      parts.push(`${label}: ${name}\n${readableDraftValue(right[key])}`);
+    }
+  }
+  return parts.join('\n\n')||'No lesson, goal, preparation, overview or timetable changes were found.';
+}
+
+function showConflictDraft(){
+  if(!draftIsCurrent())return;
+  $('conflictDraftNotice').classList.remove('hidden');
+  $('conflictDraftText').value=conflictDraft.text;
+}
+
+function reviewConflictDraft(){
+  if(!draftIsCurrent())return;
+  showConflictDraft();$('conflictDraftDialog').showModal();
+}
+
+async function copyConflictDraft(){
+  if(!draftIsCurrent())return;
+  try{await navigator.clipboard.writeText(conflictDraft.text)}catch{showError('Copy was unavailable. Select the draft text and copy it manually.')}
+}
+
+function discardConflictDraft(){
+  if(!draftIsCurrent()||!window.confirm('Discard this unsaved draft? This cannot be undone.'))return;
+  conflictDraft=null;$('conflictDraftText').value='';$('conflictDraftNotice').classList.add('hidden');$('conflictDraftDialog').close();
+}
+
 async function persist(action='edit',change=()=>{}){
   if(!canEdit()) throw new Error('This workspace is read-only.');
+  if(draftIsCurrent())throw new Error('Review the recovered draft first. Copy any changes you want to keep, then discard the temporary draft before saving.');
   if(pendingSave?.isCurrent())throw new Error('A save is still in progress. Wait for it to finish, then save this change.');
   const context=captureStudentContext();
   const next=clone(state);
@@ -467,8 +523,10 @@ async function persist(action='edit',change=()=>{}){
       throw error;
     }
     if(error.status===409){
-      showError('This student record changed in another session. Pathways will reload the latest version rather than overwrite it.');
-      await loadStudent();
+      conflictDraft={epoch:sessionEpoch,studentId,organizationId,text:describeUnsavedChanges(state,next)};
+      showError('This record changed in another session. Your unsaved changes have been kept temporarily. Review the draft alongside the latest record before entering the changes you want to keep.');
+      await loadStudent({keepConflictDraft:true});
+      if(draftIsCurrent())reviewConflictDraft();
       return false;
     }
     throw error;
@@ -787,6 +845,10 @@ async function saveTimetable(){
 }
 
 function bindStaticEvents(){
+  $('reviewConflictDraft').onclick=reviewConflictDraft;
+  $('copyConflictDraft').onclick=copyConflictDraft;
+  $('discardConflictDraft').onclick=discardConflictDraft;
+  $('reloadConflictRecord').onclick=()=>loadStudent({keepConflictDraft:true});
   $('loginForm').addEventListener('submit',login);$('logoutBtn').onclick=logout;
   $('orgSelect').onchange=async event=>{organizationId=event.target.value;studentId='';$('userRole').textContent=currentRole();$('adminNav').classList.toggle('hidden',!canAdmin());await loadStudents()};
   $('studentSelect').onchange=async event=>{studentId=event.target.value;await loadStudent();if(canAdmin())await renderAdmin()};

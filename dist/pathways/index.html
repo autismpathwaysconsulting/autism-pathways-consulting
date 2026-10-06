@@ -52,6 +52,11 @@
       </aside>
 
       <main class="main">
+        <div id="conflictDraftNotice" class="notice warn hidden" role="status">
+          <strong>Unsaved changes recovered.</strong> Review your draft against the latest record. This temporary copy clears when you switch student, refresh the page or sign out.
+          <button id="reviewConflictDraft" type="button" class="btn secondary small">Review unsaved draft</button>
+          <button id="reloadConflictRecord" type="button" class="btn secondary small">Reload latest record</button>
+        </div>
         <section id="emptyState" class="empty card hidden">
           <h2>No student selected</h2>
           <p>Select a student above, or create a workspace in Administration if your role allows it.</p>
@@ -177,6 +182,13 @@
 
   <dialog id="consentDialog"><form method="dialog"><div class="dialog-head"><h2>Record use authority</h2><button class="icon-btn" value="cancel" aria-label="Close">×</button></div><div class="dialog-body"><label>Type<select id="consentType"><option value="pilot-use">Pilot use</option><option value="school-record">School record</option><option value="family-sharing">Family sharing</option></select></label><label>Status<select id="consentStatus"><option value="granted">Granted</option><option value="not-required">Not required / other lawful authority recorded by school</option><option value="declined">Declined</option><option value="withdrawn">Withdrawn</option></select></label><div class="two"><label>Granted / effective date (optional)<input id="consentGrantedAt" type="date"></label><label>Expiry date (optional)<input id="consentExpiresAt" type="date"></label></div><label>Authority label / source<input id="consentAuthority" placeholder="e.g. Parent consent form / school lawful basis"></label><label>Reference note<textarea id="consentNote" rows="2" placeholder="Do not paste unnecessary sensitive information."></textarea></label></div><div class="dialog-actions"><button value="cancel" class="btn ghost">Cancel</button><button id="saveConsentBtn" type="button" class="btn primary">Record</button></div></form></dialog>
 
+  <dialog id="conflictDraftDialog" aria-labelledby="conflictDraftHeading"><form method="dialog">
+    <div class="dialog-head"><h2 id="conflictDraftHeading">Your unsaved changes</h2><button class="icon-btn" value="close" aria-label="Close recovered draft">×</button></div>
+    <div class="dialog-body"><p>The latest record has not been overwritten. Copy the changes you want to keep, compare them with the current record, then enter them in the appropriate form. A draft may already have been saved if its response was lost, so check before adding it again.</p>
+    <label>Recovered draft<textarea id="conflictDraftText" rows="14" readonly></textarea></label>
+    <p class="muted">Kept only in this page for this student. Refreshing the page, switching student or signing out clears this copy.</p></div>
+    <div class="dialog-actions"><button id="copyConflictDraft" type="button" class="btn secondary">Copy draft</button><button id="discardConflictDraft" type="button" class="btn secondary">Discard draft</button><button value="close" class="btn primary">Keep for review</button></div>
+  </form></dialog>
   <script type="module" src="/pathways/app.js"></script>
 </body>
 </html>

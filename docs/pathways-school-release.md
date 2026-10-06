@@ -28,6 +28,14 @@ A database-backed regression reproduced a false 403 when an editor's snapshot pr
 
 Follow-up verification: 90/90 Pathways tests and 8/8 site-build checks passed. The 13 summary/access tests cover assigned-viewer projections, raw-route denials, assignment revocation, inactive users, suspended organizations, cross-organization access, authority boundaries and the two new recovery cases. Conflict handling still reloads the current record and does not preserve a conflict draft. Live role checks, clipboard behavior, laptop/iPad review and school-network acceptance remain outstanding.
 
+### Conflict-draft recovery increment
+
+Conflict handling now keeps a readable, temporary copy of the changed lesson, overview, preparation/reminder, goal or timetable entries before loading the latest record. A recovery notice and dialog let the editor review/copy that text and explicitly discard it after deciding what to re-enter. Nothing is automatically merged or resubmitted. Other saves are blocked until the draft is resolved so another conflict cannot replace the retained copy.
+
+The draft stays in page memory only. It survives a failed latest-record load and same-student record reloads, but clears on student/organization change, sign-out/session reset, access refusal, or browser-page refresh. This is manual recovery, not durable offline storage. Editors must check whether an uncertain earlier save already committed before re-entering a new item. Summary-review drafts retain their existing handling; this increment covers canonical record saves.
+
+Verification: 95/95 Pathways tests and 8/8 site-build checks passed. Five new behavior tests cover preservation without overwriting newer state, failed reload/retry, student switching and stale responses, confirmed discard/copy isolation, and revoked access. Source and generated assets match. The recovery dialog uses the existing responsive dialog styles; its live laptop/iPad appearance and clipboard behavior remain unverified because of the browser observation restriction. The previous paragraphs describing lost conflict drafts are historical and superseded by these bounded recovery controls.
+
 ### Next blocks
 
 1. Core synthetic workflow: passed for the scenario above.

@@ -285,3 +285,49 @@ test('a failed lesson save retains its draft and leaves the last confirmed lesso
   const retry=h.run('saveSubject()');h.requests[1].resolve({record:{revision:1,state:h.requests[1].options.body.state}});await retry;
   assert.equal(h.run('state.subjects.lesson.narrative'),'Unsaved draft');
 });
+
+test('version conflicts retain only changed draft records while loading the newer server state',async()=>{
+  const h=harness();h.run("record={revision:0,permission:'edit',role:'support'};state={subjects:{lesson:{narrative:'Original'},other:{narrative:'Unrelated private note'}}};$('conflictDraftDialog').showModal=()=>{};$('conflictDraftDialog').close=()=>{}");
+  const pending=h.run("persist('edit',next=>{next.subjects.lesson={narrative:'My unsaved observation'}})");
+  h.requests[0].reject(Object.assign(new Error('Conflict'),{status:409}));
+  await new Promise(resolve=>setImmediate(resolve));
+  h.requests[1].resolve({record:{revision:1,state:{subjects:{lesson:{narrative:'Newer colleague observation'}}}},student:{display_name:'Student A'},permission:'edit',role:'support',revisions:[]});h.requests[2].resolve({consents:[]});
+  assert.equal(await pending,false);
+  assert.equal(h.run('state.subjects.lesson.narrative'),'Newer colleague observation');
+  assert.match(h.elements.get('conflictDraftText').value,/My unsaved observation/);
+  assert.ok(!h.elements.get('conflictDraftText').value.includes('Unrelated private note'));
+  await assert.rejects(h.run('persist()'),/Review the recovered draft first/);
+  assert.equal(h.requests.length,3);
+});
+
+test('draft survives a failed conflict reload and same-student refresh, then clears on sign-out',async()=>{
+  const h=harness();h.run("record={revision:0,permission:'edit',role:'support'};state={overview:{day:{note:'Old'}}};$('conflictDraftDialog').showModal=()=>{}");
+  const pending=h.run("persist('edit',next=>{next.overview.day.note='Keep this draft'})");
+  h.requests[0].reject(Object.assign(new Error('Conflict'),{status:409}));await new Promise(resolve=>setImmediate(resolve));
+  h.requests[1].reject(new Error('Offline'));h.requests[2].resolve({consents:[]});await pending;
+  assert.equal(h.run('state'),null);assert.match(h.elements.get('conflictDraftText').value,/Keep this draft/);
+  const reloading=h.run('loadStudent()');answer(h,3,'new-a');await reloading;
+  assert.match(h.elements.get('conflictDraftText').value,/Keep this draft/);
+  h.run('resetProtectedUi()');assert.equal(h.run('conflictDraft'),null);assert.equal(h.elements.get('conflictDraftText').value,'');
+});
+
+test('switching students clears recovered drafts and late reloads cannot restore them',async()=>{
+  const h=harness();h.run("conflictDraft={epoch:sessionEpoch,organizationId,studentId,text:'Private draft A'};showConflictDraft()");
+  const a=h.run('loadStudent()');h.run("studentId='student-b'");const b=h.run('loadStudent()');
+  answer(h,2,'b');await b;answer(h,0,'a');await a;
+  assert.equal(h.run('conflictDraft'),null);assert.equal(h.elements.get('conflictDraftText').value,'');assert.equal(h.run('state.owner'),'b');
+});
+
+test('discard requires confirmation and copying never reads a previous student draft',async()=>{
+  const h=harness();h.run("conflictDraft={epoch:sessionEpoch,organizationId,studentId,text:'Draft A'};showConflictDraft();window.confirm=()=>false;$('conflictDraftDialog').close=()=>{};copied=[];navigator={clipboard:{writeText:async text=>copied.push(text)}}");
+  h.run('discardConflictDraft()');assert.equal(h.run('conflictDraft.text'),'Draft A');
+  await h.run('copyConflictDraft()');assert.equal(h.run('copied[0]'),'Draft A');
+  h.run("studentId='student-b'");await h.run('copyConflictDraft()');assert.equal(h.run('copied.length'),1);
+  h.run("studentId='student-a';window.confirm=()=>true;discardConflictDraft()");assert.equal(h.run('conflictDraft'),null);assert.equal(h.elements.get('conflictDraftText').value,'');
+});
+
+test('revoked student access clears the temporary conflict draft',async()=>{
+  const h=harness();h.run("conflictDraft={epoch:sessionEpoch,organizationId,studentId,text:'Private draft'};showConflictDraft()");
+  const loading=h.run('loadStudent()');h.requests[0].reject(Object.assign(new Error('Access revoked'),{status:403}));h.requests[1].resolve({consents:[]});await loading;
+  assert.equal(h.run('conflictDraft'),null);assert.equal(h.elements.get('conflictDraftText').value,'');
+});
