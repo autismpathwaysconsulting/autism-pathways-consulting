@@ -126,6 +126,12 @@ export async function onRequestPut({ request, env }) {
     const current = await readStudentState(auth.db, studentId);
     if (['import','reset'].includes(action) && payload.state && typeof payload.state === 'object') payload.state.reviewedSummaries = {};
     if (!['import','reset'].includes(action) && JSON.stringify(payload.state?.reviewedSummaries || {}) !== JSON.stringify(current?.state?.reviewedSummaries || {})) {
+      // A review in another session can legitimately change this field while an
+      // editor is working. Preserve conflict recovery without allowing that old
+      // snapshot (or a forged review) to be written.
+      if (current && Number.isSafeInteger(payload.expectedRevision) && payload.expectedRevision >= 0 && payload.expectedRevision !== current.revision) {
+        return json({ conflict: true, idempotent: false, record: current }, 409);
+      }
       return json({ error: 'Reviewed summaries must be saved through the review endpoint.' }, 403);
     }
     const result = await writeStudentState({

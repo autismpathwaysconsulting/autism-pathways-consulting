@@ -137,3 +137,33 @@ test('school-use authority is required for both review and retrieval of a non-de
   consent('withdrawn');assert.equal((await h.call(summaries,'viewer','?studentId=student-a&date=2026-09-18&audience=teacher')).status,403);
  }finally{h.sql.close()}
 });
+
+test('an editor with an older reviewed summary receives a conflict, not a false permission failure',async()=>{
+ const h=await setup();try{
+  const before=await readStudentState(h.db,'student-a');
+  await h.call(summaries,'support','',h.review());
+  before.state.overview['2026-09-18'].note='New lesson draft';
+  const response=await h.call(stateApi,'support','',{studentId:'student-a',expectedRevision:before.revision,requestId:'stale:'+crypto.randomUUID(),action:'edit',state:before.state},'PUT');
+  assert.equal(response.status,409);
+  const result=await response.json();assert.equal(result.conflict,true);
+  const current=await readStudentState(h.db,'student-a');
+  assert.equal(current.revision,1);assert.equal(current.state.overview['2026-09-18'].note,'PRIVATE NOTE');
+  assert.equal(current.state.reviewedSummaries['2026-09-18'].teacher.text,'Selected highlight');
+ }finally{h.sql.close()}
+});
+
+test('retry after a lost save response cannot duplicate a revision or resurrect an invalidated summary',async()=>{
+ const h=await setup();try{
+  await h.call(summaries,'support','',h.review());
+  const original=await readStudentState(h.db,'student-a');
+  original.state.overview['2026-09-18'].note='Confirmed lesson after review';
+  const body={studentId:'student-a',expectedRevision:original.revision,requestId:'first:'+crypto.randomUUID(),action:'edit',state:original.state};
+  // The server commits, but the client does not consume the response body.
+  assert.equal((await h.call(stateApi,'support','',body,'PUT')).status,200);
+  const retry=await h.call(stateApi,'support','',{...body,requestId:'retry:'+crypto.randomUUID()},'PUT');
+  assert.equal(retry.status,409);
+  const current=await readStudentState(h.db,'student-a');
+  assert.equal(current.revision,2);assert.equal(current.state.overview['2026-09-18'].note,'Confirmed lesson after review');
+  assert.equal((await h.call(summaries,'viewer','?studentId=student-a&date=2026-09-18&audience=teacher')).status,409);
+ }finally{h.sql.close()}
+});

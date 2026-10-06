@@ -20,6 +20,14 @@ Verification before deployment: 88/88 Pathways tests and 8/8 site-build checks p
 
 Remaining limitations: the automation browser returned to login on reload and later blocked observation because of native credential protection. The cause is not established; these changes do not claim to fix that observation. Live reload/session persistence, clipboard confirmation, staff-viewer access and laptop/iPad visual checks remain outstanding. A lost save response may still mean the server committed; no automatic retry is added. Existing conflict handling reloads the current version and does not preserve a conflict draft. No offline storage or complete offline recovery is claimed.
 
+### Follow-up: concurrent reviews and lost responses
+
+The first reliability increment was deployed as `32d507e`; Cloudflare reported success. A further live-browser attempt still reached sign-in after navigation and encountered native-credential observation restrictions. No additional live session or staff-viewer pass is claimed.
+
+A database-backed regression reproduced a false 403 when an editor's snapshot predates a summary review in another session. The state endpoint now returns a 409 version conflict in that case, without writing the stale record. Attempts to alter reviewed text at the current revision remain forbidden. A simulated lost-response test confirms that retrying an already committed save cannot add another revision or restore an invalidated summary. This exercises real handlers and SQLite, not a live network interruption.
+
+Follow-up verification: 90/90 Pathways tests and 8/8 site-build checks passed. The 13 summary/access tests cover assigned-viewer projections, raw-route denials, assignment revocation, inactive users, suspended organizations, cross-organization access, authority boundaries and the two new recovery cases. Conflict handling still reloads the current record and does not preserve a conflict draft. Live role checks, clipboard behavior, laptop/iPad review and school-network acceptance remain outstanding.
+
 ### Next blocks
 
 1. Core synthetic workflow: passed for the scenario above.
