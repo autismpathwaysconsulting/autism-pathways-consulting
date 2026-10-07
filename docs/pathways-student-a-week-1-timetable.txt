@@ -1,0 +1,35 @@
+Monday | 08:00–08:55 | LEDU
+Monday | 09:00–09:55 | EAL
+Monday | 10:00–10:30 | Tutor / Assembly
+Monday | 10:55–11:50 | Science
+Monday | 11:55–12:50 | Computer Science
+Monday | 13:30–14:25 | Music
+Monday | 14:30–15:25 | Mandarin
+Tuesday | 08:00–08:55 | Art
+Tuesday | 09:00–09:55 | Physical Education
+Tuesday | 10:00–10:30 | Tutor / Assembly
+Tuesday | 10:55–11:50 | Mandarin
+Tuesday | 11:55–12:50 | Mathematics
+Tuesday | 13:30–14:25 | Design Technology
+Tuesday | 14:30–15:25 | Design Technology
+Wednesday | 08:00–08:55 | Bahasa Malaysia
+Wednesday | 09:00–09:55 | EAL
+Wednesday | 10:00–10:30 | Tutor / Assembly
+Wednesday | 10:55–11:50 | Mandarin
+Wednesday | 11:55–12:50 | Humanities
+Wednesday | 13:30–14:25 | Mathematics
+Wednesday | 14:30–15:25 | Science
+Thursday | 08:00–08:55 | Mathematics
+Thursday | 09:00–09:55 | EAL
+Thursday | 10:00–10:30 | Tutor / Assembly
+Thursday | 10:55–11:50 | Science
+Thursday | 11:55–12:50 | Bahasa Malaysia
+Thursday | 13:30–14:25 | Humanities
+Thursday | 14:30–15:25 | PSHCE
+Friday | 08:00–08:55 | EAL
+Friday | 09:00–09:55 | Physical Education
+Friday | 10:00–10:30 | Tutor / Assembly
+Friday | 10:55–11:50 | Drama
+Friday | 11:55–12:50 | Mathematics
+Friday | 13:30–14:25 | Humanities
+Friday | 14:30–15:25 | Science

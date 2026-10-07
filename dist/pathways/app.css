@@ -32,7 +32,7 @@ h1{font-weight:650;letter-spacing:-.025em}h2{font-size:1.15rem;font-weight:650}
 .eyebrow{font-weight:650;letter-spacing:.07em}.item-title{font-weight:650}
 .btn,.nav,label,details>summary{font-weight:600}.btn,.btn.small{min-height:44px}
 .sidebar{background:var(--bg)}.sidebar .nav{min-height:46px}
-#dailyScreen{max-width:960px}.daily-actions{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:8px 0 28px;padding:0}
+#dailyScreen{max-width:960px}#dailyScreen>.screen-head{margin-bottom:16px}#dailyScreen>.screen-head .muted{margin-bottom:0}.daily-actions{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:8px 0 20px;padding:0}
 .workflow-action{border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;min-height:48px;padding:12px 20px;font-size:.95rem;color:var(--muted);font-weight:600}
 .workflow-action.active{border-bottom-color:var(--green);color:var(--green)}
 .workflow-action:hover{background:var(--green-3)}

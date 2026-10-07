@@ -584,7 +584,7 @@ function renderPins(){
 function renderSubjects(){
   const entries=currentSubjects(state,currentDay,activeWeek);let saved=0;
   for(const entry of entries) if(entry.data?.saved)saved++;
-  $('savedCount').textContent=`${saved}/${entries.length} saved`;
+  $('savedCount').textContent=`${saved} of ${entries.length} lesson notes recorded`;
   $('subjectList').innerHTML=entries.length?entries.map(({time,subject,key,data})=>{
     const status=data?.saved?'Saved':data?.skipped?'Not reported':'No note yet';
     const preview=data?.narrative||(data?.skipped?'Not reported today':'Add a brief lesson note.');
