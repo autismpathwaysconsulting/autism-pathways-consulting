@@ -116,20 +116,32 @@ export function effectivePinStatus(pin, baseDate = new Date()) {
   return 'Open';
 }
 
-export function objectiveStats(subjects = {}, objectiveId) {
-  let measured=0,met=0,partial=0,notMet=0,notMeasured=0;
+export function objectiveEvidence(subjects = {}, objectiveId, {from='',to=''} = {}) {
+  const rows=[];
   for (const [key,record] of Object.entries(subjects)) {
-    if (key.startsWith('legacy|')) continue;
-    for (const task of record?.tasks || []) {
+    const [date,time,...subject]=key.split('|');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !record?.saved || record.skipped || (from && date<from) || (to && date>to)) continue;
+    for (const task of record.tasks || []) {
       if (task.objectiveId !== objectiveId) continue;
-      if (!task.objectiveResult || task.objectiveResult === 'Not measured / insufficient opportunity') { if (task.objectiveResult) notMeasured++; continue; }
-      measured++;
-      if (task.objectiveResult === 'Criterion met') met++;
-      else if (task.objectiveResult === 'Partly / emerging') partial++;
-      else if (task.objectiveResult === 'Criterion not met') notMet++;
+      const result=PATHWAYS_OBJECTIVE_RESULTS.includes(task.objectiveResult)?task.objectiveResult:'Not measured / insufficient opportunity';
+      rows.push({date,time,subject:subject.join('|'),task:task.label||'Unnamed task',result,
+        value:typeof task.measurementValue==='number'&&Number.isFinite(task.measurementValue)?task.measurementValue:null,
+        unit:task.measurementUnit||'',support:[record.aideLevel,record.supportTiming,record.supportMethod].filter(Boolean).join(' · ')||'Not recorded'});
     }
   }
-  return { measured,met,partial,notMet,notMeasured };
+  return rows.sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+}
+
+export function objectiveStats(subjects = {}, objectiveId, range = {}) {
+  let measured=0,met=0,partial=0,notMet=0,notMeasured=0;
+  for (const row of objectiveEvidence(subjects,objectiveId,range)) {
+    if(row.result==='Not measured / insufficient opportunity'){notMeasured++;continue}
+    measured++;
+    if(row.result==='Criterion met')met++;
+    else if(row.result==='Partly / emerging')partial++;
+    else if(row.result==='Criterion not met')notMet++;
+  }
+  return {measured,met,partial,notMet,notMeasured};
 }
 
 export function currentSubjects(state, dayName, baseDate) {

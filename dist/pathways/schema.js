@@ -96,7 +96,7 @@ function validateTask(task, index) {
   if (task.objectiveId) safeId(task.objectiveId, `task ${index + 1} objective id`);
   oneOf(task.objectiveResult ?? '', PATHWAYS_OBJECTIVE_RESULTS, `task ${index + 1} objective result`, { optional: true });
   if (task.measurementValue !== undefined && task.measurementValue !== null && task.measurementValue !== '') {
-    if (typeof task.measurementValue !== 'number' || !Number.isFinite(task.measurementValue)) fail(`task ${index + 1} measurement value is invalid.`);
+    if (typeof task.measurementValue !== 'number' || !Number.isFinite(task.measurementValue) || task.measurementValue < 0) fail(`task ${index + 1} measurement value is invalid.`);
   }
   string(task.measurementUnit ?? '', `task ${index + 1} measurement unit`, 40, { optional: true });
 }
@@ -107,6 +107,7 @@ function validateLessonRecord(record, key) {
   if ('skipped' in record && typeof record.skipped !== 'boolean') fail(`lesson ${key} skipped flag is invalid.`);
   string(record.status ?? '', `lesson ${key} status`, 40, { optional: true });
   string(record.narrative ?? '', `lesson ${key} narrative`, LIMITS.narrative, { optional: true });
+  string(record.originalNarrative ?? '', `lesson ${key} original note`, LIMITS.narrative, { optional: true });
   string(record.participation ?? '', `lesson ${key} participation`, LIMITS.textShort, { optional: true });
   string(record.aideLevel ?? '', `lesson ${key} aide level`, 40, { optional: true });
   string(record.supportSource ?? '', `lesson ${key} support source`, LIMITS.textShort, { optional: true });
@@ -133,6 +134,7 @@ function validateObjective(objective, index) {
   optionalDate(objective.review, `objective ${index + 1} review date`);
   oneOf(objective.status ?? 'active', PATHWAYS_OBJECTIVE_STATUSES, `objective ${index + 1} status`);
   oneOf(objective.measureType ?? 'criterion', PATHWAYS_MEASURE_TYPES, `objective ${index + 1} measure type`);
+  for (const field of ['reviewNote','nextStep','reviewOwner']) string(objective[field] ?? '', `objective ${index + 1} ${field}`, LIMITS.textMedium, {optional:true});
   if (objective.supersedesId) safeId(objective.supersedesId, `objective ${index + 1} supersedes id`);
   if (!objective.target.trim() || !objective.condition.trim() || !objective.criterion.trim() || !objective.review) {
     fail(`objective ${index + 1} must include target, condition, criterion and review date.`);
@@ -220,6 +222,10 @@ export function assertValidPathwaysState(state) {
 
   if (!Array.isArray(state.objectives) || state.objectives.length > LIMITS.objectives) fail('objectives are invalid or exceed the supported limit.');
   state.objectives.forEach(validateObjective);
+  for(const record of Object.values(state.subjects))for(const task of record.tasks||[]){
+    const objective=state.objectives.find(item=>item.id===task.objectiveId);
+    if(objective?.measureType==='accuracy'&&typeof task.measurementValue==='number'&&task.measurementValue>100)fail('Accuracy cannot exceed 100 percent.');
+  }
 
   plainObject(state.settings ?? {}, 'settings');
   string(state.settings?.timezone ?? 'Asia/Kuala_Lumpur', 'timezone', 80);

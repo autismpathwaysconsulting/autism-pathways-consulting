@@ -353,3 +353,29 @@ test('daily panels show only the chosen task and preserve an in-progress reviewe
   h.run("user={memberships:[{organization_id:'org-a',role:'viewer'}]};dashboardAction('updates')");
   assert.equal(h.elements.get('reviewUpdates').hiddenByClass,true,'summary viewer cannot open the internal daily panel');
 });
+
+test('late sentence draft cannot cross students or overwrite edited notes',async()=>{
+ for(const mode of ['student','edited','closed']){
+  const h=harness();h.run("canEdit=()=>true;selectedStudent=()=>({is_synthetic_demo:1});window.confirm=()=>true;editingKey='lesson-a';formData={};");h.elements.get('narrative')??h.run("$('narrative')");h.elements.get('narrative').value='Four questions with prompts';
+  const task=h.run('rewriteNote()');assert.equal(h.requests.length,1);
+  if(mode==='student')h.run("studentId='student-b';resetRewrite()");
+  if(mode==='edited')h.elements.get('narrative').value='A newer observation';
+  if(mode==='closed')h.run('resetRewrite()');
+  h.requests[0].resolve({text:'Draft that must be discarded.'});await task;
+  assert.equal(h.elements.get('rewriteDraft').value,'');assert.notEqual(h.elements.get('narrative').value,'Draft that must be discarded.');
+ }
+});
+
+test('using a sentence draft requires explicit review, retains original and never saves automatically',()=>{
+ const h=harness();h.run("canEdit=()=>true;editingKey='lesson';formData={};rewritePending={key:'lesson',source:'Rough note'};$('narrative').value='Rough note';$('rewriteDraft').value='Reviewed full sentence.';");
+ h.run('applyRewrite()');assert.equal(h.elements.get('narrative').value,'Rough note');
+ h.run("$('rewriteConfirmed').checked=true;applyRewrite()");assert.equal(h.elements.get('narrative').value,'Reviewed full sentence.');assert.equal(h.run('formData.originalNarrative'),'Rough note');assert.equal(h.requests.length,0);
+});
+
+test('changing an evidenced IEP criterion creates a separate version and retains old goal context',async()=>{
+ const h=harness();h.run("canEdit=()=>true;window.confirm=()=>true;objectiveEvidence=()=>[{date:'2026-10-05'}];editingObjectiveId='goal-old';state={objectives:[{id:'goal-old',domain:'AUT',target:'Start work',condition:'During EAL',support:'Visual steps',criterion:'2 prompts',review:'2026-11-01',status:'active',measureType:'criterion'}]};record={revision:0,permission:'edit'};$('objectiveDialog').close=()=>{};");
+ for(const [id,value] of Object.entries({objDomain:'AUT',objStatus:'active',objTarget:'Start work',objCondition:'During EAL',objSupport:'Visual steps',objCriterion:'1 prompt',objReview:'2026-11-01',objMeasure:'criterion',objReviewNote:'Discuss next term',objNextStep:'Agree an observation window',objReviewOwner:'SENCO'}))h.run(`$('${id}').value=${JSON.stringify(value)}`);
+ const saving=h.run('saveObjective()');const next=h.requests[0].options.body.state;
+ assert.equal(next.objectives.length,2);assert.equal(next.objectives[0].criterion,'2 prompts');assert.equal(next.objectives[0].status,'replaced');assert.equal(next.objectives[1].supersedesId,'goal-old');assert.equal(next.objectives[1].criterion,'1 prompt');assert.notEqual(next.objectives[1].id,'goal-old');
+ h.requests[0].resolve({record:{revision:1,state:next}});await saving;
+});

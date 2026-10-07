@@ -17,6 +17,7 @@ import {
   formatShortDate,
   moveWeek,
   objectiveStats,
+  objectiveEvidence,
   outputFor,
   startOfWeek,
   weekKey,
@@ -73,6 +74,8 @@ let studentLoadSequence = 0;
 let studentListSequence = 0;
 let pendingSave = null;
 let conflictDraft = null;
+let rewritePending = null;
+let rewriteSequence = 0;
 
 function captureStudentContext(){
   const epoch=sessionEpoch, sequence=studentLoadSequence, org=organizationId, id=studentId;
@@ -80,6 +83,8 @@ function captureStudentContext(){
 }
 
 function clearStudentUi(keepConflictDraft=false){
+  resetRewrite();
+  if($('readinessResult'))$('readinessResult').textContent='';
   if(!keepConflictDraft)conflictDraft=null;
   if($('conflictDraftText'))$('conflictDraftText').value='';
   if($('conflictDraftNotice'))$('conflictDraftNotice').classList.add('hidden');
@@ -87,7 +92,7 @@ function clearStudentUi(keepConflictDraft=false){
   if($('summaryEditor'))$('summaryEditor').hidden=true;
   for(const id of ['summaryDraft','viewerSummaryText','viewerSummaryStatus','summaryStatus']){if($(id)){$(id).value='';$(id).textContent=''}}
   if($('summaryScreen'))$('summaryScreen').classList.add('hidden');
-  for(const id of ['studentHeading','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','savedCount','planningCount','updateDate','studentAdminPanel']){
+  for(const id of ['originalNoteText','studentHeading','outputText','revisionList','revisionHeading','revisionPreview','objectiveList','objectiveSummary','pinList','subjectList','savedCount','planningCount','updateDate','studentAdminPanel']){
     if($(id))$(id).textContent='';
   }
   if($('overviewNote'))$('overviewNote').value='';
@@ -191,7 +196,7 @@ async function api(path,{method='GET',body=null}={}){
     headers['X-Pathways-Request']='1';
     if(csrfToken) headers['X-Pathways-CSRF']=csrfToken;
   }
-  const response=await fetch(path,{method,headers,body:body===null?undefined:JSON.stringify(body),credentials:'same-origin'});
+  const response=await fetch(path,{method,headers,body:body===null?undefined:JSON.stringify(body),credentials:'same-origin',signal:globalThis.AbortSignal?.timeout?.(30000)});
   const type=response.headers.get('Content-Type')||'';
   const data=type.includes('application/json')?await response.json().catch(()=>({})):{};
   if(response.status===401 && path!=='/api/pathways/login' && requestEpoch===sessionEpoch){
@@ -204,17 +209,20 @@ async function api(path,{method='GET',body=null}={}){
     }
   }
   if(!response.ok){
-    const error=new Error(data.error||`Request failed (${response.status}).`);
+    const reference=typeof data.requestId==='string'&&/^[a-f0-9-]{36}$/.test(data.requestId)?` Reference: ${data.requestId}`:'';
+    const error=new Error((data.error||`Request failed (${response.status}).`)+reference);
     error.status=response.status; error.data=data; throw error;
   }
   return data;
 }
 
 function showLogin(){
+  $('loadingView').classList.add('hidden');
   $('appView').classList.add('hidden');
   $('loginView').classList.remove('hidden');
 }
 function showApp(){
+  $('loadingView').classList.add('hidden');
   $('loginView').classList.add('hidden');
   $('appView').classList.remove('hidden');
 }
@@ -222,7 +230,8 @@ function showApp(){
 async function init(){
   bindStaticEvents();
   resetProtectedUi();
-  showLogin();
+  $('loginView').classList.add('hidden');
+  $('loadingView').classList.remove('hidden');
   try{
     const me=await api('/api/pathways/me');
     user=me.user; csrfToken=me.csrfToken;
@@ -620,10 +629,17 @@ function renderOutput(){
 
 function renderObjectives(){
   const items=state.objectives||[];
+  const range=$('evidencePeriod').value==='week'?{from:datedDayKey('Monday',activeWeek),to:datedDayKey('Friday',activeWeek)}:{};
+  const today=localDateKeyForZone(state.settings?.timezone||'Asia/Kuala_Lumpur');
   $('objectiveList').innerHTML=items.length?items.map(objective=>{
-    const stats=objectiveStats(state.subjects,objective.id);const meta=DOMAIN_META[objective.domain];
-    return `<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(objective.target)}</div><div class="item-copy">${escapeHtml(objective.condition)}${objective.support?` · with ${escapeHtml(objective.support)}`:''}</div><div class="meta"><span class="pill" style="border-left:3px solid ${meta?.[1]||'#475569'}">${escapeHtml(DOMAIN_GUIDE[objective.domain]?.[0]||objective.domain)}</span><span class="pill ${objective.status==='active'?'good':''}">${escapeHtml(objective.status)}</span><span>${stats.measured} measured</span><span>${stats.met} met</span><span>Review ${escapeHtml(objective.review)}</span><span>${escapeHtml(objective.measureType||'criterion')}</span></div></div>${canEdit()?`<button class="btn secondary small" data-edit-objective="${escapeHtml(objective.id)}">Edit</button>`:''}</div></div>`;
-  }).join(''):'<div class="muted-box">No objectives yet.</div>';
+    const rows=objectiveEvidence(state.subjects,objective.id,range), stats=objectiveStats(state.subjects,objective.id,range);
+    const weekly=new Map();
+    for(const row of rows){const week=weekKey(new Date(row.date+'T12:00:00'));if(!weekly.has(week))weekly.set(week,{met:0,measured:0,missing:0});const w=weekly.get(week);if(row.result==='Not measured / insufficient opportunity')w.missing++;else{w.measured++;if(row.result==='Criterion met')w.met++}}
+    const total=stats.measured;
+    const bar=total?`<div class="evidence-bar" role="img" aria-label="${stats.met} met, ${stats.partial} emerging, ${stats.notMet} not met, from ${total} measured opportunities"><span class="evidence-met" style="width:${stats.met/total*100}%"></span><span class="evidence-partial" style="width:${stats.partial/total*100}%"></span><span class="evidence-not-met" style="width:${stats.notMet/total*100}%"></span></div>`:'<p class="muted-box">No measured opportunities in this period. This is not a failed goal.</p>';
+    const evidence=rows.length?`<details><summary>See ${rows.length} linked observations</summary><div class="evidence-scroll" tabindex="0" role="region" aria-label="Dated goal observations"><table><thead><tr><th>Date / lesson</th><th>Task</th><th>Result</th><th>Measurement</th><th>Support context</th></tr></thead><tbody>${rows.map(row=>`<tr><td>${escapeHtml(row.date)}<br>${escapeHtml(row.subject)}</td><td>${escapeHtml(row.task)}</td><td>${escapeHtml(row.result)}</td><td>${row.value===null?'Not recorded':escapeHtml(row.value+' '+row.unit)}</td><td>${escapeHtml(row.support)}</td></tr>`).join('')}</tbody></table></div></details>`:'';
+    return `<article class="item goal-card"><div class="section-head"><h2>${escapeHtml(objective.target)}</h2>${canEdit()?`<button class="btn secondary small" data-edit-objective="${escapeHtml(objective.id)}">Edit / review</button>`:''}</div><p>${escapeHtml(objective.condition)}${objective.support?` · Support allowed: ${escapeHtml(objective.support)}`:''}</p><p><strong>Criterion:</strong> ${escapeHtml(objective.criterion)}</p><div class="meta"><span class="pill">${escapeHtml(DOMAIN_GUIDE[objective.domain]?.[0]||objective.domain)}</span><span class="pill">${escapeHtml(objective.status)}</span><span>Review ${escapeHtml(objective.review)}${objective.status==='active'&&objective.review<today?' · Due for discussion':''}</span></div>${bar}<p class="tiny">${stats.met} met · ${stats.partial} emerging · ${stats.notMet} not met · ${stats.notMeasured} not measured (excluded)</p>${weekly.size?`<details><summary>Weekly comparison</summary>${[...weekly].map(([week,w])=>`<p class="weekly-evidence"><span>Week of ${escapeHtml(week)}</span><meter min="0" max="${w.measured||1}" value="${w.met}" aria-label="Week ${escapeHtml(week)}: ${w.met} of ${w.measured} measured opportunities met"></meter><span>${w.met} / ${w.measured} met; ${w.missing} not measured</span></p>`).join('')}<p class="tiny muted">A different task mix or level of support can change these counts. This is not a standardised progress score.</p></details>`:''}${evidence}${objective.reviewNote||objective.nextStep||objective.reviewOwner?`<div class="review-planning"><strong>Review planning</strong><p>${escapeHtml(objective.reviewNote||'')}</p><p>${escapeHtml(objective.nextStep||'')}</p><p class="tiny">Follow up: ${escapeHtml(objective.reviewOwner||'Not assigned')}</p></div>`:''}</article>`;
+  }).join(''):'<div class="muted-box">No goals yet. Agree a measurable target with the SENCO, then link lesson opportunities to it.</div>';
 }
 
 function renderHistory(){
@@ -641,10 +657,11 @@ function historicalEditGuard(){
 
 function openSubject(key,time,subject){
   if(canEdit()&&!historicalEditGuard())return;
+  resetRewrite();
   editingKey=key;editingTime=time;editingSubject=subject;
   const existing=state.subjects[key]||{};
   formData={
-    status:existing.status||'routine',narrative:existing.narrative||'',participation:existing.participation||'',
+    status:existing.status||'routine',narrative:existing.narrative||'',originalNarrative:existing.originalNarrative||'',participation:existing.participation||'',
     aideLevel:existing.aideLevel||'',supportSource:existing.supportSource||'',supportPurpose:existing.supportPurpose||'',
     supportTiming:existing.supportTiming||'',supportMethod:existing.supportMethod||'',supportDetail:existing.supportDetail||'',
     autonomy:[...(existing.autonomy||[])],domains:[...(existing.domains||[])],eventObservation:existing.eventObservation||'',eventUncertainty:existing.eventUncertainty||'',
@@ -654,6 +671,7 @@ function openSubject(key,time,subject){
   $('supportTiming').value=formData.supportTiming;$('supportMethod').value=formData.supportMethod;$('supportDetail').value=formData.supportDetail;
   $('aideLevel').value=formData.aideLevel;$('supportSource').value=formData.supportSource;$('supportPurpose').value=formData.supportPurpose;$('eventObservation').value=formData.eventObservation;$('eventUncertainty').value=formData.eventUncertainty;
   $('moreDetail').open=Boolean(existing.supportTiming||existing.supportMethod||existing.supportDetail||existing.participation||existing.eventObservation||existing.eventUncertainty||(existing.autonomy||[]).length||(existing.domains||[]).length||existing.aideLevel&&existing.aideLevel!=='None');
+  $('originalNoteSection').hidden=!formData.originalNarrative;$('originalNoteText').textContent=formData.originalNarrative;
   $('taskDetails').open=formData.tasks.length>0;
   renderSubjectForm();
   for(const el of $('subjectForm').querySelectorAll('input,textarea,select,button')) if(el.value!=='cancel') el.disabled=!canEdit() && !el.classList.contains('icon-btn');
@@ -673,8 +691,8 @@ function renderSubjectForm(){
 function renderTasks(){
   const activeObjectives=(state.objectives||[]).filter(item=>item.status==='active');
   $('taskList').innerHTML=formData.tasks.length?formData.tasks.map((task,index)=>{
-    const objective=activeObjectives.find(item=>item.id===task.objectiveId);const measure=objective?.measureType||'criterion';
-    const objectiveOptions=['<option value="">No objective measurement</option>',...activeObjectives.map(item=>`<option value="${escapeHtml(item.id)}" ${task.objectiveId===item.id?'selected':''}>${escapeHtml(DOMAIN_GUIDE[item.domain]?.[0]||item.domain)} · ${escapeHtml(item.target)}</option>`)].join('');
+    const objective=(state.objectives||[]).find(item=>item.id===task.objectiveId);const measure=objective?.measureType||'criterion';
+    const objectiveOptions=['<option value="">No objective measurement</option>',...[...activeObjectives,...(objective&&objective.status!=='active'?[objective]:[])].map(item=>`<option value="${escapeHtml(item.id)}" ${task.objectiveId===item.id?'selected':''}>${escapeHtml(DOMAIN_GUIDE[item.domain]?.[0]||item.domain)} · ${escapeHtml(item.target)}</option>`)].join('');
     const resultOptions=['<option value="">Select result</option>',...PATHWAYS_OBJECTIVE_RESULTS.map(value=>`<option ${task.objectiveResult===value?'selected':''}>${escapeHtml(value)}</option>`)].join('');
     let measurement='';
     if(task.objectiveId && measure!=='criterion'){
@@ -683,6 +701,42 @@ function renderTasks(){
     }
     return `<div class="task" data-task-index="${index}"><div class="section-head"><strong>Task ${index+1}</strong><button type="button" class="btn ghost small" data-remove-task="${index}">Remove</button></div><div class="task-grid"><label>Task<input class="task-label" value="${escapeHtml(task.label||'')}"></label><label>Type<select class="task-type">${TASK_TYPES.map(value=>`<option ${task.type===value?'selected':''}>${escapeHtml(value)}</option>`).join('')}</select></label><label>Outcome<select class="task-outcome">${TASK_OUTCOMES.map(value=>`<option ${task.outcome===value?'selected':''}>${escapeHtml(value)}</option>`).join('')}</select></label></div><label>Internal detail<textarea class="task-detail" rows="2">${escapeHtml(task.detail||'')}</textarea></label><label class="check-row"><input class="task-parent" type="checkbox" ${task.includeParent?'checked':''}>Include this task in the parent / WhatsApp report</label><div class="task-more"><label>Objective<select class="task-objective">${objectiveOptions}</select></label><label>Opportunity result<select class="task-result" ${task.objectiveId?'':'disabled'}>${resultOptions}</select></label></div>${measurement}</div>`;
   }).join(''):'<div class="muted-box">No task breakdown needed. Add tasks only when they clarify the lesson or measure an objective.</div>';
+}
+
+function resetRewrite(){
+  rewriteSequence++;rewritePending=null;
+  if($('rewriteReview'))$('rewriteReview').hidden=true;
+  for(const id of ['rewriteDraft','rewriteOriginal'])if($(id))$(id).value='';
+  if($('rewriteStatus'))$('rewriteStatus').textContent='';
+  if($('rewriteNoteBtn'))$('rewriteNoteBtn').disabled=false;
+  if($('rewriteConfirmed'))$('rewriteConfirmed').checked=false;
+}
+async function rewriteNote(){
+  if(!canEdit()||rewritePending)return;
+  const source=$('narrative').value.trim();
+  if(source.length<8||source.length>5000){$('rewriteStatus').textContent='Add 8–5,000 characters of notes first.';return}
+  if(selectedStudent()?.is_synthetic_demo!==1){$('rewriteStatus').textContent='Sentence drafting is currently limited to the synthetic demo.';return}
+  if(!window.confirm('Send only this lesson note to OpenAI to draft complete sentences? Do not include real student or family information in this synthetic demo. You will review the result before using it.'))return;
+  const context=captureStudentContext(),key=editingKey,sequence=++rewriteSequence;
+  rewritePending={source,key,sequence};$('rewriteNoteBtn').disabled=true;$('rewriteStatus').textContent='Preparing a draft. Your original stays unchanged.';
+  try{
+    const result=await api('/api/pathways/rewrite',{method:'POST',body:{studentId,narrative:source,providerDisclosureConfirmed:true}});
+    if(!context.isCurrent()||sequence!==rewriteSequence||editingKey!==key)return;
+    if($('narrative').value.trim()!==source){resetRewrite();$('rewriteStatus').textContent='You edited the note while drafting. Your latest text was kept. Request a new draft if needed.';return}
+    $('rewriteOriginal').value=source;$('rewriteDraft').value=result.text;$('rewriteReview').hidden=false;$('rewriteConfirmed').checked=false;
+    $('rewriteStatus').textContent='Draft ready. Check the facts before using it.';
+  }catch(error){if(context.isCurrent()&&sequence===rewriteSequence){rewritePending=null;$('rewriteStatus').textContent=error.message}}
+  finally{if(context.isCurrent()&&sequence===rewriteSequence)$('rewriteNoteBtn').disabled=false}
+}
+function applyRewrite(){
+  if(!canEdit()||!rewritePending)return;
+  if(editingKey!==rewritePending.key||$('narrative').value.trim()!==rewritePending.source){resetRewrite();$('rewriteStatus').textContent='The original note changed. Request a fresh draft.';return}
+  const draft=$('rewriteDraft').value.trim();
+  if(!$('rewriteConfirmed').checked||!draft||draft.length>5000){$('rewriteStatus').textContent='Check the draft and tick the confirmation first.';return}
+  formData.originalNarrative ||= rewritePending.source;
+  formData.narrative=draft;$('narrative').value=draft;
+  $('originalNoteText').textContent=formData.originalNarrative;$('originalNoteSection').hidden=false;
+  resetRewrite();$('rewriteStatus').textContent='Reviewed draft added. Save the lesson when ready.';
 }
 
 async function saveSubject(){
@@ -739,12 +793,23 @@ function openObjective(id=''){
   $('objectiveDialogTitle').textContent=objective?'Edit objective':'Add measurable objective';
   $('objDomain').innerHTML=PATHWAYS_DOMAINS.map(code=>`<option value="${code}">${escapeHtml(DOMAIN_GUIDE[code]?.[0]||code)}</option>`).join('');
   $('objDomain').value=objective?.domain||'AUT';$('objStatus').value=objective?.status||'active';$('objTarget').value=objective?.target||'';$('objCondition').value=objective?.condition||'';$('objSupport').value=objective?.support||'';$('objCriterion').value=objective?.criterion||'';$('objMeasure').value=objective?.measureType||'criterion';$('objReview').value=objective?.review||'';
+  $('objReviewNote').value=objective?.reviewNote||'';$('objNextStep').value=objective?.nextStep||'';$('objReviewOwner').value=objective?.reviewOwner||'';
   $('objectiveDialog').showModal();
 }
 async function saveObjective(){
-  const draft={id:editingObjectiveId||uid('obj'),domain:$('objDomain').value,target:$('objTarget').value.trim(),condition:$('objCondition').value.trim(),support:$('objSupport').value.trim(),criterion:$('objCriterion').value.trim(),review:$('objReview').value,status:$('objStatus').value,measureType:$('objMeasure').value,supersedesId:''};
+  const draft={id:editingObjectiveId||uid('obj'),domain:$('objDomain').value,target:$('objTarget').value.trim(),condition:$('objCondition').value.trim(),support:$('objSupport').value.trim(),criterion:$('objCriterion').value.trim(),review:$('objReview').value,status:$('objStatus').value,measureType:$('objMeasure').value,supersedesId:'',reviewNote:$('objReviewNote').value.trim(),nextStep:$('objNextStep').value.trim(),reviewOwner:$('objReviewOwner').value.trim()};
+  const previous=state.objectives.find(item=>item.id===editingObjectiveId);
+  let replacePrevious=false;
+  if(previous){
+    draft.supersedesId=previous.supersedesId||'';
+    const changed=['target','condition','support','criterion','measureType'].some(field=>(previous[field]||'')!==(draft[field]||''));
+    if(changed&&objectiveEvidence(state.subjects,previous.id).length){
+      if(!window.confirm('This goal already has recorded evidence. Save the changed target or conditions as a new goal version so earlier evidence keeps its original meaning?'))return;
+      replacePrevious=true;draft.id=uid('obj');draft.supersedesId=previous.id;
+    }
+  }
   if(!draft.target||!draft.condition||!draft.criterion||!draft.review){showError('Target, context/condition, criterion and review date are required.');return}
-  try{if(await persist('edit',next=>{const index=next.objectives.findIndex(item=>item.id===draft.id);if(index>=0)next.objectives[index]=draft;else next.objectives.push(draft)})){$('objectiveDialog').close();renderAll()}}catch(error){showError(error.message)}
+  try{if(await persist('edit',next=>{if(replacePrevious)next.objectives.find(item=>item.id===previous.id).status='replaced';const index=next.objectives.findIndex(item=>item.id===draft.id);if(index>=0)next.objectives[index]=draft;else next.objectives.push(draft)})){$('objectiveDialog').close();renderAll()}}catch(error){showError(error.message)}
 }
 
 async function loadRevision(revision){
@@ -772,8 +837,16 @@ async function restoreRevision(){
   }catch(error){if(!context.isCurrent())return;showError(error.message)}
 }
 
+async function checkReadiness(){
+  if(!user?.platformAdmin)return;
+  const epoch=sessionEpoch;$('readinessBtn').disabled=true;$('readinessResult').textContent='Checking…';
+  try{const result=await api('/api/pathways/readiness');if(epoch!==sessionEpoch)return;$('readinessResult').textContent=Object.entries(result.checks).map(([name,value])=>`${name}: ${value}`).join('\n')}
+  catch(error){if(epoch===sessionEpoch)$('readinessResult').textContent=error.message}
+  finally{if(epoch===sessionEpoch)$('readinessBtn').disabled=false}
+}
 async function renderAdmin(){
   if(!canAdmin())return;
+  $('readinessPanel').hidden=!user?.platformAdmin;
   const context=captureStudentContext();
   try{
     const usersData=await api(`/api/pathways/users?organizationId=${encodeURIComponent(organizationId)}`);
@@ -872,6 +945,10 @@ async function saveTimetable(){
 }
 
 function bindStaticEvents(){
+  $('rewriteNoteBtn').onclick=rewriteNote;$('applyRewriteBtn').onclick=applyRewrite;$('discardRewriteBtn').onclick=resetRewrite;
+  $('subjectDialog').addEventListener('close',resetRewrite);
+  $('evidencePeriod').onchange=renderObjectives;
+  $('readinessBtn').onclick=checkReadiness;
   $('reviewConflictDraft').onclick=reviewConflictDraft;
   $('copyConflictDraft').onclick=copyConflictDraft;
   $('discardConflictDraft').onclick=discardConflictDraft;

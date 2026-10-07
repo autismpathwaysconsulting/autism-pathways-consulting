@@ -3,11 +3,11 @@
 ## Release target
 
 Preview branch: `codex/pathways-simple-workflow`. No main or live-beta merge.
-Last deployed preview commit: `3a6461e57c362699b84039cb5b60fa4fb87facef`.
-URL: https://718844bb.autism-pathways-consulting.pages.dev/pathways/
+Last deployed preview commit: `2cd2c309d80b0b0dcaf782a7af9dfc694df2292e`.
+URL: https://300145a2.autism-pathways-consulting.pages.dev/pathways/
 This preview shares the synthetic D1 database with the beta.
 
-## Prepared locally after that deployment
+## Changes verified in that deployed release
 
 - Plain-language optional observation categories with examples, preserving stored domain codes.
 - Participation guidance separates taking part from independence or correct answers.
@@ -28,14 +28,14 @@ This preview shares the synthetic D1 database with the beta.
 
 ## Live evidence and unresolved checks
 
-The full supplied Week 1 timetable was submitted through Student A Administration. The dialog closed and the app displayed Saved. Reload then returned the agent browser to sign-in. Persisted timetable has not been independently re-read. The session incident's root cause is unconfirmed; the cookie hardening is not proof that incident is resolved.
+Live verification on deployment 300145a2 confirmed sign-in, all seven Wednesday timetable blocks, the existing Bahasa note, and a labelled synthetic EAL test save. Reload restored the session after initial loading, and reopening EAL confirmed support timing, method and detail persisted. The initial login-screen flash was a loading state, not proof of session loss.
 
-This local release has not been deployed or visually accepted. Required next checks: desktop/iPad layout, sign-in/reload, save/reopen a synthetic lesson, support-field retention and reviewed-update flow. Do not edit newly enhanced records from older preview/beta clients during acceptance, because older forms do not know the added fields.
+A new local release now adds reviewed sentence drafting, dated/weekly IEP evidence, versioned goal edits, review-planning fields, touch/responsive improvements, an explicit loading screen, an API exception boundary, administrator diagnostics and a read-only availability probe. See `pathways-next-release-gates.md` and `pathways-operations-runbook.md` for acceptance and dependencies. This new release has not been deployed or visually accepted. Do not edit enhanced records from an older client that does not know the added fields.
 
 ## Remaining product work
 
-- Controlled rough-note sentence rewriting, provider configuration and synthetic evaluation. AI remains disabled.
-- Per-task support context, multiple support purposes, visual IEP evidence and SENCO review decisions.
+- Sentence rewriting is implemented with mocked-provider tests; provider configuration and live synthetic semantic evaluation remain outstanding. AI remains disabled.
+- Visual IEP evidence and review-planning notes are implemented locally. Per-task support context, multiple support purposes and a formal SENCO approval workflow remain future scope; review planning is not approval.
 - Real-data operational readiness: monitoring/alerts, backup restore exercise, incident process, privacy arrangements and role-based pilot acceptance.
 - No verified iSAMS/Google integration or parent accounts.
 - No verified paid-school or real-student readiness claim. Product value and time savings require a measured pilot.

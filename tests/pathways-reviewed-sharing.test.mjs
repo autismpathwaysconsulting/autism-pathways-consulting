@@ -250,3 +250,89 @@ test('support detail persists with validation and stays out of family drafts',as
   }
  }finally{h.sql.close()}
 });
+
+import {onRequest as rewriteApi,validateRewrite} from '../functions/api/pathways/rewrite.js';
+import {onRequest as readinessApi} from '../functions/api/pathways/readiness.js';
+const rewritePayload={studentId:'student-a',narrative:'Completed 4 questions with 2 prompts.',providerDisclosureConfirmed:true};
+const withAi=handler=>context=>handler({...context,env:{...context.env,APC_PATHWAYS_AI_ENABLED:'true',OPENAI_API_KEY:'synthetic-test-key',APC_PATHWAYS_AI_MODEL:'synthetic-test-model'}});
+function providerDraft(text){return Response.json({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({text})}]}]})}
+
+test('rewrite fails closed before disclosure for disabled configuration, real students, viewers, unassigned users and missing CSRF',async()=>{
+ const originalFetch=globalThis.fetch;let calls=0;globalThis.fetch=async()=>{calls++;throw new Error('Unexpected disclosure')};
+ const h=await setup(),real=await setup(0);try{
+  assert.equal((await h.call(rewriteApi,'support','',rewritePayload)).status,503);
+  for(const [role,payload,headers,status] of [['viewer',rewritePayload,{},403],['support',{...rewritePayload,studentId:'student-b'},{},403],['support',{...rewritePayload,providerDisclosureConfirmed:false},{},400],['support',rewritePayload,{'X-Pathways-CSRF':''},403]]){
+   assert.equal((await h.call(withAi(rewriteApi),role,'',payload,'POST',headers)).status,status);
+  }
+  assert.equal((await real.call(withAi(rewriteApi),'support','',rewritePayload)).status,403);
+  assert.equal(calls,0);
+ }finally{globalThis.fetch=originalFetch;h.sql.close();real.sql.close()}
+});
+
+test('rewrite sends only the selected note, enforces review, does not store generated text and atomically caps calls',async()=>{
+ const h=await setup(),originalFetch=globalThis.fetch;let calls=0;
+ globalThis.fetch=async(url,options)=>{calls++;const body=JSON.parse(options.body);assert.equal(body.store,false);assert.equal(body.model,'synthetic-test-model');assert.deepEqual(JSON.parse(body.input),{lessonNote:rewritePayload.narrative});assert.ok(options.signal);assert.equal(body.text.format.strict,true);return providerDraft('The student completed 4 questions with 2 prompts.')};
+ try{
+  for(let i=0;i<5;i++){const response=await h.call(withAi(rewriteApi),'support','',rewritePayload);assert.equal(response.status,200);assert.equal((await response.json()).humanConfirmationRequired,true)}
+  assert.equal((await h.call(withAi(rewriteApi),'support','',rewritePayload)).status,429);assert.equal(calls,5);
+  assert.equal((await readStudentState(h.db,'student-a')).revision,0);
+  const rows=h.sql.prepare("SELECT metadata_json FROM pathways_audit_log WHERE action='ai-disclosure-attempt'").all();assert.equal(rows.length,5);assert.ok(rows.every(row=>!row.metadata_json.includes('questions')));
+ }finally{globalThis.fetch=originalFetch;h.sql.close()}
+});
+
+test('rewrite rejects changed numbers, provider errors, incomplete output and revoked access without saving anything',async()=>{
+ const originalFetch=globalThis.fetch;
+ for(const mode of ['numbers','http','incomplete','revoked']){
+  const h=await setup();try{
+   globalThis.fetch=async()=>{
+    if(mode==='numbers')return providerDraft('The student completed 5 questions with 2 prompts.');
+    if(mode==='http')return new Response('private provider diagnostic',{status:500});
+    if(mode==='incomplete')return Response.json({status:'incomplete',output:[]});
+    h.sql.exec("DELETE FROM pathways_student_assignments WHERE user_id='support'");return providerDraft('The student completed 4 questions with 2 prompts.');
+   };
+   const response=await h.call(withAi(rewriteApi),'support','',rewritePayload);
+   assert.equal(response.status,mode==='revoked'?403:503);assert.ok(!(await response.text()).includes('private provider diagnostic'));
+   assert.equal((await readStudentState(h.db,'student-a')).revision,0);
+  }finally{h.sql.close()}
+ }
+ globalThis.fetch=originalFetch;
+});
+
+test('numeric rewrite guard preserves repeated counts and rejects absent or oversized drafts',()=>{
+ assert.equal(validateRewrite('2 prompts, 2 questions',{text:'There were 2 prompts and 2 questions.'}),'There were 2 prompts and 2 questions.');
+ for(const text of ['There were 2 prompts.','There were 3 prompts and 2 questions.','', 'a'.repeat(5001)])assert.throws(()=>validateRewrite('2 prompts, 2 questions',{text}));
+});
+
+test('deployment diagnostics require platform admin and never certify real-student readiness',async()=>{
+ const h=await setup();try{
+  assert.equal((await h.call(readinessApi,'support')).status,403);
+  h.sql.exec("UPDATE pathways_users SET is_platform_admin=1 WHERE user_id='senco'");
+  const result=await h.call(readinessApi,'senco');assert.equal(result.status,200);
+  const data=await result.json();assert.equal(data.readyForRealStudents,false);assert.match(data.checks.database,/core tables present/);assert.ok(!JSON.stringify(data).includes('PRIVATE NOTE'));
+ }finally{h.sql.close()}
+});
+
+test('original rough notes and review planning survive save without leaking into family drafts',async()=>{
+ const h=await setup();try{
+  const record=await readStudentState(h.db,'student-a');const state=record.state;
+  state.timetable.Monday=[['09:00–09:55','EAL']];
+  state.subjects['2026-10-05|09:00–09:55|EAL']={saved:true,skipped:false,narrative:'Reviewed selected observation.',originalNarrative:'INTERNAL ORIGINAL ROUGH NOTE',tasks:[]};
+  state.objectives=[{id:'goal-review',domain:'AUT',target:'Begin task',condition:'After instructions',support:'Visual steps',criterion:'Within 2 minutes',review:'2026-11-01',status:'active',measureType:'criterion',reviewNote:'INTERNAL REVIEW PLAN',nextStep:'Discuss with SENCO',reviewOwner:'SENCO'}];
+  const saved=await h.call(stateApi,'support','',{studentId:'student-a',state,expectedRevision:0,requestId:'review-planning-save'},'PUT');assert.equal(saved.status,200);
+  const persisted=await readStudentState(h.db,'student-a');assert.equal(persisted.state.subjects['2026-10-05|09:00–09:55|EAL'].originalNarrative,'INTERNAL ORIGINAL ROUGH NOTE');assert.equal(persisted.state.objectives[0].reviewOwner,'SENCO');
+  const {buildParentReport}=await import('../pathways/model.js');const family=buildParentReport({state:persisted.state,dayName:'Monday',baseDate:new Date('2026-10-05T12:00:00')});assert.ok(!family.includes('INTERNAL'));assert.match(family,/Reviewed selected observation/);
+  state.objectives[0].reviewNote='x'.repeat(1201);assert.equal((await h.call(stateApi,'support','',{studentId:'student-a',state,expectedRevision:1,requestId:'oversized-planning'},'PUT')).status,400);
+ }finally{h.sql.close()}
+});
+
+import {onRequest as structureApi} from '../functions/api/pathways/ai-suggest.js';
+test('AI request allowance is shared by rewriting and structure endpoints and enforces the daily cap',async()=>{
+ const originalFetch=globalThis.fetch;globalThis.fetch=async()=>providerDraft('The student completed 4 questions with 2 prompts.');
+ const h=await setup();try{
+  for(let i=0;i<5;i++)assert.equal((await h.call(withAi(rewriteApi),'support','',rewritePayload)).status,200);
+  assert.equal((await h.call(withAi(structureApi),'support','',rewritePayload)).status,429);
+  const yesterday=new Date(Date.now()-3600000).toISOString();
+  for(let i=0;i<50;i++)h.sql.prepare("INSERT INTO pathways_audit_log(actor_user_id,action,entity_type,created_at) VALUES ('senco','ai-disclosure-attempt','ai-assist',?)").run(yesterday);
+  assert.equal((await h.call(withAi(rewriteApi),'senco','',rewritePayload)).status,429);
+ }finally{globalThis.fetch=originalFetch;h.sql.close()}
+});
