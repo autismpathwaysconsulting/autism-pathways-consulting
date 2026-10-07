@@ -5,11 +5,15 @@ import { readFile } from 'node:fs/promises';
 const file = path => readFile(new URL(`../${path}`, import.meta.url));
 const text = async path => (await file(path)).toString('utf8');
 
-test('Pathways preview alone binds the isolated synthetic D1 and keeps AI disabled', async () => {
+test('Pathways preview alone binds the isolated synthetic D1 and enables synthetic AI evaluation only', async () => {
   const config = JSON.parse(await text('wrangler.jsonc'));
   const preview = config.env?.preview;
   const production = config.env?.production;
-  assert.equal(preview?.vars?.APC_PATHWAYS_AI_ENABLED, 'false');
+  assert.equal(preview?.vars?.APC_PATHWAYS_AI_ENABLED, 'true');
+  assert.equal(preview?.vars?.APC_PATHWAYS_AI_MODEL, 'gpt-4.1-mini-2025-04-14');
+  assert.notEqual(production?.vars?.APC_PATHWAYS_AI_ENABLED, 'true');
+  assert.notEqual(config.vars?.APC_PATHWAYS_AI_ENABLED, 'true');
+  assert.ok(!JSON.stringify(config).includes('OPENAI_API_KEY'), 'API key must remain a server secret');
   const binding = (preview?.d1_databases || []).find(item => item.binding === 'APC_PATHWAYS_DB');
   assert.deepEqual(binding, {
     binding: 'APC_PATHWAYS_DB',

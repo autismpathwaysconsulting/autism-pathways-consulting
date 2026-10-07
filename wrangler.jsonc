@@ -19,7 +19,8 @@
         "APC_CONTENT_OS_ENVIRONMENT": "preview",
         "APC_CONTENT_OS_AUTOMATION_ENABLED": "false",
         "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false",
-        "APC_PATHWAYS_AI_ENABLED": "false"
+        "APC_PATHWAYS_AI_ENABLED": "true",
+        "APC_PATHWAYS_AI_MODEL": "gpt-4.1-mini-2025-04-14"
       },
       "kv_namespaces": [
         {
