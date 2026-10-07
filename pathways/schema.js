@@ -1,6 +1,9 @@
 export const PATHWAYS_SCHEMA_VERSION = '1.0';
 
 export const PATHWAYS_DOMAINS = Object.freeze(['COM','PAR','AUT','LRN','REG','SOC','SUP','TRN']);
+export const PATHWAYS_SUPPORT_TIMING = Object.freeze(['Getting started','At specific steps','Throughout the task','Varied across tasks']);
+export const PATHWAYS_SUPPORT_METHOD = Object.freeze(['Verbal prompts / explanation','Gestures / pointing','Visual / written support','Modelling / demonstration','Physical assistance','Multiple methods']);
+
 export const PATHWAYS_OBJECTIVE_RESULTS = Object.freeze([
   'Criterion met',
   'Partly / emerging',
@@ -108,6 +111,9 @@ function validateLessonRecord(record, key) {
   string(record.aideLevel ?? '', `lesson ${key} aide level`, 40, { optional: true });
   string(record.supportSource ?? '', `lesson ${key} support source`, LIMITS.textShort, { optional: true });
   string(record.supportPurpose ?? '', `lesson ${key} support purpose`, LIMITS.textShort, { optional: true });
+  oneOf(record.supportTiming ?? '', PATHWAYS_SUPPORT_TIMING, `lesson ${key} support timing`, { optional: true });
+  oneOf(record.supportMethod ?? '', PATHWAYS_SUPPORT_METHOD, `lesson ${key} support method`, { optional: true });
+  string(record.supportDetail ?? '', `lesson ${key} support detail`, LIMITS.textMedium, { optional: true });
   arrayOfStrings(record.autonomy ?? [], `lesson ${key} autonomy`, null, 20);
   arrayOfStrings(record.domains ?? [], `lesson ${key} domains`, PATHWAYS_DOMAINS, 3);
   string(record.eventObservation ?? '', `lesson ${key} event observation`, LIMITS.textMedium, { optional: true });

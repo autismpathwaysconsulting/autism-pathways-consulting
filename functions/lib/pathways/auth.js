@@ -105,8 +105,12 @@ async function constantTimeEqual(actual, expected) {
 }
 
 function parseCookie(cookieHeader, name) {
-  const match = new RegExp(`(?:^|;\\s*)${name}=([^;]+)`).exec(cookieHeader || '');
-  return match ? decodeURIComponent(match[1]) : null;
+  const matches = String(cookieHeader || '').split(';').map(part => part.trim())
+    .filter(part => part.startsWith(`${name}=`));
+  // Ambiguous or malformed session cookies must fail closed, not throw a 500.
+  if (matches.length !== 1) return null;
+  try { return decodeURIComponent(matches[0].slice(name.length + 1)) || null; }
+  catch { return null; }
 }
 
 export function sessionCookie(token, maxAge = SESSION_SECONDS) {
@@ -164,7 +168,7 @@ export async function authenticate(request, env) {
     WHERE s.session_hash = ?`)
     .bind(sessionHash)
     .first();
-  if (!row || row.is_active !== 1 || Date.parse(row.expires_at) <= Date.now()) {
+  if (!row || row.is_active !== 1 || !Number.isFinite(Date.parse(row.expires_at)) || Date.parse(row.expires_at) <= Date.now()) {
     if (row) await db.prepare('DELETE FROM pathways_sessions WHERE session_hash = ?').bind(sessionHash).run();
     return { ok: false, status: 401, error: 'Session expired. Please sign in again.' };
   }

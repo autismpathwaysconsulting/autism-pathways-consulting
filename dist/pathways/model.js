@@ -15,6 +15,18 @@ export const DOMAIN_META = Object.freeze({
   TRN: ['Transition & Future Readiness','#0e7490'],
 });
 
+// Plain-language display labels preserve the existing stored domain codes.
+export const DOMAIN_GUIDE = Object.freeze({
+  COM: ['Communication', 'Asking for help, explaining a need or understanding a message.'],
+  PAR: ['Taking part', 'Joining the lesson or accessing an adapted activity.'],
+  AUT: ['Managing tasks & choices', 'Starting work, making choices or using a familiar support.'],
+  LRN: ['Learning & organisation', 'Understanding work, planning steps or organising materials.'],
+  REG: ['Regulation & sensory needs', 'Using a break, quiet space or sensory support.'],
+  SOC: ['Working & connecting with others', 'Joining group work, conversation or a shared activity.'],
+  SUP: ['Teaching & environment adjustments', 'Changes to instructions, materials, seating or adult support.'],
+  TRN: ['Transitions & practical skills', 'Moving between activities or practising everyday routines.'],
+});
+
 export const OVERVIEW_OPTIONS = Object.freeze([
   ['steady','Overall, good efforts to display focus and participate across lessons today.'],
   ['variable','Participation and focus varied across lessons today.'],
@@ -174,9 +186,12 @@ export function buildTeacherReport({ state, dayName, baseDate }) {
     if (!data?.saved) continue;
     lines.push(subject);
     lines.push(`Participation: ${data.participation||'Not observed / unclear'}`);
-    lines.push(`Aide involvement: ${data.aideLevel||'None / not recorded'}`);
+    lines.push(`Aide involvement: ${data.aideLevel||'Not recorded'}`);
     lines.push(`Primary support: ${data.supportSource||'Not recorded'}`);
     if (data.supportPurpose && data.aideLevel !== 'None') lines.push(`Support purpose: ${data.supportPurpose}`);
+    if (data.supportTiming) lines.push(`When support was given: ${data.supportTiming}`);
+    if (data.supportMethod) lines.push(`How support was given: ${data.supportMethod}`);
+    if (data.supportDetail) lines.push(`Support detail: ${data.supportDetail}`);
     if (data.autonomy?.length) lines.push(`Communication / autonomy: ${data.autonomy.join(', ')}`);
     if (data.narrative) lines.push(`Narrative: ${data.narrative}`);
     lines.push('');

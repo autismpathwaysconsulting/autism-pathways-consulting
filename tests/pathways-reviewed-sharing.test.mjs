@@ -205,3 +205,48 @@ test('five synthetic school days preserve source facts, reviewed audiences, miss
   assert.equal((await h.call(summaries,'viewer','?studentId=student-a&date=2026-10-05&audience=teacher')).status,409,'Earlier reviews become stale after later record edits');
  }finally{h.sql.close()}
 });
+
+test('session authentication tolerates unrelated cookies and rejects malformed or ambiguous session values',async()=>{
+ const {authenticate}=await import('../functions/lib/pathways/auth.js');
+ const h=await setup();const {db}=h;try{
+ for(const cookie of ['__Host-pathways_session=support','theme=light; __Host-pathways_session=support; lang=en','theme=light;\t__Host-pathways_session=support']){
+  const result=await authenticate(new Request('https://example.test/api/pathways/me',{headers:{Cookie:cookie}}),{APC_PATHWAYS_DB:db});
+  assert.equal(result.ok,true,cookie);
+ }
+ for(const cookie of ['__Host-pathways_session=%ZZ','__Host-pathways_session=support; __Host-pathways_session=viewer','other__Host-pathways_session=support']){
+  const result=await authenticate(new Request('https://example.test/api/pathways/me',{headers:{Cookie:cookie}}),{APC_PATHWAYS_DB:db});
+  assert.equal(result.status,401);
+ }
+ }finally{h.sql.close()}
+});
+
+test('invalid session expiry fails closed',async()=>{
+ const {authenticate}=await import('../functions/lib/pathways/auth.js');
+ const h=await setup();try{
+  h.sql.prepare("UPDATE pathways_sessions SET expires_at='invalid' WHERE user_id='support'").run();
+  const result=await authenticate(new Request('https://example.test/api/pathways/me',{headers:{Cookie:'__Host-pathways_session=support'}}),{APC_PATHWAYS_DB:h.db});
+  assert.equal(result.status,401);
+ }finally{h.sql.close()}
+});
+
+test('support detail persists with validation and stays out of family drafts',async()=>{
+ const {buildParentReport,buildTeacherReport}=await import('../pathways/model.js');
+ const h=await setup();try{
+  const record=await readStudentState(h.db,'student-a');
+  const key='2026-09-18|09:00–09:55|EAL';
+  record.state.timetable.Friday=[['09:00–09:55','EAL']];
+  record.state.subjects[key]={saved:true,tasks:[],narrative:'Completed four sentences.',participation:'Full access / participation',aideLevel:'High',supportSource:'Aide',supportPurpose:'Sequencing / planning',supportTiming:'Throughout the task',supportMethod:'Verbal prompts / explanation',supportDetail:'INTERNAL: prompts at every step'};
+  const body={studentId:'student-a',expectedRevision:record.revision,requestId:crypto.randomUUID(),action:'edit',state:record.state};
+  assert.equal((await h.call(stateApi,'support','',body,'PUT')).status,200);
+  const saved=await readStudentState(h.db,'student-a');
+  assert.deepEqual(saved.state.subjects[key],record.state.subjects[key]);
+  const args={state:saved.state,dayName:'Friday',baseDate:new Date(2026,8,18)};
+  assert.match(buildTeacherReport(args),/Throughout the task/);
+  assert.match(buildTeacherReport(args),/prompts at every step/);
+  assert.doesNotMatch(buildParentReport(args),/INTERNAL|prompts at every step/);
+  for(const [field,value] of [['supportTiming','invented'],['supportMethod','invented'],['supportDetail','x'.repeat(1201)]]){
+   const invalid=structuredClone(saved.state);invalid.subjects[key][field]=value;
+   assert.equal((await h.call(stateApi,'support','',{...body,state:invalid,expectedRevision:saved.revision,requestId:crypto.randomUUID()},'PUT')).status,400);
+  }
+ }finally{h.sql.close()}
+});

@@ -6,6 +6,7 @@ import {
 } from './schema.js';
 import {
   DOMAIN_META,
+  DOMAIN_GUIDE,
   OVERVIEW_OPTIONS,
   collapseConsecutiveSlots,
   currentSubjects,
@@ -588,7 +589,7 @@ function renderSubjects(){
   $('subjectList').innerHTML=entries.length?entries.map(({time,subject,key,data})=>{
     const status=data?.saved?'Saved':data?.skipped?'Not reported':'No note yet';
     const preview=data?.narrative||(data?.skipped?'Not reported today':'Add a brief lesson note.');
-    const domains=(data?.domains||[]).map(code=>`<span class="pill" style="border-left:3px solid ${DOMAIN_META[code]?.[1]||'#475569'}">${code}</span>`).join('');
+    const domains=(data?.domains||[]).map(code=>`<span class="pill" style="border-left:3px solid ${DOMAIN_META[code]?.[1]||'#475569'}">${escapeHtml(DOMAIN_GUIDE[code]?.[0]||code)}</span>`).join('');
     return `<article class="item"><div class="time-cell">${escapeHtml(time)}</div><div><div><span class="item-title">${escapeHtml(subject)}</span> <span class="pill ${data?.saved?'good':''}">${status}</span></div><div class="item-copy">${escapeHtml(preview)}</div><div class="meta">${domains}</div></div><button class="btn secondary small" data-subject-key="${escapeHtml(key)}" data-time="${escapeHtml(time)}" data-subject="${escapeHtml(subject)}">${canEdit()?(data?.saved?'Edit note':'Add note'):'View note'}</button></article>`;
   }).join(''):'<div class="muted-box">No timetable blocks configured for this day. Administrators can set up the timetable from Administration.</div>';
 }
@@ -603,7 +604,7 @@ function renderObjectiveSummary(){
   const active=(state.objectives||[]).filter(item=>item.status==='active');
   $('objectiveSummary').innerHTML=active.length?active.map(objective=>{
     const stats=objectiveStats(state.subjects,objective.id);
-    return `<div class="item"><div class="item-title">${escapeHtml(objective.target)}</div><div class="meta"><span class="pill">${objective.domain}</span><span>${stats.met}/${stats.measured} met</span>${stats.notMeasured?`<span>${stats.notMeasured} not measured</span>`:''}</div></div>`;
+    return `<div class="item"><div class="item-title">${escapeHtml(objective.target)}</div><div class="meta"><span class="pill">${escapeHtml(DOMAIN_GUIDE[objective.domain]?.[0]||objective.domain)}</span><span>${stats.met}/${stats.measured} met</span>${stats.notMeasured?`<span>${stats.notMeasured} not measured</span>`:''}</div></div>`;
   }).join(''):'<div class="muted-box">No active objectives.</div>';
 }
 
@@ -621,7 +622,7 @@ function renderObjectives(){
   const items=state.objectives||[];
   $('objectiveList').innerHTML=items.length?items.map(objective=>{
     const stats=objectiveStats(state.subjects,objective.id);const meta=DOMAIN_META[objective.domain];
-    return `<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(objective.target)}</div><div class="item-copy">${escapeHtml(objective.condition)}${objective.support?` · with ${escapeHtml(objective.support)}`:''}</div><div class="meta"><span class="pill" style="border-left:3px solid ${meta?.[1]||'#475569'}">${objective.domain}</span><span class="pill ${objective.status==='active'?'good':''}">${escapeHtml(objective.status)}</span><span>${stats.measured} measured</span><span>${stats.met} met</span><span>Review ${escapeHtml(objective.review)}</span><span>${escapeHtml(objective.measureType||'criterion')}</span></div></div>${canEdit()?`<button class="btn secondary small" data-edit-objective="${escapeHtml(objective.id)}">Edit</button>`:''}</div></div>`;
+    return `<div class="item"><div class="section-head"><div><div class="item-title">${escapeHtml(objective.target)}</div><div class="item-copy">${escapeHtml(objective.condition)}${objective.support?` · with ${escapeHtml(objective.support)}`:''}</div><div class="meta"><span class="pill" style="border-left:3px solid ${meta?.[1]||'#475569'}">${escapeHtml(DOMAIN_GUIDE[objective.domain]?.[0]||objective.domain)}</span><span class="pill ${objective.status==='active'?'good':''}">${escapeHtml(objective.status)}</span><span>${stats.measured} measured</span><span>${stats.met} met</span><span>Review ${escapeHtml(objective.review)}</span><span>${escapeHtml(objective.measureType||'criterion')}</span></div></div>${canEdit()?`<button class="btn secondary small" data-edit-objective="${escapeHtml(objective.id)}">Edit</button>`:''}</div></div>`;
   }).join(''):'<div class="muted-box">No objectives yet.</div>';
 }
 
@@ -644,13 +645,15 @@ function openSubject(key,time,subject){
   const existing=state.subjects[key]||{};
   formData={
     status:existing.status||'routine',narrative:existing.narrative||'',participation:existing.participation||'',
-    aideLevel:existing.aideLevel||'None',supportSource:existing.supportSource||'Teacher',supportPurpose:existing.supportPurpose||'Understanding / clarification',
+    aideLevel:existing.aideLevel||'',supportSource:existing.supportSource||'',supportPurpose:existing.supportPurpose||'',
+    supportTiming:existing.supportTiming||'',supportMethod:existing.supportMethod||'',supportDetail:existing.supportDetail||'',
     autonomy:[...(existing.autonomy||[])],domains:[...(existing.domains||[])],eventObservation:existing.eventObservation||'',eventUncertainty:existing.eventUncertainty||'',
     tasks:clone(existing.tasks||[]),saved:Boolean(existing.saved),skipped:Boolean(existing.skipped),
   };
   $('subjectTime').textContent=`${time} · ${formatShortDate(dateForDay(currentDay,activeWeek))}`;$('subjectName').textContent=subject;$('narrative').value=formData.narrative;
+  $('supportTiming').value=formData.supportTiming;$('supportMethod').value=formData.supportMethod;$('supportDetail').value=formData.supportDetail;
   $('aideLevel').value=formData.aideLevel;$('supportSource').value=formData.supportSource;$('supportPurpose').value=formData.supportPurpose;$('eventObservation').value=formData.eventObservation;$('eventUncertainty').value=formData.eventUncertainty;
-  $('moreDetail').open=Boolean(existing.participation||existing.eventObservation||existing.eventUncertainty||(existing.autonomy||[]).length||(existing.domains||[]).length||existing.aideLevel&&existing.aideLevel!=='None');
+  $('moreDetail').open=Boolean(existing.supportTiming||existing.supportMethod||existing.supportDetail||existing.participation||existing.eventObservation||existing.eventUncertainty||(existing.autonomy||[]).length||(existing.domains||[]).length||existing.aideLevel&&existing.aideLevel!=='None');
   $('taskDetails').open=formData.tasks.length>0;
   renderSubjectForm();
   for(const el of $('subjectForm').querySelectorAll('input,textarea,select,button')) if(el.value!=='cancel') el.disabled=!canEdit() && !el.classList.contains('icon-btn');
@@ -662,7 +665,7 @@ function renderSubjectForm(){
   $('quickNotes').innerHTML=QUICK_NOTES.map(note=>`<button type="button" class="chip" data-quick-note="${escapeHtml(note)}">${escapeHtml(note)}</button>`).join('');
   $('participationChoices').innerHTML=PARTICIPATION.map(value=>`<button type="button" class="choice ${formData.participation===value?'selected':''}" data-participation="${escapeHtml(value)}">${escapeHtml(value)}</button>`).join('');
   $('autonomyChoices').innerHTML=AUTONOMY.map(value=>`<button type="button" class="chip ${formData.autonomy.includes(value)?'selected':''}" data-autonomy="${escapeHtml(value)}">${escapeHtml(value)}</button>`).join('');
-  $('domainChoices').innerHTML=PATHWAYS_DOMAINS.map(code=>`<button type="button" class="domain ${formData.domains.includes(code)?'selected':''}" style="--domain:${DOMAIN_META[code]?.[1]||'#475569'}" data-domain="${code}"><strong>${code}</strong><small>${escapeHtml(DOMAIN_META[code]?.[0]||code)}</small></button>`).join('');
+  $('domainChoices').innerHTML=PATHWAYS_DOMAINS.map(code=>`<button type="button" class="domain ${formData.domains.includes(code)?'selected':''}" style="--domain:${DOMAIN_META[code]?.[1]||'#475569'}" data-domain="${code}"><strong>${escapeHtml(DOMAIN_GUIDE[code]?.[0]||code)}</strong><small>${escapeHtml(DOMAIN_GUIDE[code]?.[1]||'')}</small></button>`).join('');
   renderTasks();
   if(['support','voice','event'].includes(formData.status)) $('moreDetail').open=true;
 }
@@ -671,7 +674,7 @@ function renderTasks(){
   const activeObjectives=(state.objectives||[]).filter(item=>item.status==='active');
   $('taskList').innerHTML=formData.tasks.length?formData.tasks.map((task,index)=>{
     const objective=activeObjectives.find(item=>item.id===task.objectiveId);const measure=objective?.measureType||'criterion';
-    const objectiveOptions=['<option value="">No objective measurement</option>',...activeObjectives.map(item=>`<option value="${escapeHtml(item.id)}" ${task.objectiveId===item.id?'selected':''}>${item.domain} · ${escapeHtml(item.target)}</option>`)].join('');
+    const objectiveOptions=['<option value="">No objective measurement</option>',...activeObjectives.map(item=>`<option value="${escapeHtml(item.id)}" ${task.objectiveId===item.id?'selected':''}>${escapeHtml(DOMAIN_GUIDE[item.domain]?.[0]||item.domain)} · ${escapeHtml(item.target)}</option>`)].join('');
     const resultOptions=['<option value="">Select result</option>',...PATHWAYS_OBJECTIVE_RESULTS.map(value=>`<option ${task.objectiveResult===value?'selected':''}>${escapeHtml(value)}</option>`)].join('');
     let measurement='';
     if(task.objectiveId && measure!=='criterion'){
@@ -683,6 +686,7 @@ function renderTasks(){
 }
 
 async function saveSubject(){
+  formData.supportTiming=$('supportTiming').value;formData.supportMethod=$('supportMethod').value;formData.supportDetail=$('supportDetail').value.trim();
   formData.narrative=$('narrative').value.trim();formData.aideLevel=$('aideLevel').value;formData.supportSource=$('supportSource').value;formData.supportPurpose=$('supportPurpose').value;formData.eventObservation=$('eventObservation').value.trim();formData.eventUncertainty=$('eventUncertainty').value.trim();
   if(!formData.participation)formData.participation='Not observed / unclear';
   const key=editingKey,draft=clone({...formData,saved:true,skipped:false});
@@ -733,7 +737,7 @@ async function donePin(id){
 function openObjective(id=''){
   if(!canEdit())return;editingObjectiveId=id;const objective=state.objectives.find(item=>item.id===id)||null;
   $('objectiveDialogTitle').textContent=objective?'Edit objective':'Add measurable objective';
-  $('objDomain').innerHTML=PATHWAYS_DOMAINS.map(code=>`<option value="${code}">${code} · ${escapeHtml(DOMAIN_META[code]?.[0]||code)}</option>`).join('');
+  $('objDomain').innerHTML=PATHWAYS_DOMAINS.map(code=>`<option value="${code}">${escapeHtml(DOMAIN_GUIDE[code]?.[0]||code)}</option>`).join('');
   $('objDomain').value=objective?.domain||'AUT';$('objStatus').value=objective?.status||'active';$('objTarget').value=objective?.target||'';$('objCondition').value=objective?.condition||'';$('objSupport').value=objective?.support||'';$('objCriterion').value=objective?.criterion||'';$('objMeasure').value=objective?.measureType||'criterion';$('objReview').value=objective?.review||'';
   $('objectiveDialog').showModal();
 }
