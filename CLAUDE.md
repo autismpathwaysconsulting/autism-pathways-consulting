@@ -1,9 +1,9 @@
 # APC website: working rules for this repo
 
 Static HTML site for Autism Pathways Consulting (APC), founded by CJ Lim (MA Special and
-Inclusive Education). Edit HTML/CSS in place, then run the allowlisted `npm run build` release step. The public-launch state is
-`PREPARATION_NOT_LAUNCHED / NOT_AUTHORISED`. Production deployment, launch, merge, and marking
-a draft PR ready for review require separate Founder authorization.
+Inclusive Education). Edit HTML/CSS in place, then run the allowlisted `npm run build` release step. The site is now
+`LAUNCHED / LIVE` and public. Production deployment, merge, and marking a draft PR ready for
+review still require separate Founder authorization for any further changes.
 
 APC-AI-OS is the canonical offer authority. The locked offer facts below are operational
 instructions derived from that source together with the Founder-approved 2026-09-03 international
@@ -11,9 +11,9 @@ payment and Home Support clarification. `tests/website_authority.json` is a non-
 derived mirror and website projection that must pass exact provenance and hash validation. Change its projected facts
 only when the Founder has given an explicit instruction, then update its projection hash.
 
-This branch is an `INTERIM_RISK_CONTAINMENT_PROJECTION_ONLY`. Authority version 1.2 remains
-`CANDIDATE`; public launch, deployment, publication, live booking or payment changes, and canonical
-promotion remain unauthorised. OPS-HOLD-001 through OPS-HOLD-006 remain open. The containment
+The site has launched and is now public. Authority version 1.2 remains
+`CANDIDATE`; further deployment, publication changes, live booking or payment changes, and canonical
+promotion remain unauthorised pending separate Founder sign-off. OPS-HOLD-001 through OPS-HOLD-006 remain open. The containment
 projection may reduce public risk but cannot approve an offer, close a hold, or grant payment permission.
 
 ## Non-negotiable brand rules (apply to every change)
