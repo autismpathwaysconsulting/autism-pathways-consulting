@@ -45,7 +45,7 @@ class ResourcesCleanup(unittest.TestCase):
     def test_service_offer_remains_interest_only(self):
         source=(ROOT/'services.html').read_text()
         teacher=source.split('id="educator-training"',1)[1].split('</section>',1)[0]
-        for text in ['Proposed fee: RM990 per participant.','in English.','7.5 hours across three 2.5-hour sessions. Dates to be announced.','Interest stage only. No payment is being accepted.','This does not qualify participants as Hanen-certified providers.']:
+        for text in ['Proposed fee: RM897 per participant.','in English.','7.5 hours across three 2.5-hour sessions. Dates to be announced.','Interest stage only. No payment is being accepted.','This does not qualify participants as Hanen-certified providers.']:
             self.assertIn(text,teacher)
         self.assertIn('https://www.hanen.org/programs/teacher-talk',teacher)
         self.assertNotRegex(teacher,r'href="[^"]*(?:/pay|checkout)')
