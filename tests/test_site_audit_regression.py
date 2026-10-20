@@ -33,7 +33,7 @@ class SiteAuditRegression(unittest.TestCase):
         closing = read("blog.html").split('id="apply-an-idea"', 1)[1].split("</section>", 1)[0]
         self.assertIn("Join a Pattern Session, a live online group with CJ, or continue with free parent resources. If you need help choosing individual support, the free First Step Call remains available.", closing)
         self.assertIn('<a class="audience-primary" href="/parents#pattern-session">Explore the Pattern Session</a>', closing)
-        self.assertIn('<a href="https://cal.com/autismpathwaysconsulting/first-step-call">Book a free First Step Call</a>', closing)
+        self.assertIn('<a href="/go/first-step-call">Book a free First Step Call</a>', closing)
         self.assertEqual(closing.count('class="audience-primary"'), 1)
         self.assertIn("The call is a fit check, not a consultation or assessment.", closing)
         self.assertIn('id="pattern-session"', read("parents.html"))

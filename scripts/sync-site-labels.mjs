@@ -3,7 +3,9 @@ import {PUBLIC_FILES} from './build-site.mjs';
 const config=JSON.parse(await fs.readFile(new URL('./site-labels.json',import.meta.url),'utf8'));
 const root=new URL('../',import.meta.url);
 const links=items=>items.map(([href,label])=>`<a href="${href}">${label}</a>`).join('');
-const nav=`<nav class="apc-shell-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details></nav>`;
+// Phones get a Menu button; apc-navigation.js reveals it and keeps the full nav for larger screens.
+const toggle=`<button class="apc-nav-toggle" type="button" aria-expanded="false" aria-controls="apc-primary-nav" aria-label="Menu">Menu</button>`;
+const nav=`<nav class="apc-shell-nav" id="apc-primary-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details></nav>`;
 const [ctaHref,ctaLabel]=config.cta;
 const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}>${ctaLabel}</a>`;
 const [about,legal,scope,alongside]=config.footer;
@@ -31,7 +33,8 @@ const minimalFooter=`<footer class="apc-footer apc-footer-minimal">
 const changed=[];
 for(const file of PUBLIC_FILES.filter(p=>p.endsWith('.html')&&!p.startsWith('content-os/')&&!p.startsWith('pathways-lab/'))){
  const url=new URL(file,root),old=await fs.readFile(url,'utf8');
- let next=old.replace(/<nav class="apc-shell-nav"[\s\S]*?<\/nav>/g,nav);
+ let next=old.replace(/<button class="apc-nav-toggle"[\s\S]*?<\/button>/g,'');
+ next=next.replace(/<nav class="apc-shell-nav"[\s\S]*?<\/nav>/g,toggle+nav);
  next=next.replace(/<a class="apc-shell-start"[^>]*>[\s\S]*?<\/a>/g,cta(file==='big-reactions-quick-check.html'));
  // Retired routes: educator training moved to /teacher-talk, everything else under /services to /parents.
  next=next.replace(/href="\/services#educator-training"/g,'href="/teacher-talk"').replace(/href="\/services(#[^"]*)?"/g,'href="/parents"');

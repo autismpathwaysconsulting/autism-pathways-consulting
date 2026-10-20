@@ -44,7 +44,7 @@ class ResourcesCleanup(unittest.TestCase):
 
     def test_teacher_talk_keeps_hanen_wording_and_prices(self):
         source=(ROOT/'teacher-talk.html').read_text()
-        for text in ['<!-- Hanen wording to be approved by The Hanen Centre -->','Teacher Talk™ Training A','Encouraging Language Development in Early Childhood Settings','This does not qualify participants as Hanen-certified providers.','RM897 per educator','RM797 each for 3 or more from one centre','S$297 · USD 197','Hanen workbook required; cost confirmed when you register.','Three 2.5-hour live online sessions.','Up to 24 educators per cohort','Join the next intake']:
+        for text in ['<!-- Hanen wording to be approved by The Hanen Centre -->','Teacher Talk™ Training A','Encouraging Language Development in Early Childhood Settings','This does not qualify participants as Hanen-certified providers.','RM897 per educator','RM797 each for 3 or more from one centre','S$297 · USD 197','Price includes the Hanen Teacher Talk Workbooks Set (three workbooks covering Trainings A, B and C; Hanen list price $42), so you will not need to buy materials if you continue to Trainings B and C.','<!-- Replace with Brevo Teacher Talk form when ready -->','id="teacher-talk-form"','Three 2.5-hour live online sessions.','Up to 24 educators per cohort','Join the next intake']:
             self.assertIn(text,source)
         self.assertIn('https://www.hanen.org/programs/teacher-talk',source)
         self.assertNotRegex(source,r'href="[^"]*(?:/pay|checkout)')

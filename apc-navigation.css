@@ -29,14 +29,41 @@
   .apc-v2 .apc-shell-nav .apc-dropdown-panel a { font-size:.9rem!important; }
 }
 .apc-v2 .apc-shell-nav > a { min-height:44px; }
-/* Five menu items share two rows on phones; the longest label gets half a row. */
-@media(max-width:760px) {
-  .apc-v2 .apc-shell-inner .apc-shell-nav { grid-template-columns:repeat(6,minmax(0,1fr)); }
-  .apc-v2 .apc-shell-inner .apc-shell-nav > a,
-  .apc-v2 .apc-shell-inner .apc-shell-nav > .apc-nav-dropdown { grid-column:span 2; }
-  .apc-v2 .apc-shell-inner .apc-shell-nav > a[href="/schools"],
-  .apc-v2 .apc-shell-inner .apc-shell-nav > .apc-nav-dropdown { grid-column:span 3;order:1; }
-  /* The two-row header is taller, so anchors and the first home screen allow for it. */
-  html:root, html:root.apc-home-snap, html:root.apc-site-snap { scroll-padding-top:156px !important; }
-  .apc-v2.apc-home-page { --apc-home-header:149px; }
+/* Phones: one header row with a Menu button beside the Quick Check link. The menu drops below the header. */
+.apc-v2 .apc-nav-toggle { display:none; }
+@media(max-width:767px) {
+  .apc-v2 .apc-shell-inner { display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-rows:auto;align-items:center;gap:0 8px;padding:8px 0; }
+  .apc-v2 .apc-shell-inner > .apc-shell-logo { grid-column:1;grid-row:1; }
+  .apc-v2 .apc-shell-inner > .apc-nav-toggle { grid-column:3;grid-row:1; }
+  .apc-v2 .apc-shell-inner > .apc-shell-start { grid-column:4;grid-row:1;justify-self:end;min-height:44px;padding:10px 12px;font-size:.76rem !important;white-space:nowrap; }
+  .apc-v2 .apc-nav-js .apc-nav-toggle {
+    display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;
+    border:1px solid rgba(7,55,52,.28);border-radius:999px;background:transparent;
+    color:#073734;font:700 .8rem/1 'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;
+  }
+  .apc-v2 .apc-nav-toggle::before { content:"";width:16px;height:2px;background:currentColor;box-shadow:0 -5px 0 currentColor,0 5px 0 currentColor; }
+  .apc-v2 .apc-nav-toggle[aria-expanded="true"] { background:#073734;color:#fff;border-color:#073734; }
+  .apc-v2 .apc-nav-toggle:focus-visible { outline:3px solid #0f766e;outline-offset:3px; }
+  /* Without JavaScript the nav keeps its grid; with it, the nav waits for the Menu button. */
+  .apc-v2 .apc-site-header:not(.apc-nav-js) > .apc-shell-inner > .apc-shell-nav { grid-column:1 / -1;grid-row:2;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px; }
+  .apc-v2 .apc-nav-js > .apc-shell-inner > .apc-shell-nav { display:none; }
+  .apc-v2 .apc-nav-js > .apc-shell-inner > .apc-shell-nav.is-open {
+    display:grid !important;grid-template-columns:1fr;gap:2px;
+    position:absolute !important;z-index:220;top:calc(100% + 6px);left:0;right:0;width:auto !important;margin:0;
+    padding:8px !important;background:#fffcf7 !important;border:1px solid rgba(7,55,52,.12) !important;border-radius:14px;
+    box-shadow:0 18px 40px rgba(7,55,52,.16) !important;
+  }
+  .apc-v2 .apc-shell-inner > .apc-shell-nav.is-open > a,
+  .apc-v2 .apc-shell-inner > .apc-shell-nav.is-open > .apc-nav-dropdown > summary { justify-content:flex-start;min-height:48px;padding:0 12px;border-radius:8px;font-size:.95rem !important; }
+  .apc-v2 .apc-shell-inner > .apc-shell-nav.is-open > a[aria-current="page"] { background:rgba(15,118,110,.08);box-shadow:none; }
+  .apc-v2 .apc-shell-inner > .apc-shell-nav.is-open > .apc-nav-dropdown { position:static; }
+  .apc-v2 .apc-shell-inner > .apc-shell-nav.is-open .apc-dropdown-panel { position:static;width:auto;max-height:none;padding:0 0 4px 14px;background:transparent;border:0;box-shadow:none; }
+  .apc-v2 .apc-shell-inner > .apc-shell-nav.is-open .apc-dropdown-panel a { min-height:44px;padding:10px 12px; }
+  /* One header row, so anchors and the first home screen only allow for that height. */
+  html:root, html:root.apc-home-snap, html:root.apc-site-snap { scroll-padding-top:72px !important; }
+  .apc-v2.apc-home-page { --apc-home-header:62px; }
+}
+/* The narrowest phones keep the icon and the Quick Check link; the button keeps its accessible name. */
+@media(max-width:360px) {
+  .apc-v2 .apc-nav-js .apc-nav-toggle { gap:0;padding:0 13px;font-size:0; }
 }
