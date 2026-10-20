@@ -81,6 +81,9 @@
 /schools
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
+/teacher-talk
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
 /screens
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 

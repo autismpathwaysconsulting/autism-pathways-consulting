@@ -29,3 +29,14 @@
   .apc-v2 .apc-shell-nav .apc-dropdown-panel a { font-size:.9rem!important; }
 }
 .apc-v2 .apc-shell-nav > a { min-height:44px; }
+/* Five menu items share two rows on phones; the longest label gets half a row. */
+@media(max-width:760px) {
+  .apc-v2 .apc-shell-inner .apc-shell-nav { grid-template-columns:repeat(6,minmax(0,1fr)); }
+  .apc-v2 .apc-shell-inner .apc-shell-nav > a,
+  .apc-v2 .apc-shell-inner .apc-shell-nav > .apc-nav-dropdown { grid-column:span 2; }
+  .apc-v2 .apc-shell-inner .apc-shell-nav > a[href="/schools"],
+  .apc-v2 .apc-shell-inner .apc-shell-nav > .apc-nav-dropdown { grid-column:span 3;order:1; }
+  /* The two-row header is taller, so anchors and the first home screen allow for it. */
+  html:root, html:root.apc-home-snap, html:root.apc-site-snap { scroll-padding-top:156px !important; }
+  .apc-v2.apc-home-page { --apc-home-header:149px; }
+}

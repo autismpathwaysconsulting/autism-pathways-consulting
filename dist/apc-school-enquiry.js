@@ -94,13 +94,14 @@ if (schoolForm) {
     if (!schoolForm.reportValidity()) return;
     const value = id => document.getElementById(id).value.trim();
     const message = [
-      'Hello CJ, I would like to enquire about school or educator training.',
+      'Hello CJ, I would like a training quote for my centre or school.',
       `Name: ${value('sf-name')}`,
       `School / centre: ${value('sf-school')}`,
       `Role: ${value('sf-role') || 'Not specified'}`,
+      ...(document.getElementById('sf-country') ? [`Country: ${value('sf-country') || 'Not specified'}`] : []),
       ...(value('sf-phone') ? [`Alternative contact number: ${value('sf-phone')}`] : []),
+      ...(format ? [`Package: ${format.value || 'Help me choose'}`] : []),
       ...(topic ? [`Training focus: ${topic.value || 'Help me choose'}`] : []),
-      ...(format ? [`Preferred format: ${format.value || 'Help me choose'}`] : []),
       ...(document.getElementById('sf-team-size') ? [`Team size: ${value('sf-team-size') || 'To discuss'}`] : []),
       `Training needs: ${value('sf-message') || 'To discuss'}`,
     ].join('\n');

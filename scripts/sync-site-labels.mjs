@@ -3,20 +3,41 @@ import {PUBLIC_FILES} from './build-site.mjs';
 const config=JSON.parse(await fs.readFile(new URL('./site-labels.json',import.meta.url),'utf8'));
 const root=new URL('../',import.meta.url);
 const links=items=>items.map(([href,label])=>`<a href="${href}">${label}</a>`).join('');
-const nav=`<nav class="apc-shell-nav" aria-label="Primary navigation"><a href="/about">About CJ</a><details class="apc-nav-dropdown"><summary>Services</summary><div class="apc-dropdown-panel">${links(config.services)}</div></details><details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details></nav>`;
+const nav=`<nav class="apc-shell-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details></nav>`;
+const [ctaHref,ctaLabel]=config.cta;
+const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}>${ctaLabel}</a>`;
+const [about,legal,scope,alongside]=config.footer;
+const explore=[['/','Home'],...config.primary,['/resources','Resources'],[ctaHref,'Free Quick Check']];
+// Every public page carries the same four footer lines; main pages keep the link columns.
+const mainFooter=`<footer class="apc-footer">
+  <div class="apc-footer-inner">
+    <div class="apc-footer-brand"><a href="/" class="apc-footer-logo">Autism Pathways Consulting</a><p>${about}</p><p class="apc-footer-small">${legal}</p></div>
+    <nav class="apc-footer-column" aria-label="Explore"><h3>Explore</h3>${links(explore)}</nav>
+    <nav class="apc-footer-column" aria-label="Support"><h3>Support</h3><a href="https://cal.com/autismpathwaysconsulting/first-step-call">Free 15-Min First Step Call</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cancellation-policy">Cancellation Policy</a><a href="/disclaimer">Disclaimer</a></nav>
+    <div class="apc-footer-column"><h3>Contact</h3><a href="https://wa.me/601172998168" target="_blank" rel="noopener">WhatsApp: 011-7299 8168</a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a><a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a></div>
+  </div>
+  <div class="apc-footer-bottom"><p>${scope}</p><p>${alongside}</p></div>
+</footer>`;
+const minimalFooter=`<footer class="apc-footer apc-footer-minimal">
+  <div class="apc-footer-minimal-inner">
+    <a href="/" class="apc-footer-logo">Autism Pathways Consulting</a>
+    <nav class="apc-footer-minimal-links" aria-label="Footer navigation">${links([['/','Home'],...config.primary,['/resources','Resources']])}</nav>
+    <p>${about}</p>
+    <p>${legal}</p>
+    <p>${scope}</p>
+    <p>${alongside}</p>
+  </div>
+</footer>`;
 const changed=[];
 for(const file of PUBLIC_FILES.filter(p=>p.endsWith('.html')&&!p.startsWith('content-os/')&&!p.startsWith('pathways-lab/'))){
  const url=new URL(file,root),old=await fs.readFile(url,'utf8');
  let next=old.replace(/<nav class="apc-shell-nav"[\s\S]*?<\/nav>/g,nav);
- next=next.replace(/<a\b([^>]*?)href="\/services(#[^"]*)?"([^>]*)>([\s\S]*?)<\/a>/g,(all,before,fragment,after,label)=>{
-  if(fragment==='#educator-training')return all;
-  if(fragment||/support|parent sessions|parent session/i.test(label))return `<a${before}href="/parents${fragment==='#service-slide-session'?'#one-concern':fragment||''}"${after}>${label.replace(/Parent sessions &amp; programmes|Parent Support Options|parent support options|Parent support/g,'Parent Home Support')}</a>`;
-  return all;
- });
+ next=next.replace(/<a class="apc-shell-start"[^>]*>[\s\S]*?<\/a>/g,cta(file==='big-reactions-quick-check.html'));
+ // Retired routes: educator training moved to /teacher-talk, everything else under /services to /parents.
+ next=next.replace(/href="\/services#educator-training"/g,'href="/teacher-talk"').replace(/href="\/services(#[^"]*)?"/g,'href="/parents"');
  next=next.replace(/APC Calm(?: Companion)?(?![\w])/g,'APC Calm App').replace(/APC Calm App App/g,'APC Calm App');
- next=next.replace(/>Parent support</g,'>Parent Home Support<').replace(/>Explore parent support</g,'>Explore Parent Home Support<');
- next=next.replace(/<footer\b[\s\S]*?<\/footer>/g,footer=>footer.replace(/<a href="\/services">Services<\/a>/g,'<a href="/services">Learning &amp; Workshops</a>').replace(/(<a href="\/resources">Resources<\/a>)(?!<a href="\/programmes">)/g,'$1<a href="/programmes">Upcoming Programmes</a>'));
- next=next.replace(/<footer\b[\s\S]*?<\/footer>/g,footer=>footer.replace(/<a\b([^>]*?)href="([^"]+)"([^>]*)>([\s\S]*?)<\/a>/g,(all,before,href,after)=>{const route=config.services.find(([path])=>path===href);return route?`<a${before}href="${href}"${after}>${route[1]}</a>`:all;}));
+ next=next.replace(/<footer class="apc-footer apc-footer-minimal">[\s\S]*?<\/footer>/g,minimalFooter);
+ next=next.replace(/<footer class="apc-footer">[\s\S]*?<\/footer>/g,mainFooter);
  if(file==='programmes.html')for(const [id,name]of Object.entries(config.programmes)){
   const label=name.replace(/&/g,'&amp;');
   next=next.replace(new RegExp(`(<input[^>]*name="programmes"[^>]*value="${id}"[^>]*>)[^<]*`),`$1${label}`);

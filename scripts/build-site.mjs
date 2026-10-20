@@ -186,6 +186,7 @@ export const PUBLIC_FILES = Object.freeze([
   "resources.html",
   "school-collapse.html",
   "schools.html",
+  "teacher-talk.html",
   "screens.html",
   "sensory-public.html",
   "services.html",

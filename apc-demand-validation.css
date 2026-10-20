@@ -54,3 +54,12 @@ body .apc-contact-note{font-size:14px!important;line-height:1.65!important}
 body.apc-about-page h1,body.apc-about-page .hero h1{max-width:20ch!important}
 .audit-start-routes a:focus-visible,.audit-individual>summary:focus-visible{outline:3px solid #0f766e;outline-offset:4px}
 @media(max-width:640px){.audit-start-routes>a{grid-template-columns:1fr;padding:20px;gap:10px}.audit-start-routes .audit-route-action{grid-column:auto;grid-row:auto}.audit-start-routes strong{font-size:1.4rem}}
+/* Homepage: four ways to work with CJ, one per row. */
+.ways-list{list-style:none;margin:0;padding:0;border-top:1px solid rgba(7,55,52,.14)}
+.ways-list li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto;gap:8px 28px;align-items:center;padding:20px 0;border-bottom:1px solid rgba(7,55,52,.14)}
+.ways-list h3{margin:0}
+.ways-list .price{display:block;margin-top:4px;color:var(--apc-primary-teal,#0f766e);font-weight:700;font-size:.95rem}
+.ways-list p{margin:0}
+.ways-list a{display:inline-flex;align-items:center;min-height:44px;font-weight:700}
+@media(max-width:760px){.ways-list li{grid-template-columns:1fr;gap:4px;padding:14px 0}}
+

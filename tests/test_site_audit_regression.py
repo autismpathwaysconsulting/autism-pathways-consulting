@@ -15,25 +15,28 @@ def read(path):
 
 class SiteAuditRegression(unittest.TestCase):
     def test_home_and_about_experience_claims(self):
-        precise_claim = "Working alongside autistic children and families since 2016, beginning as an intern"
         home = read("index.html")
         about = read("about.html")
-        self.assertEqual(home.count(precise_claim), 1)
-        self.assertEqual(about.count(precise_claim), 2)
+        self.assertEqual(home.count("Supporting autistic children and families since 2016"), 1)
+        self.assertIn("More than 30 families supported", home)
+        self.assertIn("Delivers Hanen's Teacher Talk for educators", home)
         self.assertIn("I have worked alongside autistic children and families since 2016, beginning as an intern.", about)
+        self.assertIn("Since 2016, beginning as an intern", about)
+        self.assertIn("Today I work with parents, centres and schools in Malaysia, Singapore and internationally.", about)
         for page in (home, about):
             self.assertNotRegex(page, r"(?i)over\s+(?:10|ten)\s+years|10\+\s+years")
-        self.assertIn("Meet CJ Lim, autism educator and APC founder.", about)
+        self.assertIn("Meet CJ Lim, autism educator and founder of APC.", about)
         self.assertIn("part-time lecturer with CAE Malaysia", about)
+        self.assertNotRegex(about, r"SPARK|Hanen-informed parent guidance")
 
-    def test_blog_closing_prioritises_proposed_session(self):
+    def test_blog_closing_prioritises_pattern_session(self):
         closing = read("blog.html").split('id="apply-an-idea"', 1)[1].split("</section>", 1)[0]
-        self.assertIn("Explore the proposed founding live session with CJ, or continue with free parent resources. If you need help choosing individual support, the free First Step Call remains available.", closing)
-        self.assertIn('<a class="audience-primary" href="/parents#workshops">Explore the founding live session</a>', closing)
+        self.assertIn("Join a Pattern Session, a live online group with CJ, or continue with free parent resources. If you need help choosing individual support, the free First Step Call remains available.", closing)
+        self.assertIn('<a class="audience-primary" href="/parents#pattern-session">Explore the Pattern Session</a>', closing)
         self.assertIn('<a href="https://cal.com/autismpathwaysconsulting/first-step-call">Book a free First Step Call</a>', closing)
         self.assertEqual(closing.count('class="audience-primary"'), 1)
         self.assertIn("The call is a fit check, not a consultation or assessment.", closing)
-        self.assertIn('id="workshops"', read("parents.html"))
+        self.assertIn('id="pattern-session"', read("parents.html"))
 
     def test_quick_check_publication_copy(self):
         landing = read("big-reactions-quick-check.html")
@@ -45,26 +48,23 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertRegex(landing, r"APC-Big-Reactions-Quick-Check-page-1\.webp\?v=[a-f0-9]{12}")
         self.assertRegex(landing, r"APC-Big-Reactions-Quick-Check-page-2\.webp\?v=[a-f0-9]{12}")
         self.assertIn("To type, download the PDF, open it in a PDF reader, then save a copy.", thanks)
-        self.assertIn('href="/course-waitlist#course-contact">Explore the founding live session (optional)', thanks)
-        self.assertIn("This is an interest test. Dates, duration, fee and final scope are not confirmed.", thanks)
+        self.assertIn('href="/parents#pattern-session">See the Pattern Session (optional)', thanks)
+        self.assertIn("Next Pattern Session dates go to the Quick Check email list first.", thanks)
+        self.assertNotRegex(thanks, r"(?i)interest test|founding live session")
         self.assertIn("Keep your notes private unless you choose to share them.", thanks)
         self.assertNotIn("Browse more APC parent resources", thanks)
         self.assertIn('<body class="apc-quick-check-page">', thanks)
         self.assertIn('.quick-thanks .button{max-width:100%;text-align:center}', thanks)
         self.assertIn('.quick-thanks .quick-wrap{max-width:680px}', thanks)
 
-    def test_current_course_copy_and_metadata(self):
-        for page in ("connect/index.html", "course-waitlist.html", "services.html"):
+    def test_retired_course_pages_redirect(self):
+        for page, target in (("connect/index.html", "/parents"), ("course-waitlist.html", "/parents#pattern-session"), ("services.html", "/parents")):
             with self.subTest(page=page):
                 source = read(page)
-                self.assertIn("Understanding Escalation at Home", source)
-                self.assertRegex(source, r"(?i)in development")
-                self.assertNotRegex(source, r"(?i)Hanen-backed|RM\s*(147|197)\b|Communication Course|How to Connect with Your Child|early.bird|special price")
-        interest = read("course-waitlist.html")
-        self.assertNotRegex(interest, r"(?i)<iframe|sibforms\.com")
-        self.assertIn("mailto:cjlim@autismpathwaysconsulting.com?subject=Understanding", interest)
-        self.assertIn("does not reserve a place or subscribe you to marketing emails", interest)
-        self.assertNotIn("sibforms.com", read("connect/index.html"))
+                self.assertIn(f'<meta http-equiv="refresh" content="0; url={target}">', source)
+                self.assertIn('<meta name="robots" content="noindex">', source)
+                self.assertNotRegex(source, r"(?i)in development|proposed|interest test|<form|<iframe|sibforms\.com")
+        self.assertIn('location.hash === "#educator-training" ? "/teacher-talk"', read("services.html"))
 
     def test_resource_entries_lead_to_guides(self):
         main = read("resources.html").split("<main", 1)[1].split("</main>", 1)[0]
@@ -81,7 +81,7 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertIn("genuine submission", source)
 
     def test_cross_page_fragment_destinations(self):
-        for page in ("services.html", "start.html", "resources.html", "connect/index.html", "course-waitlist.html"):
+        for page in ("index.html", "parents.html", "schools.html", "teacher-talk.html", "resources.html", "connect/index.html", "course-waitlist.html"):
             for href in re.findall(r'href="(/[^\"]*#[^\"]+)"', read(page)):
                 with self.subTest(page=page, href=href):
                     url = urlsplit(href)

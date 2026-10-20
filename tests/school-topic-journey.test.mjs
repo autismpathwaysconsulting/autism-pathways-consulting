@@ -59,7 +59,7 @@ test('format choices preserve topic and notes, invalidate old messages, and incl
   assert.equal(f['sf-message'].value,'Keep my existing description.');
   f['school-training-form'].events.submit({preventDefault(){}});
   const message=new URL(f['school-whatsapp-link'].href).searchParams.get('text');
-  assert.ok(message.includes(`Preferred format: ${f['sf-format'].value}`));
+  assert.ok(message.includes(`Package: ${f['sf-format'].value}`));
   assert.ok(message.includes('Team size: 12'));
  }
 });
@@ -67,7 +67,7 @@ test('unspecified optional enquiry details have useful message defaults',()=>{
  const f=setup();f['sf-message'].value='';
  f['school-training-form'].events.submit({preventDefault(){}});
  const message=new URL(f['school-whatsapp-link'].href).searchParams.get('text');
- assert.ok(message.includes('Preferred format: Help me choose'));
+ assert.ok(message.includes('Package: Help me choose'));
  assert.ok(message.includes('Team size: To discuss'));
  assert.ok(message.includes('Training needs: To discuss'));
 });

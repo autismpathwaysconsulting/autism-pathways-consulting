@@ -255,3 +255,9 @@
 .apc-school-minimal .format-symbol-0 svg rect{fill:#fff9e8}
 .apc-school-minimal .format-symbol-1 svg path:first-child{fill:#fff3de}
 .apc-school-minimal .format-symbol-2 svg circle{fill:#fff6de}
+/* Four priced packages share the format band. */
+.apc-school-minimal .format-symbol-3{background:linear-gradient(145deg,#ffe3b8,#e8997a)}
+.apc-school-minimal .school-format-compare p.school-price{color:#fffdf9;font-size:1rem;font-weight:700;line-height:1.45;margin-top:12px}
+.apc-school-minimal .school-format-compare p.school-price-note{color:#b2d4c6;font-size:.8rem;line-height:1.5}
+@media(min-width:1001px){.apc-school-minimal .school-price-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}.apc-school-minimal .school-price-grid>li+li{padding-left:20px}}
+@media(min-width:761px) and (max-width:1000px){.apc-school-minimal .school-price-grid{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:28px}.apc-school-minimal .school-price-grid>li:nth-child(3){border-left:0;padding-left:0}}

@@ -1,4 +1,7 @@
 /pay/350    /pay/          302
 /pay/1800   /pay/          302
 /booking-confirmed-session/ /booking-confirmed-session.html 302
+/programmes /           301
+/start      /           301
+/services   /parents    301
 /*          /404.html      404

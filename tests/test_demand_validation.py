@@ -1,47 +1,33 @@
-"""The demand test changes priority, without adding signup or payment routes."""
+"""The repositioned journeys keep free routes first, without adding signup or payment routes."""
 from pathlib import Path
 import unittest
 R=Path(__file__).resolve().parents[1]
+PAY='CJ confirms fit and availability first, then sends payment details privately. Malaysia: bank transfer or DuitNow QR. Singapore and other countries: Wise.'
 class DemandValidationTests(unittest.TestCase):
- def test_home_primary_route_and_existing_booking_integration(self):
+ def test_home_primary_route_and_ways_to_work(self):
   s=(R/'index.html').read_text();hero=s.split('id="home"')[1].split('</section>')[0]
   self.assertIn('href="/big-reactions-quick-check">Get the free Quick Check',hero)
+  self.assertIn('href="/schools">For centres and schools',hero)
   self.assertNotIn('Book Free 15-Min',hero)
-  self.assertIn('data-cal-inline',s)
+  self.assertNotIn('hero-approach',hero)
+  self.assertNotIn('data-cal-inline',s)
   self.assertEqual(s.count('<section '),9)
- def test_parent_route_order_and_existing_offer_details(self):
-  s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','workshops','digital-learning','limited-enquiry']]
+  ways=s.split('id="support-options"')[1].split('</section>')[0]
+  for text in ['Free Quick Check','Pattern Session','RM57','Home Support Programme','From RM1,797','Staff training','From RM1,497']:self.assertIn(text,ways)
+  for text in ['RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
+ def test_parent_route_order_and_offer_details(self):
+  s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','pattern-finder','pattern-session','home-support','first-step-call']]
   self.assertEqual(ids,sorted(ids))
-  for text in ['Founding Live Session','Which situation is hardest right now?','No payment is being accepted','id="one-concern"','id="home-support"','id="support-booking"']:self.assertIn(text,s)
-  for text in ['<form','parent-strategy-session','/pay/350']:self.assertNotIn(text,s)
- def test_enquiry_is_editable_and_not_a_signup(self):
-  s=(R/'course-waitlist.html').read_text()
-  for text in ['Founding Live Session','Which situation is hardest right now?','does not reserve a place or subscribe you to marketing emails','Dates, duration, fee and final scope are not confirmed']:self.assertIn(text,s)
-  for text in ['<form','<iframe','checkout','sibforms.com']:self.assertNotIn(text,s)
-
- def test_digital_interest_does_not_route_to_live_session(self):
-  from urllib.parse import unquote
-  s=(R/'connect/index.html').read_text()
-  self.assertNotIn('href="/course-waitlist"',s)
-  self.assertIn('self-paced course enquiry',unquote(s))
-  self.assertIn('Which situation is hardest right now?',unquote(s))
-
- def test_start_offers_learning_before_optional_individual_support(self):
-  s=(R/'start.html').read_text()
-  routes=s.split('class="audit-start-routes"')[1].split('</nav>')[0]
-  for route in ['/big-reactions-quick-check','/parents#workshops','/services#educator-training']:self.assertIn('href="'+route+'"',routes)
-  self.assertLess(s.index('class="audit-start-routes"'),s.index('class="audit-individual"'))
-  self.assertEqual(s.count('<h1>'),1)
-  for offer in ['RM350','RM1,800','first-step-call']:self.assertIn(offer,s)
-
- def test_learning_directory_does_not_confuse_delivery_formats(self):
-  s=(R/'services.html').read_text()
-  digital=s.split('id="self-paced"')[1].split('</article>')[0]
-  live=s.split('id="parent-workshops"')[1].split('</article>')[0]
-  self.assertIn('href="/connect"',digital)
-  self.assertNotIn('/course-waitlist',digital)
-  self.assertIn('href="/parents#workshops"',live)
-
+  for text in ['RM37 on Etsy','RM57 · Live online group','Next dates go to the Quick Check email list first. Charged in RM; your card converts.','RM1,797 · S$997 · USD 697','Four 60-minute online sessions, once every two weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
+ def test_retired_routes_redirect_without_forms(self):
+  for page,target in [('start.html','/'),('programmes.html','/'),('services.html','/parents'),('course-waitlist.html','/parents#pattern-session'),('connect/index.html','/parents')]:
+   s=(R/page).read_text()
+   self.assertIn('http-equiv="refresh" content="0; url='+target+'"',s)
+   for text in ['<form','<iframe','checkout','sibforms.com']:self.assertNotIn(text,s)
+  redirects=(R/'_redirects').read_text()
+  for rule in ['/programmes /           301','/start      /           301','/services   /parents    301']:self.assertIn(rule,redirects)
+  self.assertLess(redirects.index('/services'),redirects.index('/*'))
  def test_indexable_resource_and_private_fulfilment(self):
   import xml.etree.ElementTree as ET
   landing=(R/'big-reactions-quick-check.html').read_text()
@@ -49,4 +35,6 @@ class DemandValidationTests(unittest.TestCase):
   self.assertIn('noindex,nofollow',(R/'thank-you-big-reactions.html').read_text())
   urls=[x.text for x in ET.parse(R/'sitemap.xml').iter() if x.tag.endswith('}loc')]
   self.assertIn('https://autismpathwaysconsulting.com/big-reactions-quick-check',urls)
-  self.assertNotIn('https://autismpathwaysconsulting.com/thank-you-big-reactions',urls)
+  self.assertIn('https://autismpathwaysconsulting.com/teacher-talk',urls)
+  for retired in ['services','start','programmes','course-waitlist','connect','thank-you-big-reactions']:
+   self.assertNotIn('https://autismpathwaysconsulting.com/'+retired,urls)

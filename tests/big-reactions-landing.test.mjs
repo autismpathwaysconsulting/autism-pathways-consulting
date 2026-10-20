@@ -74,7 +74,7 @@ test('Pattern Finder bridge preserves the approved parent copy and one verified 
   assert.match(destination.pathname, /\/listing\/4590236884(?:\/|$)/);
   assert.doesNotMatch(block, /target="_blank"/, 'preserve the nearby same-tab link behavior');
   assert.ok(parents.indexOf('id="quick-check"') < parents.indexOf('id="pattern-finder"'));
-  assert.ok(parents.indexOf('id="pattern-finder"') < parents.indexOf('id="workshops"'));
+  assert.ok(parents.indexOf('id="pattern-finder"') < parents.indexOf('id="pattern-session"'));
 });
 
 test('Quick Check ending appends the bridge after the unchanged free download instructions', async () => {
@@ -85,7 +85,7 @@ test('Quick Check ending appends the bridge after the unchanged free download in
     'Compare the Pattern',
     'To type, download the PDF, open it in a PDF reader, then save a copy.',
     'Keep your notes private unless you choose to share them. You do not need to complete both pages today.',
-    'Explore the founding live session (optional)',
+    'See the Pattern Session (optional)',
   ]) assert.ok(html.includes(copy), copy);
   assert.ok(html.indexOf('id="quick-check-download"') < html.indexOf('id="pattern-bridge-title"'));
   assert.equal((html.match(/>Compare the Pattern<\/a>/g) || []).length, 1);

@@ -32,7 +32,7 @@ class ResourcesCleanup(unittest.TestCase):
     def test_directory_hierarchy_and_primary_actions(self):
         source=(ROOT/'resources.html').read_text().split('<main',1)[1].split('</main>',1)[0]
         self.assertEqual(source.count('<h1>'),1)
-        self.assertEqual(source.count('<details>'),5)
+        self.assertEqual(source.count('<details>'),4)
         self.assertEqual(source.count('class="resource-button"'),2)
         self.assertEqual(source.count('<article>'),3)
         self.assertNotIn('apc-card-photo',source)
@@ -42,18 +42,16 @@ class ResourcesCleanup(unittest.TestCase):
         self.assertIn('The call is a fit check, not consultation, advice, assessment, diagnosis, or therapy.',source)
         self.assertIn('APC works with you, not instead of the therapists your child is already seeing.',source)
 
-    def test_service_offer_remains_interest_only(self):
-        source=(ROOT/'services.html').read_text()
-        teacher=source.split('id="educator-training"',1)[1].split('</section>',1)[0]
-        for text in ['Proposed fee: RM990 per participant.','in English.','7.5 hours across three 2.5-hour sessions. Dates to be announced.','Interest stage only. No payment is being accepted.','This does not qualify participants as Hanen-certified providers.']:
-            self.assertIn(text,teacher)
-        self.assertIn('https://www.hanen.org/programs/teacher-talk',teacher)
-        self.assertNotRegex(teacher,r'href="[^"]*(?:/pay|checkout)')
-        self.assertNotRegex(source,r'<span aria-hidden="true">[→↗]</span>')
-        self.assertIn('class="service-action-icon"',teacher)
+    def test_teacher_talk_keeps_hanen_wording_and_prices(self):
+        source=(ROOT/'teacher-talk.html').read_text()
+        for text in ['<!-- Hanen wording to be approved by The Hanen Centre -->','Teacher Talk™ Training A','Encouraging Language Development in Early Childhood Settings','This does not qualify participants as Hanen-certified providers.','RM897 per educator','RM797 each for 3 or more from one centre','S$297 · USD 197','Hanen workbook required; cost confirmed when you register.','Three 2.5-hour live online sessions.','Up to 24 educators per cohort','Join the next intake']:
+            self.assertIn(text,source)
+        self.assertIn('https://www.hanen.org/programs/teacher-talk',source)
+        self.assertNotRegex(source,r'href="[^"]*(?:/pay|checkout)')
+        self.assertNotRegex(source,r'(?i)proposed|RM990|interest stage')
 
     def test_built_pages_and_legal_disclosures(self):
-        for page in ['resources.html','services.html']:
+        for page in ['resources.html','teacher-talk.html']:
             source=(ROOT/page).read_text()
             self.assertEqual(source,(ROOT/'dist'/page).read_text())
             self.assertNotIn('\u2014',source)

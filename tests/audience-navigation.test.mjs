@@ -74,10 +74,11 @@ test('all shared public headers provide native disclosures and both audience rou
     const text=await readFile(new URL('../'+path,import.meta.url),'utf8');
     if (!text.includes('class="apc-shell-nav"')) continue;
     const nav=text.match(/<nav class="apc-shell-nav"[\s\S]*?<\/nav>/)[0];
-    assert.equal((nav.match(/<details /g)||[]).length,2,path);
-    for (const route of ['/parents','/schools','/services','/blog','/resources']) assert.ok(nav.includes(`href="${route}"`),path+route);
+    assert.equal((nav.match(/<details /g)||[]).length,1,path);
+    for (const route of ['/about','/parents','/schools','/teacher-talk','/blog','/resources']) assert.ok(nav.includes(`href="${route}"`),path+route);
+    assert.ok(text.includes('<a class="apc-shell-start" href="/big-reactions-quick-check"'),path);
     assert.ok(text.includes('/apc-navigation.js?v='),path);
     assert.ok(text.includes('/apc-navigation.css?v='),path); count++;
   }
-  assert.equal(count,33);
+  assert.equal(count,29);
 });
