@@ -92,6 +92,7 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 
 ## Workflow
 - Verify edits with `grep -c` before committing. Confirm em-dash count is 0.
+- After editing any source HTML, always run npm run build and commit the changed dist/ files in the same push. The live site only serves dist/.
 - Commit messages: **no AI attribution lines.** Push only the authorized review branch normally,
   without force. Do not push to `main`, merge, mark a draft PR ready, deploy, or launch without
   separate Founder authorization.
