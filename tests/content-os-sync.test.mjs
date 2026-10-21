@@ -139,7 +139,7 @@ test("production secret accepts only the production credential", async () => {
     next: () => new Response("private"),
   });
   assert.equal(rejected.status, 302);
-  assert.equal(rejected.headers.get("Location"), "https://example.com/content-os/login/");
+  assert.equal(rejected.headers.get("Location"), "https://example.com/content-os/login/?next=%2Fcontent-os%2F");
 
   const accepted = await authorize({
     env,
@@ -181,7 +181,7 @@ test("expired browser sessions fail closed", async () => {
     next: () => new Response("must not run"),
   });
   assert.equal(response.status, 302);
-  assert.equal(response.headers.get("Location"), "https://example.com/content-os/login/");
+  assert.equal(response.headers.get("Location"), "https://example.com/content-os/login/?next=%2Fcontent-os%2F");
 });
 
 test("login stylesheet is the only unauthenticated Content OS asset", async () => {
