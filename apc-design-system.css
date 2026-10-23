@@ -684,6 +684,7 @@ body.apc-v2 {
 .service-proof {
   max-width: 780px;
   margin: 32px auto;
+  padding-inline: var(--apc-gutter, 20px);
 }
 
 .service-proof blockquote {
