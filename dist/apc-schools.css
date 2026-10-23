@@ -63,6 +63,8 @@
 .apc-school-minimal .school-format-compare h3{color:#fffdf9;font-size:1.06rem;letter-spacing:-.02em;margin:0 0 8px;line-height:1.35}
 .apc-school-minimal .school-format-compare p{color:#d5e6df;font-size:.94rem;line-height:1.65;margin:8px 0 0}
 .apc-school-minimal .school-format-compare p.format-fit{color:#b2d4c6;font-size:.78rem;line-height:1.4;margin:0}
+.apc-school-minimal .school-formats .service-proof{margin:24px 0 32px;padding-inline:0}
+.apc-school-minimal .school-formats .service-proof cite{color:#b2d4c6}
 .apc-school-minimal .school-format-select{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;font-size:.9rem;font-weight:600;color:#fffdf9;text-underline-offset:5px}
 .apc-school-minimal main .school-formats a{color:#fffdf9}
 .apc-school-minimal main>.school-formats>.school-format-terms{color:#c9ded4;text-align:left;font-size:.8rem;line-height:1.6;max-width:none;margin:24px 0 0;padding-top:18px;border-top:1px solid #416a61}
