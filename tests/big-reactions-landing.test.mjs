@@ -46,12 +46,12 @@ test('UTM attribution is bounded and analytics never include form fields or arbi
 test('confirmation route starts the same-origin download and keeps a visible fallback', async () => {
   const [html, script] = await Promise.all([source('thank-you-big-reactions.html'), source('thank-you-big-reactions.js')]);
   assert.match(html, /noindex,nofollow/);
-  assert.match(html, /href="\/APC-Big-Reactions-Quick-Check\.pdf" download/);
+  assert.match(html, /href="\/APC-Big-Reactions-Quick-Check-iyeandt9\.pdf" download/);
   assert.match(html, /src="\/thank-you-big-reactions\.js"/);
   assert.match(script, /window\.setTimeout/);
   assert.match(script, /record\("form_submitted"\)/);
   assert.match(script, /link\.click\(\)/);
-  assert.ok((await stat(new URL('APC-Big-Reactions-Quick-Check.pdf', root))).size > 100000);
+  assert.ok((await stat(new URL('APC-Big-Reactions-Quick-Check-iyeandt9.pdf', root))).size > 100000);
 });
 
 test('Pattern Finder bridge preserves the approved parent copy and one verified listing destination', async () => {
