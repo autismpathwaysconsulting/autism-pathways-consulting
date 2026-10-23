@@ -41,6 +41,15 @@ jobs:
           APC_QA_OUTPUT: qa/programmes
         run: |
           node tests/programmes/preview.mjs > /tmp/apc-programme-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8899/programmes > /dev/null && break
+            if [ "$i" = 30 ]; then
+              echo "::error::Local QA preview server never became ready"
+              cat /tmp/apc-programme-preview.log
+              exit 1
+            fi
+            sleep 1
+          done
           node tests/programmes/browser.cjs
           node tests/programmes/site-sync-browser.cjs
           node tests/big-reactions-browser.cjs
