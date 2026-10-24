@@ -11,7 +11,7 @@ class DemandValidationTests(unittest.TestCase):
   self.assertNotIn('Book Free 15-Min',hero)
   self.assertNotIn('hero-approach',hero)
   self.assertNotIn('data-cal-inline',s)
-  self.assertEqual(s.count('<section '),9)
+  self.assertEqual(s.count('<section '),10)
   ways=s.split('id="support-options"')[1].split('</section>')[0]
   for text in ['Free Quick Check','Pattern Session','RM57','Home Support Programme','From RM1,797','Staff training','From RM1,497']:self.assertIn(text,ways)
   for text in ['RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
