@@ -53,7 +53,7 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertNotRegex(thanks, r"(?i)interest test|founding live session")
         self.assertIn("Keep your notes private unless you choose to share them.", thanks)
         self.assertNotIn("Browse more APC parent resources", thanks)
-        self.assertIn('<body class="apc-quick-check-page">', thanks)
+        self.assertIn('<body class="apc-v2 apc-tier-b apc-quick-check-page">', thanks)
         self.assertIn('.quick-thanks .button{max-width:100%;text-align:center}', thanks)
         self.assertIn('.quick-thanks .quick-wrap{max-width:680px}', thanks)
 
