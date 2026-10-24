@@ -85,7 +85,7 @@ class SiteAuditRegression(unittest.TestCase):
             for href in re.findall(r'href="(/[^\"]*#[^\"]+)"', read(page)):
                 with self.subTest(page=page, href=href):
                     url = urlsplit(href)
-                    path = url.path.lstrip("/")
+                    path = url.path.lstrip("/") or "index"
                     target = next((p for p in (path + ".html", path + "/index.html") if (ROOT / p).exists()), None)
                     self.assertIsNotNone(target)
                     self.assertIn(f'id="{unquote(url.fragment)}"', read(target))

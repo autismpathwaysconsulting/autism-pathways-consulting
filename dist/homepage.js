@@ -241,8 +241,9 @@ let sitewideTargets = [];
 if (isApcPage) {
   const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
   document.querySelectorAll(".apc-shell-nav a, .apc-shell-start").forEach(link => {
-    const linkPath = new URL(link.href, window.location.href).pathname.replace(/\/$/, "") || "/";
-    if (linkPath === currentPath) link.setAttribute("aria-current", "page");
+    const linkURL = new URL(link.href, window.location.href);
+    const linkPath = linkURL.pathname.replace(/\/$/, "") || "/";
+    if (!linkURL.hash && linkPath === currentPath) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
 }
