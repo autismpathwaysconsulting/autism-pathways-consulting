@@ -65,7 +65,7 @@ fs.mkdirSync(output, { recursive: true });
   const download = page.waitForEvent('download');
   await page.goto('http://localhost:8899/thank-you-big-reactions');
   const file = await download;
-  assert.equal(file.suggestedFilename(), 'APC-Big-Reactions-Quick-Check.pdf');
+  assert.equal(file.suggestedFilename(), 'APC-Big-Reactions-Quick-Check-iyeandt9.pdf');
   const downloadPath = await file.path();
   assert.ok(fs.statSync(downloadPath).size > 100000);
   await page.screenshot({ path: path.join(output, 'big-reactions-thank-you-mobile.png'), fullPage: true });

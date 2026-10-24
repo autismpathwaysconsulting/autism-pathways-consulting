@@ -58,7 +58,7 @@ class ResourcesCleanup(unittest.TestCase):
             self.assertIn('CJ Special and Inclusive Consultancy (003030209-T) · Reg. 201903282307',source)
             for route in ['/privacy','/terms','/cancellation-policy','/disclaimer']:
                 self.assertIn('href="'+route+'"',source)
-        for file in ['APC-Big-Reactions-Quick-Check.pdf','The_Complete_Malaysian_Parent_Guide_by_CJ_Lim_APC.pdf']:
+        for file in ['APC-Big-Reactions-Quick-Check-iyeandt9.pdf','The_Complete_Malaysian_Parent_Guide_by_CJ_Lim_APC.pdf']:
             self.assertEqual((ROOT/file).read_bytes(),(ROOT/'dist'/file).read_bytes())
 
 if __name__=='__main__':unittest.main()
