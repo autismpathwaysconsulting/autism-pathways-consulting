@@ -5,11 +5,11 @@ const root=new URL('../',import.meta.url);
 const links=items=>items.map(([href,label])=>`<a href="${href}">${label}</a>`).join('');
 // Phones get a Menu button; apc-navigation.js reveals it and keeps the full nav for larger screens.
 const toggle=`<button class="apc-nav-toggle" type="button" aria-expanded="false" aria-controls="apc-primary-nav" aria-label="Menu">Menu</button>`;
-const nav=`<nav class="apc-shell-nav" id="apc-primary-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details></nav>`;
+const nav=`<nav class="apc-shell-nav" id="apc-primary-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details>${links([config.contact])}</nav>`;
 const [ctaHref,ctaLabel]=config.cta;
 const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}>${ctaLabel}</a>`;
 const [about,legal,scope,alongside]=config.footer;
-const explore=[['/','Home'],...config.primary,['/resources','Resources'],[ctaHref,'Free Quick Check']];
+const explore=[['/','Home'],...config.primary,['/resources','Resources'],[ctaHref,'Free Quick Check'],config.contact];
 // Every public page carries the same four footer lines; main pages keep the link columns.
 const mainFooter=`<footer class="apc-footer">
   <div class="apc-footer-inner">
@@ -23,7 +23,7 @@ const mainFooter=`<footer class="apc-footer">
 const minimalFooter=`<footer class="apc-footer apc-footer-minimal">
   <div class="apc-footer-minimal-inner">
     <a href="/" class="apc-footer-logo">Autism Pathways Consulting</a>
-    <nav class="apc-footer-minimal-links" aria-label="Footer navigation">${links([['/','Home'],...config.primary,['/resources','Resources']])}</nav>
+    <nav class="apc-footer-minimal-links" aria-label="Footer navigation">${links([['/','Home'],...config.primary,['/resources','Resources'],config.contact])}</nav>
     <p>${about}</p>
     <p>${legal}</p>
     <p>${scope}</p>

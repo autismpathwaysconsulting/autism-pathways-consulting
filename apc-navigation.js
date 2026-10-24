@@ -56,11 +56,12 @@ if (header && navToggle && primaryNav) {
   });
 }
 // Match both origin and path: APC Calm must not appear current on the home page.
+// Section links such as /#contact point into a page, so they are never the current page.
 const currentURL = new URL(window.location.href);
 for (const link of document.querySelectorAll('.apc-shell-nav a')) {
   const targetURL = new URL(link.href, currentURL);
   const path = url => url.pathname.replace(/\/$/, '') || '/';
-  if (targetURL.origin === currentURL.origin && path(targetURL) === path(currentURL)) {
+  if (!targetURL.hash && targetURL.origin === currentURL.origin && path(targetURL) === path(currentURL)) {
     link.setAttribute('aria-current', 'page');
   } else {
     link.removeAttribute('aria-current');

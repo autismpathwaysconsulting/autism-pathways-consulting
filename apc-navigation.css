@@ -67,3 +67,10 @@
 @media(max-width:360px) {
   .apc-v2 .apc-nav-js .apc-nav-toggle { gap:0;padding:0 13px;font-size:0; }
 }
+/* Tablet widths show the full nav; tighter spacing keeps the Quick Check button on screen. */
+@media(min-width:768px) and (max-width:1099px) {
+  .apc-v2 .apc-shell-inner { gap:14px; }
+  .apc-v2 .apc-shell-nav { gap:12px; }
+  .apc-v2 .apc-shell-nav > a, .apc-v2 .apc-shell-nav > .apc-nav-dropdown > summary { font-size:.84rem !important; }
+  .apc-v2 .apc-shell-start { padding:10px 16px;font-size:.84rem !important; }
+}
