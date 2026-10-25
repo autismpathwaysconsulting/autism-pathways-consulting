@@ -54,8 +54,8 @@ test('confirmation route starts the same-origin download and keeps a visible fal
   assert.ok((await stat(new URL('APC-Big-Reactions-Quick-Check-iyeandt9.pdf', root))).size > 100000);
 });
 
-test('Pattern Finder bridge preserves the approved parent copy and one verified listing destination', async () => {
-  const [parents, thanks] = await Promise.all([source('parents.html'), source('thank-you-big-reactions.html')]);
+test('Pattern Finder block preserves the approved parent copy and one verified listing destination', async () => {
+  const parents = await source('parents.html');
   const block = parents.match(/<section[^>]*id="pattern-finder"[\s\S]*?<\/section>/)?.[0];
   assert.ok(block, 'parent page has a dedicated Pattern Finder block');
   for (const copy of [
@@ -65,8 +65,6 @@ test('Pattern Finder bridge preserves the approved parent copy and one verified 
     'View the Big Reactions Pattern Finder',
   ]) assert.ok(block.includes(copy), copy);
   const parentHref = block.match(/href="([^"]+)"/)?.[1];
-  const thanksHref = thanks.match(/href="([^"]+)"[^>]*>Compare the Pattern<\/a>/)?.[1];
-  assert.equal(parentHref, thanksHref, 'both placements share the verified listing-specific link');
   assert.equal(parentHref, 'https://autismpathwaysco.etsy.com/listing/4590236884/autism-parent-pattern-finder-toolkit-big', 'preserve the exact approved shop-domain URL');
   const destination = new URL(parentHref.replaceAll('&amp;', '&'));
   assert.equal(destination.protocol, 'https:');
@@ -77,17 +75,14 @@ test('Pattern Finder bridge preserves the approved parent copy and one verified 
   assert.ok(parents.indexOf('id="pattern-finder"') < parents.indexOf('id="pattern-session"'));
 });
 
-test('Quick Check ending appends the bridge after the unchanged free download instructions', async () => {
+test('Quick Check confirmation drops the Etsy bridge and keeps the download and Pattern Session copy', async () => {
   const html = await source('thank-you-big-reactions.html');
   for (const copy of [
-    'Is the same situation still happening?',
-    'One observation can give you something to notice. If you want to compare the same situation across a few everyday occasions, the Big Reactions Pattern Finder helps you see what repeats, what differs and what you could try changing next.',
-    'Compare the Pattern',
     'To type, download the PDF, open it in a PDF reader, then save a copy.',
     'Keep your notes private unless you choose to share them. You do not need to complete both pages today.',
     'See the Pattern Session (optional)',
   ]) assert.ok(html.includes(copy), copy);
-  assert.ok(html.indexOf('id="quick-check-download"') < html.indexOf('id="pattern-bridge-title"'));
-  assert.equal((html.match(/>Compare the Pattern<\/a>/g) || []).length, 1);
+  assert.doesNotMatch(html, /etsy/i);
+  assert.doesNotMatch(html, /Compare the Pattern|Big Reactions Pattern Finder/);
   assert.doesNotMatch(html, /<form\b|<iframe\b|target="_blank"/);
 });

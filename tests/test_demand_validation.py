@@ -11,12 +11,12 @@ class DemandValidationTests(unittest.TestCase):
   self.assertNotIn('Book Free 15-Min',hero)
   self.assertNotIn('hero-approach',hero)
   self.assertNotIn('data-cal-inline',s)
-  self.assertEqual(s.count('<section '),10)
+  self.assertEqual(s.count('<section '),9)
   ways=s.split('id="support-options"')[1].split('</section>')[0]
-  for text in ['Free Quick Check','Pattern Session','RM57','Home Support Programme','From RM1,797','Staff training','From RM1,497']:self.assertIn(text,ways)
+  for text in ['Free Quick Check','Pattern Session','RM57','Home Support Programme','RM1,797','Staff training','From RM1,497']:self.assertIn(text,ways)
   for text in ['RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_parent_route_order_and_offer_details(self):
-  s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','pattern-finder','pattern-session','home-support','first-step-call']]
+  s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','home-support','pattern-finder','pattern-session','first-step-call']]
   self.assertEqual(ids,sorted(ids))
   for text in ['RM37 on Etsy','RM57 · Live online group','Next dates go to the Quick Check email list first. Charged in RM; your card converts.','RM1,797 · S$997 · USD 697','Four 60-minute online sessions, once every two weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
   for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
