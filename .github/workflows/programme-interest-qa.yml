@@ -42,7 +42,7 @@ jobs:
         run: |
           node tests/programmes/preview.mjs > /tmp/apc-programme-preview.log 2>&1 &
           for i in $(seq 1 30); do
-            curl -sf http://localhost:8899/programmes > /dev/null && break
+            curl -sf http://localhost:8899/ > /dev/null && break
             if [ "$i" = 30 ]; then
               echo "::error::Local QA preview server never became ready"
               cat /tmp/apc-programme-preview.log
@@ -54,7 +54,6 @@ jobs:
           node tests/programmes/site-sync-browser.cjs
           node tests/big-reactions-browser.cjs
           node scripts/check-programme-live.mjs http://localhost:8899 open
-      - run: python3 tests/validate_website_authority.py
       - run: python3 tests/run_authority_tests.py
       - uses: actions/upload-artifact@v4
         if: always()

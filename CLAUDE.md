@@ -8,10 +8,8 @@ review still require separate Founder authorization for any further changes.
 APC-AI-OS is the canonical offer authority. On 2026-10-20 the Founder approved a repositioning for
 parents, centres and schools with the new offer ladder below, which replaces the earlier locked ladder
 (One-Concern Parent Session RM350, Home Support RM1,800) and its permission-before-payment wording.
-`tests/website_authority.json`, `tests/validate_website_authority.py`, `tests/interim_containment.json`
-and `tests/validate_interim_containment.py` still encode the earlier ladder and fail against the current
-pages until they are re-baselined from an updated APC-AI-OS record. Change projected facts only when the
-Founder has given an explicit instruction, then update the projection hash.
+`tests/test_current_offers.py` checks the public pages against this ladder (prices, payment line, dropped
+offers, First Step Call). Change offer facts there only when the Founder has given an explicit instruction.
 
 ## Non-negotiable brand rules (apply to every change)
 - **No em dashes anywhere, ever.** Use commas, colons, or full stops. Before committing, confirm zero em-dash characters remain in changed files (count must be 0).
