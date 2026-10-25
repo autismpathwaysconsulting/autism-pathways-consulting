@@ -12,6 +12,8 @@ fs.mkdirSync(output, { recursive: true });
 
   for (const viewport of [{ name: 'mobile', width: 390, height: 844 }, { name: 'desktop', width: 1440, height: 1000 }]) {
     const context = await browser.newContext({ viewport });
+    // Only the form address is checked; a slow live Brevo response made full-page screenshots time out.
+    await context.route('https://b0f4b8a0.sibforms.com/**', route => route.fulfill({ contentType: 'text/html', body: '<p>Brevo form (local test)</p>' }));
     const page = await context.newPage();
     page.on('pageerror', error => errors.push(`${viewport.name}: ${error.message}`));
     await page.goto('http://localhost:8899/big-reactions-quick-check?utm_source=instagram&utm_medium=organic_social&utm_campaign=big_reactions', { waitUntil: 'domcontentloaded' });
