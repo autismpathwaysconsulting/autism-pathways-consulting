@@ -29,7 +29,6 @@ fs.mkdirSync(output, { recursive: true });
     await page.screenshot({ path: path.join(output, `big-reactions-${viewport.name}.png`), fullPage: true });
     for (const bridge of [
       { route: '/parents', label: 'View the Big Reactions Pattern Finder', file: 'pattern-finder-parents' },
-      { route: '/thank-you-big-reactions', label: 'Compare the Pattern', file: 'pattern-finder-thanks' },
     ]) {
       await page.goto('http://localhost:8899' + bridge.route, { waitUntil: 'domcontentloaded' });
       const link = page.getByRole('link', { name: bridge.label, exact: true });
