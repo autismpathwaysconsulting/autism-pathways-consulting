@@ -29,13 +29,14 @@
   .apc-v2 .apc-shell-nav .apc-dropdown-panel a { font-size:.9rem!important; }
 }
 .apc-v2 .apc-shell-nav > a { min-height:44px; }
-/* Phones: one header row with a Menu button beside the Quick Check link. The menu drops below the header. */
+/* Phones and small tablets: one header row with a Menu button beside the Quick Check link. The menu drops below the header.
+   The full nav needs about 935px on pages whose links do not wrap, so the Menu button stays up to 959px. */
 .apc-v2 .apc-nav-toggle { display:none; }
-@media(max-width:767px) {
+@media(max-width:959px) {
   .apc-v2 .apc-shell-inner { display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-rows:auto;align-items:center;gap:0 8px;padding:8px 0; }
   .apc-v2 .apc-shell-inner > .apc-shell-logo { grid-column:1;grid-row:1; }
   .apc-v2 .apc-shell-inner > .apc-nav-toggle { grid-column:3;grid-row:1; }
-  .apc-v2 .apc-shell-inner > .apc-shell-start { grid-column:4;grid-row:1;justify-self:end;min-height:44px;padding:10px 12px;font-size:.76rem !important;white-space:nowrap; }
+  .apc-v2 .apc-shell-inner > .apc-shell-start { grid-column:4;grid-row:1;justify-self:end;min-height:44px;padding:10px 12px;font-size:.76rem !important;text-align:center; }
   .apc-v2 .apc-nav-js .apc-nav-toggle {
     display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;
     border:1px solid rgba(7,55,52,.28);border-radius:999px;background:transparent;
@@ -66,9 +67,10 @@
 /* The narrowest phones keep the icon and the Quick Check link; the button keeps its accessible name. */
 @media(max-width:360px) {
   .apc-v2 .apc-nav-js .apc-nav-toggle { gap:0;padding:0 13px;font-size:0; }
+  .apc-v2 .apc-shell-inner > .apc-shell-start { white-space:nowrap; }
 }
-/* Tablet widths show the full nav; tighter spacing keeps the Quick Check button on screen. */
-@media(min-width:768px) and (max-width:1099px) {
+/* Wider tablets show the full nav; tighter spacing keeps the Quick Check button on screen. */
+@media(min-width:960px) and (max-width:1099px) {
   .apc-v2 .apc-shell-inner { gap:14px; }
   .apc-v2 .apc-shell-nav { gap:12px; }
   .apc-v2 .apc-shell-nav > a, .apc-v2 .apc-shell-nav > .apc-nav-dropdown > summary { font-size:.84rem !important; }
