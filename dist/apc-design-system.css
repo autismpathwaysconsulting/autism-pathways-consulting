@@ -5436,9 +5436,13 @@ html.apc-site-snap {
     overflow-wrap: normal;
   }
 
-  /* The email is the widest, so it goes last and WhatsApp and Instagram share a row */
+  /* The email is the widest, so it goes last and WhatsApp and Instagram share a row.
+     It fits on one line at normal sizes but may wrap at very large text so it stays readable */
   .apc-v2 .apc-footer-inner > div.apc-footer-column a[href^="mailto:"] {
     order: 1;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
   }
 
   .apc-v2 .apc-footer-inner > div.apc-footer-column a:first-of-type {
