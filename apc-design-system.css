@@ -4103,6 +4103,29 @@ html {
   align-items: center;
 }
 
+.apc-v2 .apc-footer-minimal-policies {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0 6px;
+  width: auto;
+  min-height: 0;
+  margin: -10px 0;
+  padding: 0;
+  color: rgba(255, 255, 255, .68);
+  font-size: .8rem;
+}
+
+.apc-v2 .apc-footer-minimal-policies a {
+  display: inline-flex;
+  padding: 0 !important;
+  min-height: 44px !important;
+  align-items: center;
+}
+
 .apc-v2 .apc-footer-minimal-inner p {
   grid-column: 1 / -1;
   margin: 0 !important;
@@ -5378,11 +5401,62 @@ html.apc-site-snap {
     grid-column: 1 / -1;
   }
 
+  .apc-v2 .apc-footer {
+    padding: 20px 0 12px !important;
+  }
+
+  .apc-v2 .apc-footer-inner {
+    row-gap: 4px !important;
+  }
+
+  .apc-v2 .apc-footer-column h3 {
+    margin: 4px 0 2px !important;
+  }
+
+  /* Contact: the call as one full-width button, then compact WhatsApp, email and Instagram buttons that wrap whole */
+  .apc-v2 .apc-footer-inner > div.apc-footer-column {
+    display: flex !important;
+    flex-flow: row wrap !important;
+    gap: 8px !important;
+  }
+
+  .apc-v2 .apc-footer-inner > div.apc-footer-column h3 {
+    flex-basis: 100%;
+    margin-bottom: -6px !important;
+  }
+
+  .apc-v2 .apc-footer-inner > div.apc-footer-column a {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 0 10px;
+    border: 1px solid rgba(255, 255, 255, .28);
+    border-radius: 10px;
+    font-size: .75rem !important;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  /* The email is the widest, so it goes last and WhatsApp and Instagram share a row */
+  .apc-v2 .apc-footer-inner > div.apc-footer-column a[href^="mailto:"] {
+    order: 1;
+  }
+
+  .apc-v2 .apc-footer-inner > div.apc-footer-column a:first-of-type {
+    flex-basis: 100%;
+    border-color: #2DD4BF;
+    background: #2DD4BF;
+    color: #073734 !important;
+    font-weight: 600;
+  }
+
+  .apc-v2 .apc-footer-bottom {
+    margin-top: 8px !important;
+    line-height: 1.5 !important;
+  }
+
   .apc-v2 .apc-footer-policies {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, max-content));
-    column-gap: 24px;
-    margin-block: -6px;
+    gap: 0 12px;
+    margin-block: -12px;
   }
 
   .apc-v2 .apc-footer-policies span {
