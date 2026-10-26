@@ -25,6 +25,7 @@ const minimalFooter=`<footer class="apc-footer apc-footer-minimal">
     <a href="/" class="apc-footer-logo">Autism Pathways Consulting</a>
     <nav class="apc-footer-minimal-links" aria-label="Footer navigation">${links([...config.primary,['/resources','Resources']])}</nav>
     <p>${legal}</p>
+    <nav class="apc-footer-minimal-policies" aria-label="Policies">${policies.slice(0,2).map(([href,label])=>`<a href="${href}">${label}</a>`).join('<span aria-hidden="true">·</span>')}</nav>
     <p>${scope}</p>
   </div>
 </footer>`;
