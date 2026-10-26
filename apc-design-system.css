@@ -5340,6 +5340,10 @@ html.apc-site-snap {
   margin: 0 !important;
 }
 
+.apc-v2 .apc-footer-nowrap {
+  white-space: nowrap;
+}
+
 .apc-v2 .apc-footer-policies {
   display: flex;
   flex-wrap: wrap;
@@ -5356,17 +5360,29 @@ html.apc-site-snap {
 
 @media (max-width: 640px) {
   .apc-v2 .apc-footer-inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   .apc-v2 .apc-footer-brand {
-    grid-column: 1 / -1 !important;
+    grid-column: auto !important;
+  }
+
+  /* Explore keeps two link columns; Contact gets the full width so the number and email stay whole */
+  .apc-v2 .apc-footer-inner > nav.apc-footer-column {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 16px;
+  }
+
+  .apc-v2 .apc-footer-inner > nav.apc-footer-column h3 {
+    grid-column: 1 / -1;
   }
 
   .apc-v2 .apc-footer-policies {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, max-content));
+    column-gap: 24px;
+    margin-block: -6px;
   }
 
   .apc-v2 .apc-footer-policies span {
