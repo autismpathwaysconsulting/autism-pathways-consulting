@@ -8,26 +8,24 @@ const toggle=`<button class="apc-nav-toggle" type="button" aria-expanded="false"
 const nav=`<nav class="apc-shell-nav" id="apc-primary-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details>${links([config.contact])}</nav>`;
 const [ctaHref,ctaLabel]=config.cta;
 const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}>${ctaLabel}</a>`;
-const [about,legal,scope,alongside]=config.footer;
-const explore=[['/','Home'],...config.primary,['/resources','Resources'],[ctaHref,'Free Quick Check'],config.contact];
-// Every public page carries the same four footer lines; main pages keep the link columns.
+const [legal,scope]=config.footer;
+const explore=[...config.primary,['/resources','Resources'],[ctaHref,'Free Quick Check']];
+const policies=[['/privacy','Privacy Policy'],['/terms','Terms and Conditions'],['/cancellation-policy','Cancellation Policy'],['/disclaimer','Disclaimer']];
+// Every public page carries the company line and the scope paragraph; main pages keep the link columns.
 const mainFooter=`<footer class="apc-footer">
   <div class="apc-footer-inner">
-    <div class="apc-footer-brand"><a href="/" class="apc-footer-logo">Autism Pathways Consulting</a><p>${about}</p><p class="apc-footer-small">${legal}</p></div>
+    <div class="apc-footer-brand"><a href="/" class="apc-footer-logo">Autism Pathways Consulting</a></div>
     <nav class="apc-footer-column" aria-label="Explore"><h3>Explore</h3>${links(explore)}</nav>
-    <nav class="apc-footer-column" aria-label="Support"><h3>Support</h3><a href="https://cal.com/autismpathwaysconsulting/first-step-call">Free 15-Min First Step Call</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cancellation-policy">Cancellation Policy</a><a href="/disclaimer">Disclaimer</a></nav>
-    <div class="apc-footer-column"><h3>Contact</h3><a href="https://wa.me/601172998168" target="_blank" rel="noopener">WhatsApp: 011-7299 8168</a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a><a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a></div>
+    <div class="apc-footer-column"><h3>Contact</h3><a href="https://cal.com/autismpathwaysconsulting/first-step-call">Free 15-Min First Step Call</a><a href="https://wa.me/601172998168" target="_blank" rel="noopener">WhatsApp: 011-7299 8168</a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a><a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a></div>
   </div>
-  <div class="apc-footer-bottom"><p>${scope}</p><p>${alongside}</p></div>
+  <div class="apc-footer-bottom"><p>${legal}</p><nav class="apc-footer-policies" aria-label="Policies">${policies.map(([href,label])=>`<a href="${href}">${label}</a>`).join('<span aria-hidden="true"> · </span>')}</nav><p>${scope}</p></div>
 </footer>`;
 const minimalFooter=`<footer class="apc-footer apc-footer-minimal">
   <div class="apc-footer-minimal-inner">
     <a href="/" class="apc-footer-logo">Autism Pathways Consulting</a>
-    <nav class="apc-footer-minimal-links" aria-label="Footer navigation">${links([['/','Home'],...config.primary,['/resources','Resources'],config.contact])}</nav>
-    <p>${about}</p>
+    <nav class="apc-footer-minimal-links" aria-label="Footer navigation">${links([...config.primary,['/resources','Resources']])}</nav>
     <p>${legal}</p>
     <p>${scope}</p>
-    <p>${alongside}</p>
   </div>
 </footer>`;
 const changed=[];

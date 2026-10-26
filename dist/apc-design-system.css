@@ -5299,3 +5299,67 @@ html.apc-site-snap {
   }
 }
 
+
+/* Compact footer: logo, Explore and Contact, then one slim company, policy and scope bar */
+.apc-v2 .apc-footer {
+  padding: 36px 0 20px !important;
+}
+
+.apc-v2 .apc-footer-inner {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1.3fr) !important;
+  gap: 8px clamp(20px, 3vw, 32px) !important;
+}
+
+.apc-v2 .apc-footer-brand {
+  grid-column: auto !important;
+}
+
+.apc-v2 .apc-footer-column {
+  gap: 0 !important;
+}
+
+.apc-v2 .apc-footer-column h3 {
+  overflow-wrap: anywhere;
+}
+
+.apc-v2 .apc-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px !important;
+  overflow-wrap: anywhere;
+}
+
+.apc-v2 .apc-footer-bottom {
+  margin-top: 16px !important;
+  padding-top: 12px !important;
+  font-size: 0.75rem !important;
+  line-height: 1.6 !important;
+}
+
+.apc-v2 .apc-footer-bottom p {
+  margin: 0 !important;
+}
+
+.apc-v2 .apc-footer-policies {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.apc-v2 .apc-footer-policies a {
+  font-size: 0.75rem !important;
+}
+
+.apc-v2 .apc-footer-policies span {
+  padding-inline: 6px;
+}
+
+@media (max-width: 640px) {
+  .apc-v2 .apc-footer-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+
+  .apc-v2 .apc-footer-brand {
+    grid-column: 1 / -1 !important;
+  }
+}
