@@ -31,9 +31,9 @@ class SiteAuditRegression(unittest.TestCase):
 
     def test_blog_closing_prioritises_pattern_session(self):
         closing = read("blog.html").split('id="apply-an-idea"', 1)[1].split("</section>", 1)[0]
-        self.assertIn("Join a Pattern Session, a live online group with CJ, or continue with free parent resources. If you need help choosing individual support, the free First Step Call remains available.", closing)
-        self.assertIn('<a class="audience-primary" href="/parents#pattern-session">Explore the Pattern Session</a>', closing)
-        self.assertIn('<a href="/go/first-step-call">Book a free First Step Call</a>', closing)
+        self.assertIn("Pattern Session, a live online group with CJ: coming soon. Dates go to Quick Check email subscribers first. Continue with free parent resources, or if you need help choosing individual support, the free First Step Call remains available.", closing)
+        self.assertNotIn("Explore the Pattern Session", closing)
+        self.assertIn('<a class="audience-primary" href="/go/first-step-call">Book a free First Step Call</a>', closing)
         self.assertEqual(closing.count('class="audience-primary"'), 1)
         self.assertIn("The call is a fit check, not a consultation or assessment.", closing)
         self.assertIn('id="pattern-session"', read("parents.html"))
@@ -48,8 +48,8 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertRegex(landing, r"APC-Big-Reactions-Quick-Check-page-1\.webp\?v=[a-f0-9]{12}")
         self.assertRegex(landing, r"APC-Big-Reactions-Quick-Check-page-2\.webp\?v=[a-f0-9]{12}")
         self.assertIn("To type, download the PDF, open it in a PDF reader, then save a copy.", thanks)
-        self.assertIn('href="/parents#pattern-session">See the Pattern Session (optional)', thanks)
-        self.assertIn("Next Pattern Session dates go to the Quick Check email list first.", thanks)
+        self.assertNotIn("See the Pattern Session (optional)", thanks)
+        self.assertIn("Pattern Session: coming soon. Dates go to Quick Check email subscribers first.", thanks)
         self.assertNotRegex(thanks, r"(?i)interest test|founding live session")
         self.assertIn("Keep your notes private unless you choose to share them.", thanks)
         self.assertNotIn("Browse more APC parent resources", thanks)
