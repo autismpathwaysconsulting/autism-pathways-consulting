@@ -5362,4 +5362,14 @@ html.apc-site-snap {
   .apc-v2 .apc-footer-brand {
     grid-column: 1 / -1 !important;
   }
+
+  .apc-v2 .apc-footer-policies {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 16px;
+  }
+
+  .apc-v2 .apc-footer-policies span {
+    display: none;
+  }
 }
