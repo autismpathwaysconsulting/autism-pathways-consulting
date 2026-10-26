@@ -225,6 +225,8 @@ test("public pages preserve audited contrast, narrow-screen wrapping, and securi
   assert.match(css, /\.apc-about-page :where\(\.work-panel, \.final-card\) > \.eyebrow\s*{[^}]*color: #8fe8dc !important;/s);
   assert.match(css, /\.apc-legal-page :where\([^)]*\.legal-contact[^)]*\) a\s*{[^}]*overflow-wrap: anywhere;/s);
   assert.match(headers, /^\/\*\n(?:  .+\n)*  Content-Security-Policy: .*frame-ancestors 'none';/m);
+  assert.match(headers, /script-src [^;]*https:\/\/static\.cloudflareinsights\.com[ ;]/);
+  assert.match(headers, /connect-src [^;]*https:\/\/cloudflareinsights\.com[ ;]/);
   assert.match(headers, /Strict-Transport-Security: max-age=31536000; includeSubDomains/);
   assert.match(headers, /Permissions-Policy: camera=\(\), microphone=\(\), geolocation=\(\), usb=\(\)/);
   assert.match(headers, /X-Frame-Options: DENY/);
