@@ -82,7 +82,7 @@ class CurrentOffers(unittest.TestCase):
         for name, html in self.pages.items():
             if 'class="apc-shell-start"' in html:
                 with self.subTest(page=name):
-                    self.assertRegex(html, r'<a class="apc-shell-start" href="/big-reactions-quick-check"[^>]*>Get the free Quick Check</a>')
+                    self.assertRegex(html, r'<a class="apc-shell-start" href="/big-reactions-quick-check"[^>]*><span class="apc-cta-long">Get the free Quick Check</span><span class="apc-cta-short">Free Quick Check</span></a>')
 
 
 if __name__ == "__main__":
