@@ -62,7 +62,7 @@
 .apc-call-first .cf-rot { display: inline-grid; vertical-align: bottom; text-align: left; max-width: 100%; }
 .apc-call-first .cf-rot .cf-w { grid-area: 1 / 1; justify-self: start; opacity: 0; }
 .apc-call-first .cf-rot .cf-w i { font-style: normal; background: linear-gradient(transparent 70%, rgba(232, 153, 122, .55) 70%); padding: 0 .06em; }
-/* Runs once through the words (about 2.8 s each) and stops on "big reaction", so nothing keeps moving beside the reading. */
+/* Runs once through the words (about 2.8 s each) and stops on "big reaction". */
 .apc-call-first .cf-rot .cf-w { animation: cf-word 2.8s var(--cf-ease) both; }
 .apc-call-first .cf-rot .cf-w2 { animation-delay: 2.8s; }
 .apc-call-first .cf-rot .cf-w3 { animation-delay: 5.6s; }
@@ -77,6 +77,25 @@
   100% { opacity: 0; transform: translateY(-.35em); filter: blur(4px); }
 }
 @keyframes cf-word-last { from { opacity: 0; transform: translateY(.35em); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+/* With the script, the words keep cycling (8 words x 2.8 s) and the Pause button beside the headline stops them.
+   Longhands keep each word's delay from the rules above. Without the script it stays the run-once version. */
+.apc-call-first .cf-rot.cf-loop .cf-w { animation-name: cf-word-loop; animation-duration: 22.4s; animation-iteration-count: infinite; }
+.apc-call-first .cf-hero.cf-paused .cf-rot .cf-w { animation-play-state: paused; }
+@keyframes cf-word-loop {
+  0% { opacity: 0; transform: translateY(.35em); filter: blur(4px); }
+  2.5%, 10.25% { opacity: 1; transform: none; filter: none; }
+  12.5%, 100% { opacity: 0; transform: translateY(-.35em); filter: blur(4px); }
+}
+.apc-call-first .cf-pause {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 10px; padding: 0 16px;
+  border: 1px solid rgba(7, 55, 52, .18); border-radius: 999px; background: transparent; color: var(--cf-muted);
+  font: inherit; font-size: 1rem; cursor: pointer; transition: transform 160ms var(--cf-ease);
+}
+.apc-call-first .cf-pause[hidden] { display: none; }
+.apc-call-first .cf-pause:active { transform: scale(.97); }
+.apc-call-first .cf-pause svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+.apc-call-first .cf-pause .cf-ico-play, .apc-call-first .cf-hero.cf-paused .cf-pause .cf-ico-pause { display: none; }
+.apc-call-first .cf-hero.cf-paused .cf-pause .cf-ico-play { display: block; }
 .apc-call-first .cf-lede { margin-top: 18px !important; max-width: 40ch !important; font-size: 1.3125rem; color: var(--cf-muted); }
 .apc-call-first .cf-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 24px; }
 .apc-call-first .cf-photo { margin: 0; aspect-ratio: 4 / 3.4; border-radius: 28px; overflow: hidden; background: var(--cf-bg-alt); }
@@ -265,5 +284,6 @@
   .apc-call-first *, .apc-call-first *::before, .apc-call-first *::after { animation: none !important; transition: none !important; }
   .apc-call-first .cf-rot .cf-w { display: none; }
   .apc-call-first .cf-rot .cf-w8 { display: inline; opacity: 1; }
+  .apc-call-first .cf-pause { display: none !important; }
   .apc-call-first .cf-stars svg { opacity: 1; transform: none; }
 }
