@@ -4,7 +4,8 @@ const config=JSON.parse(await fs.readFile(new URL('./site-labels.json',import.me
 const root=new URL('../',import.meta.url);
 const links=items=>items.map(([href,label])=>`<a href="${href}">${label}</a>`).join('');
 // Phones get a Menu button; apc-navigation.js reveals it and keeps the full nav for larger screens.
-const toggle=`<button class="apc-nav-toggle" type="button" aria-expanded="false" aria-controls="apc-primary-nav" aria-label="Menu">Menu</button>`;
+// The inline script marks the header before the nav paints, so the phone header does not jump when apc-navigation.js loads.
+const toggle=`<button class="apc-nav-toggle" type="button" aria-expanded="false" aria-controls="apc-primary-nav" aria-label="Menu">Menu</button><script>document.currentScript.closest('.apc-site-header').classList.add('apc-nav-js')</script>`;
 const nav=`<nav class="apc-shell-nav" id="apc-primary-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details>${links([config.contact])}</nav>`;
 const [ctaHref,ctaLabel]=config.cta;
 const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}>${ctaLabel}</a>`;
@@ -32,7 +33,7 @@ const minimalFooter=`<footer class="apc-footer apc-footer-minimal">
 const changed=[];
 for(const file of PUBLIC_FILES.filter(p=>p.endsWith('.html')&&!p.startsWith('content-os/')&&!p.startsWith('pathways-lab/'))){
  const url=new URL(file,root),old=await fs.readFile(url,'utf8');
- let next=old.replace(/<button class="apc-nav-toggle"[\s\S]*?<\/button>/g,'');
+ let next=old.replace(/<button class="apc-nav-toggle"[\s\S]*?<\/button>(?:<script>[^<]*<\/script>)?/g,'');
  next=next.replace(/<nav class="apc-shell-nav"[\s\S]*?<\/nav>/g,toggle+nav);
  next=next.replace(/<a class="apc-shell-start"[^>]*>[\s\S]*?<\/a>/g,cta(file==='big-reactions-quick-check.html'));
  // Retired routes: educator training moved to /teacher-talk, everything else under /services to /parents.

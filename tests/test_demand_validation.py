@@ -20,7 +20,7 @@ class DemandValidationTests(unittest.TestCase):
  def test_parent_route_order_and_offer_details(self):
   s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','home-support','pattern-finder','pattern-session','first-step-call']]
   self.assertEqual(ids,sorted(ids))
-  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','RM1,797 · S$997 · USD 697','Four 60-minute online sessions, once every two weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','RM1,797 · S$997 · USD 697','Four 60-minute online sessions over about 10 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
   for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
  def test_retired_routes_redirect_without_forms(self):
   for page,target in [('start.html','/'),('programmes.html','/'),('services.html','/parents'),('course-waitlist.html','/parents#pattern-session'),('connect/index.html','/parents')]:
