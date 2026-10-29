@@ -15,7 +15,7 @@
 <link rel="preload" href="/dm-serif-display-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/apc-navigation.css?v=3064f527a4b0">
 <script src="/apc-navigation.js?v=ca445beb357d" defer></script>
-<link rel="stylesheet" href="/apc-call-first.css?v=db57117a8c70">
+<link rel="stylesheet" href="/apc-call-first.css?v=dfa65d1c1149">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "@id": "https://autismpathwaysconsulting.com/#webpage", "url": "https://autismpathwaysconsulting.com/", "name": "Autism Education for Parents, Centres and Schools | APC", "description": "CJ Lim helps parents, centres and schools understand difficult moments for autistic children and choose one practical change. Online, Malaysia and beyond.", "isPartOf": {"@id": "https://autismpathwaysconsulting.com/#website"}}, {"@type": "WebSite", "@id": "https://autismpathwaysconsulting.com/#website", "url": "https://autismpathwaysconsulting.com/", "name": "Autism Pathways Consulting", "publisher": {"@id": "https://autismpathwaysconsulting.com/#organization"}}, {"@type": "Organization", "@id": "https://autismpathwaysconsulting.com/#organization", "name": "Autism Pathways Consulting", "url": "https://autismpathwaysconsulting.com/", "logo": "https://autismpathwaysconsulting.com/og-image.png"}]}</script></head><body class="apc-v2 apc-home-page apc-call-first">
 <a class="apc-skip-link" href="#main-content">Skip to main content</a>
 <header class="apc-site-header">
@@ -28,6 +28,7 @@
 <main id="main-content">
 <section class="cf-hero" id="home"><div class="cf-wrap"><div>
 <h1 class="cf-rise"><span class="cf-sr">Same meltdown, shutdown, school refusal or big reaction, every day?</span><span aria-hidden="true">Same<br><span class="cf-rot"><span class="cf-w cf-w1"><i>meltdown</i>,</span><span class="cf-w cf-w2"><i>shutdown</i>,</span><span class="cf-w cf-w3"><i>morning struggle</i>,</span><span class="cf-w cf-w4"><i>bedtime battle</i>,</span><span class="cf-w cf-w5"><i>mealtime fight</i>,</span><span class="cf-w cf-w6"><i>school refusal</i>,</span><span class="cf-w cf-w7"><i>homework battle</i>,</span><span class="cf-w cf-w8"><i>big reaction</i>,</span></span><br>every day?</span></h1>
+<button class="cf-pause cf-rise" type="button" aria-label="Pause the moving headline" hidden><svg class="cf-ico-pause" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" rx="1"/><rect x="8.5" y="1" width="3.5" height="12" rx="1"/></svg><svg class="cf-ico-play" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11a1 1 0 0 0 1.5.86l9-5.5a1 1 0 0 0 0-1.72l-9-5.5A1 1 0 0 0 3 1.5z"/></svg><span>Pause</span></button>
 <p class="cf-lede cf-rise cf-d1">Talk it through with CJ. Free, 15 minutes, online.</p>
 <div class="cf-cta cf-rise cf-d2"><a class="cf-btn" href="/go/first-step-call">Book a free call</a></div>
 </div><figure class="cf-photo cf-rise cf-d3"><picture><source srcset="home-parent-listening-480.webp 480w, home-parent-listening-720.webp 720w, home-parent-listening-960.webp 960w" sizes="(max-width: 760px) calc(100vw - 32px), 50vw" type="image/webp"><img src="home-parent-listening-960.webp" width="960" height="640" alt="A parent listening as her child points to a visual routine at home" decoding="async" fetchpriority="high"></picture></figure></div></section>
@@ -51,6 +52,10 @@
 <script>
 // Start each band's motion when it scrolls into view, once. Holding and releasing live in the same script,
 // so a page without it simply plays everything on load.
+// The headline words loop only when this script runs, and the Pause button beside them can stop them.
+(function(){var h=document.querySelector(".cf-hero"),b=h&&h.querySelector(".cf-pause");if(!b||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+h.querySelector(".cf-rot").classList.add("cf-loop");b.hidden=false;
+b.addEventListener("click",function(){var p=h.classList.toggle("cf-paused");b.lastChild.textContent=p?"Play":"Pause";b.setAttribute("aria-label",(p?"Play":"Pause")+" the moving headline")});})();
 (function(){if(!("IntersectionObserver" in window))return;document.documentElement.classList.add("cf-js");
 // Watch the moving part of each band (stepper, weeks, rating), not its heading, and start once nearly all of it is
 // on screen above the phone call bar (the bottom 110px), so the motion is seen rather than missed.
