@@ -5425,15 +5425,18 @@ html.apc-site-snap {
     margin-bottom: -6px !important;
   }
 
+  /* Buttons move to the next row whole; at very large text a label wraps inside its button instead of leaving the screen */
   .apc-v2 .apc-footer-inner > div.apc-footer-column a {
-    flex: 1 1 auto;
+    flex: 1 0 auto;
+    max-width: 100%;
     justify-content: center;
     padding: 0 10px;
     border: 1px solid rgba(255, 255, 255, .28);
     border-radius: 10px;
     font-size: .75rem !important;
-    white-space: nowrap;
-    overflow-wrap: normal;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
   }
 
   /* The email is the widest, so it goes last and WhatsApp and Instagram share a row.
