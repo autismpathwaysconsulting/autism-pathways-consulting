@@ -54,8 +54,10 @@ column keeps About CJ, For Parents, For Centres and Schools, Teacher Talk, Resou
 1. **Free Big Reactions Quick Check**: two-page guide, email signup.
 2. **Pattern Finder Toolkit**: RM37 on Etsy.
 3. **Pattern Session**: RM57, live online group. Charged in RM; the card converts.
-4. **APC Home Support Programme**: RM1,797 · S$997 · USD 697. Format updated by the Founder on 2026-10-29:
-   four 60-minute online sessions over about 10 weeks (the first two are two weeks apart, the last two about
+4. **APC Home Support Programme**: RM1,797 · S$997 · USD 697, shared on the First Step Call only. Since the
+   call-first brief (29 Oct 2026) no public page shows this price; near the call button use "Fees are shared on
+   the call, before you decide. Nothing is paid on the call." and keep the payment line. Format updated by the
+   Founder on 2026-10-29: four 60-minute online sessions over 10 to 12 weeks (the first two are two weeks apart, the last two about
    a month apart), a one-page practice plan after every session, and one WhatsApp check-in message each week
    between sessions. No check-in after the final session, no "every two weeks", and no maintenance sessions
    mentioned yet. No unlimited messaging or crisis support.

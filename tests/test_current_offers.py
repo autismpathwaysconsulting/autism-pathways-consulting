@@ -23,7 +23,7 @@ DROPPED_OFFERS = re.compile(
 UNAPPROVED_PAYMENT = re.compile(r"paypal|stripe|crypto", re.I)
 
 PRICES = {
-    "parents.html": ["RM37", "RM57", "RM1,797", "S$997", "USD 697"],
+    "parents.html": ["RM37", "RM57"],
     "schools.html": ["RM2,497", "S$997", "USD 697", "RM4,497", "S$1,797", "USD 1,297", "RM1,497", "S$597", "USD 397"],
     "teacher-talk.html": ["RM897", "RM797", "S$297", "USD 197"],
 }
