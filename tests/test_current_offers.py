@@ -23,7 +23,7 @@ DROPPED_OFFERS = re.compile(
 UNAPPROVED_PAYMENT = re.compile(r"paypal|stripe|crypto", re.I)
 
 PRICES = {
-    "parents.html": ["RM37", "RM57", "RM1,797", "S$997", "USD 697"],
+    "parents.html": ["RM37", "RM57"],
     "schools.html": ["RM2,497", "S$997", "USD 697", "RM4,497", "S$1,797", "USD 1,297", "RM1,497", "S$597", "USD 397"],
     "teacher-talk.html": ["RM897", "RM797", "S$297", "USD 197"],
 }
@@ -75,14 +75,14 @@ class CurrentOffers(unittest.TestCase):
                     self.assertIn(price, self.pages[name])
 
     def test_parents_keeps_the_free_first_step_call(self):
-        self.assertIn("https://cal.com/autismpathwaysconsulting/first-step-call", self.pages["parents.html"])
+        self.assertIn('href="/go/first-step-call"', self.pages["parents.html"])
         self.assertIn("Free 15-Min First Step Call", self.pages["parents.html"])
 
-    def test_quick_check_is_the_header_call_to_action(self):
+    def test_free_call_is_the_header_call_to_action(self):
         for name, html in self.pages.items():
             if 'class="apc-shell-start"' in html:
                 with self.subTest(page=name):
-                    self.assertRegex(html, r'<a class="apc-shell-start" href="/big-reactions-quick-check"[^>]*><span class="apc-cta-long">Get the free Quick Check</span><span class="apc-cta-short">Free Quick Check</span></a>')
+                    self.assertRegex(html, r'<a class="apc-shell-start" href="/go/first-step-call"><span class="apc-cta-long">Book a free call</span><span class="apc-cta-short">Free call</span></a>')
 
 
 if __name__ == "__main__":

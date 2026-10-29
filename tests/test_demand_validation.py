@@ -4,23 +4,24 @@ import unittest
 R=Path(__file__).resolve().parents[1]
 PAY='CJ confirms fit and availability first, then sends payment details privately. Malaysia: bank transfer or DuitNow QR. Singapore and other countries: Wise.'
 class DemandValidationTests(unittest.TestCase):
- def test_home_primary_route_and_ways_to_work(self):
+ def test_home_is_call_first(self):
   s=(R/'index.html').read_text();hero=s.split('id="home"')[1].split('</section>')[0]
-  self.assertIn('href="/big-reactions-quick-check">Get the free Quick Check',hero)
-  self.assertIn('2 pages · about 5 minutes',hero)
-  self.assertEqual(hero.count('class="button'),1)
-  self.assertNotIn('Book Free 15-Min',hero)
-  self.assertNotIn('hero-approach',hero)
-  self.assertNotIn('data-cal-inline',s)
-  self.assertEqual(s.count('<section '),6)
+  self.assertIn('Same meltdown, shutdown, school refusal or big reaction, every day?',hero)
+  self.assertIn('Talk it through with CJ. Free, 15 minutes, online.',hero)
+  self.assertEqual(hero.count('href="/go/first-step-call">Book a free call'),1)
+  self.assertEqual(s.count('<section '),5)
   self.assertNotIn('data-reveal',s)
-  start=s.split('id="choose-start"')[1].split('</section>')[0]
-  for text in ['Free Big Reactions Quick Check','APC Home Support Programme','RM1,797 · S$997 · USD 697','href="/go/first-step-call">Book a free First Step Call','CJ confirms fit first, then sends payment details privately.','href="/schools"','APC works with you, not instead of the therapists your child is already seeing.']:self.assertIn(text,start)
-  for text in ['RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
+  self.assertNotIn('data-cal-inline',s)
+  self.assertIn('class="cf-bar"><a class="cf-btn" href="/go/first-step-call">Book a free call',s)
+  for text in ['Tell CJ the moment','Get one step to try','Hear if Home Support fits','4 sessions · 10 to 12 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid on the call.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
+  # No price on the call-first home page
+  for text in ['RM1,797','S$997','USD 697','RM57','RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_parent_route_order_and_offer_details(self):
   s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','home-support','pattern-finder','pattern-session','first-step-call']]
   self.assertEqual(ids,sorted(ids))
-  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','RM1,797 · S$997 · USD 697','Four 60-minute online sessions over about 10 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Four 60-minute online sessions over 10 to 12 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  # The Home Support price is shared on the call, not on any public page
+  for page in ['parents.html','pay/index.html','terms.html','index.html']:self.assertNotIn('RM1,797',(R/page).read_text())
   for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
  def test_retired_routes_redirect_without_forms(self):
   for page,target in [('start.html','/'),('programmes.html','/'),('services.html','/parents'),('course-waitlist.html','/parents#pattern-session'),('connect/index.html','/parents')]:

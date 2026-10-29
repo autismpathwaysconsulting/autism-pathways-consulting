@@ -83,3 +83,10 @@
 }
 /* The skip link sits off-screen until focused; keep it inside the viewport width so large text does not widen the page. */
 .apc-skip-link { max-width:calc(100vw - 16px);white-space:normal; }
+/* Frosted glass header; text stays dark on a mostly opaque cream, so contrast holds over any photo beneath. */
+html body.apc-v2 .apc-site-header { background: rgba(255, 252, 247, .78) !important; -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { html body.apc-v2 .apc-site-header { background: #fffcf7 !important; } }
+@media (prefers-reduced-transparency: reduce) { html body.apc-v2 .apc-site-header { background: #fffcf7 !important; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* Call-first menu is short, so header text can meet the 16px minimum at every width. */
+html body.apc-v2 .apc-shell-nav > a, html body.apc-v2 .apc-shell-inner > .apc-shell-start, html body.apc-v2 .apc-nav-js .apc-nav-toggle { font-size: 1rem !important; }
+@media (max-width: 360px) { html body.apc-v2 .apc-nav-js .apc-nav-toggle { font-size: 0 !important; } }
