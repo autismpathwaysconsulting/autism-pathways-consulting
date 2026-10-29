@@ -126,6 +126,7 @@ export const PUBLIC_FILES = Object.freeze([
   "apc-teacher-talk-enquiry.js",
   "apc-navigation.js",
   "apc-navigation.css",
+  "apc-call-first.css",
   "apc-audience-pages.css",
   "blog.html",
   "parents.html",

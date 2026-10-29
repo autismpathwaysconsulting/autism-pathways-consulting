@@ -75,14 +75,14 @@ class CurrentOffers(unittest.TestCase):
                     self.assertIn(price, self.pages[name])
 
     def test_parents_keeps_the_free_first_step_call(self):
-        self.assertIn("https://cal.com/autismpathwaysconsulting/first-step-call", self.pages["parents.html"])
+        self.assertIn('href="/go/first-step-call"', self.pages["parents.html"])
         self.assertIn("Free 15-Min First Step Call", self.pages["parents.html"])
 
-    def test_quick_check_is_the_header_call_to_action(self):
+    def test_free_call_is_the_header_call_to_action(self):
         for name, html in self.pages.items():
             if 'class="apc-shell-start"' in html:
                 with self.subTest(page=name):
-                    self.assertRegex(html, r'<a class="apc-shell-start" href="/big-reactions-quick-check"[^>]*><span class="apc-cta-long">Get the free Quick Check</span><span class="apc-cta-short">Free Quick Check</span></a>')
+                    self.assertRegex(html, r'<a class="apc-shell-start" href="/go/first-step-call"><span class="apc-cta-long">Book a free call</span><span class="apc-cta-short">Free call</span></a>')
 
 
 if __name__ == "__main__":
