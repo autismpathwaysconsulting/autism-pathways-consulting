@@ -9,7 +9,7 @@ const nav=`<nav class="apc-shell-nav" id="apc-primary-nav" aria-label="Primary n
 const [ctaHref,ctaLabel]=config.cta;
 const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}>${ctaLabel}</a>`;
 const [legal,scope]=config.footer;
-const explore=[...config.primary,['/resources','Resources'],[ctaHref,'Free Quick Check']];
+const explore=[...config.primary,['/resources','Resources'],['/parents#pattern-session','Pattern Session'],[ctaHref,'Free Quick Check']];
 const policies=[['/privacy','Privacy Policy'],['/terms','Terms and Conditions'],['/cancellation-policy','Cancellation Policy'],['/disclaimer','Disclaimer']];
 // Every public page carries the company line and the scope paragraph; main pages keep the link columns.
 const mainFooter=`<footer class="apc-footer">
