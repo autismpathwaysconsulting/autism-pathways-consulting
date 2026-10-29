@@ -1,5 +1,14 @@
 # APC website: working rules for this repo
 
+## Reply format (CJ does not read code)
+CJ does not read code. End every reply with this block and nothing after it:
+- **Next step (recommended):** one plain sentence.
+- **Reply with:** numbered options, the recommended one first, each saying in plain words what will happen (for example 1. yes = it goes live on the website; 2. no = nothing changes).
+- **Risk:** none, low or medium, with one short reason (for example: changes the live site, can be undone).
+- **Live site changed this turn:** yes or no.
+
+No code, file names or jargon in this block. If nothing is needed from CJ, write: Nothing for you right now. No em dashes.
+
 Static HTML site for Autism Pathways Consulting (APC), founded by CJ Lim (MA Special and
 Inclusive Education). Edit HTML/CSS in place, then run the allowlisted `npm run build` release step. The site is now
 `LAUNCHED / LIVE` and public. Production deployment, merge, and marking a draft PR ready for
