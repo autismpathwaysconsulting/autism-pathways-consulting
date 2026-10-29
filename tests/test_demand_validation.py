@@ -7,7 +7,7 @@ class DemandValidationTests(unittest.TestCase):
  def test_home_primary_route_and_ways_to_work(self):
   s=(R/'index.html').read_text();hero=s.split('id="home"')[1].split('</section>')[0]
   self.assertIn('href="/big-reactions-quick-check">Get the free Quick Check',hero)
-  self.assertIn('A 2-page check. About 5 minutes. Notice what happened before, during and after one big reaction.',hero)
+  self.assertIn('2 pages · about 5 minutes',hero)
   self.assertEqual(hero.count('class="button'),1)
   self.assertNotIn('Book Free 15-Min',hero)
   self.assertNotIn('hero-approach',hero)
@@ -15,7 +15,7 @@ class DemandValidationTests(unittest.TestCase):
   self.assertEqual(s.count('<section '),6)
   self.assertNotIn('data-reveal',s)
   start=s.split('id="choose-start"')[1].split('</section>')[0]
-  for text in ['Free Big Reactions Quick Check','APC Home Support Programme','RM1,797 · S$997 · USD 697','href="/go/first-step-call">Book a free First Step Call',PAY,'href="/schools"','APC works with you, not instead of the therapists your child is already seeing.']:self.assertIn(text,start)
+  for text in ['Free Big Reactions Quick Check','APC Home Support Programme','RM1,797 · S$997 · USD 697','href="/go/first-step-call">Book a free First Step Call','CJ confirms fit first, then sends payment details privately.','href="/schools"','APC works with you, not instead of the therapists your child is already seeing.']:self.assertIn(text,start)
   for text in ['RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_parent_route_order_and_offer_details(self):
   s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','home-support','pattern-finder','pattern-session','first-step-call']]
