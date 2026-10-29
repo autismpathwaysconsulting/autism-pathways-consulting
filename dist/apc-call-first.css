@@ -243,6 +243,13 @@
   .apc-call-first :is(.cf-bar, .cf-rpill, .cf-glass) { background: var(--cf-bg) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 }
 
+/* Section motion waits for the reader: the script below the page adds .cf-js, then .cf-inview to each band as it
+   scrolls into view (once). Until then its animations hold on their first frame. Without the script nothing is
+   held, so everything plays on load and ends fully visible. The hero is not a band, so it still starts on load. */
+.cf-js .cf-band:not(.cf-inview) *,
+.cf-js .cf-band:not(.cf-inview) *::before,
+.cf-js .cf-band:not(.cf-inview) *::after { animation-play-state: paused !important; }
+
 /* Reduced motion: no movement at all, and the headline shows "big reaction" */
 @media (prefers-reduced-motion: reduce) {
   .apc-call-first *, .apc-call-first *::before, .apc-call-first *::after { animation: none !important; transition: none !important; }
