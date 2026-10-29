@@ -76,3 +76,5 @@
 
 /* Keep the resource inside narrow viewports; retain the embedded signup. */
 body.apc-quick-check-page{margin:0}
+/* Let the hero column and its button shrink at 320px with large text instead of widening the page. */
+.quick-hero-grid>*,.inside-grid>*{min-width:0}.apc-quick-check-page main :is(h1,h2){overflow-wrap:break-word;hyphens:auto}.apc-quick-check-page .quick-inside{overflow-x:clip}.apc-quick-check-page .hero-actions .button{white-space:normal;max-width:100%}

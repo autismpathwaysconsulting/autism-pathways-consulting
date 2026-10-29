@@ -8,7 +8,8 @@ const links=items=>items.map(([href,label])=>`<a href="${href}">${label}</a>`).j
 const toggle=`<button class="apc-nav-toggle" type="button" aria-expanded="false" aria-controls="apc-primary-nav" aria-label="Menu">Menu</button><script>document.currentScript.closest('.apc-site-header').classList.add('apc-nav-js')</script>`;
 const nav=`<nav class="apc-shell-nav" id="apc-primary-nav" aria-label="Primary navigation">${links(config.primary)}<details class="apc-nav-dropdown"><summary>Resources</summary><div class="apc-dropdown-panel">${links(config.resources)}</div></details>${links([config.contact])}</nav>`;
 const [ctaHref,ctaLabel]=config.cta;
-const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}>${ctaLabel}</a>`;
+// Phones show the short label; the hidden one is display:none, so the accessible name always matches what is on screen.
+const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria-current="page"':''}><span class="apc-cta-long">${ctaLabel}</span><span class="apc-cta-short">Free Quick Check</span></a>`;
 const [legal,scope]=config.footer;
 const explore=[...config.primary,['/resources','Resources'],['/parents#pattern-session','Pattern Session'],[ctaHref,'Free Quick Check']];
 const policies=[['/privacy','Privacy Policy'],['/terms','Terms and Conditions'],['/cancellation-policy','Cancellation Policy'],['/disclaimer','Disclaimer']];
