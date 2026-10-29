@@ -244,11 +244,21 @@
 }
 
 /* Section motion waits for the reader: the script below the page adds .cf-js, then .cf-inview to each band as it
-   scrolls into view (once). Until then its animations hold on their first frame. Without the script nothing is
-   held, so everything plays on load and ends fully visible. The hero is not a band, so it still starts on load. */
-.cf-js .cf-band:not(.cf-inview) *,
-.cf-js .cf-band:not(.cf-inview) *::before,
-.cf-js .cf-band:not(.cf-inview) *::after { animation-play-state: paused !important; }
+   scrolls into view (once). Until then the band's animations are switched off and its parts sit at their first frame,
+   so each animation is created fresh on arrival; paused-from-load animations can look finished in Safari.
+   Without the script none of this applies and everything plays on load and ends fully visible.
+   The hero is not a band, so it still starts on load. */
+@media (prefers-reduced-motion: no-preference) {
+  .cf-js .cf-band:not(.cf-inview) *,
+  .cf-js .cf-band:not(.cf-inview) *::before,
+  .cf-js .cf-band:not(.cf-inview) *::after { animation: none !important; }
+  .cf-js .cf-band:not(.cf-inview) :is(.cf-call, .cf-timeline)::before { transform: scaleX(0); }
+  .cf-js .cf-band:not(.cf-inview) .cf-wk { opacity: .01; transform: translateY(22px); }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 640px) {
+  .cf-js .cf-band:not(.cf-inview) .cf-call::before { transform: scaleY(0); }
+  .cf-js .cf-band:not(.cf-inview) .cf-call li { opacity: .01; transform: translateY(22px); }
+}
 
 /* Reduced motion: no movement at all, and the headline shows "big reaction" */
 @media (prefers-reduced-motion: reduce) {
