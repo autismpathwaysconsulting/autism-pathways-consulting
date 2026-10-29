@@ -43,7 +43,6 @@ if (offerSwitcher) {
   offerSwitcher.dataset.enhanced = "true";
 }
 
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 document.querySelectorAll("[data-apc-carousel]").forEach(carousel => {
   const tabs = [...carousel.querySelectorAll("[data-carousel-tab]")];
@@ -300,11 +299,6 @@ if (isApcPage) {
   window.addEventListener("resize", requestProgress);
 }
 
-if (!reducedMotion) {
-  document.querySelectorAll(".apc-v2:not(.apc-home-page) main > :where(header, section, article, .hero), .apc-v2:not(.apc-home-page) main > :where(.container, .wrap) > :where(section, .service-section, .unsure)")
-    .forEach(item => item.setAttribute("data-reveal", ""));
-}
-
 const sectionLinks = [...document.querySelectorAll("[data-section-link]")];
 const sections = sectionLinks
   .map(link => document.querySelector(link.getAttribute("href")))
@@ -334,25 +328,3 @@ if (sectionLinks.length && sections.length && "IntersectionObserver" in window) 
   sections.forEach(section => observer.observe(section));
 }
 
-// The first screen must paint immediately. Reveal only offscreen content.
-const revealItems = [...document.querySelectorAll("[data-reveal]")].filter(item => {
-  if (item.getBoundingClientRect().top >= window.innerHeight) return true;
-  item.removeAttribute("data-reveal");
-  return false;
-});
-
-if (revealItems.length && !reducedMotion && "IntersectionObserver" in window) {
-  document.documentElement.classList.add("apc-motion-ready");
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("is-visible");
-      revealObserver.unobserve(entry.target);
-    });
-  }, {
-    rootMargin: "0px 0px -12% 0px",
-    threshold: 0.16,
-  });
-
-  revealItems.forEach(item => revealObserver.observe(item));
-}
