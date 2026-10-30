@@ -13,7 +13,7 @@ class DemandValidationTests(unittest.TestCase):
   self.assertNotIn('data-cal-inline',s)
   self.assertEqual(s.count('<section '),10)
   ways=s.split('id="support-options"')[1].split('</section>')[0]
-  for text in ['Free Quick Check','Pattern Session','RM57','Home Support Programme','From RM1,797','Staff training','From RM1,497']:self.assertIn(text,ways)
+  for text in ['Free Quick Check','Pattern Session','RM57','Autism Parent Pathway Programme','From RM1,797','Staff training','From RM1,497']:self.assertIn(text,ways)
   for text in ['RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_parent_route_order_and_offer_details(self):
   s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','pattern-finder','pattern-session','home-support','first-step-call']]
