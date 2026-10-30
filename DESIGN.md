@@ -10,7 +10,7 @@ Every parent-facing journey should help a parent move through this emotional seq
 
 The experience should feel calm, modern, editorial, warm, premium, parent-centred, trustworthy, and uncluttered.
 
-Avoid clinical hospital styling, SaaS dashboard styling, excessive cards, childish autism iconography, purposeless gradients, giant shadows, glassmorphism, decorative progress bars, aggressive sales patterns, fake urgency, autoplay animation, excessive rounded containers, and animation used only for decoration.
+Avoid clinical hospital styling, SaaS dashboard styling, excessive cards, childish autism iconography, purposeless gradients, giant shadows, heavy glassmorphism (light glass is allowed only where section 9 lists it), decorative progress bars, aggressive sales patterns, fake urgency, autoplay animation other than the loops section 9 lists, excessive rounded containers, and animation used only for decoration.
 
 ## 2. Information architecture
 
@@ -113,9 +113,16 @@ Allowed motion includes:
 - Gentle page-state transitions when browser-native and safe.
 - Accordion transitions where a native implementation supports them cleanly.
 
-Prefer animating `opacity` and `transform`. Avoid bouncing, large spring movement, parallax on parent-support content, spinning, continuous loops, or motion required to understand content.
+Prefer animating `opacity` and `transform`. Avoid bouncing, large spring movement, parallax on parent-support content, spinning, other continuous loops, or motion required to understand content.
 
-Respect `prefers-reduced-motion`. When reduced motion is requested, remove nonessential transitions and reveals. Do not add a JavaScript animation library for APC v1.
+Founder decisions, 29 and 30 October 2026, for the homepage:
+
+- Light liquid glass is allowed on the header, the hero photo captions and the phone call bar, with a solid fallback for old browsers and `prefers-reduced-transparency`. Never behind body text.
+- Looping motion is allowed for the headline word, the hero photo captions and the Pathway Programme steps.
+- Every animation must keep the layout still: no layout shift, on any screen size.
+- The Pause button controls the hero motion: the headline word and the photo captions together.
+
+Respect `prefers-reduced-motion`. When reduced motion is requested, remove nonessential transitions and reveals. On the homepage the headline word and photo captions keep changing by plain fade only (no slide or blur), and the programme steps stay fully lit without cycling. Do not add a JavaScript animation library for APC v1.
 
 ## 10. Modern CSS
 
