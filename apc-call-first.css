@@ -239,6 +239,10 @@ html:not(.cf-js) .apc-call-first .cf-pause { display: none; }
   transition: background 500ms var(--cf-ease), color 500ms var(--cf-ease), transform 500ms var(--cf-ease), box-shadow 500ms var(--cf-ease);
 }
 .apc-call-first .cf-live .cf-on .cf-step-n { background: var(--cf-bright); color: var(--cf-deep); transform: scale(1.15); box-shadow: 0 0 0 8px rgba(45, 212, 191, .16); }
+/* Reduce Motion: the fade stays, the number does not grow. !important because the shared layer flattens transitions. */
+.apc-call-first .cf-calm .cf-on .cf-step-n { transform: none; }
+.apc-call-first .cf-calm .cf-step { transition-duration: 600ms !important; }
+.apc-call-first .cf-calm .cf-step-n { transition-duration: 500ms !important; }
 .apc-call-first .cf-step b { display: block; margin-top: 18px; color: var(--cf-bright); font-size: 1rem; font-weight: 600; }
 .apc-call-first .cf-step h3 { margin-top: 4px; color: #fff9f1 !important; font-size: 1.625rem; }
 .apc-call-first .cf-step p { margin: 6px auto 0 !important; max-width: 21ch !important; color: var(--cf-on-dark); }
@@ -346,7 +350,7 @@ html:not(.cf-js) .apc-call-first .cf-pause { display: none; }
 }
 
 /* Reduced motion: the word still changes and the captions still take turns, by plain fade only.
-   No slide, blur, pulse, lift, drawn line or programme cycling.
+   No slide, blur, pulse, lift, drawn line or growing step number.
    !important because the shared layer switches every animation off under this setting. */
 @media (prefers-reduced-motion: reduce) {
   .apc-call-first .cf-final path { stroke-dashoffset: 0; }
