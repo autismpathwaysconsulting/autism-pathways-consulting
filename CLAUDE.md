@@ -29,7 +29,8 @@ offers, First Step Call). Change offer facts there only when the Founder has giv
 - Scope line where relevant: "APC works with you, not instead of the therapists your child is already seeing."
 - Call-first funnel (Founder brief, 29 Oct 2026): the one main action is the Free 15-Min First Step Call. Every
   call button goes to `/go/first-step-call` (Cal.com). The home page shows no price; the Quick Check appears there
-  only as the FAQ link "Not ready to talk yet?".
+  only as text links, never a second button: "Not ready to talk? Free Quick Check" under the hero button
+  (Founder brief, 30 Oct 2026) and the FAQ link "Not ready to talk yet?".
 - Parent-facing CTAs on other pages still route by readiness:
   - **Start free:** the free Big Reactions Quick Check (`/big-reactions-quick-check`).
   - **Learn with other parents:** Pattern Session, RM57 live online group. Dates go to the Quick Check email list first.
