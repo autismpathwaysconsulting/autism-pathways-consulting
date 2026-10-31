@@ -122,7 +122,7 @@ Founder decisions, 29 and 30 October 2026, for the homepage:
 - Every animation must keep the layout still: no layout shift, on any screen size.
 - The Pause button controls the hero motion: the headline word and the photo captions together.
 
-Respect `prefers-reduced-motion`. When reduced motion is requested, remove nonessential transitions and reveals. On the homepage the headline word and photo captions keep changing by plain fade only (no slide or blur), and the programme steps stay fully lit without cycling. Do not add a JavaScript animation library for APC v1.
+Respect `prefers-reduced-motion`. When reduced motion is requested, remove nonessential transitions and reveals. On the homepage the headline word and photo captions keep changing by plain fade only (no slide or blur), and the programme steps still take turns by plain fade, without the number growing. Do not add a JavaScript animation library for APC v1.
 
 ## 10. Modern CSS
 

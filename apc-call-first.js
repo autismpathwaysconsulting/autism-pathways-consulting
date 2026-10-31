@@ -19,44 +19,43 @@
   }).observe(hero);
 
   // Programme: one step lit at a time, only while the section is on screen, so the dimmed steps
-  // are never what a reader lands on. Reduced motion keeps all four steps fully lit.
+  // are never what a reader lands on. Reduced motion keeps the fade but drops the movement.
   var list = document.querySelector(".cf-steps"), steps = [].slice.call(list.children);
-  if (!reduce) {
-    var current = 0, holdUntil = 0, onScreen = false, frame = 0;
-    var show = function (n) {
-      current = n;
-      steps.forEach(function (step, i) { step.classList.toggle("cf-on", i === n); });
-    };
-    var choose = function (n) { holdUntil = Date.now() + 6000; show(n); };
-    show(0);
-    steps.forEach(function (step, n) {
-      step.tabIndex = 0;
-      ["mouseenter", "focus", "click"].forEach(function (type) {
-        step.addEventListener(type, function () { choose(n); });
-      });
+  var current = 0, holdUntil = 0, onScreen = false, frame = 0;
+  var show = function (n) {
+    current = n;
+    steps.forEach(function (step, i) { step.classList.toggle("cf-on", i === n); });
+  };
+  var choose = function (n) { holdUntil = Date.now() + 6000; show(n); };
+  list.classList.toggle("cf-calm", reduce);
+  show(0);
+  steps.forEach(function (step, n) {
+    step.tabIndex = 0;
+    ["mouseenter", "focus", "click"].forEach(function (type) {
+      step.addEventListener(type, function () { choose(n); });
     });
-    new IntersectionObserver(function (entries) {
-      onScreen = entries[0].isIntersecting;
-      list.classList.toggle("cf-live", onScreen);
-    }, { threshold: 0.25 }).observe(list);
-    setInterval(function () {
-      if (onScreen && Date.now() >= holdUntil) show((current + 1) % steps.length);
-    }, 2800);
-    // Phones: the step nearest the middle of the screen lights up while scrolling.
-    var phone = matchMedia("(max-width: 820px)");
-    addEventListener("scroll", function () {
-      if (!phone.matches || !onScreen || frame) return;
-      frame = requestAnimationFrame(function () {
-        frame = 0;
-        var middle = innerHeight / 2, best = current, bestGap = Infinity;
-        steps.forEach(function (step, i) {
-          var box = step.getBoundingClientRect(), gap = Math.abs(box.top + box.height / 2 - middle);
-          if (gap < bestGap) { bestGap = gap; best = i; }
-        });
-        choose(best);
+  });
+  new IntersectionObserver(function (entries) {
+    onScreen = entries[0].isIntersecting;
+    list.classList.toggle("cf-live", onScreen);
+  }, { threshold: 0.25 }).observe(list);
+  setInterval(function () {
+    if (onScreen && Date.now() >= holdUntil) show((current + 1) % steps.length);
+  }, 2800);
+  // Phones: the step nearest the middle of the screen lights up while scrolling.
+  var phone = matchMedia("(max-width: 820px)");
+  addEventListener("scroll", function () {
+    if (!phone.matches || !onScreen || frame) return;
+    frame = requestAnimationFrame(function () {
+      frame = 0;
+      var middle = innerHeight / 2, best = current, bestGap = Infinity;
+      steps.forEach(function (step, i) {
+        var box = step.getBoundingClientRect(), gap = Math.abs(box.top + box.height / 2 - middle);
+        if (gap < bestGap) { bestGap = gap; best = i; }
       });
-    }, { passive: true });
-  }
+      choose(best);
+    });
+  }, { passive: true });
 
   // Reviews: one card at a time. Swipe is native scroll snap; arrows and dots move it. No auto-advance.
   var track = document.querySelector(".cf-track"), cards = [].slice.call(track.children);
