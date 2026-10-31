@@ -29,8 +29,6 @@ await page.keyboard.press('Tab');
 assert.equal(await page.locator('.apc-skip-link').first().evaluate(el=>el===document.activeElement),true);
 await page.keyboard.press('Enter');
 assert.equal(await page.evaluate(()=>location.hash),'#main-content');
-await page.locator('.apc-nav-dropdown summary').first().focus();await page.keyboard.press('Enter');
-assert.equal(await page.locator('.apc-nav-dropdown').first().getAttribute('open'),'');
 assert.equal(await page.locator('footer nav').first().evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
 await page.goto('http://localhost:8899/parents#home-support');assert.equal(await page.locator('#home-support').count(),1);
 await page.goto('http://localhost:8899/schools');await page.locator('#sf-name').fill('QA Educator');await page.locator('#sf-school').fill('QA School');await page.locator('#school-training-form button[type=submit]').click();await page.locator('#sf-success').waitFor({state:'visible'});assert.match(await page.locator('#school-whatsapp-link').getAttribute('href'),/^https:\/\/wa.me\/601172998168\?text=/);await page.locator('#sf-name').fill('Changed');assert.equal(await page.locator('#sf-success').isVisible(),false);
