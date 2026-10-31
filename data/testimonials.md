@@ -5,7 +5,7 @@ Real names only with written permission. See docs/TESTIMONIALS.md for the approv
 
 ## Parents
 - quote: "After having a structured outline of what he has to do, he is more accepting of his routine, and it takes less time to get him to do something, especially going to classes. I also see that he is able to communicate his needs more precisely now, rather than just crying or saying no."
-  name: "Parent, APC Home Support Programme, Malaysia (2026)"
+  name: "Parent, Autism Parent Pathway Programme, Malaysia (2026)"
   context: "Parent-reported. Live on the homepage (#parent-story)."
 - quote: "I come to you because doctors gave generic advice."
   name: "Parent after a First Step Call, Malaysia (2026)"

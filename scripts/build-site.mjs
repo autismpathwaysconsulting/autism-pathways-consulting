@@ -127,6 +127,8 @@ export const PUBLIC_FILES = Object.freeze([
   "apc-navigation.js",
   "apc-navigation.css",
   "apc-call-first.css",
+  "apc-call-first.js",
+  "apc-logo-clear.webp",
   "apc-audience-pages.css",
   "blog.html",
   "parents.html",

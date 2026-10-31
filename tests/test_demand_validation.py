@@ -12,8 +12,8 @@ class DemandValidationTests(unittest.TestCase):
   self.assertEqual(s.count('<section '),5)
   self.assertNotIn('data-reveal',s)
   self.assertNotIn('data-cal-inline',s)
-  self.assertIn('class="cf-bar"><a class="cf-btn" href="/go/first-step-call">Book a free call',s)
-  for text in ['Tell CJ the moment','Get one step to try','Hear if Home Support fits','4 sessions · 10 to 12 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid on the call.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
+  self.assertIn('class="cf-bar"><p><b>Free 15-minute call</b>',s)
+  for text in ['Tell CJ the moment','Get one step to try','Hear if the Pathway Programme fits','4 sessions · 10 to 12 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid on the call.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
   # No price on the call-first home page
   for text in ['RM1,797','S$997','USD 697','RM57','RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_parent_route_order_and_offer_details(self):
