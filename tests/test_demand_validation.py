@@ -20,6 +20,8 @@ class DemandValidationTests(unittest.TestCase):
   s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','home-support','pattern-finder','pattern-session','first-step-call']]
   self.assertEqual(ids,sorted(ids))
   for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Four 60-minute online sessions over 10 to 12 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  promises=s[s.index('class="parent-promises"'):s.index('id="pattern-finder"')]
+  for text in ['What you can count on','Session notes the same day.','Your written plan within 48 hours of the last session.','WhatsApp replies within 1 working day.']:self.assertIn(text,promises)
   # The Home Support price is shared on the call, not on any public page
   for page in ['parents.html','pay/index.html','terms.html','index.html']:self.assertNotIn('RM1,797',(R/page).read_text())
   for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
