@@ -10,6 +10,7 @@ REDIRECTS = {
     "guide": "/big-reactions-quick-check",
     "toolkit": "https://www.etsy.com/listing/4590236884/autism-parent-pattern-finder-toolkit-big",
     "apply": "/parents#home-support",
+    "calm": "https://calm.autismpathwaysconsulting.com",
 }
 
 
@@ -20,7 +21,7 @@ class LinksPage(unittest.TestCase):
 
     def test_four_buttons_in_order(self):
         hrefs = re.findall(r'<a class="card" href="([^"]+)"', self.html)
-        self.assertEqual(hrefs, ["/go/first-step-call", "/go/guide", "/go/toolkit", "/go/apply"])
+        self.assertEqual(hrefs, ["/go/first-step-call", "/go/guide", "/go/calm", "/go/toolkit", "/go/apply"])
 
     def test_no_prices_on_the_page(self):
         self.assertIsNone(re.search(r"RM ?\d|S\$ ?\d|USD ?\d", self.html))
