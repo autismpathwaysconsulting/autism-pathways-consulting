@@ -131,6 +131,10 @@
   Cache-Control: public, max-age=0, must-revalidate, no-transform
   X-Robots-Tag: noindex
 
+/go/calm
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+  X-Robots-Tag: noindex
+
 # Keep the old Pages address out of search; the live site is autismpathwaysconsulting.com.
 https://autism-pathways-consulting.pages.dev/*
   X-Robots-Tag: noindex

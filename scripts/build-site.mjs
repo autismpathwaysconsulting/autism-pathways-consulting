@@ -227,6 +227,7 @@ export const PUBLIC_FILES = Object.freeze([
   "go/guide.html",
   "go/toolkit.html",
   "go/apply.html",
+  "go/calm.html",
   "links.html",
   "pathways-lab/index.html",
   "pathways-lab/app.js",
