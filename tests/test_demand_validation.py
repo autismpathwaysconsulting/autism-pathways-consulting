@@ -13,17 +13,18 @@ class DemandValidationTests(unittest.TestCase):
   self.assertNotIn('data-reveal',s)
   self.assertNotIn('data-cal-inline',s)
   self.assertIn('class="cf-bar"><p><b>Free 15-minute call</b>',s)
-  for text in ['Tell CJ the moment','Get one step to try','Hear if the Pathway Programme fits','4 sessions · 10 to 12 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid on the call.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
+  for text in ['Tell CJ the moment','Get one step to try','Hear if the Pathway Programme fits','8 sessions · 12 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid on the call.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
   # No price on the call-first home page
   for text in ['RM1,797','S$997','USD 697','RM57','RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_parent_route_order_and_offer_details(self):
   s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','home-support','pattern-finder','pattern-session','first-step-call']]
   self.assertEqual(ids,sorted(ids))
-  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Four 60-minute online sessions over 10 to 12 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Eight 60-minute online sessions over 12 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
   promises=s[s.index('class="parent-promises"'):s.index('id="pattern-finder"')]
-  for text in ['What you can count on','Session notes the same day.','Your written plan within 48 hours of the last session.','WhatsApp replies within 1 working day.']:self.assertIn(text,promises)
+  for text in ['What you can count on','Session notes the same day.','Your written plan within 48 hours of the last session.','WhatsApp replies the same working day.','Not a fit after the first session? Your money back in full.']:self.assertIn(text,promises)
   # The Home Support price is shared on the call, not on any public page
-  for page in ['parents.html','pay/index.html','terms.html','index.html']:self.assertNotIn('RM1,797',(R/page).read_text())
+  for page in ['parents.html','pay/index.html','terms.html','index.html']:
+   for price in ['RM1,797','RM4,997','RM7,997']:self.assertNotIn(price,(R/page).read_text())
   for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
  def test_retired_routes_redirect_without_forms(self):
   for page,target in [('start.html','/'),('programmes.html','/'),('services.html','/parents'),('course-waitlist.html','/parents#pattern-session'),('connect/index.html','/parents')]:
