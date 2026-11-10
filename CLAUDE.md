@@ -27,16 +27,16 @@ offers, First Step Call). Change offer facts there only when the Founder has giv
 - Tone: warm, calm, practical. Card/guide titles use the parent's felt moment, not a clinical
   topic label (e.g. "When the meltdown comes out of nowhere", not "Meltdowns at home").
 - Scope line where relevant: "APC works with you, not instead of the therapists your child is already seeing."
-- Call-first funnel (Founder brief, 29 Oct 2026): the one main action is the Free 15-Min First Step Call. Every
+- Call-first funnel (Founder brief, 29 Oct 2026): the one main action is the Free 20-Min First Step Call. Every
   call button goes to `/go/first-step-call` (Cal.com). The home page shows no price; the Quick Check appears there
   only as text links, never a second button: "Not ready to talk? Free Quick Check" under the hero button
   (Founder brief, 30 Oct 2026) and the FAQ link "Not ready to talk yet?".
 - Parent-facing CTAs on other pages still route by readiness:
   - **Start free:** the free Big Reactions Quick Check (`/big-reactions-quick-check`).
   - **Learn with other parents:** Pattern Session, RM57 live online group. Dates go to the Quick Check email list first.
-  - **Ready for Autism Parent Coaching for Hard Moments:** start with the Free 15-Min First Step Call so CJ can check fit.
+  - **Ready for Autism Parent Coaching for Hard Moments:** start with the Free 20-Min First Step Call so CJ can check fit.
   - **Centres and schools:** "Ask for a training quote" through the WhatsApp enquiry builder on `/schools`.
-- Keep the Free 15-Min First Step Call available on `/parents` as the fit-check path for Autism Parent Coaching for Hard Moments.
+- Keep the Free 20-Min First Step Call available on `/parents` as the fit-check path for Autism Parent Coaching for Hard Moments.
 - Do not turn Autism Parent Coaching for Hard Moments into unrestricted direct checkout or create a new intake form unless separately approved.
 
 ## Footer requirement (every page)
@@ -63,7 +63,7 @@ column keeps About CJ, For Parents, For Centres and Schools, Teacher Talk, Resou
    one-page practice plan after every session, WhatsApp support with replies the same working day, and with written
    consent a short note to the child's therapists and school. Full refund if the parent feels it is not a fit after the
    first session. No unlimited messaging or crisis support. Source of truth: APC/00_START_HERE/APC_Offer_Master.md.
-5. **Free 15-Min First Step Call**: fit check, Cal.com slug `first-step-call`.
+5. **Free 20-Min First Step Call**: fit check, Cal.com slug `first-step-call`.
 
 **Centres and schools** (per organisation, up to 20 staff, charged by where the organisation is based)
 - Staff Workshop: half day, up to 3.5 hours. RM2,497 · S$997 · USD 697
@@ -98,7 +98,7 @@ Do not publish or link the paid `parent-strategy-session` Cal.com event.
   details, QR asset, receipt-submission CTA, or selector. Root `pay.html`, `/pay/350`, and `/pay/1800`
   redirect to that same notice. Individual payment details are sent privately by CJ.
 - Brevo email capture: the free Quick Check and the free parent guide (on `resources.html`).
-- The Free 15-Min First Step Call is linked from `/parents` (programme card and closing section).
+- The Free 20-Min First Step Call is linked from `/parents` (programme card and closing section).
 - `apc-design-system.css` is the authoritative shared visual layer for the main parent-facing pages. Load it after page-specific styles so its tokens and consistency overrides apply last.
 - Custom `404.html` + `_redirects` (`/* /404.html 404`). Accessibility baseline: `<style id="apc-a11y">`,
   a skip link, and `id="main-content"` on each `<main>` already exist on live pages; do not re-add.

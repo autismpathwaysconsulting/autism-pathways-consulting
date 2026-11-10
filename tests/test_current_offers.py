@@ -76,7 +76,7 @@ class CurrentOffers(unittest.TestCase):
 
     def test_parents_keeps_the_free_first_step_call(self):
         self.assertIn('href="/go/first-step-call"', self.pages["parents.html"])
-        self.assertIn("Free 15-Min First Step Call", self.pages["parents.html"])
+        self.assertIn("Free 20-Min First Step Call", self.pages["parents.html"])
 
     def test_free_call_is_the_header_call_to_action(self):
         for name, html in self.pages.items():
