@@ -7,12 +7,12 @@ class DemandValidationTests(unittest.TestCase):
  def test_home_is_call_first(self):
   s=(R/'index.html').read_text();hero=s.split('id="home"')[1].split('</section>')[0]
   self.assertIn('Same meltdown, shutdown, school refusal or big reaction, every day?',hero)
-  self.assertIn('Talk it through with CJ. Free, 20 minutes, online.',hero)
+  self.assertIn('Talk it through with CJ. Free, 15 minutes, online.',hero)
   self.assertEqual(hero.count('href="/go/first-step-call">Book a free call'),1)
   self.assertEqual(s.count('<section '),5)
   self.assertNotIn('data-reveal',s)
   self.assertNotIn('data-cal-inline',s)
-  self.assertIn('class="cf-bar"><p><b>Free 20-minute call</b>',s)
+  self.assertIn('class="cf-bar"><p><b>Free 15-minute call</b>',s)
   for text in ['Tell CJ the moment','Get one step to try','Hear if Parent Coaching fits','8 sessions · 12 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid on the call.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
   # No price on the call-first home page
   for text in ['RM1,797','S$997','USD 697','RM57','RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
