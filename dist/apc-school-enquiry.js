@@ -114,3 +114,5 @@ if (schoolForm) {
   });
 }
 
+// Course participant quotes: swipe dots on phones
+(function(){var q=document.querySelector(".sq-bento"),dots=document.querySelectorAll(".sq-dots i");if(!q||!dots.length)return;q.addEventListener("scroll",function(){var c=q.querySelectorAll(".sq-q"),m=q.scrollLeft+q.clientWidth/2,b=0,d=1e9;c.forEach(function(el,i){var x=Math.abs(el.offsetLeft+el.offsetWidth/2-m);if(x<d){d=x;b=i;}});dots.forEach(function(el,i){el.classList.toggle("on",i===b);});},{passive:true});})();
