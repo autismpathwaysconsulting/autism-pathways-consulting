@@ -118,7 +118,7 @@ Prefer animating `opacity` and `transform`. Avoid bouncing, large spring movemen
 Founder decisions, 29 and 30 October 2026, for the homepage:
 
 - Light liquid glass is allowed on the header, the hero photo captions and the phone call bar, with a solid fallback for old browsers and `prefers-reduced-transparency`. Never behind body text.
-- Looping motion is allowed for the headline word, the hero photo captions and the Pathway Programme steps.
+- Looping motion is allowed for the headline word, the hero photo captions and Parent Coaching steps.
 - Every animation must keep the layout still: no layout shift, on any screen size.
 - The Pause button controls the hero motion: the headline word and the photo captions together.
 
@@ -162,7 +162,7 @@ The funnel is locked:
 | --- | --- |
 | Unsure | Free 15-Min First Step Call |
 | One focused parent concern | Submit an RM350 One-Concern Parent Session booking request; Founder review and permission are required before payment. |
-| Structured ongoing support | Free 15-Min First Step Call first, CJ confirms fit, then RM1,800 Autism Parent Pathway Programme payment |
+| Structured ongoing support | Free 15-Min First Step Call first, CJ confirms fit, then RM1,800 Autism Parent Coaching for Hard Moments payment |
 
 Do not alter this routing during visual redesigns. The RM350 booking-request route remains directly available without a First Step Call when the scope is clear. A request is not automatic confirmation, and Founder suitability and availability permission is required before payment. The RM1,800 programme is not an unrestricted direct-checkout offer.
 
