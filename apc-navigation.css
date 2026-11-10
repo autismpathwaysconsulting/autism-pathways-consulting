@@ -90,3 +90,16 @@ html body.apc-v2 .apc-site-header { background: rgba(255, 252, 247, .78) !import
 /* Call-first menu is short, so header text can meet the 16px minimum at every width. */
 html body.apc-v2 .apc-shell-nav > a, html body.apc-v2 .apc-shell-inner > .apc-shell-start, html body.apc-v2 .apc-nav-js .apc-nav-toggle { font-size: 1rem !important; }
 @media (max-width: 360px) { html body.apc-v2 .apc-nav-js .apc-nav-toggle { font-size: 0 !important; } }
+
+/* Readable floor (11 Nov 2026): labels and tiny captions were 9.6 to 12.8px; 16px is the site minimum. Classes repeat to outrank older !important rules */
+html body .eyebrow.eyebrow.eyebrow,
+html body .school-image-caption.school-image-caption.school-image-caption,
+html body .school-sample-tag.school-sample-tag.school-sample-tag,
+html body .school-download-meta.school-download-meta.school-download-meta,
+html body .school-example-invite.school-example-invite.school-example-invite,
+html body .school-choice-hint.school-choice-hint.school-choice-hint,
+html body .school-price-note.school-price-note.school-price-note,
+html body figcaption:not(#x) { font-size: 1rem !important; }
+/* At 16px, capitals with wide spacing ran to three lines on phones */
+html body .eyebrow.eyebrow.eyebrow { text-transform: none !important; letter-spacing: 0 !important; }
+html body .school-image-caption.school-image-caption.school-image-caption { max-width: none !important; }

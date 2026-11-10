@@ -159,7 +159,7 @@ html:not(.cf-js) .apc-call-first .cf-pause { display: none; }
 .apc-call-first .cf-paused .cf-pause .cf-ico-play { display: block; }
 .apc-call-first .cf-lede { margin: 18px auto 0 !important; max-width: 32rem !important; font-size: 1.1875rem; color: var(--cf-muted); text-wrap: balance; }
 .apc-call-first .cf-cta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 24px; margin-top: 26px; }
-.apc-call-first .cf-qc { color: var(--cf-muted); text-decoration: underline; text-decoration-color: rgba(7, 55, 52, .3); text-underline-offset: 4px; }
+.apc-call-first .cf-qc { display: inline-flex; align-items: center; min-height: 44px; color: var(--cf-muted); text-decoration: underline; text-decoration-color: rgba(7, 55, 52, .3); text-underline-offset: 4px; }
 .apc-call-first .cf-qc:hover { text-decoration-color: currentColor; }
 .apc-call-first .cf-under { margin-top: 14px !important; color: var(--cf-muted); font-size: 1rem; }
 
