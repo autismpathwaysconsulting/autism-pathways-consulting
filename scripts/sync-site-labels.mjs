@@ -20,7 +20,7 @@ const mainFooter=`<footer class="apc-footer">
   <div class="apc-footer-inner">
     <div class="apc-footer-brand"><a href="/" class="apc-footer-logo">Autism Pathways Consulting</a></div>
     <nav class="apc-footer-column" aria-label="Explore"><h3>Explore</h3>${links(explore)}</nav>
-    <div class="apc-footer-column"><h3>Contact</h3><a href="/go/first-step-call">Free 15-Min First Step Call</a><a href="https://wa.me/601172998168" target="_blank" rel="noopener"><span>WhatsApp: <span class="apc-footer-nowrap">011-7299 8168</span></span></a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a><a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a></div>
+    <div class="apc-footer-column"><h3>Contact</h3><a href="/go/first-step-call">Free 15-Min First Step Call</a><a href="https://wa.me/601172998168" target="_blank" rel="noopener"><span>WhatsApp: <span class="apc-footer-nowrap">+60 11-7299 8168</span></span></a><a href="mailto:cjlim@autismpathwaysconsulting.com">cjlim@autismpathwaysconsulting.com</a><a href="https://www.instagram.com/autismpathwaysconsulting/" target="_blank" rel="noopener">Instagram</a><a href="https://www.youtube.com/channel/UCzmPn-XAi7DwUhNz6xKRr3A" target="_blank" rel="noopener">YouTube</a></div>
   </div>
   <div class="apc-footer-bottom"><p>${legal}</p><nav class="apc-footer-policies" aria-label="Policies">${policies.map(([href,label])=>`<a href="${href}">${label}</a>`).join('<span aria-hidden="true"> · </span>')}</nav><p>${scope}</p></div>
 </footer>`;
