@@ -27,8 +27,12 @@ fs.mkdirSync(output, { recursive: true });
     assert.match(src, /utm_medium=organic_social/);
     assert.match(src, /utm_campaign=big_reactions/);
     await page.screenshot({ path: path.join(output, `big-reactions-${viewport.name}.png`), fullPage: true });
+    // The RM37 Pattern Finder is hidden on /parents during the one-sales-path freeze (CJ, 11 Nov 2026; review 11 Dec 2026).
+    // Restore the bridge below when the section is shown again.
+    await page.goto('http://localhost:8899/parents', { waitUntil: 'domcontentloaded' });
+    assert.equal(await page.getByRole('link', { name: 'View the Big Reactions Pattern Finder', exact: true }).isVisible(), false, 'Pattern Finder stays hidden during the freeze');
     for (const bridge of [
-      { route: '/parents', label: 'View the Big Reactions Pattern Finder', file: 'pattern-finder-parents' },
+      // { route: '/parents', label: 'View the Big Reactions Pattern Finder', file: 'pattern-finder-parents' },
     ]) {
       await page.goto('http://localhost:8899' + bridge.route, { waitUntil: 'domcontentloaded' });
       const link = page.getByRole('link', { name: bridge.label, exact: true });
