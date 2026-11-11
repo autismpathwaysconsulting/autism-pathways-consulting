@@ -27,6 +27,7 @@ offers, First Step Call). Change offer facts there only when the Founder has giv
 - Tone: warm, calm, practical. Card/guide titles use the parent's felt moment, not a clinical
   topic label (e.g. "When the meltdown comes out of nowhere", not "Meltdowns at home").
 - Scope line where relevant: "APC works with you, not instead of the therapists your child is already seeing."
+- Parents-first funnel (Founder decision, 11 Nov 2026, replaces the call-first main button below): the home page's main button is "Get the free workshop date" (WhatsApp, prefilled message), then three ways to start: free workshop, 7-day course (RM98 founding, RM197 after), Parent Coaching (price shown). The header button stays "Book a free call".
 - Call-first funnel (Founder brief, 29 Oct 2026): the one main action is the Free 15-Min First Step Call. Every
   call button goes to `/go/first-step-call` (Cal.com). The home page shows no price; the Quick Check appears there
   only as text links, never a second button: "Not ready to talk? Free Quick Check" under the hero button
@@ -56,8 +57,8 @@ column keeps About CJ, For Parents, For Centres and Schools, Teacher Talk, Resou
 2. **Pattern Finder Toolkit**: RM37 on Etsy.
 3. **Pattern Session**: RM57, live online group. Charged in RM; the card converts.
 4. **Autism Parent Coaching for Hard Moments** (premium, Founder decision 2026-11-09): RM4,997 or 3 x RM1,666; with two
-   Klang Valley home visits RM7,997 or 3 x RM2,666. Prices are shared on the First Step Call only; no public page shows
-   them. Near the call button use "Fees are shared on the call, before you decide. Nothing is paid on the call." and keep
+   Klang Valley home visits RM7,997 or 3 x RM2,666. Since 11 Nov 2026 (Founder decision) the price IS shown on the home and parents pages;
+   coaching still starts with the First Step Call fit check. Near the call button say "Nothing is paid on the call." and keep
    the payment line. Format: eight 60-minute online sessions over 12 weeks (the parent joins all 8; a helper, partner or
    grandparent may join), one session for a partner, helper or grandparent, visual supports and routine cards, a
    one-page practice plan after every session, WhatsApp support with replies the same working day, and with written
