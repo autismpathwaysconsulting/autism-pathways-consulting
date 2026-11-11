@@ -22,7 +22,7 @@ class DemandValidationTests(unittest.TestCase):
   for i in ['pattern-finder','pattern-session']:self.assertIn('<section hidden class="demand-section" id="'+i+'"',s)
   ids=[s.index('id="'+i+'"') for i in ['home-support','quick-check','pattern-finder','pattern-session','parent-questions','first-step-call']]
   self.assertEqual(ids,sorted(ids))
-  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Eight 60-minute online sessions over 12 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Eight 60-minute online sessions over 12 weeks','Book a free call',PAY]:self.assertIn(text,s)
   promises=s[s.index('class="parent-promises"'):s.index('id="pattern-finder"')]
   for text in ['What you can count on','Session notes the same day.','Your Family Playbook within 48 hours of the last session','A check-in session 6 weeks after you finish.','WhatsApp replies the same working day.','Not a fit after the first session? Tell CJ within 7 days and get your money back in full.']:self.assertIn(text,promises)
   # The Home Support price is shared on the call, not on any public page

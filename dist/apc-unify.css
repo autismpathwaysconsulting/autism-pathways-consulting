@@ -99,3 +99,21 @@ html body.apc-v2 main .apc-section-emblem { box-shadow: none !important; }
 html body.apc-v2 main :is(a, cite, small, .school-hero-note, .format-fit, .school-format-select, .school-other-focus) { font-size: max(1rem, 1em) !important; }
 html body.apc-v2.apc-school-minimal.apc-school-minimal.apc-school-minimal main :is(p, a, cite, small, legend, label, span, dd, dt, summary, strong, button) { font-size: max(1rem, 1em) !important; }
 html body.apc-v2.apc-school-minimal.apc-school-minimal.apc-school-minimal main :is(h1, h2, h3) :is(span, a) { font-size: inherit !important; }
+
+/* Re-score fixes: every box on the same 160 to 1280px edges, centred hero note, flat guide cards and credentials, packages in two columns */
+html body.apc-v2 main > :is(section, aside):is(#on-the-call, #what-parents-say, #home-support),
+html body.apc-v2.apc-parent-minimal main > section:not(.parent-hero):not([hidden]), html body.apc-v2.apc-parent-minimal main > aside.parent-guide,
+html body.apc-v2.apc-school-minimal main > section:not(.school-hero):not([hidden]),
+html body.apc-v2.apc-blog-page main > section:not(.audience-hero):not([hidden]) { width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; }
+html body.apc-v2.apc-home-page main > section#contact .cf-faq { width: min(1120px, calc(100vw - 32px)); max-width: none; box-sizing: border-box; }
+html body.apc-v2.apc-blog-page .audience-hero > .apc-section-composition { width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; margin-inline: auto !important; border: 0 !important; }
+html body.apc-v2.apc-home-page .cf-under { text-align: center; margin-inline: auto; }
+html body.apc-v2 main .audience-card { border: 0 !important; }
+html body.apc-v2 main .audience-card::before, html body.apc-v2 main .audience-card::after { display: none !important; }
+html body.apc-v2 main [class*="card"] { box-shadow: none !important; }
+html body.apc-v2.apc-about-page #experience .credential::before, html body.apc-v2.apc-about-page #experience .credential::after { display: none !important; }
+html body.apc-v2.apc-about-page #experience .credential .apc-section-emblem { display: none !important; }
+html body.apc-v2.apc-school-minimal .school-format-options { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px !important; }
+html body.apc-v2.apc-school-minimal .school-format-options > * { border: 0 !important; padding: 0 !important; }
+html body.apc-v2.apc-school-minimal .school-format-heading .format-toggle { display: none !important; }
+@media (max-width: 700px) { html body.apc-v2.apc-school-minimal .school-format-options { grid-template-columns: 1fr !important; } }
