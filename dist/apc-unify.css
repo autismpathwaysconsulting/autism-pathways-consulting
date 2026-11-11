@@ -118,3 +118,26 @@ html body.apc-v2.apc-school-minimal .school-format-compare { display: grid !impo
 html body.apc-v2.apc-school-minimal .school-format-compare > li { border: 0 !important; padding: 0 !important; }
 html body.apc-v2.apc-school-minimal .school-format-heading .format-toggle { display: none !important; }
 @media (max-width: 700px) { html body.apc-v2.apc-school-minimal .school-format-compare { grid-template-columns: 1fr !important; } }
+
+/* Clarity pass (CJ, 11 Nov 2026: "too messy, not clear"). Fewer items, one column, numbers people can scan */
+html body.apc-v2.apc-parent-minimal #home-support ul.offer-points { display: block !important; max-width: 640px !important; margin: 0 auto 40px !important; }
+html body.apc-v2.apc-parent-minimal #home-support ul.offer-points li { margin: 0 0 14px !important; padding: 0 0 0 34px !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises { max-width: 880px !important; margin: 0 auto 32px !important; padding: 32px 0 0 !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises h3 { text-align: center; margin: 0 0 24px !important; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats { list-style: none; margin: 0 !important; padding: 0 !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 24px !important; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats li { padding: 0 !important; text-align: center !important; max-width: none; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats li::before { display: none !important; content: none !important; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats b { display: block; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem); line-height: 1.1; color: var(--u-dark); margin-bottom: 6px; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats span { display: block; font-size: 1rem !important; color: #2E4A46; }
+@media (max-width: 640px) { html body.apc-v2.apc-parent-minimal ol.promise-stats { grid-template-columns: 1fr !important; gap: 20px !important; } }
+/* Guides: three clean cards, no coloured arcs */
+html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card { border: 0 !important; border-radius: 0 !important; display: flex !important; flex-direction: column; gap: 8px; }
+html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card > span { margin-top: auto; padding-top: 8px; }
+/* About: each qualification as a title with its detail underneath, in a tidy two-column grid */
+html body.apc-v2.apc-about-page #experience .credential { display: block !important; }
+html body.apc-v2.apc-about-page #experience .credential strong { display: block !important; margin: 0 0 4px !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats li { text-align: center !important; padding: 0 !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats li::before { display: none !important; content: none !important; }
+/* About: one plain cream page behind the boxes (no tinted bands or gradients) */
+html body.apc-v2.apc-about-page, html body.apc-v2.apc-about-page main { background: var(--u-cream) !important; background-image: none !important; }
+html body.apc-v2.apc-about-page main > section:is(#page-section-1, #story, #experience, #how-i-work, #scope, #additional-training, #start), html body.apc-v2.apc-about-page main > section.hero { background: transparent none !important; }
