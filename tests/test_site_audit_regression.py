@@ -17,7 +17,7 @@ class SiteAuditRegression(unittest.TestCase):
     def test_home_and_about_experience_claims(self):
         home = read("index.html")
         about = read("about.html")
-        self.assertIn("Since 2016 · MA Special and Inclusive Education · Hanen Teacher Talk", home)
+        self.assertIn("Working with autistic children and families since 2016 · MA Special and Inclusive Education, University of Nottingham Malaysia", home)
         self.assertIn("I have worked alongside autistic children and families since 2016, beginning as an intern.", about)
         self.assertIn("Since 2016, beginning as an intern", about)
         self.assertIn("Today I work with parents, centres and schools in Malaysia, Singapore and internationally.", about)
