@@ -73,3 +73,5 @@ body.apc-about-page h1,body.apc-about-page .hero h1{max-width:20ch!important}
 .parent-founder-story { font-size: 1rem; line-height: 1.6; max-width: 62ch; }
 /* Readable floor: small notes on the parents page were 14.4px */
 html body.apc-parent-minimal .parent-small { font-size: 1rem !important; }
+/* Contrast: the coral "What you can count on" heading was 4.28:1 on cream; this is about 5.3:1 */
+html body.apc-parent-minimal .parent-promises h3 { color: #A05234 !important; }
