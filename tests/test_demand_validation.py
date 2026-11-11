@@ -24,7 +24,7 @@ class DemandValidationTests(unittest.TestCase):
   for text in ['What you can count on','Session notes the same day.','Your written plan within 48 hours of the last session.','WhatsApp replies the same working day.','Not a fit after the first session? Your money back in full.']:self.assertIn(text,promises)
   # The Home Support price is shared on the call, not on any public page
   for page in ['parents.html','pay/index.html','terms.html','index.html']:
-   for price in ['RM1,797','RM4,997','RM7,997']:self.assertNotIn(price,(R/page).read_text())
+   for price in ['RM1,797','RM4,997','RM7,997','RM4,998','RM7,998','SGD 1,800']:self.assertNotIn(price,(R/page).read_text())
   for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
  def test_retired_routes_redirect_without_forms(self):
   for page,target in [('start.html','/'),('programmes.html','/'),('services.html','/parents'),('course-waitlist.html','/parents#pattern-session'),('connect/index.html','/parents')]:
