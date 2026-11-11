@@ -299,3 +299,15 @@ html body.apc-parent-minimal main a, html body.apc-about-page main a { font-size
 /* Founder box on phones: heading first, then photo and story */
 @media (max-width: 759px) { html body.apc-parent-minimal main > aside.parent-guide { display: flex !important; flex-direction: column; } html body.apc-parent-minimal .parent-guide .parent-founder-title { order: -1; } html body.apc-parent-minimal .parent-guide .audience-author { align-items: flex-start; text-align: left; } }
 html body.apc-parent-minimal .parent-guide-list li { margin: 0 !important; }
+/* Re-score fixes: training rows full width, credential grid even, bright button on dark box, lone last tick spans the row */
+html body.apc-about-page #additional-training .training { max-width: 860px; margin: 24px auto 0; }
+html body.apc-about-page #additional-training details { width: 100%; max-width: none !important; text-align: left !important; background: #F8F5EF; border: 0 !important; border-radius: 16px; padding: 4px 20px; margin: 0 0 12px !important; }
+html body.apc-about-page #additional-training summary { display: block !important; padding: 12px 0; cursor: pointer; }
+html body.apc-about-page #additional-training summary strong, html body.apc-about-page #additional-training summary small { display: block !important; text-align: left !important; }
+html body.apc-about-page #additional-training summary small { font-size: 1rem !important; color: #435D58; margin-top: 2px; }
+html body.apc-about-page #experience .credentials { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+html body.apc-about-page #experience .credential { border-left: 0 !important; border: 0 !important; }
+html body.apc-about-page #experience .credential:last-child:nth-child(odd) { grid-column: 1 / -1; }
+@media (max-width: 640px) { html body.apc-about-page #experience .credentials { grid-template-columns: 1fr !important; } }
+html body.apc-about-page #start .final-card .button { background: #2DD4BF !important; color: #073734 !important; border-color: #2DD4BF !important; }
+html body.apc-parent-minimal #home-support ul.offer-points li:last-child:nth-child(odd) { grid-column: 1 / -1; }
