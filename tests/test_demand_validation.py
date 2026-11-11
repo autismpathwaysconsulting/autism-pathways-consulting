@@ -10,7 +10,7 @@ class DemandValidationTests(unittest.TestCase):
   self.assertIn('Same meltdown, shutdown, school refusal or big reaction, every day?',hero)
   self.assertEqual(hero.count('class="cf-btn" href="https://wa.me/601172998168?text='),1)
   self.assertIn('Parent education, not therapy',hero)
-  self.assertEqual(s.count('<section '),6)
+  self.assertEqual(s.count('<section '),7)
   self.assertNotIn('data-reveal',s)
   self.assertNotIn('data-cal-inline',s)
   self.assertIn('class="cf-bar"><p><b>Free parent workshop</b>',s)
