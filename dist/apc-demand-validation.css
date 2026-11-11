@@ -75,3 +75,72 @@ body.apc-about-page h1,body.apc-about-page .hero h1{max-width:20ch!important}
 html body.apc-parent-minimal .parent-small { font-size: 1rem !important; }
 /* Contrast: the coral "What you can count on" heading was 4.28:1 on cream; this is about 5.3:1 */
 html body.apc-parent-minimal .parent-promises h3 { color: #A05234 !important; }
+
+/* Boxed sections (CJ, 11 Nov 2026: "too plain and not in its own boxes"). Each parents-page section sits in its own rounded panel */
+html body.apc-parent-minimal main > section:not(.parent-hero):not([hidden]),
+html body.apc-parent-minimal main > aside.parent-guide {
+  box-sizing: border-box; width: min(1120px, calc(100% - 32px)); max-width: 1120px;
+  margin: 28px auto !important; padding: clamp(24px, 4vw, 52px) !important;
+  background: #FFFFFF; border: 1px solid rgba(7, 55, 52, .08); border-radius: 28px;
+  box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35);
+}
+html body.apc-parent-minimal main > section#home-support { background: #EEF5F0; border-top: 8px solid #2DD4BF; }
+html body.apc-parent-minimal main > section#quick-check { background: #FFFFFF; border-top: 8px solid #E8997A; }
+html body.apc-parent-minimal main > aside.parent-guide { background: #FFFFFF; }
+html body.apc-parent-minimal main > section#first-step-call { background: #073734; color: #FFF9F1; border: 0; }
+html body.apc-parent-minimal main > section#first-step-call h2,
+html body.apc-parent-minimal main > section#first-step-call p,
+html body.apc-parent-minimal main > section#first-step-call cite,
+html body.apc-parent-minimal main > section#first-step-call blockquote { color: #FFF9F1 !important; }
+html body.apc-parent-minimal main > section#first-step-call .eyebrow { color: #8FE8DC !important; }
+html body.apc-parent-minimal main > section#first-step-call .audience-actions a:not(.audience-primary) { color: #FFF9F1 !important; }
+html body.apc-parent-minimal main > section#first-step-call .audience-primary { background: #2DD4BF !important; color: #073734 !important; }
+/* FAQ rows become their own soft boxes */
+html body.apc-parent-minimal .parent-faq details { background: #F8F5EF; border: 0 !important; border-radius: 16px; padding: 4px 20px; margin-top: 12px; }
+html body.apc-parent-minimal .parent-faq details[open] { background: #EEF5F0; }
+/* The APC HOME steps */
+html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #073734; color: #FFF9F1; border: 0; }
+.apc-home-steps h2, .apc-home-steps .home-steps-intro { color: #FFF9F1 !important; text-align: center; }
+.apc-home-steps .home-steps-intro { margin: 8px auto 28px; max-width: 52ch; font-size: 1.0625rem; }
+.apc-home-steps ol.home-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.apc-home-steps ol.home-steps li { background: rgba(255, 249, 241, .07); border: 1px solid rgba(143, 232, 220, .25); border-radius: 20px; padding: 22px; display: block; }
+.apc-home-steps .home-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #2DD4BF; color: #073734; font: 700 1.75rem/1 'DM Serif Display', Georgia, serif; margin-bottom: 14px; }
+.apc-home-steps ol.home-steps li:nth-child(even) .home-letter { background: #E8997A; }
+.apc-home-steps h3 { color: #FFF9F1 !important; font-size: 1.25rem; margin: 0 0 6px; }
+.apc-home-steps ol.home-steps li p { color: #CFE3DF !important; margin: 0; font-size: 1rem; line-height: 1.5; }
+@media (max-width: 900px) { .apc-home-steps ol.home-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .apc-home-steps ol.home-steps { grid-template-columns: 1fr; } }
+/* Coaching inclusions as small boxes in two columns */
+html body.apc-parent-minimal #home-support ul.offer-points { list-style: none; padding: 0; margin: 20px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+html body.apc-parent-minimal #home-support ul.offer-points li { background: #FFFFFF; border-radius: 16px; padding: 14px 16px 14px 46px; position: relative; line-height: 1.5; margin: 0; }
+html body.apc-parent-minimal #home-support ul.offer-points li::before { content: ""; position: absolute; left: 16px; top: 17px; width: 18px; height: 18px; border-radius: 50%; background: #2DD4BF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23073734' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat; }
+@media (max-width: 700px) { html body.apc-parent-minimal #home-support ul.offer-points { grid-template-columns: 1fr; } }
+/* Founder box: photo beside the story on wider screens */
+@media (min-width: 760px) { html body.apc-parent-minimal main > aside.parent-guide { display: grid; grid-template-columns: 220px 1fr; column-gap: 32px; align-items: start; text-align: left; } html body.apc-parent-minimal main > aside.parent-guide > *:not(.audience-author) { grid-column: 2; } html body.apc-parent-minimal main > aside.parent-guide > .audience-author { grid-row: 1 / span 4; } }
+html body.apc-parent-minimal .parent-guide .parent-founder-title { margin: 0 0 12px; text-align: left; }
+html body.apc-parent-minimal .parent-guide .parent-scope, html body.apc-parent-minimal .parent-guide .parent-small { text-align: left; }
+html body.apc-parent-minimal .parent-guide .audience-author img { width: 180px; height: 180px; border-radius: 24px; object-fit: cover; }
+@media (min-width: 760px) { html body.apc-parent-minimal main > aside.parent-guide > .audience-author { display: flex; flex-direction: column; gap: 12px; text-align: left; } }
+html body.apc-parent-minimal #parent-process .home-steps .home-letter { width: 56px !important; height: 56px !important; border-radius: 16px !important; background: #2DD4BF !important; color: #073734 !important; font: 700 1.75rem/1 'DM Serif Display', Georgia, serif !important; display: grid !important; place-items: center !important; }
+html body.apc-parent-minimal #parent-process .home-steps li:nth-child(even) .home-letter { background: #E8997A !important; }
+html body.apc-parent-minimal #parent-process .home-steps .home-letter { position: static !important; transform: none !important; margin: 0 0 14px !important; }
+html body.apc-parent-minimal #parent-process .home-steps li { padding-left: 22px !important; }
+/* Readable floor for the remaining small text on the parents page */
+html body.apc-parent-minimal .audience-breadcrumb, html body.apc-parent-minimal .audience-breadcrumb *, html body.apc-parent-minimal main cite, html body.apc-parent-minimal main .audience-primary { font-size: 1rem !important; }
+html body.apc-parent-minimal .parent-guide .audience-author p { font-size: 1rem !important; }
+
+/* About page: HOME steps and boxed sections (11 Nov 2026) */
+html body.apc-about-page #how-i-work .home-steps { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+html body.apc-about-page #how-i-work .home-steps li { background: rgba(255, 249, 241, .07); border: 1px solid rgba(143, 232, 220, .25); border-radius: 20px; padding: 22px; }
+html body.apc-about-page #how-i-work .home-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #2DD4BF; color: #073734; font: 700 1.75rem/1 'DM Serif Display', Georgia, serif; margin-bottom: 14px; }
+html body.apc-about-page #how-i-work .home-steps li:nth-child(even) .home-letter { background: #E8997A; }
+html body.apc-about-page #how-i-work h3 { color: #FFF9F1; font-size: 1.25rem; margin: 0 0 6px; }
+html body.apc-about-page #how-i-work .home-steps p, html body.apc-about-page #how-i-work .home-steps-intro { color: #CFE3DF; margin: 0; font-size: 1rem; line-height: 1.5; }
+html body.apc-about-page #how-i-work .home-steps-intro { margin: 8px 0 24px; }
+@media (max-width: 900px) { html body.apc-about-page #how-i-work .home-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { html body.apc-about-page #how-i-work .home-steps { grid-template-columns: 1fr; } }
+html body.apc-about-page #story > .wrap, html body.apc-about-page #experience > .wrap, html body.apc-about-page #additional-training > .wrap, html body.apc-about-page #start > .wrap {
+  background: #FFFFFF; border: 1px solid rgba(7, 55, 52, .08); border-radius: 28px; padding: clamp(24px, 4vw, 52px); box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35);
+}
+html body.apc-about-page #experience > .wrap { border-top: 8px solid #2DD4BF; }
+html body.apc-about-page #start > .wrap { background: #073734; color: #FFF9F1; }
