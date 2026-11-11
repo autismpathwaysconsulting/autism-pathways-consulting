@@ -32,7 +32,7 @@ html body.apc-v2 main :is(.cf-final, .cf-sheet, #first-step-call, #start .final-
 html body.apc-v2.apc-home-page main > section:is(#on-the-call, #what-parents-say),
 html body.apc-v2.apc-school-minimal main > section:not(.school-hero):not([hidden]):not(#training-packages),
 html body.apc-v2.apc-blog-page main > section:not(.audience-hero):not([hidden]) {
-  box-sizing: border-box; width: calc(100% - 32px) !important; max-width: var(--u-max) !important; margin: var(--u-gap) auto !important;
+  box-sizing: border-box; width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; margin: var(--u-gap) auto !important;
   padding: var(--u-pad-y) var(--u-pad-x) !important; background: #FFFFFF !important; border: 0 !important; border-radius: 24px !important; box-shadow: none !important;
 }
 html body.apc-v2.apc-home-page main > section#home-support { box-sizing: border-box; width: calc(100% - 32px) !important; max-width: var(--u-max) !important; margin: var(--u-gap) auto !important; padding: var(--u-pad-y) var(--u-pad-x) !important; border-radius: 24px !important; box-shadow: none !important; }
@@ -81,7 +81,7 @@ html body.apc-v2.apc-home-page .cf-step :is(h3, p, b) { opacity: 1 !important; }
 html body.apc-v2.apc-home-page .cf-photo { max-width: 960px; margin-inline: auto; }
 
 /* Schools: the packages section stays a dark box, same edges and corners as the others */
-html body.apc-v2.apc-school-minimal main > section#training-packages { box-sizing: border-box; width: calc(100% - 32px) !important; max-width: var(--u-max) !important; margin: var(--u-gap) auto !important; border-radius: 24px !important; box-shadow: none !important; }
+html body.apc-v2.apc-school-minimal main > section#training-packages { box-sizing: border-box; width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; margin: var(--u-gap) auto !important; border-radius: 24px !important; box-shadow: none !important; }
 
 /* No boxes inside boxes on the parents and About pages either */
 html body.apc-v2 main #home-support ul.offer-points li, html body.apc-v2 main #home-support .parent-promises,
@@ -113,7 +113,8 @@ html body.apc-v2 main .audience-card::before, html body.apc-v2 main .audience-ca
 html body.apc-v2 main [class*="card"] { box-shadow: none !important; }
 html body.apc-v2.apc-about-page #experience .credential::before, html body.apc-v2.apc-about-page #experience .credential::after { display: none !important; }
 html body.apc-v2.apc-about-page #experience .credential .apc-section-emblem { display: none !important; }
-html body.apc-v2.apc-school-minimal .school-format-options { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px !important; }
-html body.apc-v2.apc-school-minimal .school-format-options > * { border: 0 !important; padding: 0 !important; }
+html body.apc-v2.apc-school-minimal details.school-format-options { display: block !important; }
+html body.apc-v2.apc-school-minimal .school-format-compare { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 32px 40px !important; margin-top: 32px !important; }
+html body.apc-v2.apc-school-minimal .school-format-compare > li { border: 0 !important; padding: 0 !important; }
 html body.apc-v2.apc-school-minimal .school-format-heading .format-toggle { display: none !important; }
-@media (max-width: 700px) { html body.apc-v2.apc-school-minimal .school-format-options { grid-template-columns: 1fr !important; } }
+@media (max-width: 700px) { html body.apc-v2.apc-school-minimal .school-format-compare { grid-template-columns: 1fr !important; } }
