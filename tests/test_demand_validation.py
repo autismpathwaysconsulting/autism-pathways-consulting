@@ -9,7 +9,7 @@ class DemandValidationTests(unittest.TestCase):
   s=(R/'index.html').read_text();hero=s.split('id="home"')[1].split('</section>')[0]
   self.assertIn('Same meltdown, shutdown, school refusal or big reaction, every day?',hero)
   self.assertEqual(hero.count('class="cf-btn" href="https://wa.me/601172998168?text='),1)
-  self.assertIn('Parent education, not therapy',hero)
+  self.assertIn('Not therapy.',hero)
   self.assertEqual(s.count('<section '),7)
   self.assertNotIn('data-reveal',s)
   self.assertNotIn('data-cal-inline',s)
