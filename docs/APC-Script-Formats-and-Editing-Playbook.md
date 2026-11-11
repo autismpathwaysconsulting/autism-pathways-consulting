@@ -1,11 +1,11 @@
 # APC Script Formats and Editing Playbook
 
-Version: 0.6
+Version: 0.7
 Date: 2026-11-11
 Owner: CJ Lim, Autism Pathways Consulting
 Status: Working reference under test. Content OS changes are in draft PR #59, pending merge and deployment.
 
-For current reconciliation of the supplied Claude documents, use the v0.5 section below. For the Decoder format and the first external creator reference, use the v0.6 section. Earlier reference records remain historical evidence; repeated source instructions are not additional requirements.
+For current reconciliation of the supplied Claude documents, use the v0.5 section below. For the Decoder format use the v0.6 section; for the full TikTok reference review and the cultural relevance route, use v0.7. Earlier reference records remain historical evidence; repeated source instructions are not additional requirements.
 
 ## Purpose and boundaries
 
@@ -559,3 +559,70 @@ Do-not-use variants: "what each one means" (too certain), "decode your child" (t
 ### Changelog addition
 
 0.6: added the first external creator reference (cover-level only), a cover-level editorial rating, seven virality hypotheses, Format D (Decoder), and four proposed hook bank templates. No APC performance data was invented. Proposed bank entries need CJ's approval in the Claude project before use.
+
+
+## v0.7: full review of four supplied TikTok references and the cultural relevance route, 2026-11-11
+
+CJ supplied four links. This section supersedes the v0.6 cover-level ratings; v0.6 is kept as history.
+
+### Source register
+
+Figures are the platform display counts read from each post page on 11 Nov 2026. They are not analytics exports and do not include watch time or retention.
+
+| Reference | Coverage | Posted | Plays | Likes | Saves | Shares | Comments |
+|---|---|---|---:|---:|---:|---:|---:|
+| @theregulatedpath "Behaviours are Sensory Needs" (5-slide carousel) | VISUAL_REVIEWED, all slides + caption | 2025-08-21 | 1.2M | 56.1K (4.7%) | 40.4K (3.4%) | 8.5K (0.7%) | 383 |
+| @theregulatedpath "Supporting Stims" / "5 Types of Stimming" (6-slide carousel) | VISUAL_REVIEWED, all slides + caption | 2026-06-19 | 1.8M | 33.0K (1.8%) | 15.8K (0.9%) | 6.5K (0.4%) | 0 (comments off) |
+| @mindfulnesswithdesiree "Why You Do That, Ep. 2: why your brain keeps procrastinating" (95 s talking head) | TEXT_REVIEWED: platform auto-captions + caption. Video frames not reviewed | 2026-08-31 | 1.5M | 318.4K (21.2%) | 109.9K (7.3%) | 19.2K (1.3%) | 947 |
+| @adley "How to make a ton of money from content" (43 s talking head) | TEXT_REVIEWED: platform auto-captions + caption | 2026-10-29 | 52.9K | 2.7K | 1.4K | 405 | 37 |
+
+Percentages are per play. The stimming carousel is a paid partnership (#pokpokpartner; the Pok Pok app appears in the visual stimming tip), so its reach may include paid promotion. That is a hypothesis, not a confirmed fact.
+
+### Corrected ratings
+
+| Reference | Hook | Shareability | Accuracy and scope | Overall | Why |
+|---|---:|---:|---:|---:|---|
+| Behaviours are Sensory Needs | 9 | 9 | 5 | 8/10 | "Behaviour = Sensory Need" reframe; Observed / Need / Try instead on every slide; 3.4% save rate on a 7-week-old account. But each behaviour is mapped to one need with certainty ("usually mean"), biting others is treated as purely sensory, and there is a spelling error on a slide |
+| 5 Types of Stimming | 8 | 7 | 7 | 7/10 | Clear "looks like / might mean / support tip" grid with tentative wording. Highest plays but a quarter of the sensory post's save rate, comments off, and sponsored, so the views overstate how well it landed |
+| Why You Do That, Ep. 2 | 9 | 10 | 5 | 9/10 | Identity callout ("In case your parents never taught you how to regulate your nervous system, welcome back"), a named series, and a self-blame flip ("lazy" becomes "not feeling safe"). It speaks to a universal behaviour, not a niche. "Survival mode" is oversimplified and the 95 s length is long for APC |
+| adley | n/a | n/a | n/a | Strategy source | Supplies the cultural relevance route below. Not a format to copy |
+
+Main correction to v0.6: the most-viewed post is not the best performer. Judge by saves and shares per play, as the content playbook already says. By that measure the sensory carousel and the Desiree video are the real winners.
+
+### The cultural relevance route
+
+Source: @adley, using trial lawyer Jefferson Fisher as the example. Fisher grew by talking about everyday conversations ("how to know if you are being gaslit"), not about law. In adley's words he "took the cultural relevance route. Macro out to the wider, relatable TAM that his audience is still inside." TAM means total addressable market. Desiree does the same: a nervous system coach talking about procrastination to every adult. The sensory carousel does a lighter version: "behaviour is communication" is relevant to any parent.
+
+APC version (CANDIDATE_HYPOTHESIS, under test):
+
+- **Widen the doorway, keep the room.** Pick an everyday moment every parent in Malaysia and Singapore recognises (the car ride home from school, tuition fights, the mall, family gatherings, a child who listens to the teacher but not to you). Speak to all parents for the first third.
+- **Name autistic children by the middle third.** One line where autism parents feel this is even more true for them. They are still inside the wider audience.
+- **Flip a self-blame belief.** Desiree turns "I am lazy" into "my body does not feel safe". APC turns "it is my parenting" or "he is just naughty" into a body or brain explanation. This is APC's guilt-lift engine and fits the approved folk-belief targets.
+- **Local texture.** School gate, tuition, grandparents' advice and festive visits make it feel made for here, which supports sharing in family and school WhatsApp groups.
+- **One small action for tonight or tomorrow.** Same payoff rule as other formats.
+- **CJ on camera, experience line in the final third.** This avoids the carousel creator's problem of reach without trust.
+
+Limits: the content playbook asks for the main keyword in the first 3 seconds. For this route the first-3-second keyword should be the broad one (for example an after-school or meltdown keyword) if CJ's keyword list contains one, with "autism" in the caption and the middle third. CJ to confirm against the keyword list. Do not drop scope, sources or tentative wording to widen reach.
+
+### What to take from the Desiree video specifically
+
+- An identity callout line before the topic ("In case your parents never taught you...").
+- A recurring series name that promises a type of answer ("Why You Do That"). APC is not starting new series right now (content playbook, Not now), so use the question form inside existing formats instead.
+- A caption that starts with a POV reframe of self-blame.
+- Do not copy: jokes that undercut the science ("you might forever be lazy, just kidding"), "survival mode" as a one-size explanation, or 95 s running time.
+
+### Proposed hook bank entries (cultural relevance)
+
+For CJ to paste into `claude/APC_Hook_Template_Bank_31Oct.md` in the Claude project and number.
+
+| Proposed template | Frame-one text | Archetype |
+|---|---|---|
+| "If your child is fine at [place] and falls apart [with you / at home], this is for you." | "They save it for you." | Guilt Lift + Pattern Interrupt |
+| "We were told that if kids behave for [others] but not for you, you are too soft. It may be the opposite." | "Not too soft." | Misconception Smash |
+| "Why kids [universal behaviour], and why it can be bigger for autistic kids." | "Why kids [behaviour]" | Question Hook |
+
+Do not use: "every parent" claims, "it's never your fault" absolutes, or anything that promises calmer evenings.
+
+### Changelog addition
+
+0.7: full slide and caption review of both @theregulatedpath carousels, transcript review of two talking-head references, real platform stats, corrected ratings (sensory carousel and the Desiree video are the stronger performers; the stimming carousel is sponsored with comments off), the cultural relevance route as a candidate format, and three proposed hook bank entries. No APC analytics were invented.
