@@ -311,3 +311,4 @@ html body.apc-about-page #experience .credential:last-child:nth-child(odd) { gri
 @media (max-width: 640px) { html body.apc-about-page #experience .credentials { grid-template-columns: 1fr !important; } }
 html body.apc-about-page #start .final-card .button { background: #2DD4BF !important; color: #073734 !important; border-color: #2DD4BF !important; }
 html body.apc-parent-minimal #home-support ul.offer-points li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+html body.apc-about-page main .button, html body.apc-about-page main a.button { font-size: 1rem !important; }
