@@ -55,8 +55,8 @@ column keeps About CJ, For Parents, For Centres and Schools, Teacher Talk, Resou
 1. **Free Big Reactions Quick Check**: two-page guide, email signup.
 2. **Pattern Finder Toolkit**: RM37 on Etsy.
 3. **Pattern Session**: RM57, live online group. Charged in RM; the card converts.
-4. **Autism Parent Coaching for Hard Moments** (premium, Founder decision 2026-11-09): RM4,997 or 3 x RM1,666; with two
-   Klang Valley home visits RM7,997 or 3 x RM2,666. Prices are shared on the First Step Call only; no public page shows
+4. **Autism Parent Coaching for Hard Moments** (premium, Founder decision 2026-11-09): RM4,998 or 3 x RM1,666 (Singapore SGD 1,800 or 3 x SGD 600, set 2026-11-11); with two
+   Klang Valley home visits RM7,998 or 3 x RM2,666. Prices are shared on the First Step Call only; no public page shows
    them. Near the call button use "Fees are shared on the call, before you decide. Nothing is paid on the call." and keep
    the payment line. Format: eight 60-minute online sessions over 12 weeks (the parent joins all 8; a helper, partner or
    grandparent may join), one session for a partner, helper or grandparent, visual supports and routine cards, a
