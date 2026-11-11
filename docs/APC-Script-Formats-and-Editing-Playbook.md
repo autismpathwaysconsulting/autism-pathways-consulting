@@ -1,11 +1,11 @@
 # APC Script Formats and Editing Playbook
 
-Version: 0.5
-Date: 2026-09-09
+Version: 0.6
+Date: 2026-11-11
 Owner: CJ Lim, Autism Pathways Consulting
 Status: Working reference under test. Content OS changes are in draft PR #59, pending merge and deployment.
 
-For current reconciliation of the supplied Claude documents, use the v0.5 section below. Earlier reference records remain historical evidence; repeated source instructions are not additional requirements.
+For current reconciliation of the supplied Claude documents, use the v0.5 section below. For the Decoder format and the first external creator reference, use the v0.6 section. Earlier reference records remain historical evidence; repeated source instructions are not additional requirements.
 
 ## Purpose and boundaries
 
@@ -485,3 +485,77 @@ Draft PR: https://github.com/autismpathwaysconsulting/autism-pathways-consulting
 The dashboard and episode studio retain the prior format/reference and editing handoffs. This revision adds the consolidated quality gate, source-reconciliation instructions and bounded existing-episode comparison to new video prompts. Imported reference files remain transient unless downloaded; no automatic persistence or readiness decision is implied. No backend schema or master identity was changed. No real episode was marked published or assigned a new performance score.
 
 0.5: deduplicated the repeated Claude source, reconciled historical contradictions, cross-referenced the four accessible example families, added a weighted 9/10 editorial target with critical blockers, and added catalog-aware distinctness guidance. The current format remains under test.
+
+
+## v0.6: external creator reference and the Decoder format, 2026-11-11
+
+### Source and coverage
+
+First external (non-APC) reference in this playbook. Creator: Jessica, "The Regulated Path" (@theregulatedpath, TikTok), a US-dollar autism parent creator who sells the SAGE membership app (USD 47 a month or USD 397 a year) and a USD 37 potty training ebook.
+
+| Reference | Accessible material reviewed | Format | Structural contribution | Limits |
+|---|---|---|---|---|
+| "Types of Stimming and What Each One Might Mean" (pinned) | Cover frame in CJ's profile screenshot, 11 Nov 2026 | Illustrated photo carousel | Number + everyday word + "what each might mean" promise; grid of recognisable child behaviours on the cover | VISUAL_REVIEWED, cover only. Inner slides, caption, audio, URL and publication date UNKNOWN |
+| "Sensory Needs: behaviours are a form of communication. Here's what they usually mean + what you can try instead" (pinned) | Cover frame in the same screenshot | Illustrated photo carousel | Reframe line on the cover, then meaning + action promise; grid of four recognisable sensory moments | VISUAL_REVIEWED, cover only. Title partly hidden by the Pinned tag. Same unknowns |
+
+View counts as displayed on the profile on 11 Nov 2026: about 1.8M (stimming) and 1.2M (sensory). Most other visible posts show 274 to 12.4K. Account: 23.8K followers, 277.8K likes, 187 posts, opened July 2025. These are platform display figures, not analytics exports, and do not show saves, shares or watch time.
+
+Never copy her wording, illustrations or slide order. Copy the formula only (content playbook rule: "copy the formula, not the words").
+
+### Editorial rating (cover and hook level only)
+
+| Post | Hook and shareability | Notes |
+|---|---:|---|
+| Types of Stimming | 9/10 | Largest searchable word on screen, list promise with closure, instantly self-identifying pictures, affirming tone |
+| Sensory Needs | 8/10 | Stronger promise (meaning + what to try), but busier cover and title cut by the tag; less readable at thumbnail size |
+
+Partial-review ratings only. They are not performance forecasts and do not score accuracy, since the inner slides were not read.
+
+### Why these two travelled (CANDIDATE_HYPOTHESIS)
+
+1. **Decoder promise.** "Types of X and what each might mean" opens a gap the viewer can close in one swipe. A numbered list promises an end point, so people finish it.
+2. **The keyword is the headline.** "Stimming" and "Sensory" are the words parents type into search. The cover is both the hook and the search term.
+3. **Self-identification on frame one.** Each tile is a scene a parent has seen at home (hands over ears, chewing a sleeve, spinning). The viewer finds "their" child before reading a word, which drives "my son does number 3" comments.
+4. **Reference value.** The cover works as a standalone chart, so it gets saved and screenshotted, and sent to a partner, grandparent or teacher.
+5. **Affirming reframe, no blame.** "Behaviours are a form of communication" lifts guilt instead of adding it, which makes it safe to share in family groups.
+6. **Wide audience.** Parents, teachers, therapists-in-training and autistic adults all recognise the topic, so it spreads beyond the niche.
+7. **She pinned her winners.** New profile visitors land on the two strongest posts first.
+
+### What did not work for her, and what APC must add
+
+- **Reach without trust transfer.** About 3M views across two posts against 23.8K followers. The posts show no face, voice or credential, so viewers keep the chart but do not learn who made it. APC keeps CJ on camera and adds the experience line in the final third.
+- **Generic cartoon art.** It is easy to make and easy to ignore once the feed is full of it. APC's overlay cards use APC colours and real wording, not stock children.
+- **Over-reading behaviour.** "What each one means" can slide into "this behaviour means X". APC always says "might" or "may", and never infers diagnosis or a single cause from one behaviour.
+
+### Format D: Decoder (N kinds of a behaviour and what each might be telling you)
+
+Use when parents see a group of related behaviours and lump them under one label ("naughty", "hyper", "doing it for attention").
+
+- Title: [N] kinds of [everyday behaviour word]
+- Question: What might each one be telling me?
+- Opening: Name the scene and the folk label the parent has heard (approved folk-belief targets only).
+- Mechanism: One body-science line that explains all the items (keeps it out of the bare VS dead zone).
+- Decoder card by second 8: a 2 x 2 grid, one line per tile, the behaviour in plain words and what it might be asking for. This replaces her illustration with APC's overlay card style.
+- Points: 3 or 4 items, one sentence each, tentative wording.
+- Re-hook: one short turn line before the action.
+- Payoff: one safer swap the parent can try tonight, scoped ("your child's OT can tailor this").
+- Ending: one comment keyword (GUIDE by default) and a share prompt naming a person.
+
+Rules: maximum 4 items in a talking-head reel (5 or 6 only in a carousel). Every item uses "may" or "might". No item names a diagnosis, therapy approach or professional's advice. The grid must still make sense as a screenshot with no audio. Same distinctness check as other formats: a new behaviour group with the same mechanism and the same swap is an INTENTIONAL_VARIANT, not a new episode.
+
+### Hook templates to add to the bank
+
+The canonical bank is `claude/APC_Hook_Template_Bank_31Oct.md` in CJ's Claude project. It is not reachable from this repository, so these are proposed entries for CJ to paste in and number. All pass the bank's APC filter (no promise, no blame, no credential in the hook).
+
+| Proposed template | Frame-one text (5 words or fewer) | Archetype | Notes |
+|---|---|---|---|
+| "[N] kinds of [behaviour] and what each might be telling you" | "[N] kinds of [behaviour]" | Question Hook + Rarity/Secret | Core Decoder hook. Keyword as the headline |
+| "If someone keeps calling it [folk label], here are [N] things it might actually be" | "Not [folk label]. [Need]." | Misconception Smash | Needs the body mechanism in the next line |
+| "Which one does your child do? [N] kinds of [behaviour]" | "Which one is yours?" | Question Hook | Comment engine: "comment the number" |
+| "[Behaviour] is not one thing. It might be [N] different needs." | "Not one thing" | Pattern Interrupt | Strong for crashing, chewing, covering ears |
+
+Do-not-use variants: "what each one means" (too certain), "decode your child" (treats the child as a puzzle), any version that promises fewer meltdowns or other outcomes.
+
+### Changelog addition
+
+0.6: added the first external creator reference (cover-level only), a cover-level editorial rating, seven virality hypotheses, Format D (Decoder), and four proposed hook bank templates. No APC performance data was invented. Proposed bank entries need CJ's approval in the Claude project before use.
