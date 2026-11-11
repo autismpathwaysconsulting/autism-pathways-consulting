@@ -95,3 +95,7 @@ html body.apc-v2 main .audience-hero-visual figcaption h2 { font-size: 1.5rem !i
 html body.apc-v2.apc-about-page main > section { background: transparent !important; }
 html body.apc-v2.apc-about-page #experience .credential { background: transparent !important; border: 0 !important; border-left: 0 !important; box-shadow: none !important; padding: 12px 0 !important; border-bottom: 1px solid rgba(7, 55, 52, .1) !important; border-radius: 0 !important; }
 html body.apc-v2 main .apc-section-emblem { box-shadow: none !important; }
+/* Readable floor for links, captions and small notes that older page styles set below 16px */
+html body.apc-v2 main :is(a, cite, small, .school-hero-note, .format-fit, .school-format-select, .school-other-focus) { font-size: max(1rem, 1em) !important; }
+html body.apc-v2.apc-school-minimal.apc-school-minimal.apc-school-minimal main :is(p, a, cite, small, legend, label, span, dd, dt, summary, strong, button) { font-size: max(1rem, 1em) !important; }
+html body.apc-v2.apc-school-minimal.apc-school-minimal.apc-school-minimal main :is(h1, h2, h3) :is(span, a) { font-size: inherit !important; }
