@@ -144,3 +144,30 @@ html body.apc-about-page #story > .wrap, html body.apc-about-page #experience > 
 }
 html body.apc-about-page #experience > .wrap { border-top: 8px solid #2DD4BF; }
 html body.apc-about-page #start > .wrap { background: #073734; color: #FFF9F1; }
+/* Panel and council fixes: HOME box light (dark now only means "act here"), tighter boxes on phones, 2 x 2 HOME grid on phones */
+html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #FFFFFF !important; color: #073734; border: 1px solid rgba(7, 55, 52, .08) !important; border-top: 8px solid #2DD4BF !important; }
+html body.apc-parent-minimal #parent-process h2, html body.apc-parent-minimal #parent-process .home-steps-intro { color: #073734 !important; }
+html body.apc-parent-minimal #parent-process ol.home-steps li { background: #EEF5F0 !important; border: 0 !important; }
+html body.apc-parent-minimal #parent-process h3 { color: #073734 !important; }
+html body.apc-parent-minimal #parent-process ol.home-steps li p { color: #2E4A46 !important; }
+html body.apc-about-page #how-i-work .work-panel.apc-home-steps { background: #FFFFFF !important; color: #073734 !important; border: 1px solid rgba(7, 55, 52, .08); border-top: 8px solid #2DD4BF; border-radius: 28px; box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35); }
+html body.apc-about-page #how-i-work .work-panel.apc-home-steps h2, html body.apc-about-page #how-i-work .work-panel.apc-home-steps h3 { color: #073734 !important; }
+html body.apc-about-page #how-i-work .work-panel.apc-home-steps .eyebrow { color: #0F7C70 !important; }
+html body.apc-about-page #how-i-work .home-steps li { background: #EEF5F0 !important; border: 0 !important; }
+html body.apc-about-page #how-i-work .home-steps p, html body.apc-about-page #how-i-work .home-steps-intro { color: #2E4A46 !important; }
+html body.apc-about-page #scope > .wrap { background: #FFFFFF; border: 1px solid rgba(7, 55, 52, .08); border-radius: 28px; padding: clamp(24px, 4vw, 52px); box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35); }
+@media (max-width: 560px) {
+  html body.apc-parent-minimal main > section:not(.parent-hero):not([hidden]), html body.apc-parent-minimal main > aside.parent-guide { margin: 16px auto !important; box-shadow: 0 10px 24px -22px rgba(7, 55, 52, .35); }
+  html body.apc-parent-minimal #parent-process ol.home-steps, html body.apc-about-page #how-i-work .home-steps { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  html body.apc-parent-minimal #parent-process ol.home-steps li, html body.apc-about-page #how-i-work .home-steps li { padding: 14px !important; }
+  html body.apc-parent-minimal #parent-process .home-steps .home-letter, html body.apc-about-page #how-i-work .home-letter { width: 44px !important; height: 44px !important; font-size: 1.4rem !important; margin-bottom: 10px !important; }
+  html body.apc-parent-minimal #parent-process h3, html body.apc-about-page #how-i-work h3 { font-size: 1.05rem !important; }
+}
+/* Phones: one column, letter tile beside the text (2 x 2 was too narrow for 16px text) */
+@media (max-width: 560px) {
+  html body.apc-parent-minimal #parent-process ol.home-steps, html body.apc-about-page #how-i-work .home-steps { grid-template-columns: 1fr !important; }
+  html body.apc-parent-minimal #parent-process ol.home-steps li, html body.apc-about-page #how-i-work .home-steps li { display: grid !important; grid-template-columns: 44px 1fr; column-gap: 14px; align-items: start; }
+  html body.apc-parent-minimal #parent-process .home-steps .home-letter, html body.apc-about-page #how-i-work .home-letter { grid-row: 1 / span 2; margin: 0 !important; }
+  html body.apc-parent-minimal #parent-process .home-steps li > :not(.home-letter), html body.apc-about-page #how-i-work .home-steps li > :not(.home-letter) { grid-column: 2; }
+  html body.apc-parent-minimal main > section#parent-process { padding: 22px 16px !important; }
+}
