@@ -17,11 +17,14 @@ class DemandValidationTests(unittest.TestCase):
   # No price on the call-first home page
   for text in ['RM1,797','S$997','USD 697','RM57','RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_parent_route_order_and_offer_details(self):
-  s=(R/'parents.html').read_text();ids=[s.index('id="'+i+'"') for i in ['quick-check','home-support','pattern-finder','pattern-session','first-step-call']]
+  s=(R/'parents.html').read_text()
+  # RM37 and RM57 sections stay in the source but hidden during the freeze (CJ, 11 Nov 2026)
+  for i in ['pattern-finder','pattern-session']:self.assertIn('<section hidden class="demand-section" id="'+i+'"',s)
+  ids=[s.index('id="'+i+'"') for i in ['home-support','quick-check','pattern-finder','pattern-session','parent-questions','first-step-call']]
   self.assertEqual(ids,sorted(ids))
   for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Eight 60-minute online sessions over 12 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
   promises=s[s.index('class="parent-promises"'):s.index('id="pattern-finder"')]
-  for text in ['What you can count on','Session notes the same day.','Your written plan within 48 hours of the last session.','WhatsApp replies the same working day.','Not a fit after the first session? Your money back in full.']:self.assertIn(text,promises)
+  for text in ['What you can count on','Session notes the same day.','Your Family Playbook within 48 hours of the last session','A check-in session 6 weeks after you finish.','WhatsApp replies the same working day.','Not a fit after the first session? Tell CJ within 7 days and get your money back in full.']:self.assertIn(text,promises)
   # The Home Support price is shared on the call, not on any public page
   for page in ['parents.html','pay/index.html','terms.html','index.html']:
    for price in ['RM1,797','RM4,997','RM7,997','RM4,998','RM7,998','SGD 1,800']:self.assertNotIn(price,(R/page).read_text())
