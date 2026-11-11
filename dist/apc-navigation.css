@@ -103,3 +103,9 @@ html body figcaption:not(#x) { font-size: 1rem !important; }
 /* At 16px, capitals with wide spacing ran to three lines on phones */
 html body .eyebrow.eyebrow.eyebrow { text-transform: none !important; letter-spacing: 0 !important; }
 html body .school-image-caption.school-image-caption.school-image-caption { max-width: none !important; }
+/* Footer readable floor (11 Nov 2026): labels were 12px capitals, links 14px, legal lines 12px. Classes repeat to outrank the design-system rules */
+html body .apc-footer.apc-footer.apc-footer h3 { font-size: 1rem !important; text-transform: none !important; letter-spacing: 0 !important; }
+html body .apc-footer.apc-footer.apc-footer a, html body .apc-footer.apc-footer.apc-footer p, html body .apc-footer.apc-footer.apc-footer span, html body .apc-footer.apc-footer .apc-footer-bottom.apc-footer-bottom { font-size: 1rem !important; }
+html body .apc-footer.apc-footer .apc-footer-column.apc-footer-column a { min-height: 44px; display: inline-flex; align-items: center; }
+html body .apc-footer.apc-footer.apc-footer .apc-footer-logo { font-size: 1.25rem !important; }
+@media (max-width: 560px) { html body .apc-footer.apc-footer .apc-footer-policies { display: flex !important; flex-direction: column; gap: 4px; } html body .apc-footer.apc-footer .apc-footer-policies > span[aria-hidden="true"] { display: none !important; } }

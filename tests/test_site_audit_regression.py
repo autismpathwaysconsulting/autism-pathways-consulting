@@ -23,9 +23,10 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertIn("Today I work with parents, centres and schools in Malaysia, Singapore and internationally.", about)
         for page in (home, about):
             self.assertNotRegex(page, r"(?i)over\s+(?:10|ten)\s+years|10\+\s+years")
-        self.assertIn("Meet CJ Lim, autism educator and founder of APC.", about)
+        self.assertIn("<h1>Meet CJ Lim.</h1><p class=\"about-lead\">Autism educator and founder of APC.</p>", about)
         self.assertIn("part-time lecturer with CAE Malaysia", about)
-        self.assertNotRegex(about, r"SPARK|Hanen-informed parent guidance")
+        # SPARK Communication may be named (CJ, 11 Nov 2026); the vague "Hanen-informed" wording stays out
+        self.assertNotRegex(about, r"Hanen-informed parent guidance")
 
     def test_blog_closing_prioritises_pattern_session(self):
         closing = read("blog.html").split('id="apply-an-idea"', 1)[1].split("</section>", 1)[0]
