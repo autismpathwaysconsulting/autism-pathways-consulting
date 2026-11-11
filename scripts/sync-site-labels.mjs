@@ -13,7 +13,7 @@ const cta=current=>`<a class="apc-shell-start" href="${ctaHref}"${current?' aria
 const [legal,scope]=config.footer;
 // The footer keeps every audience page and the free Quick Check, whatever the header menu shows.
 const pages=[['/about','About CJ'],['/parents','For Parents'],['/schools','For Centres and Schools'],['/teacher-talk','Teacher Talk'],['/resources','Resources']];
-const explore=[...pages,['/parents#pattern-session','Pattern Session'],['/big-reactions-quick-check','Free Quick Check']];
+const explore=[...pages,['/big-reactions-quick-check','Free Quick Check']];
 const policies=[['/privacy','Privacy Policy'],['/terms','Terms and Conditions'],['/cancellation-policy','Cancellation Policy'],['/disclaimer','Disclaimer']];
 // Every public page carries the company line and the scope paragraph; main pages keep the link columns.
 const mainFooter=`<footer class="apc-footer">
