@@ -171,3 +171,131 @@ html body.apc-about-page #scope > .wrap { background: #FFFFFF; border: 1px solid
   html body.apc-parent-minimal #parent-process .home-steps li > :not(.home-letter), html body.apc-about-page #how-i-work .home-steps li > :not(.home-letter) { grid-column: 2; }
   html body.apc-parent-minimal main > section#parent-process { padding: 22px 16px !important; }
 }
+
+/* ===== Polish pass (11 Nov 2026): designers, council and parent panel. One type scale, one box rule, one alignment rule ===== */
+:root { --apc-box-gap: 24px; --apc-box-pad-y: 64px; --apc-box-pad-x: 56px; }
+@media (max-width: 560px) { :root { --apc-box-gap: 16px; --apc-box-pad-y: 40px; --apc-box-pad-x: 20px; } }
+
+/* Boxes: same 1120px edge as header and footer, white fill, no shadow, no stripes */
+html body.apc-parent-minimal main > section:not(.parent-hero):not([hidden]),
+html body.apc-parent-minimal main > aside.parent-guide {
+  width: calc(100% - 32px) !important; max-width: 1120px !important; margin: var(--apc-box-gap) auto !important;
+  padding: var(--apc-box-pad-y) var(--apc-box-pad-x) !important; border-radius: 24px !important;
+  box-shadow: none !important; border: 0 !important; background: #FFFFFF;
+}
+html body.apc-parent-minimal main > section#home-support { background: #EEF5F0 !important; }
+html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #FFFFFF !important; border: 0 !important; }
+html body.apc-parent-minimal main > section#first-step-call { background: #073734 !important; }
+html body.apc-about-page #story > .wrap, html body.apc-about-page #experience > .wrap, html body.apc-about-page #additional-training > .wrap,
+html body.apc-about-page #scope > .wrap, html body.apc-about-page #how-i-work .work-panel.apc-home-steps {
+  box-shadow: none !important; border: 0 !important; border-radius: 24px !important; padding: var(--apc-box-pad-y) var(--apc-box-pad-x) !important;
+}
+html body.apc-about-page main > section { padding-top: calc(var(--apc-box-gap) / 2) !important; padding-bottom: calc(var(--apc-box-gap) / 2) !important; }
+
+/* Type scale: display 56/36, section 40/28, card 22/20, body 18/16, small 16 */
+html body.apc-parent-minimal main h1, html body.apc-about-page main h1 { font-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.5rem) !important; line-height: 1.08 !important; }
+html body.apc-parent-minimal main h2, html body.apc-about-page main h2 { font-size: clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem) !important; line-height: 1.15 !important; }
+html body.apc-parent-minimal main h3, html body.apc-about-page main h3 { font-size: clamp(1.25rem, 1.18rem + .3vw, 1.375rem) !important; line-height: 1.25 !important; }
+html body.apc-parent-minimal main p, html body.apc-parent-minimal main li, html body.apc-parent-minimal main summary, html body.apc-parent-minimal main blockquote,
+html body.apc-about-page main p, html body.apc-about-page main li, html body.apc-about-page main summary, html body.apc-about-page main blockquote { font-size: clamp(1rem, .95rem + .25vw, 1.125rem) !important; line-height: 1.6 !important; }
+html body.apc-parent-minimal main .parent-small, html body.apc-parent-minimal main cite, html body.apc-parent-minimal main figcaption,
+html body.apc-about-page main figcaption, html body.apc-about-page main cite, html body.apc-about-page main small { font-size: 1rem !important; }
+html body.apc-parent-minimal main p, html body.apc-parent-minimal main li, html body.apc-about-page main p, html body.apc-about-page main li { max-width: 62ch; }
+
+/* Centre each box heading and its supporting line; paragraphs and lists stay left */
+html body.apc-parent-minimal main > section:not(.parent-hero) > h2, html body.apc-parent-minimal main > section:not(.parent-hero) h2#quick-title,
+html body.apc-parent-minimal #parent-faq-title, html body.apc-parent-minimal #closing-title, html body.apc-parent-minimal #resources-title,
+html body.apc-parent-minimal .section-lead, html body.apc-parent-minimal .home-steps-intro, html body.apc-parent-minimal #quick-check .parent-intro {
+  text-align: center !important; margin-inline: auto !important; max-width: 34ch;
+}
+html body.apc-parent-minimal .section-lead, html body.apc-parent-minimal .home-steps-intro, html body.apc-parent-minimal #quick-check .parent-intro { max-width: 52ch !important; margin-top: 12px !important; margin-bottom: 32px !important; }
+
+/* Coaching: inclusions grid then a calm "What you can count on" list */
+html body.apc-parent-minimal #home-support ul.offer-points { max-width: 920px; margin: 0 auto 32px !important; }
+html body.apc-parent-minimal #home-support ul.offer-points li { max-width: none; }
+html body.apc-parent-minimal #home-support .parent-promises { background: #FFFFFF !important; border: 0 !important; border-radius: 20px; padding: 32px !important; max-width: 920px; margin: 0 auto 24px !important; text-align: left !important; }
+html body.apc-parent-minimal #home-support .parent-promises h3 { text-align: center; margin: 0 0 16px !important; color: #073734 !important; }
+html body.apc-parent-minimal #home-support .parent-promises ol { list-style: none; padding: 0 !important; margin: 0 !important; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; }
+html body.apc-parent-minimal #home-support .parent-promises li { position: relative; padding-left: 30px; text-align: left !important; font-weight: 400 !important; max-width: none; }
+html body.apc-parent-minimal #home-support .parent-promises li::before { content: ""; position: absolute; left: 0; top: .45em; width: 18px; height: 18px; border-radius: 50%; background: #E8997A url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23073734' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat; }
+html body.apc-parent-minimal #home-support .audience-actions, html body.apc-parent-minimal #home-support > .parent-small { justify-content: center; text-align: center; margin-inline: auto !important; max-width: 52ch; }
+@media (max-width: 700px) { html body.apc-parent-minimal #home-support .parent-promises ol { grid-template-columns: 1fr; } html body.apc-parent-minimal #home-support .parent-promises { padding: 20px !important; } }
+
+/* Quick Check: text beside a readable preview */
+@media (min-width: 760px) {
+  html body.apc-parent-minimal section#quick-check { display: grid !important; grid-template-columns: 1fr 300px; column-gap: 48px; align-items: center; }
+  html body.apc-parent-minimal section#quick-check > figure { grid-column: 2; grid-row: 1; margin: 0; }
+  html body.apc-parent-minimal section#quick-check > .service-proof { grid-column: 1 / -1; }
+  html body.apc-parent-minimal section#quick-check h2#quick-title, html body.apc-parent-minimal section#quick-check .parent-intro { text-align: left !important; margin-inline: 0 !important; }
+}
+html body.apc-parent-minimal section#quick-check > figure img { width: 100%; height: auto; border-radius: 12px; box-shadow: none; }
+html body.apc-parent-minimal section#quick-check .service-proof { margin-top: 32px; }
+
+/* Guides: centred heading, three even cards, two-column list */
+html body.apc-parent-minimal section[aria-labelledby="resources-title"] .apc-section-composition { display: block !important; }
+html body.apc-parent-minimal section[aria-labelledby="resources-title"] .apc-section-copy { max-width: none !important; width: 100% !important; }
+html body.apc-parent-minimal .parent-section-heading { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; margin-bottom: 28px; }
+html body.apc-parent-minimal .parent-resources { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 24px !important; }
+html body.apc-parent-minimal .parent-resources .audience-card { box-shadow: none !important; padding: 24px !important; min-width: 0; }
+html body.apc-parent-minimal .parent-guide-more { text-align: center; margin: 32px 0 12px !important; }
+html body.apc-parent-minimal .parent-guide-list { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px 32px; max-width: 760px; margin: 0 auto !important; padding: 0 !important; list-style: none; }
+@media (max-width: 760px) { html body.apc-parent-minimal .parent-resources, html body.apc-parent-minimal .parent-guide-list { grid-template-columns: 1fr !important; } }
+
+/* FAQ list and closing box */
+html body.apc-parent-minimal .parent-faq details { max-width: 760px; margin-inline: auto !important; }
+html body.apc-parent-minimal #first-step-call .apc-section-copy { text-align: center; margin-inline: auto; }
+html body.apc-parent-minimal #first-step-call .apc-section-copy p { margin-inline: auto; }
+html body.apc-parent-minimal #first-step-call .audience-actions { justify-content: center; }
+html body.apc-parent-minimal #first-step-call .service-proof { display: inline-block; text-align: left; }
+
+/* Founder box: text never centred */
+html body.apc-parent-minimal .parent-guide, html body.apc-parent-minimal .parent-guide p, html body.apc-parent-minimal .parent-guide h2 { text-align: left !important; }
+
+/* Buttons: one height, no shadow */
+html body.apc-parent-minimal main .audience-primary, html body.apc-about-page main .button { min-height: 48px; display: inline-flex; align-items: center; box-shadow: none !important; }
+
+/* Mobile: no boxes inside boxes, wider text column */
+@media (max-width: 560px) {
+  html body.apc-parent-minimal #home-support ul.offer-points li { background: transparent !important; padding: 0 0 0 30px !important; }
+  html body.apc-parent-minimal #home-support ul.offer-points li::before { left: 0; top: .35em; }
+  html body.apc-parent-minimal #parent-process ol.home-steps li, html body.apc-about-page #how-i-work .home-steps li { background: transparent !important; padding: 0 0 8px !important; }
+  html body.apc-parent-minimal .parent-guide .audience-author img { width: 120px; height: 120px; }
+}
+
+/* About page: centred headings, readable cards, tidy details, no side dots */
+html body.apc-about-page #story h2, html body.apc-about-page #experience h2, html body.apc-about-page #how-i-work h2, html body.apc-about-page #scope h2,
+html body.apc-about-page #additional-training h2, html body.apc-about-page #start h2, html body.apc-about-page .home-steps-intro { text-align: center !important; margin-inline: auto !important; }
+html body.apc-about-page .about-lead { font-size: clamp(1.125rem, 1rem + .5vw, 1.375rem) !important; margin-top: 8px; }
+html body.apc-about-page #experience [class*="grid"], html body.apc-about-page #experience .cards { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; gap: 16px !important; }
+html body.apc-about-page #experience * { overflow: visible !important; }
+html body.apc-about-page #additional-training summary { display: flex; align-items: center; gap: 12px; min-height: 44px; }
+html body.apc-about-page #additional-training .split { display: block !important; }
+html body.apc-about-page #additional-training details, html body.apc-about-page #additional-training .split > div > p { max-width: 760px; margin-inline: auto; }
+html body.apc-about-page #scope .apc-section-emblem { display: block; margin: 0 auto 16px; }
+html body.apc-about-page #scope .scope { display: block !important; text-align: center; }
+html body.apc-about-page #scope .scope p { margin-inline: auto; }
+html body.apc-about-page #start .final-card { text-align: center; }
+html body.apc-about-page #start .final-card p { margin-inline: auto; }
+/* About: story heading across the box, picture beside text; experience and training as one column of heading then content */
+html body.apc-about-page #story .story-layout { display: grid !important; grid-template-columns: minmax(0, 380px) minmax(0, 1fr) !important; gap: 24px 48px !important; align-items: start; }
+html body.apc-about-page #story .story-title { grid-column: 1 / -1; text-align: center; margin: 0 auto 8px !important; max-width: 34ch; }
+html body.apc-about-page #story .story-copy h2 { display: none; }
+html body.apc-about-page #story .story-text { border: 0 !important; padding-top: 0 !important; }
+@media (max-width: 760px) { html body.apc-about-page #story .story-layout { grid-template-columns: 1fr !important; } }
+html body.apc-about-page #experience .split, html body.apc-about-page #additional-training .split { display: block !important; }
+html body.apc-about-page #experience .split > div:first-child { margin-bottom: 24px; }
+html body.apc-about-page #experience .credentials { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; gap: 16px !important; }
+html body.apc-about-page #experience .credential { border: 0 !important; background: #F8F5EF !important; box-shadow: none !important; }
+html body.apc-about-page .section-rail { display: none !important; }
+html body.apc-about-page main h1 { font-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.5rem) !important; }
+html body.apc-about-page h1 { font-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.5rem) !important; line-height: 1.08 !important; }
+html body.apc-about-page .about-lead { font-size: clamp(1.125rem, 1rem + .5vw, 1.375rem) !important; }
+/* Parents: readable Quick Check preview */
+html body.apc-parent-minimal section#quick-check > figure img { max-width: 300px !important; width: 100% !important; display: block; margin-inline: auto; }
+html body.apc-about-page .hero h1, html body.apc-about-page section h1 { font-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.5rem) !important; line-height: 1.08 !important; }
+html body.apc-about-page #experience .credential, html body.apc-about-page #experience .credential * { font-size: clamp(1rem, .95rem + .25vw, 1.125rem) !important; }
+html body.apc-parent-minimal .parent-resources .audience-card h3 { font-size: clamp(1.25rem, 1.18rem + .3vw, 1.375rem) !important; }
+html body.apc-parent-minimal main a, html body.apc-about-page main a { font-size: inherit; }
+/* Founder box on phones: heading first, then photo and story */
+@media (max-width: 759px) { html body.apc-parent-minimal main > aside.parent-guide { display: flex !important; flex-direction: column; } html body.apc-parent-minimal .parent-guide .parent-founder-title { order: -1; } html body.apc-parent-minimal .parent-guide .audience-author { align-items: flex-start; text-align: left; } }
+html body.apc-parent-minimal .parent-guide-list li { margin: 0 !important; }
