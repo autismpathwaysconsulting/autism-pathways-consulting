@@ -141,3 +141,15 @@ html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-st
 /* About: one plain cream page behind the boxes (no tinted bands or gradients) */
 html body.apc-v2.apc-about-page, html body.apc-v2.apc-about-page main { background: var(--u-cream) !important; background-image: none !important; }
 html body.apc-v2.apc-about-page main > section:is(#page-section-1, #story, #experience, #how-i-work, #scope, #additional-training, #start), html body.apc-v2.apc-about-page main > section.hero { background: transparent none !important; }
+/* Clarity pass 2: single-column qualifications, founder facts as short lines, guides link below the cards */
+html body.apc-v2.apc-about-page #experience .credentials { grid-template-columns: 1fr !important; max-width: 760px; margin-inline: auto !important; gap: 0 !important; }
+html body.apc-v2.apc-about-page #experience .credential:last-child:nth-child(odd) { grid-column: auto; }
+html body.apc-v2.apc-parent-minimal .parent-founder-facts { list-style: none; margin: 16px 0 !important; padding: 0 !important; }
+html body.apc-v2.apc-parent-minimal .parent-founder-facts li { position: relative; padding-left: 22px !important; margin: 0 0 8px !important; color: var(--u-dark) !important; }
+html body.apc-v2.apc-parent-minimal .parent-founder-facts li::before { content: ""; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; border-radius: 50%; background: #2DD4BF; }
+html body.apc-v2.apc-parent-minimal .parent-guides-all { text-align: center !important; max-width: none !important; margin: 32px 0 0 !important; }
+html body.apc-v2.apc-parent-minimal .apc-outline-link { display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border: 2px solid var(--u-teal); border-radius: 999px; color: var(--u-teal) !important; font-weight: 600; text-decoration: none !important; }
+@media (max-width: 760px) { html body.apc-v2.apc-parent-minimal .parent-resources { gap: 24px !important; } html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card { gap: 4px; } html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card > span { padding-top: 0; } }
+/* About: same 24px gap between boxes as every other page; parents FAQ list centred */
+html body.apc-v2.apc-about-page main > section:is(#story, #experience, #how-i-work, #scope, #additional-training, #start) { padding-top: 12px !important; padding-bottom: 12px !important; }
+html body.apc-v2.apc-parent-minimal .parent-faq details { margin: 0 auto !important; max-width: 760px !important; }

@@ -109,3 +109,4 @@ html body .apc-footer.apc-footer.apc-footer a, html body .apc-footer.apc-footer.
 html body .apc-footer.apc-footer .apc-footer-column.apc-footer-column a { min-height: 44px; display: inline-flex; align-items: center; }
 html body .apc-footer.apc-footer.apc-footer .apc-footer-logo { font-size: 1.25rem !important; }
 @media (max-width: 560px) { html body .apc-footer.apc-footer .apc-footer-policies { display: flex !important; flex-direction: column; gap: 4px; } html body .apc-footer.apc-footer .apc-footer-policies > span[aria-hidden="true"] { display: none !important; } }
+html body .apc-footer.apc-footer .apc-footer-bottom.apc-footer-bottom > p { margin-top: 12px !important; }
