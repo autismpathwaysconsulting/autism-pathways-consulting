@@ -21,7 +21,7 @@ class LinksPage(unittest.TestCase):
 
     def test_four_buttons_in_order(self):
         hrefs = re.findall(r'<a class="card" href="([^"]+)"', self.html)
-        self.assertEqual(hrefs, ["/go/first-step-call", "/go/guide", "/go/calm", "/go/toolkit", "/go/apply"])
+        self.assertEqual(hrefs, ["/go/first-step-call", "/go/guide", "/go/calm", "/go/apply"])
 
     def test_no_prices_on_the_page(self):
         self.assertIsNone(re.search(r"RM ?\d|S\$ ?\d|USD ?\d", self.html))

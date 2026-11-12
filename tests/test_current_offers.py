@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 PAYMENT_LINE = (
     "CJ confirms fit and availability first, then sends payment details privately. "
-    "Malaysia: bank transfer or DuitNow QR. Singapore and other countries: Wise."
+    "Malaysia: bank transfer or DuitNow QR. Other countries: from your own Wise account or by international bank transfer."
 )
 
 DROPPED_OFFERS = re.compile(
