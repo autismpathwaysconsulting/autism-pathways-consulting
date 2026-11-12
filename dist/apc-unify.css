@@ -1,0 +1,155 @@
+/* APC site-wide consistency layer (11 Nov 2026). Loaded last on home, parents, about, schools and blog.
+   One header, one 1120px container, one type scale, one button, one box (no boxes inside boxes), one image frame, no decoration. */
+:root { --u-max: 1120px; --u-gap: 24px; --u-pad-y: 64px; --u-pad-x: 56px; --u-teal: #0F6E66; --u-dark: #073734; --u-cream: #FFF9F1; }
+@media (max-width: 560px) { :root { --u-gap: 16px; --u-pad-y: 40px; --u-pad-x: 20px; } }
+
+/* 1. One flat header on every page */
+html body.apc-v2 .apc-site-header.apc-site-header { background: #FFFFFF !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; border-bottom: 1px solid rgba(7, 55, 52, .08) !important; padding: 0 !important; top: 0 !important; }
+html body.apc-v2 .apc-site-header.apc-site-header .apc-shell-inner { width: calc(100% - 32px) !important; max-width: var(--u-max) !important; margin: 0 auto !important; min-height: 76px; padding: 0 !important; background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+html body.apc-v2 .apc-site-header .apc-shell-logo img { height: 44px !important; width: auto !important; }
+html body.apc-v2 .apc-scroll-progress { display: none !important; }
+html body.apc-v2 * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* 2. One type scale */
+html body.apc-v2 main h1 { font-size: clamp(2.25rem, 1.4rem + 3.2vw, 4rem) !important; line-height: 1.08 !important; letter-spacing: -0.01em; }
+html body.apc-v2.apc-home-page main h1 { font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.5rem) !important; }
+html body.apc-v2 main h2 { font-size: clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem) !important; line-height: 1.15 !important; }
+html body.apc-v2 main h3 { font-size: clamp(1.25rem, 1.15rem + .4vw, 1.5rem) !important; line-height: 1.25 !important; }
+html body.apc-v2 main p, html body.apc-v2 main li, html body.apc-v2 main summary, html body.apc-v2 main blockquote, html body.apc-v2 main dd { font-size: clamp(1rem, .95rem + .25vw, 1.125rem) !important; line-height: 1.6 !important; }
+html body.apc-v2 main small, html body.apc-v2 main cite, html body.apc-v2 main figcaption, html body.apc-v2 main .parent-small, html body.apc-v2 main .cf-under, html body.apc-v2 main span, html body.apc-v2 main a { font-size: max(1rem, 1em); }
+
+/* 3. One button */
+html body.apc-v2 main :is(.cf-btn, .audience-primary, a.button) {
+  display: inline-flex !important; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 28px !important;
+  border-radius: 999px !important; background: var(--u-teal) !important; color: #FFFFFF !important; border: 0 !important;
+  font-weight: 600 !important; font-size: 1rem !important; box-shadow: none !important; text-decoration: none !important;
+}
+html body.apc-v2 main .cf-btn > i, html body.apc-v2 main .audience-primary > span[aria-hidden="true"] { display: none !important; }
+html body.apc-v2 .apc-site-header .apc-shell-start { background: var(--u-teal) !important; color: #FFFFFF !important; box-shadow: none !important; border-radius: 999px !important; min-height: 44px; }
+html body.apc-v2 main :is(.cf-final, .cf-sheet, #first-step-call, #start .final-card) :is(.cf-btn, .audience-primary, a.button) { background: #2DD4BF !important; color: var(--u-dark) !important; }
+
+/* 4. One box: each section sits in its own rounded panel, nothing boxed inside it */
+html body.apc-v2.apc-home-page main > section:is(#on-the-call, #what-parents-say),
+html body.apc-v2.apc-school-minimal main > section:not(.school-hero):not([hidden]):not(#training-packages),
+html body.apc-v2.apc-blog-page main > section:not(.audience-hero):not([hidden]) {
+  box-sizing: border-box; width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; margin: var(--u-gap) auto !important;
+  padding: var(--u-pad-y) var(--u-pad-x) !important; background: #FFFFFF !important; border: 0 !important; border-radius: 24px !important; box-shadow: none !important;
+}
+html body.apc-v2.apc-home-page main > section#home-support { box-sizing: border-box; width: calc(100% - 32px) !important; max-width: var(--u-max) !important; margin: var(--u-gap) auto !important; padding: var(--u-pad-y) var(--u-pad-x) !important; border-radius: 24px !important; box-shadow: none !important; }
+html body.apc-v2.apc-home-page main > section#contact { background: transparent !important; }
+html body.apc-v2.apc-home-page main > section#contact .cf-faq { box-sizing: border-box; max-width: var(--u-max); margin: 0 auto var(--u-gap) !important; background: #FFFFFF; border-radius: 24px; padding: var(--u-pad-y) var(--u-pad-x); }
+html body.apc-v2 main :is(.cf-wrap, .apc-section-composition) { max-width: var(--u-max) !important; }
+/* Items inside a box are flat: no fill, no border, no shadow */
+html body.apc-v2 main :is(.cf-call > li, .cf-q, .audience-card, .credential, .blog-feature > div) {
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+html body.apc-v2 main :is(.cf-call > li, .audience-card) { padding: 0 !important; }
+html body.apc-v2 main .cf-num { display: none !important; }
+
+/* 5. One image frame */
+html body.apc-v2 main img:not([width="224"]):not(.apc-footer img) { border-radius: 20px !important; box-shadow: none !important; border: 0 !important; }
+html body.apc-v2 main :is(.cf-photo, .school-hero-image, .audience-hero-visual, .apc-section-visual, .story-visual, .portrait) { background: transparent !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; }
+html body.apc-v2 main :is(.cf-photo, .portrait, .school-hero-image, .audience-hero-visual)::before,
+html body.apc-v2 main :is(.cf-photo, .portrait, .school-hero-image, .audience-hero-visual)::after { display: none !important; }
+html body.apc-v2 main .cf-photo :is(.cf-tag, svg) { display: none !important; }
+html body.apc-v2 main .audience-hero-visual figcaption { background: transparent !important; color: var(--u-dark) !important; padding: 16px 0 0 !important; position: static !important; }
+html body.apc-v2 main .audience-hero-visual figcaption * { color: var(--u-dark) !important; }
+
+/* 6. No decoration */
+html body.apc-v2 main .cf-final svg { display: none !important; }
+html body.apc-v2.apc-about-page .hero { background: var(--u-cream) !important; }
+html body.apc-v2.apc-about-page .hero::before, html body.apc-v2.apc-about-page .hero::after { display: none !important; }
+
+/* 7. One FAQ style */
+html body.apc-v2 main details > summary { list-style: none; cursor: pointer; }
+html body.apc-v2 main details > summary::-webkit-details-marker { display: none; }
+html body.apc-v2 main :is(.cf-faq, .parent-faq) { max-width: 760px; margin-inline: auto; }
+
+/* 8. Centred headings, left paragraphs, readable measure */
+html body.apc-v2 main > section :is(h2) { text-align: center; }
+html body.apc-v2 main p, html body.apc-v2 main li { max-width: 68ch; }
+
+/* Home details: no clipped letters, flat quote and founder strip, FAQ rows as dividers */
+html body.apc-v2.apc-home-page .cf-call > li { overflow: visible !important; }
+html body.apc-v2.apc-home-page .cf-call > li h3 { padding-right: 0 !important; }
+html body.apc-v2.apc-home-page :is(.cf-car, .cf-track, .cf-meet) { background: transparent !important; box-shadow: none !important; border: 0 !important; }
+html body.apc-v2.apc-home-page .cf-meet { border-top: 1px solid rgba(7, 55, 52, .1) !important; border-radius: 0 !important; padding: 24px 0 0 !important; margin-top: 24px; }
+html body.apc-v2 main :is(.cf-faq, .parent-faq) details { background: transparent !important; border: 0 !important; border-bottom: 1px solid rgba(7, 55, 52, .12) !important; border-radius: 0 !important; box-shadow: none !important; padding: 6px 0 !important; margin: 0 !important; }
+html body.apc-v2.apc-home-page #contact h2 { margin-bottom: 8px; }
+html body.apc-v2.apc-home-page .cf-step { opacity: 1 !important; }
+html body.apc-v2.apc-home-page .cf-step :is(h3, p, b) { opacity: 1 !important; }
+html body.apc-v2.apc-home-page .cf-photo { max-width: 960px; margin-inline: auto; }
+
+/* Schools: the packages section stays a dark box, same edges and corners as the others */
+html body.apc-v2.apc-school-minimal main > section#training-packages { box-sizing: border-box; width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; margin: var(--u-gap) auto !important; border-radius: 24px !important; box-shadow: none !important; }
+
+/* No boxes inside boxes on the parents and About pages either */
+html body.apc-v2 main #home-support ul.offer-points li, html body.apc-v2 main #home-support .parent-promises,
+html body.apc-v2 main :is(#parent-process, #how-i-work) .home-steps li { background: transparent !important; box-shadow: none !important; border: 0 !important; }
+html body.apc-v2 main #home-support ul.offer-points li { padding: 8px 0 8px 30px !important; }
+html body.apc-v2 main #home-support ul.offer-points li::before { left: 0 !important; top: 13px !important; }
+html body.apc-v2 main #home-support .parent-promises { padding: 24px 0 0 !important; border-top: 1px solid rgba(7, 55, 52, .12) !important; border-radius: 0 !important; }
+html body.apc-v2 main :is(#parent-process, #how-i-work) .home-steps li { padding: 0 !important; }
+html body.apc-v2 main .audience-hero-visual figcaption h2 { font-size: 1.5rem !important; text-align: left !important; }
+/* About: one page background behind the boxes, credentials as a plain list */
+html body.apc-v2.apc-about-page main > section { background: transparent !important; }
+html body.apc-v2.apc-about-page #experience .credential { background: transparent !important; border: 0 !important; border-left: 0 !important; box-shadow: none !important; padding: 12px 0 !important; border-bottom: 1px solid rgba(7, 55, 52, .1) !important; border-radius: 0 !important; }
+html body.apc-v2 main .apc-section-emblem { box-shadow: none !important; }
+/* Readable floor for links, captions and small notes that older page styles set below 16px */
+html body.apc-v2 main :is(a, cite, small, .school-hero-note, .format-fit, .school-format-select, .school-other-focus) { font-size: max(1rem, 1em) !important; }
+html body.apc-v2.apc-school-minimal.apc-school-minimal.apc-school-minimal main :is(p, a, cite, small, legend, label, span, dd, dt, summary, strong, button) { font-size: max(1rem, 1em) !important; }
+html body.apc-v2.apc-school-minimal.apc-school-minimal.apc-school-minimal main :is(h1, h2, h3) :is(span, a) { font-size: inherit !important; }
+
+/* Re-score fixes: every box on the same 160 to 1280px edges, centred hero note, flat guide cards and credentials, packages in two columns */
+html body.apc-v2 main > :is(section, aside):is(#on-the-call, #what-parents-say, #home-support),
+html body.apc-v2.apc-parent-minimal main > section:not(.parent-hero):not([hidden]), html body.apc-v2.apc-parent-minimal main > aside.parent-guide,
+html body.apc-v2.apc-school-minimal main > section:not(.school-hero):not([hidden]),
+html body.apc-v2.apc-blog-page main > section:not(.audience-hero):not([hidden]) { width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; }
+html body.apc-v2.apc-home-page main > section#contact .cf-faq { width: min(1120px, calc(100vw - 32px)); max-width: none; box-sizing: border-box; }
+html body.apc-v2.apc-blog-page .audience-hero > .apc-section-composition { width: min(1120px, calc(100vw - 32px)) !important; max-width: none !important; margin-inline: auto !important; border: 0 !important; }
+html body.apc-v2.apc-home-page .cf-under { text-align: center; margin-inline: auto; }
+html body.apc-v2 main .audience-card { border: 0 !important; }
+html body.apc-v2 main .audience-card::before, html body.apc-v2 main .audience-card::after { display: none !important; }
+html body.apc-v2 main [class*="card"] { box-shadow: none !important; }
+html body.apc-v2.apc-about-page #experience .credential::before, html body.apc-v2.apc-about-page #experience .credential::after { display: none !important; }
+html body.apc-v2.apc-about-page #experience .credential .apc-section-emblem { display: none !important; }
+html body.apc-v2.apc-school-minimal details.school-format-options { display: block !important; }
+html body.apc-v2.apc-school-minimal .school-format-compare { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 32px 40px !important; margin-top: 32px !important; }
+html body.apc-v2.apc-school-minimal .school-format-compare > li { border: 0 !important; padding: 0 !important; }
+html body.apc-v2.apc-school-minimal .school-format-heading .format-toggle { display: none !important; }
+@media (max-width: 700px) { html body.apc-v2.apc-school-minimal .school-format-compare { grid-template-columns: 1fr !important; } }
+
+/* Clarity pass (CJ, 11 Nov 2026: "too messy, not clear"). Fewer items, one column, numbers people can scan */
+html body.apc-v2.apc-parent-minimal #home-support ul.offer-points { display: block !important; max-width: 640px !important; margin: 0 auto 40px !important; }
+html body.apc-v2.apc-parent-minimal #home-support ul.offer-points li { margin: 0 0 14px !important; padding: 0 0 0 34px !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises { max-width: 880px !important; margin: 0 auto 32px !important; padding: 32px 0 0 !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises h3 { text-align: center; margin: 0 0 24px !important; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats { list-style: none; margin: 0 !important; padding: 0 !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 24px !important; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats li { padding: 0 !important; text-align: center !important; max-width: none; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats li::before { display: none !important; content: none !important; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats b { display: block; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem); line-height: 1.1; color: var(--u-dark); margin-bottom: 6px; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats span { display: block; font-size: 1rem !important; color: #2E4A46; }
+@media (max-width: 640px) { html body.apc-v2.apc-parent-minimal ol.promise-stats { grid-template-columns: 1fr !important; gap: 20px !important; } }
+/* Guides: three clean cards, no coloured arcs */
+html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card { border: 0 !important; border-radius: 0 !important; display: flex !important; flex-direction: column; gap: 8px; }
+html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card > span { margin-top: auto; padding-top: 8px; }
+/* About: each qualification as a title with its detail underneath, in a tidy two-column grid */
+html body.apc-v2.apc-about-page #experience .credential { display: block !important; }
+html body.apc-v2.apc-about-page #experience .credential strong { display: block !important; margin: 0 0 4px !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats li { text-align: center !important; padding: 0 !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats li::before { display: none !important; content: none !important; }
+/* About: one plain cream page behind the boxes (no tinted bands or gradients) */
+html body.apc-v2.apc-about-page, html body.apc-v2.apc-about-page main { background: var(--u-cream) !important; background-image: none !important; }
+html body.apc-v2.apc-about-page main > section:is(#page-section-1, #story, #experience, #how-i-work, #scope, #additional-training, #start), html body.apc-v2.apc-about-page main > section.hero { background: transparent none !important; }
+/* Clarity pass 2: single-column qualifications, founder facts as short lines, guides link below the cards */
+html body.apc-v2.apc-about-page #experience .credentials { grid-template-columns: 1fr !important; max-width: 760px; margin-inline: auto !important; gap: 0 !important; }
+html body.apc-v2.apc-about-page #experience .credential:last-child:nth-child(odd) { grid-column: auto; }
+html body.apc-v2.apc-parent-minimal .parent-founder-facts { list-style: none; margin: 16px 0 !important; padding: 0 !important; }
+html body.apc-v2.apc-parent-minimal .parent-founder-facts li { position: relative; padding-left: 22px !important; margin: 0 0 8px !important; color: var(--u-dark) !important; }
+html body.apc-v2.apc-parent-minimal .parent-founder-facts li::before { content: ""; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; border-radius: 50%; background: #2DD4BF; }
+html body.apc-v2.apc-parent-minimal .parent-guides-all { text-align: center !important; max-width: none !important; margin: 32px 0 0 !important; }
+html body.apc-v2.apc-parent-minimal .apc-outline-link { display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border: 2px solid var(--u-teal); border-radius: 999px; color: var(--u-teal) !important; font-weight: 600; text-decoration: none !important; }
+@media (max-width: 760px) { html body.apc-v2.apc-parent-minimal .parent-resources { gap: 24px !important; } html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card { gap: 4px; } html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card > span { padding-top: 0; } }
+/* About: same 24px gap between boxes as every other page; parents FAQ list centred */
+html body.apc-v2.apc-about-page main > section:is(#story, #experience, #how-i-work, #scope, #additional-training, #start) { padding-top: 12px !important; padding-bottom: 12px !important; }
+html body.apc-v2.apc-parent-minimal .parent-faq details { margin: 0 auto !important; max-width: 760px !important; }

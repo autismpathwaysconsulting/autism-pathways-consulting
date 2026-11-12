@@ -22,9 +22,12 @@ class DemandValidationTests(unittest.TestCase):
   for i in ['pattern-finder','pattern-session']:self.assertIn('<section hidden class="demand-section" id="'+i+'"',s)
   ids=[s.index('id="'+i+'"') for i in ['home-support','quick-check','pattern-finder','pattern-session','parent-questions','first-step-call']]
   self.assertEqual(ids,sorted(ids))
-  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Eight 60-minute online sessions over 12 weeks','Book a free First Step Call',PAY]:self.assertIn(text,s)
+  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Eight 60-minute online sessions over 12 weeks','Book a free call',PAY]:self.assertIn(text,s)
   promises=s[s.index('class="parent-promises"'):s.index('id="pattern-finder"')]
-  for text in ['What you can count on','Session notes the same day.','Your Family Playbook within 48 hours of the last session','A check-in session 6 weeks after you finish.','WhatsApp replies the same working day.','Not a fit after the first session? Tell CJ within 7 days and get your money back in full.']:self.assertIn(text,promises)
+  for text in ['What you can count on','Same day','Session notes after every session','48 hours','Your Family Playbook after the last session','7 days','To ask for a full refund after session 1']:self.assertIn(text,promises)
+  # Full inclusions live in one FAQ answer (CJ, 11 Nov 2026: the long lists looked messy)
+  faq=s[s.index('id="parent-questions"'):]
+  for text in ['WhatsApp replies the same working day.','a check-in session 6 weeks after you finish','In the Klang Valley, you can add two home visits']:self.assertIn(text,faq)
   # The Home Support price is shared on the call, not on any public page
   for page in ['parents.html','pay/index.html','terms.html','index.html']:
    for price in ['RM1,797','RM4,997','RM7,997','RM4,998','RM7,998','SGD 1,800']:self.assertNotIn(price,(R/page).read_text())

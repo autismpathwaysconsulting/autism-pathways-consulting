@@ -28,11 +28,12 @@ class SiteAuditRegression(unittest.TestCase):
         # SPARK Communication may be named (CJ, 11 Nov 2026); the vague "Hanen-informed" wording stays out
         self.assertNotRegex(about, r"Hanen-informed parent guidance")
 
-    def test_blog_closing_prioritises_pattern_session(self):
+    def test_blog_closing_offers_one_call(self):
+        # One sales path during the freeze (CJ, 11 Nov 2026): no "coming soon" session, no app link
         closing = read("blog.html").split('id="apply-an-idea"', 1)[1].split("</section>", 1)[0]
-        self.assertIn("Pattern Session, a live online group with CJ: coming soon. Dates go to Quick Check email subscribers first. Continue with free parent resources, or if you need help choosing individual support, the free First Step Call remains available.", closing)
-        self.assertNotIn("Explore the Pattern Session", closing)
-        self.assertIn('<a class="audience-primary" href="/go/first-step-call">Book a free First Step Call</a>', closing)
+        self.assertNotIn("coming soon", closing)
+        self.assertNotIn("calm.autismpathwaysconsulting.com", closing)
+        self.assertIn('<a class="audience-primary" href="/go/first-step-call">Book a free call</a>', closing)
         self.assertEqual(closing.count('class="audience-primary"'), 1)
         self.assertIn("The call is a fit check, not a consultation or assessment.", closing)
         self.assertIn('id="pattern-session"', read("parents.html"))
