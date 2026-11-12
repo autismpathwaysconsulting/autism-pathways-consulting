@@ -20,6 +20,12 @@ class DemandValidationTests(unittest.TestCase):
   for page in ['index.html','parents.html','pay/index.html','terms.html']:
    s=(R/page).read_text()
    for text in ['12 weeks','Eight 60-minute','Family Playbook','home visits','3 monthly payments','Singapore and other countries: Wise']:self.assertNotIn(text,s,page)
+ def test_terms_publish_no_prices(self):
+  # Prices are shared on the call or in a written quote, matching /pay/ (CJ, 13 Nov 2026)
+  import re
+  s=(R/'terms.html').read_text()
+  self.assertIsNone(re.search(r"RM ?\d|S\$ ?\d|USD ?\d",s))
+  self.assertIn('CJ shares them on the call or sends your organisation a written quote',s)
  def test_parent_route_order_and_offer_details(self):
   s=(R/'parents.html').read_text()
   # RM37 and RM57 sections stay in the source but hidden during the freeze (CJ, 11 Nov 2026)
