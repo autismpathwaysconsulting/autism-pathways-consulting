@@ -1,11 +1,11 @@
 # APC Script Formats and Editing Playbook
 
-Version: 0.7
-Date: 2026-11-11
+Version: 0.5
+Date: 2026-09-09
 Owner: CJ Lim, Autism Pathways Consulting
 Status: Working reference under test. Content OS changes are in draft PR #59, pending merge and deployment.
 
-For current reconciliation of the supplied Claude documents, use the v0.5 section below. For the Decoder format use the v0.6 section; for the full TikTok reference review and the cultural relevance route, use v0.7. Earlier reference records remain historical evidence; repeated source instructions are not additional requirements.
+For current reconciliation of the supplied Claude documents, use the v0.5 section below. Earlier reference records remain historical evidence; repeated source instructions are not additional requirements.
 
 ## Purpose and boundaries
 
@@ -485,144 +485,3 @@ Draft PR: https://github.com/autismpathwaysconsulting/autism-pathways-consulting
 The dashboard and episode studio retain the prior format/reference and editing handoffs. This revision adds the consolidated quality gate, source-reconciliation instructions and bounded existing-episode comparison to new video prompts. Imported reference files remain transient unless downloaded; no automatic persistence or readiness decision is implied. No backend schema or master identity was changed. No real episode was marked published or assigned a new performance score.
 
 0.5: deduplicated the repeated Claude source, reconciled historical contradictions, cross-referenced the four accessible example families, added a weighted 9/10 editorial target with critical blockers, and added catalog-aware distinctness guidance. The current format remains under test.
-
-
-## v0.6: external creator reference and the Decoder format, 2026-11-11
-
-### Source and coverage
-
-First external (non-APC) reference in this playbook. Creator: Jessica, "The Regulated Path" (@theregulatedpath, TikTok), a US-dollar autism parent creator who sells the SAGE membership app (USD 47 a month or USD 397 a year) and a USD 37 potty training ebook.
-
-| Reference | Accessible material reviewed | Format | Structural contribution | Limits |
-|---|---|---|---|---|
-| "Types of Stimming and What Each One Might Mean" (pinned) | Cover frame in CJ's profile screenshot, 11 Nov 2026 | Illustrated photo carousel | Number + everyday word + "what each might mean" promise; grid of recognisable child behaviours on the cover | VISUAL_REVIEWED, cover only. Inner slides, caption, audio, URL and publication date UNKNOWN |
-| "Sensory Needs: behaviours are a form of communication. Here's what they usually mean + what you can try instead" (pinned) | Cover frame in the same screenshot | Illustrated photo carousel | Reframe line on the cover, then meaning + action promise; grid of four recognisable sensory moments | VISUAL_REVIEWED, cover only. Title partly hidden by the Pinned tag. Same unknowns |
-
-View counts as displayed on the profile on 11 Nov 2026: about 1.8M (stimming) and 1.2M (sensory). Most other visible posts show 274 to 12.4K. Account: 23.8K followers, 277.8K likes, 187 posts, opened July 2025. These are platform display figures, not analytics exports, and do not show saves, shares or watch time.
-
-Never copy her wording, illustrations or slide order. Copy the formula only (content playbook rule: "copy the formula, not the words").
-
-### Editorial rating (cover and hook level only)
-
-| Post | Hook and shareability | Notes |
-|---|---:|---|
-| Types of Stimming | 9/10 | Largest searchable word on screen, list promise with closure, instantly self-identifying pictures, affirming tone |
-| Sensory Needs | 8/10 | Stronger promise (meaning + what to try), but busier cover and title cut by the tag; less readable at thumbnail size |
-
-Partial-review ratings only. They are not performance forecasts and do not score accuracy, since the inner slides were not read.
-
-### Why these two travelled (CANDIDATE_HYPOTHESIS)
-
-1. **Decoder promise.** "Types of X and what each might mean" opens a gap the viewer can close in one swipe. A numbered list promises an end point, so people finish it.
-2. **The keyword is the headline.** "Stimming" and "Sensory" are the words parents type into search. The cover is both the hook and the search term.
-3. **Self-identification on frame one.** Each tile is a scene a parent has seen at home (hands over ears, chewing a sleeve, spinning). The viewer finds "their" child before reading a word, which drives "my son does number 3" comments.
-4. **Reference value.** The cover works as a standalone chart, so it gets saved and screenshotted, and sent to a partner, grandparent or teacher.
-5. **Affirming reframe, no blame.** "Behaviours are a form of communication" lifts guilt instead of adding it, which makes it safe to share in family groups.
-6. **Wide audience.** Parents, teachers, therapists-in-training and autistic adults all recognise the topic, so it spreads beyond the niche.
-7. **She pinned her winners.** New profile visitors land on the two strongest posts first.
-
-### What did not work for her, and what APC must add
-
-- **Reach without trust transfer.** About 3M views across two posts against 23.8K followers. The posts show no face, voice or credential, so viewers keep the chart but do not learn who made it. APC keeps CJ on camera and adds the experience line in the final third.
-- **Generic cartoon art.** It is easy to make and easy to ignore once the feed is full of it. APC's overlay cards use APC colours and real wording, not stock children.
-- **Over-reading behaviour.** "What each one means" can slide into "this behaviour means X". APC always says "might" or "may", and never infers diagnosis or a single cause from one behaviour.
-
-### Format D: Decoder (N kinds of a behaviour and what each might be telling you)
-
-Use when parents see a group of related behaviours and lump them under one label ("naughty", "hyper", "doing it for attention").
-
-- Title: [N] kinds of [everyday behaviour word]
-- Question: What might each one be telling me?
-- Opening: Name the scene and the folk label the parent has heard (approved folk-belief targets only).
-- Mechanism: One body-science line that explains all the items (keeps it out of the bare VS dead zone).
-- Decoder card by second 8: a 2 x 2 grid, one line per tile, the behaviour in plain words and what it might be asking for. This replaces her illustration with APC's overlay card style.
-- Points: 3 or 4 items, one sentence each, tentative wording.
-- Re-hook: one short turn line before the action.
-- Payoff: one safer swap the parent can try tonight, scoped ("your child's OT can tailor this").
-- Ending: one comment keyword (GUIDE by default) and a share prompt naming a person.
-
-Rules: maximum 4 items in a talking-head reel (5 or 6 only in a carousel). Every item uses "may" or "might". No item names a diagnosis, therapy approach or professional's advice. The grid must still make sense as a screenshot with no audio. Same distinctness check as other formats: a new behaviour group with the same mechanism and the same swap is an INTENTIONAL_VARIANT, not a new episode.
-
-### Hook templates to add to the bank
-
-The canonical bank is `claude/APC_Hook_Template_Bank_31Oct.md` in CJ's Claude project. It is not reachable from this repository, so these are proposed entries for CJ to paste in and number. All pass the bank's APC filter (no promise, no blame, no credential in the hook).
-
-| Proposed template | Frame-one text (5 words or fewer) | Archetype | Notes |
-|---|---|---|---|
-| "[N] kinds of [behaviour] and what each might be telling you" | "[N] kinds of [behaviour]" | Question Hook + Rarity/Secret | Core Decoder hook. Keyword as the headline |
-| "If someone keeps calling it [folk label], here are [N] things it might actually be" | "Not [folk label]. [Need]." | Misconception Smash | Needs the body mechanism in the next line |
-| "Which one does your child do? [N] kinds of [behaviour]" | "Which one is yours?" | Question Hook | Comment engine: "comment the number" |
-| "[Behaviour] is not one thing. It might be [N] different needs." | "Not one thing" | Pattern Interrupt | Strong for crashing, chewing, covering ears |
-
-Do-not-use variants: "what each one means" (too certain), "decode your child" (treats the child as a puzzle), any version that promises fewer meltdowns or other outcomes.
-
-### Changelog addition
-
-0.6: added the first external creator reference (cover-level only), a cover-level editorial rating, seven virality hypotheses, Format D (Decoder), and four proposed hook bank templates. No APC performance data was invented. Proposed bank entries need CJ's approval in the Claude project before use.
-
-
-## v0.7: full review of four supplied TikTok references and the cultural relevance route, 2026-11-11
-
-CJ supplied four links. This section supersedes the v0.6 cover-level ratings; v0.6 is kept as history.
-
-### Source register
-
-Figures are the platform display counts read from each post page on 11 Nov 2026. They are not analytics exports and do not include watch time or retention.
-
-| Reference | Coverage | Posted | Plays | Likes | Saves | Shares | Comments |
-|---|---|---|---:|---:|---:|---:|---:|
-| @theregulatedpath "Behaviours are Sensory Needs" (5-slide carousel) | VISUAL_REVIEWED, all slides + caption | 2025-08-21 | 1.2M | 56.1K (4.7%) | 40.4K (3.4%) | 8.5K (0.7%) | 383 |
-| @theregulatedpath "Supporting Stims" / "5 Types of Stimming" (6-slide carousel) | VISUAL_REVIEWED, all slides + caption | 2026-06-19 | 1.8M | 33.0K (1.8%) | 15.8K (0.9%) | 6.5K (0.4%) | 0 (comments off) |
-| @mindfulnesswithdesiree "Why You Do That, Ep. 2: why your brain keeps procrastinating" (95 s talking head) | TEXT_REVIEWED: platform auto-captions + caption. Video frames not reviewed | 2026-08-31 | 1.5M | 318.4K (21.2%) | 109.9K (7.3%) | 19.2K (1.3%) | 947 |
-| @adley "How to make a ton of money from content" (43 s talking head) | TEXT_REVIEWED: platform auto-captions + caption | 2026-10-29 | 52.9K | 2.7K | 1.4K | 405 | 37 |
-
-Percentages are per play. The stimming carousel is a paid partnership (#pokpokpartner; the Pok Pok app appears in the visual stimming tip), so its reach may include paid promotion. That is a hypothesis, not a confirmed fact.
-
-### Corrected ratings
-
-| Reference | Hook | Shareability | Accuracy and scope | Overall | Why |
-|---|---:|---:|---:|---:|---|
-| Behaviours are Sensory Needs | 9 | 9 | 5 | 8/10 | "Behaviour = Sensory Need" reframe; Observed / Need / Try instead on every slide; 3.4% save rate on a 7-week-old account. But each behaviour is mapped to one need with certainty ("usually mean"), biting others is treated as purely sensory, and there is a spelling error on a slide |
-| 5 Types of Stimming | 8 | 7 | 7 | 7/10 | Clear "looks like / might mean / support tip" grid with tentative wording. Highest plays but a quarter of the sensory post's save rate, comments off, and sponsored, so the views overstate how well it landed |
-| Why You Do That, Ep. 2 | 9 | 10 | 5 | 9/10 | Identity callout ("In case your parents never taught you how to regulate your nervous system, welcome back"), a named series, and a self-blame flip ("lazy" becomes "not feeling safe"). It speaks to a universal behaviour, not a niche. "Survival mode" is oversimplified and the 95 s length is long for APC |
-| adley | n/a | n/a | n/a | Strategy source | Supplies the cultural relevance route below. Not a format to copy |
-
-Main correction to v0.6: the most-viewed post is not the best performer. Judge by saves and shares per play, as the content playbook already says. By that measure the sensory carousel and the Desiree video are the real winners.
-
-### The cultural relevance route
-
-Source: @adley, using trial lawyer Jefferson Fisher as the example. Fisher grew by talking about everyday conversations ("how to know if you are being gaslit"), not about law. In adley's words he "took the cultural relevance route. Macro out to the wider, relatable TAM that his audience is still inside." TAM means total addressable market. Desiree does the same: a nervous system coach talking about procrastination to every adult. The sensory carousel does a lighter version: "behaviour is communication" is relevant to any parent.
-
-APC version (CANDIDATE_HYPOTHESIS, under test):
-
-- **Widen the doorway, keep the room.** Pick an everyday moment every parent in Malaysia and Singapore recognises (the car ride home from school, tuition fights, the mall, family gatherings, a child who listens to the teacher but not to you). Speak to all parents for the first third.
-- **Name autistic children by the middle third.** One line where autism parents feel this is even more true for them. They are still inside the wider audience.
-- **Flip a self-blame belief.** Desiree turns "I am lazy" into "my body does not feel safe". APC turns "it is my parenting" or "he is just naughty" into a body or brain explanation. This is APC's guilt-lift engine and fits the approved folk-belief targets.
-- **Local texture.** School gate, tuition, grandparents' advice and festive visits make it feel made for here, which supports sharing in family and school WhatsApp groups.
-- **One small action for tonight or tomorrow.** Same payoff rule as other formats.
-- **CJ on camera, experience line in the final third.** This avoids the carousel creator's problem of reach without trust.
-
-Limits: the content playbook asks for the main keyword in the first 3 seconds. For this route the first-3-second keyword should be the broad one (for example an after-school or meltdown keyword) if CJ's keyword list contains one, with "autism" in the caption and the middle third. CJ to confirm against the keyword list. Do not drop scope, sources or tentative wording to widen reach.
-
-### What to take from the Desiree video specifically
-
-- An identity callout line before the topic ("In case your parents never taught you...").
-- A recurring series name that promises a type of answer ("Why You Do That"). APC is not starting new series right now (content playbook, Not now), so use the question form inside existing formats instead.
-- A caption that starts with a POV reframe of self-blame.
-- Do not copy: jokes that undercut the science ("you might forever be lazy, just kidding"), "survival mode" as a one-size explanation, or 95 s running time.
-
-### Proposed hook bank entries (cultural relevance)
-
-For CJ to paste into `claude/APC_Hook_Template_Bank_31Oct.md` in the Claude project and number.
-
-| Proposed template | Frame-one text | Archetype |
-|---|---|---|
-| "If your child is fine at [place] and falls apart [with you / at home], this is for you." | "They save it for you." | Guilt Lift + Pattern Interrupt |
-| "We were told that if kids behave for [others] but not for you, you are too soft. It may be the opposite." | "Not too soft." | Misconception Smash |
-| "Why kids [universal behaviour], and why it can be bigger for autistic kids." | "Why kids [behaviour]" | Question Hook |
-
-Do not use: "every parent" claims, "it's never your fault" absolutes, or anything that promises calmer evenings.
-
-### Changelog addition
-
-0.7: full slide and caption review of both @theregulatedpath carousels, transcript review of two talking-head references, real platform stats, corrected ratings (sensory carousel and the Desiree video are the stronger performers; the stimming carousel is sponsored with comments off), the cultural relevance route as a candidate format, and three proposed hook bank entries. No APC analytics were invented.
