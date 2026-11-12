@@ -1321,6 +1321,7 @@ body.apc-v2 {
 .apc-free-tool-page .free-preview-card,
 .apc-free-tool-page .free-list-card,
 .apc-payment-page .choice-card {
+  padding: 24px !important;
   background: var(--apc-surface) !important;
   border: 1px solid var(--apc-border) !important;
   border-radius: var(--apc-radius-card) !important;
