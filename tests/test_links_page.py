@@ -26,6 +26,11 @@ class LinksPage(unittest.TestCase):
     def test_no_prices_on_the_page(self):
         self.assertIsNone(re.search(r"RM ?\d|S\$ ?\d|USD ?\d", self.html))
 
+    def test_only_the_free_call_is_recommended(self):
+        self.assertEqual(self.html.count('<span class="tag">Recommended</span>'), 1)
+        call = self.html[self.html.index('href="/go/first-step-call"'):self.html.index('href="/go/guide"')]
+        self.assertIn('<span class="tag">Recommended</span>', call)
+
     def test_scope_and_company_lines(self):
         self.assertIn("APC works with you, not instead of the therapists your child is already seeing.", self.html)
         self.assertIn("003030209-T", self.html)
