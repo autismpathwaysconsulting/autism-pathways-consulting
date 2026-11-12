@@ -2,7 +2,7 @@
 from pathlib import Path
 import unittest
 R=Path(__file__).resolve().parents[1]
-PAY='CJ confirms fit and availability first, then sends payment details privately. Malaysia: bank transfer or DuitNow QR. Singapore and other countries: Wise.'
+PAY='CJ confirms fit and availability first, then sends payment details privately. Malaysia: bank transfer or DuitNow QR. Other countries: from your own Wise account or by international bank transfer.'
 class DemandValidationTests(unittest.TestCase):
  def test_home_is_call_first(self):
   s=(R/'index.html').read_text();hero=s.split('id="home"')[1].split('</section>')[0]
@@ -13,27 +13,31 @@ class DemandValidationTests(unittest.TestCase):
   self.assertNotIn('data-reveal',s)
   self.assertNotIn('data-cal-inline',s)
   self.assertIn('class="cf-bar"><p><b>Free 15-minute call</b>',s)
-  for text in ['Tell CJ the moment','Get one step to try','Hear if Parent Coaching fits','8 sessions · 12 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid on the call.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
+  for text in ['Tell CJ the moment','Get one step to try','Hear if Parent Coaching fits','4 sessions · 6 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid before your first session.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
   # No price on the call-first home page
   for text in ['RM1,797','S$997','USD 697','RM57','RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
+ def test_no_retired_twelve_week_offer(self):
+  for page in ['index.html','parents.html','pay/index.html','terms.html']:
+   s=(R/page).read_text()
+   for text in ['12 weeks','Eight 60-minute','Family Playbook','home visits','3 monthly payments','Singapore and other countries: Wise']:self.assertNotIn(text,s,page)
  def test_parent_route_order_and_offer_details(self):
   s=(R/'parents.html').read_text()
   # RM37 and RM57 sections stay in the source but hidden during the freeze (CJ, 11 Nov 2026)
   for i in ['pattern-finder','pattern-session']:self.assertIn('<section hidden class="demand-section" id="'+i+'"',s)
   ids=[s.index('id="'+i+'"') for i in ['home-support','quick-check','pattern-finder','pattern-session','parent-questions','first-step-call']]
   self.assertEqual(ids,sorted(ids))
-  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared on the call, before you decide. Nothing is paid on the call.','Eight 60-minute online sessions over 12 weeks','Book a free call',PAY]:self.assertIn(text,s)
+  for text in ['RM37 on Etsy','RM57 · Live online group','Coming soon. Dates go to Quick Check email subscribers first.','Fees are shared privately, before you decide. Nothing is paid before your first session.','Four online sessions over 6 weeks','Book a free call',PAY]:self.assertIn(text,s)
   promises=s[s.index('class="parent-promises"'):s.index('id="pattern-finder"')]
-  for text in ['What you can count on','Same day','Session notes after every session','48 hours','Your Family Playbook after the last session','7 days','To ask for a full refund after session 1']:self.assertIn(text,promises)
+  for text in ['What you can count on','Same day','Session notes after every session','48 hours','Your written plan after the last session','7 days','To tell CJ session 1 is not right, and pay nothing']:self.assertIn(text,promises)
   # Full inclusions live in one FAQ answer (CJ, 11 Nov 2026: the long lists looked messy)
   faq=s[s.index('id="parent-questions"'):]
-  for text in ['WhatsApp replies the same working day.','a check-in session 6 weeks after you finish','In the Klang Valley, you can add two home visits']:self.assertIn(text,faq)
+  for text in ['WhatsApp replies the same working day, for the 6 weeks and a settling month after.','up to 2 more sessions at no cost','in English or Bahasa Malaysia']:self.assertIn(text,faq)
   # The Home Support price is shared on the call, not on any public page
   for page in ['parents.html','pay/index.html','terms.html','index.html']:
    for price in ['RM1,797','RM4,997','RM7,997','RM4,998','RM7,998','SGD 1,800']:self.assertNotIn(price,(R/page).read_text())
   for text in ['<form','parent-strategy-session','/pay/350','One-Concern','RM350','Founding Live Session','/connect']:self.assertNotIn(text,s)
  def test_retired_routes_redirect_without_forms(self):
-  for page,target in [('start.html','/'),('programmes.html','/'),('services.html','/parents'),('course-waitlist.html','/parents#pattern-session'),('connect/index.html','/parents')]:
+  for page,target in [('start.html','/'),('programmes.html','/'),('services.html','/parents'),('course-waitlist.html','/parents#home-support'),('connect/index.html','/parents')]:
    s=(R/page).read_text()
    self.assertIn('http-equiv="refresh" content="0; url='+target+'"',s)
    for text in ['<form','<iframe','checkout','sibforms.com']:self.assertNotIn(text,s)

@@ -49,7 +49,8 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertRegex(landing, r"APC-Big-Reactions-Quick-Check-page-2\.webp\?v=[a-f0-9]{12}")
         self.assertIn("To type, download the PDF, open it in a PDF reader, then save a copy.", thanks)
         self.assertNotIn("See the Pattern Session (optional)", thanks)
-        self.assertIn("Pattern Session: coming soon. Dates go to Quick Check email subscribers first.", thanks)
+        self.assertNotIn("Pattern Session", thanks)  # hidden until the 15 Feb 2027 review
+        self.assertIn('<a href="/go/first-step-call">Book a free 15-minute call</a>', thanks)
         self.assertNotRegex(thanks, r"(?i)interest test|founding live session")
         self.assertIn("Keep your notes private unless you choose to share them.", thanks)
         self.assertNotIn("Browse more APC parent resources", thanks)
@@ -58,7 +59,7 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertIn('.quick-thanks .quick-wrap{max-width:680px}', thanks)
 
     def test_retired_course_pages_redirect(self):
-        for page, target in (("connect/index.html", "/parents"), ("course-waitlist.html", "/parents#pattern-session"), ("services.html", "/parents")):
+        for page, target in (("connect/index.html", "/parents"), ("course-waitlist.html", "/parents#home-support"), ("services.html", "/parents")):
             with self.subTest(page=page):
                 source = read(page)
                 self.assertIn(f'<meta http-equiv="refresh" content="0; url={target}">', source)

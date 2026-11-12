@@ -11,7 +11,7 @@ class SchoolBookingHandoffTests(unittest.TestCase):
 
     def test_school_explains_fit_payment_and_written_confirmation(self):
         school = (ROOT / 'schools.html').read_text()
-        self.assertIn('CJ confirms fit and availability first, then sends payment details privately. Malaysia: bank transfer or DuitNow QR. Singapore and other countries: Wise.', school)
+        self.assertIn('CJ confirms fit and availability first, then sends payment details privately. Malaysia: bank transfer or DuitNow QR. Other countries: from your own Wise account or by international bank transfer.', school)
         self.assertIn('CJ confirms your training date in writing.', school)
         # No prices on the site; schools ask for a quote (CJ, 11 Nov 2026)
         self.assertNotIn('class="school-price"', school)
