@@ -19,17 +19,17 @@ class LinksPage(unittest.TestCase):
     def setUpClass(cls):
         cls.html = (ROOT / "links.html").read_text(encoding="utf-8")
 
-    def test_four_buttons_in_order(self):
-        hrefs = re.findall(r'<a class="card" href="([^"]+)"', self.html)
-        self.assertEqual(hrefs, ["/go/first-step-call", "/go/guide", "/go/calm", "/go/apply"])
+    def test_buttons_in_order(self):
+        hrefs = re.findall(r'<a class="card[^"]*" href="([^"]+)"', self.html)
+        self.assertEqual(hrefs, ["/go/first-step-call", "/go/guide", "/go/calm", "/schools"])
 
     def test_no_prices_on_the_page(self):
         self.assertIsNone(re.search(r"RM ?\d|S\$ ?\d|USD ?\d", self.html))
 
-    def test_only_the_free_call_is_recommended(self):
-        self.assertEqual(self.html.count('<span class="tag">Recommended</span>'), 1)
-        call = self.html[self.html.index('href="/go/first-step-call"'):self.html.index('href="/go/guide"')]
-        self.assertIn('<span class="tag">Recommended</span>', call)
+    def test_the_free_call_is_the_main_card_with_no_pill(self):
+        self.assertEqual(self.html.count('<a class="card main"'), 1)
+        self.assertIn('<a class="card main" href="/go/first-step-call">', self.html)
+        self.assertNotIn('class="tag"', self.html)
 
     def test_scope_and_company_lines(self):
         self.assertIn("APC works with you, not instead of the therapists your child is already seeing.", self.html)
