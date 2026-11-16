@@ -8,7 +8,7 @@ const source = name => readFile(new URL(name, root), 'utf8');
 test('Quick Check route uses the dedicated verified Brevo form and transparent consent copy', async () => {
   const html = await source('big-reactions-quick-check.html');
   assert.match(html, /MUIFAI8Y9LxqCbm658xYpspj72FKSjIj/);
-  assert.match(html, /two short follow-up emails/);
+  assert.match(html, /one short step a day for 5 days/);
   assert.match(html, /Parent resources and updates are optional/);
   assert.match(html, /APC Privacy Policy/);
   assert.match(html, /content="index,follow"/);

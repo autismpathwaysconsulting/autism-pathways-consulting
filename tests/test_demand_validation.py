@@ -13,7 +13,7 @@ class DemandValidationTests(unittest.TestCase):
   self.assertNotIn('data-reveal',s)
   self.assertNotIn('data-cal-inline',s)
   self.assertIn('class="cf-bar"><p><b>Free 15-minute call</b>',s)
-  for text in ['Tell CJ the moment','Get one step to try','Hear if Parent Coaching fits','4 sessions · 6 weeks','Your plan to keep','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid before your first session.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
+  for text in ['Tell CJ the moment','Get one step to try','Hear if Parent Coaching fits','4 sessions · 6 weeks','We know what to do when it slips','Parent-reported. Every family is different.','CJ confirms fit first, then shares fees privately. Nothing is paid before your first session.','href="/big-reactions-quick-check">free Quick Check']:self.assertIn(text,s)
   # No price on the call-first home page
   for text in ['RM1,797','S$997','USD 697','RM57','RM350','RM1,800','One-Concern','founding live session']:self.assertNotIn(text,s)
  def test_no_retired_twelve_week_offer(self):
