@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {needsCrisisReply, validateInput, parseModelReply, CRISIS_REPLY} from '../functions/lib/pattern-summary.js';
-import {summarise} from '../functions/api/pattern-summary.js';
+import {summarise, onRequest} from '../functions/api/pattern-summary.js';
 
 const ok = {before: 'We were leaving the playground.', during: 'He dropped to the floor and screamed.', after: 'Calm after 10 minutes at home.', consent: true};
 
@@ -41,4 +41,14 @@ test('a model failure falls back to a safe generic summary with the call invite'
   assert.equal(r.kind, 'summary');
   assert.match(r.invite, /first-step-call/);
   assert.match(r.label, /not a diagnosis/);
+});
+
+test('the tool stays closed without its switch, key and security check, and needs a passed check', async () => {
+  const env = {APC_PATTERN_SUMMARY_ENABLED: 'true', ANTHROPIC_API_KEY: 'k', APC_PROGRAMME_TURNSTILE_SITEKEY: 's', APC_PROGRAMME_TURNSTILE_SECRET: 'x'};
+  const get = env => onRequest({request: new Request('https://autismpathwaysconsulting.com/api/pattern-summary'), env}).then(r => r.json());
+  assert.deepEqual(await get({...env, APC_PROGRAMME_TURNSTILE_SECRET: ''}), {enabled: false, sitekey: null});
+  assert.deepEqual(await get(env), {enabled: true, sitekey: 's'});
+  const post = new Request('https://autismpathwaysconsulting.com/api/pattern-summary', {method: 'POST', body: JSON.stringify({...ok, token: 'bad'})});
+  const r = await onRequest({request: post, env}, async () => false);
+  assert.equal(r.status, 400);
 });
