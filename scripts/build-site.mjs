@@ -89,6 +89,7 @@ export const PUBLIC_FILES = Object.freeze([
   "big-reactions-quick-check.js",
   "thank-you-big-reactions.html",
   "thank-you-big-reactions.js",
+  "pattern-summary-form.js",
   "content-os/programmes/follow-up.html",
   "content-os/programmes/follow-up.js",
 

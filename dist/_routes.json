@@ -5,7 +5,8 @@
     "/content-os/*",
     "/api/content-os/*",
     "/api/site-metrics",
-    "/api/programme-interest"
+    "/api/programme-interest",
+    "/api/pattern-summary"
   ],
   "exclude": []
 }
