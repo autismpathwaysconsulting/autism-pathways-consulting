@@ -11,7 +11,8 @@
     "APC_CONTENT_OS_ENVIRONMENT": "local",
     "APC_CONTENT_OS_AUTOMATION_ENABLED": "false",
     "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false",
-    "APC_PROGRAMME_INTEREST_ENABLED": "false"
+    "APC_PROGRAMME_INTEREST_ENABLED": "false",
+    "APC_PATTERN_SUMMARY_ENABLED": "false"
   },
   "kv_namespaces": [],
   "d1_databases": [],
@@ -22,7 +23,8 @@
         "APC_CONTENT_OS_ENVIRONMENT": "preview",
         "APC_CONTENT_OS_AUTOMATION_ENABLED": "false",
         "APC_CONTENT_OS_META_GITHUB_SYNC_ENABLED": "false",
-        "APC_PROGRAMME_INTEREST_ENABLED": "false"
+        "APC_PROGRAMME_INTEREST_ENABLED": "false",
+        "APC_PATTERN_SUMMARY_ENABLED": "false"
       },
       "kv_namespaces": [
         {
@@ -44,7 +46,8 @@
         "APC_CONTENT_OS_GITHUB_ISSUE_LABEL": "apc-dashboard-feed",
         "APC_CONTENT_OS_GITHUB_ALLOWED_SENDER": "autismpathwaysconsulting",
         "APC_PROGRAMME_INTEREST_ENABLED": "true",
-        "APC_PROGRAMME_TURNSTILE_SITEKEY": "0x4AAAAAAE_dkMay3o7WmVFh"
+        "APC_PROGRAMME_TURNSTILE_SITEKEY": "0x4AAAAAAE_dkMay3o7WmVFh",
+        "APC_PATTERN_SUMMARY_ENABLED": "true"
       },
       "kv_namespaces": [],
       "services": [
