@@ -23,7 +23,7 @@ class SiteAuditRegression(unittest.TestCase):
         self.assertIn("Today I work with parents, centres and schools in Malaysia, Singapore and internationally.", about)
         for page in (home, about):
             self.assertNotRegex(page, r"(?i)over\s+(?:10|ten)\s+years|10\+\s+years")
-        self.assertIn("<h1>Meet CJ Lim.</h1><p class=\"about-lead\">Autism educator and founder of APC.</p>", about)
+        self.assertIn("<h1>Meet CJ Lim</h1><p class=\"about-lead\">Autism educator and founder of APC.</p>", about)
         self.assertIn("part-time lecturer with CAE Malaysia", about)
         # SPARK Communication may be named (CJ, 11 Nov 2026); the vague "Hanen-informed" wording stays out
         self.assertNotRegex(about, r"Hanen-informed parent guidance")
