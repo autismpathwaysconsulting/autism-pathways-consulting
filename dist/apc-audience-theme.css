@@ -1,8 +1,8 @@
 /* Shared audience-page theme. Homepage colours, type and editorial rhythm. */
 body.apc-v2.apc-audience-theme {
-  background: #fbf8f2 !important;
-  color: #073734;
-  --school-paper: #fbf8f2;
+  background: #FFF9F1 !important;
+  color: #1F2937;
+  --school-paper: #FFF9F1;
 }
 .apc-audience-theme main {
   width: min(1120px, calc(100% - 48px));
@@ -12,7 +12,7 @@ body.apc-v2.apc-audience-theme {
 .apc-audience-theme main h1,
 .apc-audience-theme main h2,
 .apc-audience-theme main h3 {
-  font-family: 'DM Serif Display', Georgia, serif !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
   font-weight: 400 !important;
   letter-spacing: -.025em;
   text-wrap: balance;
@@ -38,7 +38,7 @@ body.apc-v2.apc-audience-theme {
   gap: 10px;
   padding: 4px 0;
   font-size: .85rem;
-  color: #435d58;
+  color: #4B5563;
 }
 .apc-audience-theme .audience-breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; }
 .apc-audience-theme main > .parent-hero,
@@ -59,17 +59,17 @@ body.apc-v2.apc-audience-theme {
   max-width: 40ch;
   font-size: 1.12rem;
   line-height: 1.7;
-  color: #435d58;
+  color: #4B5563;
 }
 .apc-audience-theme .audience-hero-visual { margin: 0; overflow: hidden; border-radius: 24px; background: #f2ede3; }
 .apc-audience-theme .audience-hero-visual > img { display: block; width: 100%; height: auto; aspect-ratio: 1.8; object-fit: cover; }
 .apc-audience-theme .audience-hero-visual figcaption,
-.apc-audience-theme .services-route-panel { background: #073734; color: #fff9f1; padding: 28px 32px; }
+.apc-audience-theme .services-route-panel { background: #1F2937; color: #fff9f1; padding: 28px 32px; }
 .apc-audience-theme .audience-hero-visual h2,
 .apc-audience-theme .services-route-panel h2 { color: #fff9f1 !important; font-size: 1.85rem; margin: 10px 0; }
-.apc-audience-theme .audience-hero-visual p { color: #e3ece5; margin: 8px 0 0; line-height: 1.6; }
+.apc-audience-theme .audience-hero-visual p { color: #FBF3E8; margin: 8px 0 0; line-height: 1.6; }
 .apc-audience-theme .audience-hero-visual .eyebrow,
-.apc-audience-theme .services-route-panel .eyebrow { color: #a6d3c7 !important; }
+.apc-audience-theme .services-route-panel .eyebrow { color: #B9ECE4 !important; }
 .apc-audience-theme .services-route-panel { border-radius: 24px; }
 .apc-audience-theme .services-route-panel a { display: flex; justify-content: space-between; gap: 18px; align-items: center; padding: 18px 0; border-bottom: 1px solid #ffffff30; color: #fff9f1; min-height: 44px; text-decoration: none; }
 .apc-audience-theme .services-route-panel a:last-child { border-bottom: 0; padding-bottom: 4px; }
@@ -79,9 +79,9 @@ body.apc-v2.apc-audience-theme {
 body.apc-v2.apc-audience-theme main .audience-primary,
 .apc-audience-theme main .btn-primary,
 .apc-audience-theme main .service-request-link {
-  background: #0f766e !important;
+  background: #0E7490 !important;
   color: #fff !important;
-  border: 1px solid #0f766e !important;
+  border: 1px solid #0E7490 !important;
   border-radius: 999px !important;
   min-height: 48px;
   padding: 13px 22px;
@@ -92,10 +92,10 @@ body.apc-v2.apc-audience-theme main .audience-primary,
 }
 body.apc-v2.apc-audience-theme main .audience-primary:hover,
 .apc-audience-theme main .btn-primary:hover,
-.apc-audience-theme main .service-request-link:hover { background: #073734 !important; text-decoration: none; }
+.apc-audience-theme main .service-request-link:hover { background: #1F2937 !important; text-decoration: none; }
 .apc-audience-theme .audience-card,
 .apc-audience-theme .offer-card {
-  border: 1px solid #d6e1d8 !important;
+  border: 1px solid #EADFD3 !important;
   border-radius: 20px !important;
   background: #fffdf9 !important;
   padding: 28px 24px;
@@ -104,12 +104,12 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
 .apc-audience-theme .parent-offers h3,
 .apc-audience-theme .parent-resources h3,
 .apc-audience-theme .offer-card h2 { font-size: 1.55rem !important; line-height: 1.2; }
-.apc-audience-theme .parent-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: #dcebe2; color: #073734; }
+.apc-audience-theme .parent-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: #FBF3E8; color: #1F2937; }
 .apc-audience-theme .parent-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .apc-audience-theme .parent-offers article:nth-child(2) .parent-icon,
 .apc-audience-theme .offer-card:nth-child(2) .parent-icon { background: #f3d4c2; }
 .apc-audience-theme .parent-offers article:nth-child(3) .parent-icon,
-.apc-audience-theme .offer-card:nth-child(3) .parent-icon { background: #c9e7df; }
+.apc-audience-theme .offer-card:nth-child(3) .parent-icon { background: #B9ECE4; }
 .apc-audience-theme .offer-grid { align-items: stretch; }
 .apc-audience-theme.apc-service-minimal .minimal-process .section-heading { text-align: left; }
 .apc-audience-theme .offer-card .parent-icon { margin-bottom: 20px; }
@@ -118,7 +118,7 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
 .apc-audience-theme.apc-service-minimal main > .minimal-process {
   padding: 36px;
   border-radius: 24px;
-  background: #073734;
+  background: #1F2937;
   color: #fff9f1;
   text-align: left;
 }
@@ -127,13 +127,13 @@ body.apc-v2.apc-audience-theme main .audience-primary:hover,
 .apc-audience-theme.apc-service-minimal .minimal-process h2,
 .apc-audience-theme.apc-service-minimal .minimal-process strong { color: #fff9f1 !important; }
 .apc-audience-theme .parent-process p,
-.apc-audience-theme.apc-service-minimal .minimal-process p { color: #dbe7df !important; }
-.apc-audience-theme .parent-process li > span { margin-left: 0; background: #ffffff12; color: #a6d3c7; border-color: #ffffff30; }
-.apc-audience-theme.apc-service-minimal .minimal-process .eyebrow { color: #a6d3c7 !important; }
+.apc-audience-theme.apc-service-minimal .minimal-process p { color: #FBF3E8 !important; }
+.apc-audience-theme .parent-process li > span { margin-left: 0; background: #ffffff12; color: #B9ECE4; border-color: #ffffff30; }
+.apc-audience-theme.apc-service-minimal .minimal-process .eyebrow { color: #B9ECE4 !important; }
 .apc-audience-theme .parent-resources { gap: 20px; }
-.apc-audience-theme .parent-resources .audience-card { border-top: 3px solid #6b9e7a !important; }
+.apc-audience-theme .parent-resources .audience-card { border-top: 3px solid #0E7490 !important; }
 .apc-audience-theme .parent-resources .audience-card:nth-child(2) { border-top-color: #e8997a !important; }
-.apc-audience-theme .parent-resources .audience-card:nth-child(3) { border-top-color: #0f766e !important; }
+.apc-audience-theme .parent-resources .audience-card:nth-child(3) { border-top-color: #0E7490 !important; }
 .apc-audience-theme .parent-resources h3 { margin-top: 0; }
 .apc-audience-theme main :where(a, button, input, select, textarea, summary):focus-visible { outline: 3px solid #e8997a; outline-offset: 4px; }
 @media (max-width: 760px) {

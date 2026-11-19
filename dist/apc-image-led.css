@@ -1,7 +1,7 @@
 /* Image-led APC public pages. Uses existing page roles, content and controls. */
 body.apc-image-led .apc-editorial-image{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
 body.apc-image-led .apc-editorial-figure{margin:0;min-width:0;overflow:hidden;border-radius:24px;background:#fff9f1;box-shadow:0 18px 38px -24px #07373488,0 0 0 1px #0f766e20}
-body.apc-image-led .apc-editorial-figure figcaption{padding:16px 22px;color:#435c54;font-size:13px;line-height:1.5;text-align:left}
+body.apc-image-led .apc-editorial-figure figcaption{padding:16px 22px;color:#1F2937;font-size:13px;line-height:1.5;text-align:left}
 body.apc-image-led .apc-card-photo{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:14px;margin:0 0 22px}
 body.apc-image-led .apc-guide-photo{display:block;width:100%;height:auto;aspect-ratio:20/9;object-fit:cover;border-radius:14px;margin:0 0 22px}
 body.apc-image-led .apc-concept-note{font-size:12px;line-height:1.5;color:inherit;opacity:.9;margin:14px 0 0}
@@ -18,14 +18,14 @@ body.apc-image-led.apc-connect-page .apc-course-hero{padding:56px 24px;text-alig
 body.apc-image-led.apc-connect-page .apc-course-hero>.wrap{max-width:1120px;width:100%;padding:0;margin:auto}
 body.apc-image-led.apc-connect-page .apc-course-hero h1{font-size:clamp(36px,4vw,54px)!important;line-height:1.06!important;max-width:none;margin:16px 0 22px}
 body.apc-image-led.apc-connect-page .apc-course-hero .lede{margin:0 0 18px;max-width:none}
-body.apc-image-led.apc-connect-page .apc-course-hero .micro{color:#d9ebe5!important}
+body.apc-image-led.apc-connect-page .apc-course-hero .micro{color:#FBF3E8!important}
 body.apc-image-led.apc-connect-page .apc-course-copy{min-width:0}
 body.apc-image-led.apc-waitlist-page main{max-width:1120px!important}
 body.apc-image-led.apc-waitlist-page .apc-interest-hero{margin-bottom:48px}
 body.apc-image-led.apc-waitlist-page .apc-interest-hero h1{font-size:clamp(36px,4vw,54px)!important;line-height:1.06!important;max-width:none}
 body.apc-image-led.apc-start-page-v2 .route-card-intro>.apc-card-photo{max-height:230px;object-fit:cover}
 body.apc-image-led.apc-free-tool-page .free-preview-card>.apc-card-photo{margin-bottom:12px}
-body.apc-image-led.apc-free-tool-page .free-preview-card>.apc-concept-note{color:#e4eee4;margin:0 0 20px}
+body.apc-image-led.apc-free-tool-page .free-preview-card>.apc-concept-note{color:#FBF3E8;margin:0 0 20px}
 body.apc-image-led.apc-free-tool-page .free-preview-card>.apc-visual-icon{display:none}
 body.apc-image-led .audience-hero-visual,body.apc-image-led .hero-activity,body.apc-image-led .school-hero-image{border-radius:24px;overflow:hidden}
 @media(max-width:760px){

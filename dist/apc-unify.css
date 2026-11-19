@@ -1,10 +1,10 @@
 /* APC site-wide consistency layer (11 Nov 2026). Loaded last on home, parents, about, schools and blog.
    One header, one 1120px container, one type scale, one button, one box (no boxes inside boxes), one image frame, no decoration. */
-:root { --u-max: 1120px; --u-gap: 24px; --u-pad-y: 64px; --u-pad-x: 56px; --u-teal: #0F6E66; --u-dark: #073734; --u-cream: #FFF9F1; }
+:root { --u-max: 1120px; --u-gap: 24px; --u-pad-y: 64px; --u-pad-x: 56px; --u-teal: #1F2937; --u-dark: #1F2937; --u-cream: #FFF9F1; }
 @media (max-width: 560px) { :root { --u-gap: 16px; --u-pad-y: 40px; --u-pad-x: 20px; } }
 
 /* 1. One flat header on every page */
-html body.apc-v2 .apc-site-header.apc-site-header { background: #FFFFFF !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; border-bottom: 1px solid rgba(7, 55, 52, .08) !important; padding: 0 !important; top: 0 !important; }
+html body.apc-v2 .apc-site-header.apc-site-header { background: #FFFFFF !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; border-bottom: 1px solid rgba(31, 41, 55, .08) !important; padding: 0 !important; top: 0 !important; }
 html body.apc-v2 .apc-site-header.apc-site-header .apc-shell-inner { width: calc(100% - 32px) !important; max-width: var(--u-max) !important; margin: 0 auto !important; min-height: 76px; padding: 0 !important; background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 html body.apc-v2 .apc-site-header .apc-shell-logo img { height: 44px !important; width: auto !important; }
 html body.apc-v2 .apc-scroll-progress { display: none !important; }
@@ -73,8 +73,8 @@ html body.apc-v2 main p, html body.apc-v2 main li { max-width: 68ch; }
 html body.apc-v2.apc-home-page .cf-call > li { overflow: visible !important; }
 html body.apc-v2.apc-home-page .cf-call > li h3 { padding-right: 0 !important; }
 html body.apc-v2.apc-home-page :is(.cf-car, .cf-track, .cf-meet) { background: transparent !important; box-shadow: none !important; border: 0 !important; }
-html body.apc-v2.apc-home-page .cf-meet { border-top: 1px solid rgba(7, 55, 52, .1) !important; border-radius: 0 !important; padding: 24px 0 0 !important; margin-top: 24px; }
-html body.apc-v2 main :is(.cf-faq, .parent-faq) details { background: transparent !important; border: 0 !important; border-bottom: 1px solid rgba(7, 55, 52, .12) !important; border-radius: 0 !important; box-shadow: none !important; padding: 6px 0 !important; margin: 0 !important; }
+html body.apc-v2.apc-home-page .cf-meet { border-top: 1px solid rgba(31, 41, 55, .1) !important; border-radius: 0 !important; padding: 24px 0 0 !important; margin-top: 24px; }
+html body.apc-v2 main :is(.cf-faq, .parent-faq) details { background: transparent !important; border: 0 !important; border-bottom: 1px solid rgba(31, 41, 55, .12) !important; border-radius: 0 !important; box-shadow: none !important; padding: 6px 0 !important; margin: 0 !important; }
 html body.apc-v2.apc-home-page #contact h2 { margin-bottom: 8px; }
 html body.apc-v2.apc-home-page .cf-step { opacity: 1 !important; }
 html body.apc-v2.apc-home-page .cf-step :is(h3, p, b) { opacity: 1 !important; }
@@ -88,12 +88,12 @@ html body.apc-v2 main #home-support ul.offer-points li, html body.apc-v2 main #h
 html body.apc-v2 main :is(#parent-process, #how-i-work) .home-steps li { background: transparent !important; box-shadow: none !important; border: 0 !important; }
 html body.apc-v2 main #home-support ul.offer-points li { padding: 8px 0 8px 30px !important; }
 html body.apc-v2 main #home-support ul.offer-points li::before { left: 0 !important; top: 13px !important; }
-html body.apc-v2 main #home-support .parent-promises { padding: 24px 0 0 !important; border-top: 1px solid rgba(7, 55, 52, .12) !important; border-radius: 0 !important; }
+html body.apc-v2 main #home-support .parent-promises { padding: 24px 0 0 !important; border-top: 1px solid rgba(31, 41, 55, .12) !important; border-radius: 0 !important; }
 html body.apc-v2 main :is(#parent-process, #how-i-work) .home-steps li { padding: 0 !important; }
 html body.apc-v2 main .audience-hero-visual figcaption h2 { font-size: 1.5rem !important; text-align: left !important; }
 /* About: one page background behind the boxes, credentials as a plain list */
 html body.apc-v2.apc-about-page main > section { background: transparent !important; }
-html body.apc-v2.apc-about-page #experience .credential { background: transparent !important; border: 0 !important; border-left: 0 !important; box-shadow: none !important; padding: 12px 0 !important; border-bottom: 1px solid rgba(7, 55, 52, .1) !important; border-radius: 0 !important; }
+html body.apc-v2.apc-about-page #experience .credential { background: transparent !important; border: 0 !important; border-left: 0 !important; box-shadow: none !important; padding: 12px 0 !important; border-bottom: 1px solid rgba(31, 41, 55, .1) !important; border-radius: 0 !important; }
 html body.apc-v2 main .apc-section-emblem { box-shadow: none !important; }
 /* Readable floor for links, captions and small notes that older page styles set below 16px */
 html body.apc-v2 main :is(a, cite, small, .school-hero-note, .format-fit, .school-format-select, .school-other-focus) { font-size: max(1rem, 1em) !important; }
@@ -127,8 +127,8 @@ html body.apc-v2.apc-parent-minimal #home-support .parent-promises h3 { text-ali
 html body.apc-v2.apc-parent-minimal ol.promise-stats { list-style: none; margin: 0 !important; padding: 0 !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 24px !important; }
 html body.apc-v2.apc-parent-minimal ol.promise-stats li { padding: 0 !important; text-align: center !important; max-width: none; }
 html body.apc-v2.apc-parent-minimal ol.promise-stats li::before { display: none !important; content: none !important; }
-html body.apc-v2.apc-parent-minimal ol.promise-stats b { display: block; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem); line-height: 1.1; color: var(--u-dark); margin-bottom: 6px; }
-html body.apc-v2.apc-parent-minimal ol.promise-stats span { display: block; font-size: 1rem !important; color: #2E4A46; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats b { display: block; font-family: 'Outfit', system-ui, sans-serif; font-weight: 400; font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem); line-height: 1.1; color: var(--u-dark); margin-bottom: 6px; }
+html body.apc-v2.apc-parent-minimal ol.promise-stats span { display: block; font-size: 1rem !important; color: #1F2937; }
 @media (max-width: 640px) { html body.apc-v2.apc-parent-minimal ol.promise-stats { grid-template-columns: 1fr !important; gap: 20px !important; } }
 /* Guides: three clean cards, no coloured arcs */
 html body.apc-v2.apc-parent-minimal .parent-resources .audience-card.audience-card { border: 0 !important; border-radius: 0 !important; display: flex !important; flex-direction: column; gap: 8px; }
@@ -153,3 +153,33 @@ html body.apc-v2.apc-parent-minimal .apc-outline-link { display: inline-flex; al
 /* About: same 24px gap between boxes as every other page; parents FAQ list centred */
 html body.apc-v2.apc-about-page main > section:is(#story, #experience, #how-i-work, #scope, #additional-training, #start) { padding-top: 12px !important; padding-bottom: 12px !important; }
 html body.apc-v2.apc-parent-minimal .parent-faq details { margin: 0 auto !important; max-width: 760px !important; }
+/* Brand look, 19 Nov 2026: match the Instagram posts (Outfit headings, Work Sans text, cream, ink, coral, deep teal) and drop AI-style details */
+html body.apc-v2 { background: #FFF9F1; }
+html body.apc-v2 :is(h1, h2, h3) { font-family: 'Outfit', system-ui, sans-serif !important; font-weight: 700 !important; letter-spacing: -0.015em; color: #1F2937; }
+html body.apc-v2 :is(h3, h4) { font-weight: 600 !important; letter-spacing: -0.005em; }
+html body.apc-v2 .cf-sheet :is(h2, h3), html body.apc-v2 [class*="dark"] :is(h2, h3) { color: #FFF9F1; }
+/* Flat sections on cream instead of white boxes on cream */
+html body.apc-v2.apc-home-page main > section:is(#on-the-call, #what-parents-say, #contact).cf-band, html body.apc-v2.apc-home-page main > section#contact .cf-faq { background: transparent !important; box-shadow: none !important; border: 0 !important; }
+html body.apc-v2.apc-home-page main > section.cf-sheet#home-support p:not(.cf-side) { color: rgba(255, 249, 241, 0.86) !important; }
+html body.apc-v2 .cf-band.cf-sheet { border-radius: 0 !important; box-shadow: none !important; }
+/* Step numbers as plain bold figures, no circles or glow */
+html body.apc-v2 :is(.cf-num, .cf-step-n) { position: static !important; display: block; width: auto !important; height: auto !important; margin: 0 0 6px; padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; animation: none !important; font: 700 2.25rem/1 'Outfit', system-ui, sans-serif !important; color: #E8997A !important; transform: none !important; }
+/* Pause control stays (motion-sensitive visitors need it) but as a quiet text button, not a pill */
+html body.apc-v2 .cf-pause { border: 0 !important; background: none !important; box-shadow: none !important; padding: 4px 8px !important; font-size: 0.875rem; color: #4B5563; text-decoration: underline; text-underline-offset: 3px; }
+/* Fewer rounded boxes: calmer radius on cards and images */
+html body.apc-v2 :is(.audience-card, .cf-q, details) { border-radius: 12px !important; box-shadow: none !important; }
+/* Proof right under the home headline: real photo plus credentials, as plain text (no box) */
+html body.apc-v2 .apc-proof-strip { display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 720px; margin: 20px auto 0; font-size: 0.9375rem; line-height: 1.5; color: #1F2937; text-align: left; }
+html body.apc-v2 .apc-proof-strip img { flex: none; width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+html body.apc-v2 .apc-proof-strip a { color: #0E7490; font-weight: 600; }
+/* Parents hero: the photo frame's rounded corner was clipping the caption's last line; round the photo, not the frame */
+html body.apc-v2 .audience-hero-visual { overflow: visible !important; border-radius: 0 !important; }
+html body.apc-v2 .audience-hero-visual > img { border-radius: 16px; }
+/* Parents: flat sections on cream, no white boxes stacked down the page */
+html body.apc-v2.apc-parent-minimal main > section:is(#sound-familiar, #parent-process, #quick-check, #page-section-6, #parent-questions), html body.apc-v2.apc-parent-minimal main aside.parent-guide { background: transparent !important; box-shadow: none !important; border: 0 !important; border-radius: 0 !important; }
+html body.apc-v2.apc-parent-minimal main > section:is(#sound-familiar, #parent-process, #quick-check, #page-section-6, #parent-questions) + section { border-top: 1px solid rgba(31, 41, 55, 0.1) !important; }
+/* One button colour: deep teal everywhere on cream (bright teal stays on the dark band) */
+html body.apc-v2 :is(.apc-shell-start, .cf-hero .cf-btn) { background: #0E7490 !important; color: #FFFFFF !important; }
+
+/* Parents hero: AI-looking photo removed until CJ's real photos arrive; caption sits as plain text, bigger CJ photo */
+html body.apc-v2 .parent-hero-cj img { width: 72px !important; height: 72px !important; }

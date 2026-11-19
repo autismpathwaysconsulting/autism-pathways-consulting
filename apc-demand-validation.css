@@ -33,32 +33,32 @@ body.apc-v2.apc-tier-a.apc-home-page .apc-booking-guide ol{list-style:none;paddi
 }
 @media(max-width:480px){body.apc-v2.apc-tier-a.apc-home-page .hero-actions{display:flex;flex-direction:column;align-items:stretch!important}body.apc-v2.apc-tier-a.apc-home-page .hero-actions a{justify-content:center;text-align:center}}
 
-.demand-section{padding:36px 0;border-top:1px solid #dce5df}.demand-quick{display:grid;grid-template-columns:1.5fr .7fr;align-items:center;gap:36px}.demand-quick figure{margin:0;max-width:240px;justify-self:center}.demand-quick img{display:block;width:100%;height:auto;max-height:310px;object-fit:contain}.demand-quick figcaption{font-size:12px;color:#536864;margin-top:8px}.demand-question{background:#eef5f0;border-radius:16px;padding:24px;margin-top:24px}.demand-personal-details{margin-top:28px;border-top:1px solid #cddbd3;padding-top:18px}.demand-personal-details>summary{cursor:pointer;color:#174d46;font-weight:600;min-height:44px;padding:10px 0}.demand-personal-details>section{margin-top:24px}.demand-routes{margin-bottom:28px}.demand-routes a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}.apc-demand-home .route-actions .text-action{color:#d5ede5}.apc-demand-home #book-first-step .demand-personal-details{margin-top:0}.apc-demand-home #support-options .demand-personal-details .section-head{margin-top:24px}.demand-limited .parent-closing{margin-top:32px}.demand-section :focus-visible{outline:3px solid #0f766e;outline-offset:4px}@media(max-width:640px){.demand-quick{grid-template-columns:1fr;gap:24px}.demand-quick figure{max-width:190px}.demand-section{padding:28px 0}.demand-question{padding:20px}}
+.demand-section{padding:36px 0;border-top:1px solid #FBF3E8}.demand-quick{display:grid;grid-template-columns:1.5fr .7fr;align-items:center;gap:36px}.demand-quick figure{margin:0;max-width:240px;justify-self:center}.demand-quick img{display:block;width:100%;height:auto;max-height:310px;object-fit:contain}.demand-quick figcaption{font-size:12px;color:#536864;margin-top:8px}.demand-question{background:#FBF3E8;border-radius:16px;padding:24px;margin-top:24px}.demand-personal-details{margin-top:28px;border-top:1px solid #EADFD3;padding-top:18px}.demand-personal-details>summary{cursor:pointer;color:#1F2937;font-weight:600;min-height:44px;padding:10px 0}.demand-personal-details>section{margin-top:24px}.demand-routes{margin-bottom:28px}.demand-routes a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}.apc-demand-home .route-actions .text-action{color:#FBF3E8}.apc-demand-home #book-first-step .demand-personal-details{margin-top:0}.apc-demand-home #support-options .demand-personal-details .section-head{margin-top:24px}.demand-limited .parent-closing{margin-top:32px}.demand-section :focus-visible{outline:3px solid #0E7490;outline-offset:4px}@media(max-width:640px){.demand-quick{grid-template-columns:1fr;gap:24px}.demand-quick figure{max-width:190px}.demand-section{padding:28px 0}.demand-question{padding:20px}}
 
 body.apc-v2.apc-audience-page main>.demand-section{min-height:0!important;height:auto!important;display:block;padding:36px 0!important}body.apc-v2.apc-audience-page main>.demand-quick{display:grid}@media(max-width:640px){body.apc-v2.apc-audience-page main>.demand-section{padding:28px 0!important}}
 
 /* Audit corrections: readable type and a simple, predictable entry route. */
 .audit-start-routes{display:grid;gap:16px;margin:0 0 24px;background:transparent;border:0}
-.audit-start-routes>a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;padding:24px;border:1px solid #cddeda;border-radius:16px;text-decoration:none;background:#fff;color:#253532;min-height:44px}
-.audit-start-routes strong{font-family:'DM Serif Display',serif;font-size:1.55rem;font-weight:400;color:#073734}
-.audit-start-routes span{max-width:65ch;line-height:1.6}.audit-start-routes .audit-route-action{grid-column:2;grid-row:1/3;align-self:center;font-weight:700;color:#0f766e}
-.audit-start-routes>a:first-child{border-left:4px solid #0f766e;background:#eef5f0}
+.audit-start-routes>a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;padding:24px;border:1px solid #EADFD3;border-radius:16px;text-decoration:none;background:#fff;color:#1F2937;min-height:44px}
+.audit-start-routes strong{font-family:'Outfit',sans-serif;font-size:1.55rem;font-weight:400;color:#1F2937}
+.audit-start-routes span{max-width:65ch;line-height:1.6}.audit-start-routes .audit-route-action{grid-column:2;grid-row:1/3;align-self:center;font-weight:700;color:#0E7490}
+.audit-start-routes>a:first-child{border-left:4px solid #0E7490;background:#FBF3E8}
 .audit-fit-note{max-width:68ch;font-size:16px;line-height:1.65;margin-bottom:28px}
-.audit-individual{border-top:1px solid #cddeda;margin-bottom:28px;padding-top:16px}
-.audit-individual>summary{cursor:pointer;padding:12px 0;min-height:44px;font-weight:600;color:#0f766e}
+.audit-individual{border-top:1px solid #EADFD3;margin-bottom:28px;padding-top:16px}
+.audit-individual>summary{cursor:pointer;padding:12px 0;min-height:44px;font-weight:600;color:#0E7490}
 .audit-individual .start-hero{padding-block:24px}.audit-individual .start-hero h2{font-size:2rem}
 .audit-resource-extra{font-size:16px!important;line-height:1.6;margin-top:20px!important}
 .audit-secondary-link{margin-top:20px!important;font-size:16px!important}
 body.apc-home-page #situations .card p{font-size:16px!important;line-height:1.6!important}
 body .apc-contact-note{font-size:14px!important;line-height:1.65!important}
 body.apc-about-page h1,body.apc-about-page .hero h1{max-width:20ch!important}
-.audit-start-routes a:focus-visible,.audit-individual>summary:focus-visible{outline:3px solid #0f766e;outline-offset:4px}
+.audit-start-routes a:focus-visible,.audit-individual>summary:focus-visible{outline:3px solid #0E7490;outline-offset:4px}
 @media(max-width:640px){.audit-start-routes>a{grid-template-columns:1fr;padding:20px;gap:10px}.audit-start-routes .audit-route-action{grid-column:auto;grid-row:auto}.audit-start-routes strong{font-size:1.4rem}}
 /* Homepage: four ways to work with CJ, one per row. */
-.ways-list{list-style:none;margin:0;padding:0;border-top:1px solid rgba(7,55,52,.14)}
-.ways-list li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto;gap:8px 28px;align-items:center;padding:20px 0;border-bottom:1px solid rgba(7,55,52,.14)}
+.ways-list{list-style:none;margin:0;padding:0;border-top:1px solid rgba(31, 41, 55,.14)}
+.ways-list li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto;gap:8px 28px;align-items:center;padding:20px 0;border-bottom:1px solid rgba(31, 41, 55,.14)}
 .ways-list h3{margin:0}
-.ways-list .price{display:block;margin-top:4px;color:var(--apc-primary-teal,#0f766e);font-weight:700;font-size:.95rem}
+.ways-list .price{display:block;margin-top:4px;color:var(--apc-primary-teal,#0E7490);font-weight:700;font-size:.95rem}
 .ways-list p{margin:0}
 .ways-list a{display:inline-flex;align-items:center;min-height:44px;font-weight:700}
 @media(max-width:760px){.ways-list li{grid-template-columns:1fr;gap:4px;padding:14px 0}}
@@ -66,8 +66,8 @@ body.apc-about-page h1,body.apc-about-page .hero h1{max-width:20ch!important}
 
 /* Parents page, 11 Nov 2026: hidden offers stay hidden even where sections set display; FAQ and founder story */
 .apc-parent-minimal section[hidden] { display: none !important; }
-.parent-faq details { border-top: 1px solid rgba(7, 55, 52, .14); padding: 14px 0; }
-.parent-faq details:last-of-type { border-bottom: 1px solid rgba(7, 55, 52, .14); }
+.parent-faq details { border-top: 1px solid rgba(31, 41, 55, .14); padding: 14px 0; }
+.parent-faq details:last-of-type { border-bottom: 1px solid rgba(31, 41, 55, .14); }
 .parent-faq summary { cursor: pointer; font-weight: 600; font-size: 1.0625rem; min-height: 44px; display: flex; align-items: center; }
 .parent-faq details p { margin: 8px 0 4px; max-width: 62ch; }
 .parent-founder-story { font-size: 1rem; line-height: 1.6; max-width: 62ch; }
@@ -81,33 +81,33 @@ html body.apc-parent-minimal main > section:not(.parent-hero):not([hidden]),
 html body.apc-parent-minimal main > aside.parent-guide {
   box-sizing: border-box; width: min(1120px, calc(100% - 32px)); max-width: 1120px;
   margin: 28px auto !important; padding: clamp(24px, 4vw, 52px) !important;
-  background: #FFFFFF; border: 1px solid rgba(7, 55, 52, .08); border-radius: 28px;
-  box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35);
+  background: #FFFFFF; border: 1px solid rgba(31, 41, 55, .08); border-radius: 28px;
+  box-shadow: 0 18px 40px -28px rgba(31, 41, 55, .35);
 }
-html body.apc-parent-minimal main > section#home-support { background: #EEF5F0; border-top: 8px solid #2DD4BF; }
+html body.apc-parent-minimal main > section#home-support { background: #FBF3E8; border-top: 8px solid #2DD4BF; }
 html body.apc-parent-minimal main > section#quick-check { background: #FFFFFF; border-top: 8px solid #E8997A; }
 html body.apc-parent-minimal main > aside.parent-guide { background: #FFFFFF; }
-html body.apc-parent-minimal main > section#first-step-call { background: #073734; color: #FFF9F1; border: 0; }
+html body.apc-parent-minimal main > section#first-step-call { background: #1F2937; color: #FFF9F1; border: 0; }
 html body.apc-parent-minimal main > section#first-step-call h2,
 html body.apc-parent-minimal main > section#first-step-call p,
 html body.apc-parent-minimal main > section#first-step-call cite,
 html body.apc-parent-minimal main > section#first-step-call blockquote { color: #FFF9F1 !important; }
-html body.apc-parent-minimal main > section#first-step-call .eyebrow { color: #8FE8DC !important; }
+html body.apc-parent-minimal main > section#first-step-call .eyebrow { color: #0E7490 !important; }
 html body.apc-parent-minimal main > section#first-step-call .audience-actions a:not(.audience-primary) { color: #FFF9F1 !important; }
-html body.apc-parent-minimal main > section#first-step-call .audience-primary { background: #2DD4BF !important; color: #073734 !important; }
+html body.apc-parent-minimal main > section#first-step-call .audience-primary { background: #2DD4BF !important; color: #1F2937 !important; }
 /* FAQ rows become their own soft boxes */
-html body.apc-parent-minimal .parent-faq details { background: #F8F5EF; border: 0 !important; border-radius: 16px; padding: 4px 20px; margin-top: 12px; }
-html body.apc-parent-minimal .parent-faq details[open] { background: #EEF5F0; }
+html body.apc-parent-minimal .parent-faq details { background: #FFF9F1; border: 0 !important; border-radius: 16px; padding: 4px 20px; margin-top: 12px; }
+html body.apc-parent-minimal .parent-faq details[open] { background: #FBF3E8; }
 /* The APC HOME steps */
-html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #073734; color: #FFF9F1; border: 0; }
+html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #1F2937; color: #FFF9F1; border: 0; }
 .apc-home-steps h2, .apc-home-steps .home-steps-intro { color: #FFF9F1 !important; text-align: center; }
 .apc-home-steps .home-steps-intro { margin: 8px auto 28px; max-width: 52ch; font-size: 1.0625rem; }
 .apc-home-steps ol.home-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.apc-home-steps ol.home-steps li { background: rgba(255, 249, 241, .07); border: 1px solid rgba(143, 232, 220, .25); border-radius: 20px; padding: 22px; display: block; }
-.apc-home-steps .home-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #2DD4BF; color: #073734; font: 700 1.75rem/1 'DM Serif Display', Georgia, serif; margin-bottom: 14px; }
+.apc-home-steps ol.home-steps li { background: rgba(255, 249, 241, .07); border: 1px solid rgba(14, 116, 144, .25); border-radius: 20px; padding: 22px; display: block; }
+.apc-home-steps .home-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #2DD4BF; color: #1F2937; font: 700 1.75rem/1 'Outfit', system-ui, sans-serif; margin-bottom: 14px; }
 .apc-home-steps ol.home-steps li:nth-child(even) .home-letter { background: #E8997A; }
 .apc-home-steps h3 { color: #FFF9F1 !important; font-size: 1.25rem; margin: 0 0 6px; }
-.apc-home-steps ol.home-steps li p { color: #CFE3DF !important; margin: 0; font-size: 1rem; line-height: 1.5; }
+.apc-home-steps ol.home-steps li p { color: #EADFD3 !important; margin: 0; font-size: 1rem; line-height: 1.5; }
 @media (max-width: 900px) { .apc-home-steps ol.home-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .apc-home-steps ol.home-steps { grid-template-columns: 1fr; } }
 /* Coaching inclusions as small boxes in two columns */
@@ -121,7 +121,7 @@ html body.apc-parent-minimal .parent-guide .parent-founder-title { margin: 0 0 1
 html body.apc-parent-minimal .parent-guide .parent-scope, html body.apc-parent-minimal .parent-guide .parent-small { text-align: left; }
 html body.apc-parent-minimal .parent-guide .audience-author img { width: 180px; height: 180px; border-radius: 24px; object-fit: cover; }
 @media (min-width: 760px) { html body.apc-parent-minimal main > aside.parent-guide > .audience-author { display: flex; flex-direction: column; gap: 12px; text-align: left; } }
-html body.apc-parent-minimal #parent-process .home-steps .home-letter { width: 56px !important; height: 56px !important; border-radius: 16px !important; background: #2DD4BF !important; color: #073734 !important; font: 700 1.75rem/1 'DM Serif Display', Georgia, serif !important; display: grid !important; place-items: center !important; }
+html body.apc-parent-minimal #parent-process .home-steps .home-letter { width: 56px !important; height: 56px !important; border-radius: 16px !important; background: #2DD4BF !important; color: #1F2937 !important; font: 700 1.75rem/1 'Outfit', system-ui, sans-serif !important; display: grid !important; place-items: center !important; }
 html body.apc-parent-minimal #parent-process .home-steps li:nth-child(even) .home-letter { background: #E8997A !important; }
 html body.apc-parent-minimal #parent-process .home-steps .home-letter { position: static !important; transform: none !important; margin: 0 0 14px !important; }
 html body.apc-parent-minimal #parent-process .home-steps li { padding-left: 22px !important; }
@@ -131,33 +131,33 @@ html body.apc-parent-minimal .parent-guide .audience-author p { font-size: 1rem 
 
 /* About page: HOME steps and boxed sections (11 Nov 2026) */
 html body.apc-about-page #how-i-work .home-steps { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-html body.apc-about-page #how-i-work .home-steps li { background: rgba(255, 249, 241, .07); border: 1px solid rgba(143, 232, 220, .25); border-radius: 20px; padding: 22px; }
-html body.apc-about-page #how-i-work .home-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #2DD4BF; color: #073734; font: 700 1.75rem/1 'DM Serif Display', Georgia, serif; margin-bottom: 14px; }
+html body.apc-about-page #how-i-work .home-steps li { background: rgba(255, 249, 241, .07); border: 1px solid rgba(14, 116, 144, .25); border-radius: 20px; padding: 22px; }
+html body.apc-about-page #how-i-work .home-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #2DD4BF; color: #1F2937; font: 700 1.75rem/1 'Outfit', system-ui, sans-serif; margin-bottom: 14px; }
 html body.apc-about-page #how-i-work .home-steps li:nth-child(even) .home-letter { background: #E8997A; }
 html body.apc-about-page #how-i-work h3 { color: #FFF9F1; font-size: 1.25rem; margin: 0 0 6px; }
-html body.apc-about-page #how-i-work .home-steps p, html body.apc-about-page #how-i-work .home-steps-intro { color: #CFE3DF; margin: 0; font-size: 1rem; line-height: 1.5; }
+html body.apc-about-page #how-i-work .home-steps p, html body.apc-about-page #how-i-work .home-steps-intro { color: #EADFD3; margin: 0; font-size: 1rem; line-height: 1.5; }
 html body.apc-about-page #how-i-work .home-steps-intro { margin: 8px 0 24px; }
 @media (max-width: 900px) { html body.apc-about-page #how-i-work .home-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { html body.apc-about-page #how-i-work .home-steps { grid-template-columns: 1fr; } }
 html body.apc-about-page #story > .wrap, html body.apc-about-page #experience > .wrap, html body.apc-about-page #additional-training > .wrap, html body.apc-about-page #start > .wrap {
-  background: #FFFFFF; border: 1px solid rgba(7, 55, 52, .08); border-radius: 28px; padding: clamp(24px, 4vw, 52px); box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35);
+  background: #FFFFFF; border: 1px solid rgba(31, 41, 55, .08); border-radius: 28px; padding: clamp(24px, 4vw, 52px); box-shadow: 0 18px 40px -28px rgba(31, 41, 55, .35);
 }
 html body.apc-about-page #experience > .wrap { border-top: 8px solid #2DD4BF; }
-html body.apc-about-page #start > .wrap { background: #073734; color: #FFF9F1; }
+html body.apc-about-page #start > .wrap { background: #1F2937; color: #FFF9F1; }
 /* Panel and council fixes: HOME box light (dark now only means "act here"), tighter boxes on phones, 2 x 2 HOME grid on phones */
-html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #FFFFFF !important; color: #073734; border: 1px solid rgba(7, 55, 52, .08) !important; border-top: 8px solid #2DD4BF !important; }
-html body.apc-parent-minimal #parent-process h2, html body.apc-parent-minimal #parent-process .home-steps-intro { color: #073734 !important; }
-html body.apc-parent-minimal #parent-process ol.home-steps li { background: #EEF5F0 !important; border: 0 !important; }
-html body.apc-parent-minimal #parent-process h3 { color: #073734 !important; }
-html body.apc-parent-minimal #parent-process ol.home-steps li p { color: #2E4A46 !important; }
-html body.apc-about-page #how-i-work .work-panel.apc-home-steps { background: #FFFFFF !important; color: #073734 !important; border: 1px solid rgba(7, 55, 52, .08); border-top: 8px solid #2DD4BF; border-radius: 28px; box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35); }
-html body.apc-about-page #how-i-work .work-panel.apc-home-steps h2, html body.apc-about-page #how-i-work .work-panel.apc-home-steps h3 { color: #073734 !important; }
-html body.apc-about-page #how-i-work .work-panel.apc-home-steps .eyebrow { color: #0F7C70 !important; }
-html body.apc-about-page #how-i-work .home-steps li { background: #EEF5F0 !important; border: 0 !important; }
-html body.apc-about-page #how-i-work .home-steps p, html body.apc-about-page #how-i-work .home-steps-intro { color: #2E4A46 !important; }
-html body.apc-about-page #scope > .wrap { background: #FFFFFF; border: 1px solid rgba(7, 55, 52, .08); border-radius: 28px; padding: clamp(24px, 4vw, 52px); box-shadow: 0 18px 40px -28px rgba(7, 55, 52, .35); }
+html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #FFFFFF !important; color: #1F2937; border: 1px solid rgba(31, 41, 55, .08) !important; border-top: 8px solid #2DD4BF !important; }
+html body.apc-parent-minimal #parent-process h2, html body.apc-parent-minimal #parent-process .home-steps-intro { color: #1F2937 !important; }
+html body.apc-parent-minimal #parent-process ol.home-steps li { background: #FBF3E8 !important; border: 0 !important; }
+html body.apc-parent-minimal #parent-process h3 { color: #1F2937 !important; }
+html body.apc-parent-minimal #parent-process ol.home-steps li p { color: #1F2937 !important; }
+html body.apc-about-page #how-i-work .work-panel.apc-home-steps { background: #FFFFFF !important; color: #1F2937 !important; border: 1px solid rgba(31, 41, 55, .08); border-top: 8px solid #2DD4BF; border-radius: 28px; box-shadow: 0 18px 40px -28px rgba(31, 41, 55, .35); }
+html body.apc-about-page #how-i-work .work-panel.apc-home-steps h2, html body.apc-about-page #how-i-work .work-panel.apc-home-steps h3 { color: #1F2937 !important; }
+html body.apc-about-page #how-i-work .work-panel.apc-home-steps .eyebrow { color: #1F2937 !important; }
+html body.apc-about-page #how-i-work .home-steps li { background: #FBF3E8 !important; border: 0 !important; }
+html body.apc-about-page #how-i-work .home-steps p, html body.apc-about-page #how-i-work .home-steps-intro { color: #1F2937 !important; }
+html body.apc-about-page #scope > .wrap { background: #FFFFFF; border: 1px solid rgba(31, 41, 55, .08); border-radius: 28px; padding: clamp(24px, 4vw, 52px); box-shadow: 0 18px 40px -28px rgba(31, 41, 55, .35); }
 @media (max-width: 560px) {
-  html body.apc-parent-minimal main > section:not(.parent-hero):not([hidden]), html body.apc-parent-minimal main > aside.parent-guide { margin: 16px auto !important; box-shadow: 0 10px 24px -22px rgba(7, 55, 52, .35); }
+  html body.apc-parent-minimal main > section:not(.parent-hero):not([hidden]), html body.apc-parent-minimal main > aside.parent-guide { margin: 16px auto !important; box-shadow: 0 10px 24px -22px rgba(31, 41, 55, .35); }
   html body.apc-parent-minimal #parent-process ol.home-steps, html body.apc-about-page #how-i-work .home-steps { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
   html body.apc-parent-minimal #parent-process ol.home-steps li, html body.apc-about-page #how-i-work .home-steps li { padding: 14px !important; }
   html body.apc-parent-minimal #parent-process .home-steps .home-letter, html body.apc-about-page #how-i-work .home-letter { width: 44px !important; height: 44px !important; font-size: 1.4rem !important; margin-bottom: 10px !important; }
@@ -183,9 +183,9 @@ html body.apc-parent-minimal main > aside.parent-guide {
   padding: var(--apc-box-pad-y) var(--apc-box-pad-x) !important; border-radius: 24px !important;
   box-shadow: none !important; border: 0 !important; background: #FFFFFF;
 }
-html body.apc-parent-minimal main > section#home-support { background: #EEF5F0 !important; }
+html body.apc-parent-minimal main > section#home-support { background: #FBF3E8 !important; }
 html body.apc-parent-minimal main > section#parent-process.apc-home-steps { background: #FFFFFF !important; border: 0 !important; }
-html body.apc-parent-minimal main > section#first-step-call { background: #073734 !important; }
+html body.apc-parent-minimal main > section#first-step-call { background: #1F2937 !important; }
 html body.apc-about-page #story > .wrap, html body.apc-about-page #experience > .wrap, html body.apc-about-page #additional-training > .wrap,
 html body.apc-about-page #scope > .wrap, html body.apc-about-page #how-i-work .work-panel.apc-home-steps {
   box-shadow: none !important; border: 0 !important; border-radius: 24px !important; padding: var(--apc-box-pad-y) var(--apc-box-pad-x) !important;
@@ -214,7 +214,7 @@ html body.apc-parent-minimal .section-lead, html body.apc-parent-minimal .home-s
 html body.apc-parent-minimal #home-support ul.offer-points { max-width: 920px; margin: 0 auto 32px !important; }
 html body.apc-parent-minimal #home-support ul.offer-points li { max-width: none; }
 html body.apc-parent-minimal #home-support .parent-promises { background: #FFFFFF !important; border: 0 !important; border-radius: 20px; padding: 32px !important; max-width: 920px; margin: 0 auto 24px !important; text-align: left !important; }
-html body.apc-parent-minimal #home-support .parent-promises h3 { text-align: center; margin: 0 0 16px !important; color: #073734 !important; }
+html body.apc-parent-minimal #home-support .parent-promises h3 { text-align: center; margin: 0 0 16px !important; color: #1F2937 !important; }
 html body.apc-parent-minimal #home-support .parent-promises ol { list-style: none; padding: 0 !important; margin: 0 !important; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; }
 html body.apc-parent-minimal #home-support .parent-promises li { position: relative; padding-left: 30px; text-align: left !important; font-weight: 400 !important; max-width: none; }
 html body.apc-parent-minimal #home-support .parent-promises li::before { content: ""; position: absolute; left: 0; top: .45em; width: 18px; height: 18px; border-radius: 50%; background: #E8997A url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23073734' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat; }
@@ -285,7 +285,7 @@ html body.apc-about-page #story .story-text { border: 0 !important; padding-top:
 html body.apc-about-page #experience .split, html body.apc-about-page #additional-training .split { display: block !important; }
 html body.apc-about-page #experience .split > div:first-child { margin-bottom: 24px; }
 html body.apc-about-page #experience .credentials { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; gap: 16px !important; }
-html body.apc-about-page #experience .credential { border: 0 !important; background: #F8F5EF !important; box-shadow: none !important; }
+html body.apc-about-page #experience .credential { border: 0 !important; background: #FFF9F1 !important; box-shadow: none !important; }
 html body.apc-about-page .section-rail { display: none !important; }
 html body.apc-about-page main h1 { font-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.5rem) !important; }
 html body.apc-about-page h1 { font-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.5rem) !important; line-height: 1.08 !important; }
@@ -301,14 +301,14 @@ html body.apc-parent-minimal main a, html body.apc-about-page main a { font-size
 html body.apc-parent-minimal .parent-guide-list li { margin: 0 !important; }
 /* Re-score fixes: training rows full width, credential grid even, bright button on dark box, lone last tick spans the row */
 html body.apc-about-page #additional-training .training { max-width: 860px; margin: 24px auto 0; }
-html body.apc-about-page #additional-training details { width: 100%; max-width: none !important; text-align: left !important; background: #F8F5EF; border: 0 !important; border-radius: 16px; padding: 4px 20px; margin: 0 0 12px !important; }
+html body.apc-about-page #additional-training details { width: 100%; max-width: none !important; text-align: left !important; background: #FFF9F1; border: 0 !important; border-radius: 16px; padding: 4px 20px; margin: 0 0 12px !important; }
 html body.apc-about-page #additional-training summary { display: block !important; padding: 12px 0; cursor: pointer; }
 html body.apc-about-page #additional-training summary strong, html body.apc-about-page #additional-training summary small { display: block !important; text-align: left !important; }
-html body.apc-about-page #additional-training summary small { font-size: 1rem !important; color: #435D58; margin-top: 2px; }
+html body.apc-about-page #additional-training summary small { font-size: 1rem !important; color: #4B5563; margin-top: 2px; }
 html body.apc-about-page #experience .credentials { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 html body.apc-about-page #experience .credential { border-left: 0 !important; border: 0 !important; }
 html body.apc-about-page #experience .credential:last-child:nth-child(odd) { grid-column: 1 / -1; }
 @media (max-width: 640px) { html body.apc-about-page #experience .credentials { grid-template-columns: 1fr !important; } }
-html body.apc-about-page #start .final-card .button { background: #2DD4BF !important; color: #073734 !important; border-color: #2DD4BF !important; }
+html body.apc-about-page #start .final-card .button { background: #2DD4BF !important; color: #1F2937 !important; border-color: #2DD4BF !important; }
 html body.apc-parent-minimal #home-support ul.offer-points li:last-child:nth-child(odd) { grid-column: 1 / -1; }
 html body.apc-about-page main .button, html body.apc-about-page main a.button { font-size: 1rem !important; }
