@@ -81,8 +81,8 @@ Quick Clarity, Full Implementation, Intensive, Progress Check Call, Parent Strat
 Do not publish or link the paid `parent-strategy-session` Cal.com event.
 
 ## Brand standards
-- Palette: dark teal `#073734`, teal `#2DD4BF`, coral `#E8997A`, sage `#6B9E7A`, cream `#FFF9F1` (note/callout boxes).
-- Fonts as built: **DM Serif Display** (headings), **DM Sans** (body). Match the existing aesthetic.
+- Palette (19 Nov 2026, matches the Instagram posts; no green): dark ink `#1F2937`, deep teal `#0E7490`, teal `#2DD4BF`, coral `#E8997A`, deep coral `#B4603F`, cream `#FFF9F1`.
+- Fonts (19 Nov 2026): **Outfit** (headings), **Work Sans** (body), self-hosted woff2. No AI design tells: no icons in tinted squares, no circled step numbers, no stacked white boxes.
 - Primary logo: `apc-option-d-primary-logo.webp` (served as WebP; original `.png` kept as fallback).
 
 ## Visual and UX authority

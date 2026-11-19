@@ -178,6 +178,8 @@ export const PUBLIC_FILES = Object.freeze([
   "homepage.js",
   "dm-sans-latin-v17.woff2",
   "dm-serif-display-latin-v17.woff2",
+  "outfit-latin-v15.woff2",
+  "work-sans-latin-v24.woff2",
   "dm-sans-OFL.txt",
   "dm-serif-display-OFL.txt",
   "hero-clarity-path-768.webp",

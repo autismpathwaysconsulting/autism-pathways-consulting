@@ -1,21 +1,21 @@
-@font-face{font-family:'DM Sans';font-style:normal;font-weight:100 1000;font-display:swap;src:url('/dm-sans-latin-v17.woff2') format('woff2')}
-@font-face{font-family:'DM Serif Display';font-style:normal;font-weight:400;font-display:swap;src:url('/dm-serif-display-latin-v17.woff2') format('woff2')}
+@font-face{font-family:'Work Sans';font-style:normal;font-weight:100 900;font-display:swap;src:url('/work-sans-latin-v24.woff2') format('woff2')}
+@font-face{font-family:'Outfit';font-style:normal;font-weight:100 900;font-display:swap;src:url('/outfit-latin-v15.woff2') format('woff2')}
 
 :root {
-  --apc-font-heading: 'DM Serif Display', Georgia, serif;
-  --apc-font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --apc-font-heading: 'Outfit', system-ui, sans-serif;
+  --apc-font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --apc-type-body: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
   --apc-leading-body: 1.65;
-  --apc-dark-teal: #073734;
-  --apc-primary-teal: #0f766e;
+  --apc-dark-teal: #1F2937;
+  --apc-primary-teal: #0E7490;
   --apc-bright-teal: #2dd4bf;
   --apc-cream: #fff9f1;
-  --apc-warm-white: #f8f5ef;
+  --apc-warm-white: #FFF9F1;
   --apc-coral: #e8997a;
-  --apc-sage: #6b9e7a;
-  --apc-text: #253532;
-  --apc-muted: #5b6b68;
-  --apc-border: rgba(7, 55, 52, 0.12);
+  --apc-sage: #0E7490;
+  --apc-text: #1F2937;
+  --apc-muted: #4B5563;
+  --apc-border: rgba(31, 41, 55, 0.12);
   --apc-space-1: 8px;
   --apc-space-2: 12px;
   --apc-space-3: 16px;
@@ -25,7 +25,7 @@
   --apc-radius-sm: 16px;
   --apc-radius-lg: 24px;
   --apc-radius-pill: 999px;
-  --apc-shadow-soft: 0 12px 32px rgba(7, 55, 52, 0.055);
+  --apc-shadow-soft: 0 12px 32px rgba(31, 41, 55, 0.055);
   --apc-shadow: var(--apc-shadow-soft);
   --apc-content: 1080px;
   --apc-reading: 680px;
@@ -36,13 +36,13 @@
 
 /* APC Website V2: Calm Premium Hybrid, modern intensity */
 :root {
-  --apc-page: #fbf8f2;
+  --apc-page: #FFF9F1;
   --apc-surface: #ffffff;
-  --apc-surface-soft: #f1f5f2;
-  --apc-ink-inverse: #f7fffd;
-  --apc-border-strong: rgba(7, 55, 52, 0.22);
-  --apc-shadow-lift: 0 22px 55px rgba(7, 55, 52, 0.10);
-  --apc-shadow-float: 0 36px 90px rgba(7, 55, 52, 0.14);
+  --apc-surface-soft: #FBF3E8;
+  --apc-ink-inverse: #FBF3E8;
+  --apc-border-strong: rgba(31, 41, 55, 0.22);
+  --apc-shadow-lift: 0 22px 55px rgba(31, 41, 55, 0.10);
+  --apc-shadow-float: 0 36px 90px rgba(31, 41, 55, 0.14);
   --apc-content-wide: 1120px;
   --apc-gutter: clamp(18px, 4vw, 40px);
   --apc-section-v2: clamp(64px, 9vw, 112px);
@@ -247,12 +247,12 @@ body.apc-v2 {
   background: var(--apc-primary-teal) !important;
   border-color: var(--apc-primary-teal) !important;
   color: #fff !important;
-  box-shadow: 0 10px 24px rgba(15, 118, 110, 0.16) !important;
+  box-shadow: 0 10px 24px rgba(31, 41, 55, 0.16) !important;
 }
 
 .apc-v2 :where(.btn-secondary, .button.secondary, .btn.secondary, .confirm-btn.secondary, .free-btn.secondary) {
   background: transparent !important;
-  border-color: rgba(15, 118, 110, 0.55) !important;
+  border-color: rgba(31, 41, 55, 0.55) !important;
   color: var(--apc-primary-teal) !important;
   box-shadow: none !important;
 }
@@ -419,7 +419,7 @@ body.apc-v2 {
   align-items: center;
   padding-block: clamp(64px, 6vw, 82px) !important;
   overflow: hidden;
-  background: linear-gradient(120deg, var(--apc-page) 0 72%, rgba(107, 158, 122, 0.12) 72% 100%);
+  background: linear-gradient(120deg, var(--apc-page) 0 72%, rgba(14, 116, 144, 0.12) 72% 100%);
 }
 
 .apc-home-page .hero::after {
@@ -429,7 +429,7 @@ body.apc-v2 {
   bottom: -180px;
   width: 480px;
   height: 480px;
-  border: 1px solid rgba(15, 118, 110, 0.18);
+  border: 1px solid rgba(31, 41, 55, 0.18);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -544,7 +544,7 @@ body.apc-v2 {
   position: absolute;
   top: -0.48em;
   left: -0.34em;
-  color: rgba(15, 118, 110, 0.14);
+  color: rgba(31, 41, 55, 0.14);
   font-size: 4em;
   line-height: 1;
 }
@@ -692,12 +692,12 @@ body.apc-v2 {
   line-height: 1.7;
   margin: 16px 0;
   padding-left: 20px;
-  border-left: 3px solid #6b9e7a;
+  border-left: 3px solid #0E7490;
 }
 
 .service-proof cite {
   font-size: .9rem;
-  color: #526660;
+  color: #4B5563;
   font-style: normal;
 }
 
@@ -1761,7 +1761,7 @@ html.apc-home-snap {
   border-color: var(--apc-dark-teal);
   background: var(--apc-dark-teal);
   color: #fff;
-  box-shadow: 0 14px 28px rgba(7, 55, 52, .16);
+  box-shadow: 0 14px 28px rgba(31, 41, 55, .16);
 }
 
 .apc-home-page .offer-tab:focus-visible {
@@ -1839,7 +1839,7 @@ html.apc-home-snap {
 }
 
 .apc-home-page #start .route-card .eyebrow {
-  color: #8fe8dc !important;
+  color: #0E7490 !important;
 }
 
 .apc-home-page #start .route-card .button.secondary {
@@ -1856,10 +1856,10 @@ html.apc-home-snap {
   width: auto;
   gap: 8px;
   padding: 10px 8px;
-  border: 1px solid rgba(7, 55, 52, .14);
+  border: 1px solid rgba(31, 41, 55, .14);
   border-radius: 999px;
   background: rgba(255, 253, 249, .76);
-  box-shadow: 0 16px 40px rgba(7, 55, 52, .12);
+  box-shadow: 0 16px 40px rgba(31, 41, 55, .12);
   backdrop-filter: blur(14px);
   transform: translateY(-50%);
 }
@@ -1869,16 +1869,16 @@ html.apc-home-snap {
   top: 50% !important;
   width: auto !important;
   padding: 10px 8px !important;
-  border: 1px solid rgba(7, 55, 52, .14) !important;
+  border: 1px solid rgba(31, 41, 55, .14) !important;
   background: rgba(255, 253, 249, .76) !important;
-  box-shadow: 0 16px 40px rgba(7, 55, 52, .12) !important;
+  box-shadow: 0 16px 40px rgba(31, 41, 55, .12) !important;
 }
 
 .section-rail a {
   position: relative;
   width: 8px;
   height: 8px;
-  border: 1px solid rgba(7, 55, 52, .52);
+  border: 1px solid rgba(31, 41, 55, .52);
   border-radius: 999px;
   background: rgba(255, 255, 255, .88);
   transition: height 180ms ease, background-color 180ms ease, border-color 180ms ease;
@@ -2191,7 +2191,7 @@ html.apc-home-snap {
 
 /* Public-site accessibility audit corrections */
 .apc-about-page :where(.work-panel, .final-card) > .eyebrow {
-  color: #8fe8dc !important;
+  color: #B9ECE4 !important;
 }
 
 .apc-legal-page :where(.legal-card, .legal-contact, .apc-footer) a {
@@ -2202,7 +2202,7 @@ html.apc-home-snap {
 /* Homepage premium visual layer */
 .apc-home-page .site-nav {
   background: rgba(251, 248, 242, .9) !important;
-  box-shadow: 0 8px 34px rgba(7, 55, 52, .04);
+  box-shadow: 0 8px 34px rgba(31, 41, 55, .04);
   backdrop-filter: blur(18px) saturate(135%);
 }
 
@@ -2214,7 +2214,7 @@ html.apc-home-snap {
 
 .apc-home-page .call-link,
 .apc-home-page .button.primary {
-  box-shadow: 0 12px 28px rgba(7, 55, 52, .14);
+  box-shadow: 0 12px 28px rgba(31, 41, 55, .14);
 }
 
 .apc-home-page .hero {
@@ -2249,10 +2249,10 @@ html.apc-home-snap {
 .apc-home-page .hero-visual picture {
   display: block;
   overflow: hidden;
-  border: 1px solid rgba(7, 55, 52, .08);
+  border: 1px solid rgba(31, 41, 55, .08);
   border-radius: 34px;
   background: #fff8ef;
-  box-shadow: 0 32px 80px rgba(7, 55, 52, .12);
+  box-shadow: 0 32px 80px rgba(31, 41, 55, .12);
 }
 
 .apc-home-page .hero-visual img {
@@ -2276,7 +2276,7 @@ html.apc-home-snap {
   padding: clamp(20px, 2.6vw, 28px) !important;
   border: 1px solid rgba(255, 255, 255, .15);
   border-radius: 24px;
-  box-shadow: 0 24px 54px rgba(7, 55, 52, .2);
+  box-shadow: 0 24px 54px rgba(31, 41, 55, .2);
 }
 
 .apc-home-page .hero-visual .hero-approach .eyebrow {
@@ -2291,17 +2291,17 @@ html.apc-home-snap {
 
 .apc-home-page #situations {
   overflow: hidden;
-  background: linear-gradient(135deg, #edf5ef 0 60%, #f7eee9 100%) !important;
+  background: linear-gradient(135deg, #FBF3E8 0 60%, #f7eee9 100%) !important;
 }
 
 .apc-home-page #situations .card {
   min-height: 178px;
   padding: 26px !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-top: 4px solid var(--apc-primary-teal) !important;
   border-radius: 24px !important;
   background: rgba(255, 255, 255, .78) !important;
-  box-shadow: 0 18px 44px rgba(7, 55, 52, .06) !important;
+  box-shadow: 0 18px 44px rgba(31, 41, 55, .06) !important;
   transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 
@@ -2322,7 +2322,7 @@ html.apc-home-snap {
 
 .apc-home-page #how-apc-helps {
   overflow: hidden;
-  background: linear-gradient(145deg, #073734 0 62%, #0a4742 100%) !important;
+  background: linear-gradient(145deg, #1F2937 0 62%, #1F2937 100%) !important;
 }
 
 .apc-home-page .apc-process-five .card {
@@ -2343,7 +2343,7 @@ html.apc-home-snap {
   border: 1px solid rgba(45, 212, 191, .38);
   border-radius: 50%;
   background: rgba(45, 212, 191, .12);
-  color: #7ce7d9 !important;
+  color: #0E7490 !important;
   letter-spacing: 0;
 }
 
@@ -2355,9 +2355,9 @@ html.apc-home-snap {
 }
 
 .apc-home-page .apc-process-five .card:nth-child(4) .number {
-  border-color: rgba(107, 158, 122, .52);
-  background: rgba(107, 158, 122, .14);
-  color: #abd1b5 !important;
+  border-color: rgba(14, 116, 144, .52);
+  background: rgba(14, 116, 144, .14);
+  color: #0E7490 !important;
 }
 
 .apc-home-page .apc-process-five h3 {
@@ -2379,10 +2379,10 @@ html.apc-home-snap {
   max-width: 980px !important;
   padding: clamp(38px, 5vw, 62px);
   overflow: hidden;
-  border: 1px solid rgba(7, 55, 52, .1);
+  border: 1px solid rgba(31, 41, 55, .1);
   border-radius: 30px;
   background: rgba(255, 255, 255, .66);
-  box-shadow: 0 28px 72px rgba(7, 55, 52, .08);
+  box-shadow: 0 28px 72px rgba(31, 41, 55, .08);
 }
 
 .apc-home-page .quote::after {
@@ -2392,7 +2392,7 @@ html.apc-home-snap {
   width: 210px;
   height: 210px;
   border-radius: 50%;
-  background: rgba(107, 158, 122, .12);
+  background: rgba(14, 116, 144, .12);
   content: "";
   pointer-events: none;
 }
@@ -2470,18 +2470,18 @@ html.apc-home-snap {
 }
 
 .apc-home-page .offer-tab {
-  border-color: rgba(7, 55, 52, .12);
+  border-color: rgba(31, 41, 55, .12);
   background: #fff;
-  box-shadow: 0 10px 28px rgba(7, 55, 52, .045);
+  box-shadow: 0 10px 28px rgba(31, 41, 55, .045);
 }
 
 .apc-home-page .offer-switcher[data-enhanced="true"] .offer-panel:not([hidden]) {
-  border-color: rgba(7, 55, 52, .1) !important;
-  box-shadow: 0 26px 70px rgba(7, 55, 52, .08) !important;
+  border-color: rgba(31, 41, 55, .1) !important;
+  box-shadow: 0 26px 70px rgba(31, 41, 55, .08) !important;
 }
 
 .apc-home-page #about-cj {
-  background: linear-gradient(135deg, #e9f1eb 0 58%, #f8efe9 100%) !important;
+  background: linear-gradient(135deg, #FBF3E8 0 58%, #f8efe9 100%) !important;
 }
 
 .apc-home-page #about-cj .trust-grid {
@@ -2519,7 +2519,7 @@ html.apc-home-snap {
   border: 7px solid rgba(255, 249, 241, .92);
   border-radius: 28px 28px 68px 28px;
   object-fit: cover;
-  box-shadow: 0 24px 58px rgba(7, 55, 52, .13);
+  box-shadow: 0 24px 58px rgba(31, 41, 55, .13);
 }
 
 .apc-home-page .home-cj-copy h2 {
@@ -2538,10 +2538,10 @@ html.apc-home-snap {
 
 .apc-home-page .trust-point {
   padding: 16px 18px !important;
-  border: 1px solid rgba(7, 55, 52, .09) !important;
+  border: 1px solid rgba(31, 41, 55, .09) !important;
   border-radius: 16px !important;
   background: rgba(255, 255, 255, .62) !important;
-  box-shadow: 0 12px 28px rgba(7, 55, 52, .04) !important;
+  box-shadow: 0 12px 28px rgba(31, 41, 55, .04) !important;
 }
 
 .apc-home-page #start {
@@ -2551,8 +2551,8 @@ html.apc-home-snap {
 .apc-home-page #start .route-card {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #073734 0 70%, #0c4b45 100%) !important;
-  box-shadow: 0 30px 76px rgba(7, 55, 52, .14) !important;
+  background: linear-gradient(135deg, #1F2937 0 70%, #1F2937 100%) !important;
+  box-shadow: 0 30px 76px rgba(31, 41, 55, .14) !important;
 }
 
 .apc-home-page #start .route-card::after {
@@ -2587,7 +2587,7 @@ html.apc-home-snap {
   .apc-home-page .call-link:hover,
   .apc-home-page .button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 18px 34px rgba(7, 55, 52, .18);
+    box-shadow: 0 18px 34px rgba(31, 41, 55, .18);
   }
 
   .apc-home-page .text-action:hover {
@@ -2596,7 +2596,7 @@ html.apc-home-snap {
 
   .apc-home-page #situations .card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 26px 58px rgba(7, 55, 52, .1) !important;
+    box-shadow: 0 26px 58px rgba(31, 41, 55, .1) !important;
   }
 
   .apc-home-page .apc-process-five .card:hover {
@@ -2834,16 +2834,16 @@ html.apc-home-snap {
 /* Site-wide premium cohesion */
 .apc-v2:not(.apc-home-page) {
   background:
-    radial-gradient(circle at 92% 8%, rgba(107, 158, 122, .12), transparent 24rem),
-    linear-gradient(180deg, #fbf8f2 0%, #fffdf9 46%, #f2f6f2 100%) !important;
+    radial-gradient(circle at 92% 8%, rgba(14, 116, 144, .12), transparent 24rem),
+    linear-gradient(180deg, #FFF9F1 0%, #fffdf9 46%, #FBF3E8 100%) !important;
 }
 
 .apc-v2:not(.apc-home-page) .site-nav,
 .apc-v2:not(.apc-home-page) > nav,
 .apc-v2:not(.apc-home-page) > header:has(> nav) {
   background: rgba(255, 252, 247, .88) !important;
-  border-bottom-color: rgba(7, 55, 52, .1) !important;
-  box-shadow: 0 12px 34px rgba(7, 55, 52, .055) !important;
+  border-bottom-color: rgba(31, 41, 55, .1) !important;
+  box-shadow: 0 12px 34px rgba(31, 41, 55, .055) !important;
 }
 
 .apc-v2:not(.apc-home-page) :where(.card, .offer-card, .route-card, .credential, details, .module, .fit, .obj, .about, .guarantee, .scope) {
@@ -2861,10 +2861,10 @@ html.apc-home-snap {
   overflow: hidden;
   background:
     radial-gradient(circle at 88% 22%, rgba(232, 153, 122, .34), transparent 20rem),
-    linear-gradient(135deg, #fff9f1 0%, #eef4ed 100%) !important;
-  border: 1px solid rgba(7, 55, 52, .09);
+    linear-gradient(135deg, #fff9f1 0%, #FBF3E8 100%) !important;
+  border: 1px solid rgba(31, 41, 55, .09);
   border-radius: clamp(24px, 4vw, 38px);
-  box-shadow: 0 28px 70px rgba(7, 55, 52, .08);
+  box-shadow: 0 28px 70px rgba(31, 41, 55, .08);
 }
 
 .apc-services-page-v2 .services-hero::after,
@@ -2879,9 +2879,9 @@ html.apc-home-snap {
   bottom: clamp(-100px, -7vw, -54px);
   width: clamp(190px, 26vw, 360px);
   aspect-ratio: 1;
-  border: 1px solid rgba(15, 118, 110, .2);
+  border: 1px solid rgba(31, 41, 55, .2);
   border-radius: 50%;
-  box-shadow: 0 0 0 34px rgba(15, 118, 110, .04), 0 0 0 68px rgba(15, 118, 110, .025);
+  box-shadow: 0 0 0 34px rgba(31, 41, 55, .04), 0 0 0 68px rgba(31, 41, 55, .025);
   pointer-events: none;
 }
 
@@ -2909,7 +2909,7 @@ html.apc-home-snap {
   overflow: hidden;
   background:
     radial-gradient(circle at 12% 88%, rgba(232, 153, 122, .2), transparent 22rem),
-    linear-gradient(135deg, #fffaf3 0%, #edf4ed 100%) !important;
+    linear-gradient(135deg, #fffaf3 0%, #FBF3E8 100%) !important;
 }
 
 .apc-about-page .about-minimal-hero,
@@ -2925,7 +2925,7 @@ html.apc-home-snap {
   background: var(--apc-surface);
   border: 6px solid rgba(255, 255, 255, .92) !important;
   border-radius: 28px 28px 96px 28px !important;
-  box-shadow: 0 32px 70px rgba(7, 55, 52, .17) !important;
+  box-shadow: 0 32px 70px rgba(31, 41, 55, .17) !important;
 }
 
 .apc-about-page .portrait::before,
@@ -2960,9 +2960,9 @@ html.apc-home-snap {
   overflow: hidden;
   padding: 22px 24px 22px 30px !important;
   background: rgba(255, 255, 255, .86) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-radius: 18px !important;
-  box-shadow: 0 14px 34px rgba(7, 55, 52, .055) !important;
+  box-shadow: 0 14px 34px rgba(31, 41, 55, .055) !important;
 }
 
 .apc-about-page .credential::before {
@@ -2986,7 +2986,7 @@ html.apc-home-snap {
     var(--apc-dark-teal) !important;
   border: 1px solid rgba(255, 255, 255, .1) !important;
   border-radius: clamp(24px, 4vw, 36px) !important;
-  box-shadow: 0 34px 72px rgba(7, 55, 52, .2) !important;
+  box-shadow: 0 34px 72px rgba(31, 41, 55, .2) !important;
 }
 
 .apc-about-page :where(.work-panel, .final-card) :where(h2, p, strong) {
@@ -3003,19 +3003,19 @@ html.apc-home-snap {
 .apc-about-page .scope {
   padding: clamp(28px, 5vw, 48px) !important;
   background: rgba(255, 255, 255, .82);
-  border: 1px solid rgba(7, 55, 52, .1);
+  border: 1px solid rgba(31, 41, 55, .1);
   border-left: 7px solid var(--apc-coral) !important;
   border-radius: 22px !important;
-  box-shadow: 0 20px 46px rgba(7, 55, 52, .07);
+  box-shadow: 0 20px 46px rgba(31, 41, 55, .07);
 }
 
 .apc-about-page .training details {
   margin-bottom: 12px !important;
   padding-inline: 20px !important;
   background: rgba(255, 255, 255, .82) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-radius: 16px !important;
-  box-shadow: 0 12px 30px rgba(7, 55, 52, .045);
+  box-shadow: 0 12px 30px rgba(31, 41, 55, .045);
 }
 
 /* Services */
@@ -3032,9 +3032,9 @@ html.apc-home-snap {
   position: relative;
   overflow: hidden;
   background: rgba(255, 255, 255, .9) !important;
-  border: 1px solid rgba(7, 55, 52, .11) !important;
+  border: 1px solid rgba(31, 41, 55, .11) !important;
   border-radius: 24px !important;
-  box-shadow: 0 20px 52px rgba(7, 55, 52, .075) !important;
+  box-shadow: 0 20px 52px rgba(31, 41, 55, .075) !important;
 }
 
 .apc-services-page-v2 .offer-card::before,
@@ -3070,7 +3070,7 @@ html.apc-home-snap {
     radial-gradient(circle at 94% 6%, rgba(45, 212, 191, .17), transparent 20rem),
     var(--apc-dark-teal) !important;
   border-radius: clamp(24px, 4vw, 36px);
-  box-shadow: 0 30px 68px rgba(7, 55, 52, .18);
+  box-shadow: 0 30px 68px rgba(31, 41, 55, .18);
 }
 
 .apc-services-page-v2 .process :where(h2, li strong, li p) {
@@ -3094,7 +3094,7 @@ html.apc-home-snap {
   background:
     radial-gradient(circle at 86% 10%, rgba(232, 153, 122, .2), transparent 18rem),
     var(--apc-cream) !important;
-  border-block: 1px solid rgba(7, 55, 52, .07);
+  border-block: 1px solid rgba(31, 41, 55, .07);
 }
 
 .apc-services-page-v2 .service-proof blockquote::before {
@@ -3111,16 +3111,16 @@ html.apc-home-snap {
   margin-bottom: 12px !important;
   padding: 0 20px !important;
   background: rgba(255, 255, 255, .86) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-radius: 16px !important;
-  box-shadow: 0 12px 28px rgba(7, 55, 52, .04);
+  box-shadow: 0 12px 28px rgba(31, 41, 55, .04);
 }
 
 .apc-services-page-v2 .final-route {
   padding: clamp(32px, 6vw, 56px) !important;
-  background: linear-gradient(135deg, #073734 0%, #0b4b46 100%) !important;
+  background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%) !important;
   border-radius: clamp(24px, 4vw, 34px) !important;
-  box-shadow: 0 28px 64px rgba(7, 55, 52, .2) !important;
+  box-shadow: 0 28px 64px rgba(31, 41, 55, .2) !important;
 }
 
 .apc-services-page-v2 .final-route h2 { color: #fff !important; }
@@ -3138,7 +3138,7 @@ html.apc-home-snap {
   position: relative;
   overflow: hidden;
   border-radius: 24px !important;
-  box-shadow: 0 18px 46px rgba(7, 55, 52, .075) !important;
+  box-shadow: 0 18px 46px rgba(31, 41, 55, .075) !important;
 }
 
 .apc-start-page-v2 .route-card:nth-child(1) {
@@ -3166,22 +3166,22 @@ html.apc-home-snap {
   overflow: hidden;
   background:
     radial-gradient(circle at 85% 24%, rgba(232, 153, 122, .28), transparent 21rem),
-    linear-gradient(135deg, #fff9f1 0%, #edf4ed 100%) !important;
-  border-bottom: 1px solid rgba(7, 55, 52, .08);
+    linear-gradient(135deg, #fff9f1 0%, #FBF3E8 100%) !important;
+  border-bottom: 1px solid rgba(31, 41, 55, .08);
 }
 
 .apc-resources-page #quick-routes {
-  background: rgba(238, 244, 237, .7) !important;
+  background: rgba(251, 243, 232, .7) !important;
 }
 
 .apc-resources-page :where(#quick-routes .route-card, #featured .card) {
   position: relative;
   overflow: hidden;
   background: rgba(255, 255, 255, .9) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-top: 0 !important;
   border-radius: 22px !important;
-  box-shadow: 0 18px 44px rgba(7, 55, 52, .065) !important;
+  box-shadow: 0 18px 44px rgba(31, 41, 55, .065) !important;
 }
 
 .apc-resources-page #featured .card:nth-child(4)::before {
@@ -3196,13 +3196,13 @@ html.apc-home-snap {
 .apc-resources-page .browse details {
   overflow: hidden;
   background: rgba(255, 255, 255, .84) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-radius: 16px !important;
-  box-shadow: 0 10px 28px rgba(7, 55, 52, .035);
+  box-shadow: 0 10px 28px rgba(31, 41, 55, .035);
 }
 
 .apc-resources-page .browse details:last-child {
-  border-bottom: 1px solid rgba(7, 55, 52, .1) !important;
+  border-bottom: 1px solid rgba(31, 41, 55, .1) !important;
 }
 
 .apc-resources-page .browse summary {
@@ -3220,7 +3220,7 @@ html.apc-home-snap {
     radial-gradient(circle at 92% 10%, rgba(45, 212, 191, .16), transparent 17rem),
     var(--apc-dark-teal) !important;
   border-radius: clamp(22px, 4vw, 32px) !important;
-  box-shadow: 0 28px 62px rgba(7, 55, 52, .18) !important;
+  box-shadow: 0 28px 62px rgba(31, 41, 55, .18) !important;
 }
 
 .apc-resources-page .support-note :where(h3, p) { color: #fff !important; }
@@ -3235,10 +3235,10 @@ html.apc-home-snap {
   overflow: hidden;
   background:
     radial-gradient(circle at 88% 18%, rgba(232, 153, 122, .3), transparent 20rem),
-    linear-gradient(135deg, #fff9f1, #edf4ed) !important;
-  border: 1px solid rgba(7, 55, 52, .09);
+    linear-gradient(135deg, #fff9f1, #FBF3E8) !important;
+  border: 1px solid rgba(31, 41, 55, .09);
   border-radius: clamp(24px, 4vw, 38px);
-  box-shadow: 0 28px 70px rgba(7, 55, 52, .08);
+  box-shadow: 0 28px 70px rgba(31, 41, 55, .08);
 }
 
 .apc-schools-page main,
@@ -3252,26 +3252,26 @@ html.apc-home-snap {
   margin-bottom: 20px !important;
   padding: clamp(30px, 5vw, 52px) !important;
   background: rgba(255, 255, 255, .84) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-radius: 24px !important;
-  box-shadow: 0 16px 42px rgba(7, 55, 52, .055) !important;
+  box-shadow: 0 16px 42px rgba(31, 41, 55, .055) !important;
 }
 
 .apc-schools-page .support-list li,
 .apc-schools-page .step {
-  border-bottom-color: rgba(7, 55, 52, .1) !important;
+  border-bottom-color: rgba(31, 41, 55, .1) !important;
 }
 
 .apc-schools-page form {
   border-top: 6px solid var(--apc-coral) !important;
-  box-shadow: 0 24px 56px rgba(7, 55, 52, .09) !important;
+  box-shadow: 0 24px 56px rgba(31, 41, 55, .09) !important;
 }
 
 .apc-schools-page .unsure {
   background:
     radial-gradient(circle at 94% 8%, rgba(45, 212, 191, .18), transparent 18rem),
     var(--apc-dark-teal) !important;
-  box-shadow: 0 28px 64px rgba(7, 55, 52, .18) !important;
+  box-shadow: 0 28px 64px rgba(31, 41, 55, .18) !important;
 }
 
 /* Parent guides */
@@ -3295,7 +3295,7 @@ html.apc-home-snap {
   background: linear-gradient(135deg, #fff9f1 0%, #f8efe5 100%) !important;
   border-left-width: 6px !important;
   border-radius: 0 20px 20px 0 !important;
-  box-shadow: 0 15px 36px rgba(7, 55, 52, .055) !important;
+  box-shadow: 0 15px 36px rgba(31, 41, 55, .055) !important;
 }
 
 .apc-guide-page .try-box,
@@ -3307,13 +3307,13 @@ html.apc-home-snap {
   margin: 14px 0 !important;
   padding: 24px !important;
   background: rgba(255, 255, 255, .88) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-radius: 18px !important;
-  box-shadow: 0 14px 34px rgba(7, 55, 52, .045) !important;
+  box-shadow: 0 14px 34px rgba(31, 41, 55, .045) !important;
 }
 
 .apc-guide-page .step:last-of-type {
-  border-bottom: 1px solid rgba(7, 55, 52, .1) !important;
+  border-bottom: 1px solid rgba(31, 41, 55, .1) !important;
 }
 
 .apc-guide-page .step:nth-of-type(even) .step-num {
@@ -3321,12 +3321,12 @@ html.apc-home-snap {
 }
 
 .apc-guide-page :where(.col, .col-home, .col-school, .signal-card) {
-  box-shadow: 0 14px 34px rgba(7, 55, 52, .05) !important;
+  box-shadow: 0 14px 34px rgba(31, 41, 55, .05) !important;
 }
 
 .apc-guide-page .week,
 .apc-guide-page .credential {
-  background: rgba(238, 244, 237, .82) !important;
+  background: rgba(251, 243, 232, .82) !important;
 }
 
 .apc-guide-page .cta-banner,
@@ -3334,7 +3334,7 @@ html.apc-home-snap {
   background:
     radial-gradient(circle at 92% 8%, rgba(45, 212, 191, .17), transparent 16rem),
     var(--apc-dark-teal) !important;
-  box-shadow: 0 28px 62px rgba(7, 55, 52, .18) !important;
+  box-shadow: 0 28px 62px rgba(31, 41, 55, .18) !important;
 }
 
 /* Legal, confirmation, download and payment routes */
@@ -3345,10 +3345,10 @@ html.apc-home-snap {
   overflow: hidden;
   background:
     radial-gradient(circle at 88% 12%, rgba(232, 153, 122, .28), transparent 18rem),
-    linear-gradient(135deg, #fff9f1, #edf4ed) !important;
-  border: 1px solid rgba(7, 55, 52, .09);
+    linear-gradient(135deg, #fff9f1, #FBF3E8) !important;
+  border: 1px solid rgba(31, 41, 55, .09);
   border-radius: clamp(22px, 4vw, 34px);
-  box-shadow: 0 24px 58px rgba(7, 55, 52, .07);
+  box-shadow: 0 24px 58px rgba(31, 41, 55, .07);
 }
 
 .apc-legal-page .legal-section {
@@ -3364,9 +3364,9 @@ html.apc-home-snap {
   position: relative;
   padding: 28px 30px 28px 36px !important;
   background: rgba(255, 255, 255, .86) !important;
-  border: 1px solid rgba(7, 55, 52, .095) !important;
+  border: 1px solid rgba(31, 41, 55, .095) !important;
   border-radius: 18px !important;
-  box-shadow: 0 12px 32px rgba(7, 55, 52, .045) !important;
+  box-shadow: 0 12px 32px rgba(31, 41, 55, .045) !important;
 }
 
 .apc-legal-page .legal-card::before {
@@ -3409,8 +3409,8 @@ html.apc-home-snap {
 }
 
 .apc-utility-page :where(.card, .confirm-card, .confirm-info-item, .free-preview-card, .free-list-card, .choice-card, .form-wrap) {
-  border-color: rgba(7, 55, 52, .1) !important;
-  box-shadow: 0 18px 46px rgba(7, 55, 52, .065) !important;
+  border-color: rgba(31, 41, 55, .1) !important;
+  box-shadow: 0 18px 46px rgba(31, 41, 55, .065) !important;
 }
 
 .apc-thank-you-page .hero .card {
@@ -3418,7 +3418,7 @@ html.apc-home-snap {
     radial-gradient(circle at 94% 8%, rgba(45, 212, 191, .17), transparent 16rem),
     var(--apc-dark-teal) !important;
   border-color: rgba(255, 255, 255, .1) !important;
-  box-shadow: 0 28px 62px rgba(7, 55, 52, .18) !important;
+  box-shadow: 0 28px 62px rgba(31, 41, 55, .18) !important;
 }
 
 .apc-thank-you-page .hero .card :where(h2, p, .step) {
@@ -3441,7 +3441,7 @@ html.apc-home-snap {
   background:
     radial-gradient(circle at 90% 10%, rgba(232, 153, 122, .2), transparent 16rem),
     rgba(255, 255, 255, .9) !important;
-  box-shadow: 0 24px 58px rgba(7, 55, 52, .08) !important;
+  box-shadow: 0 24px 58px rgba(31, 41, 55, .08) !important;
 }
 
 .apc-connect-page .hero {
@@ -3449,27 +3449,27 @@ html.apc-home-snap {
   overflow: hidden;
   background:
     radial-gradient(circle at 86% 8%, rgba(45, 212, 191, .2), transparent 24rem),
-    linear-gradient(135deg, #073734, #0b4b46) !important;
+    linear-gradient(135deg, #1F2937, #1F2937) !important;
 }
 
 .apc-connect-page :where(.module, .fit, .obj, .about, .guarantee, .scope) {
-  box-shadow: 0 14px 36px rgba(7, 55, 52, .05) !important;
+  box-shadow: 0 14px 36px rgba(31, 41, 55, .05) !important;
 }
 
 .apc-connect-page .price {
   background: linear-gradient(135deg, #fff9f1, #f4ebe0) !important;
-  box-shadow: 0 20px 50px rgba(7, 55, 52, .07) !important;
+  box-shadow: 0 20px 50px rgba(31, 41, 55, .07) !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .apc-v2:not(.apc-home-page) :where(.offer-card, .route-card, #featured .card, #quick-routes .card, .credential, .step, .choice-card):hover {
     transform: translateY(-5px);
-    border-color: rgba(15, 118, 110, .24) !important;
-    box-shadow: 0 26px 58px rgba(7, 55, 52, .105) !important;
+    border-color: rgba(31, 41, 55, .24) !important;
+    box-shadow: 0 26px 58px rgba(31, 41, 55, .105) !important;
   }
 
   .apc-v2:not(.apc-home-page) details:hover {
-    border-color: rgba(15, 118, 110, .25) !important;
+    border-color: rgba(31, 41, 55, .25) !important;
   }
 }
 
@@ -3987,8 +3987,8 @@ html {
   padding: 0 !important;
   background: rgba(255, 252, 247, .94) !important;
   border: 0 !important;
-  border-bottom: 1px solid rgba(7, 55, 52, .1) !important;
-  box-shadow: 0 12px 34px rgba(7, 55, 52, .045) !important;
+  border-bottom: 1px solid rgba(31, 41, 55, .1) !important;
+  box-shadow: 0 12px 34px rgba(31, 41, 55, .045) !important;
   backdrop-filter: blur(16px);
 }
 
@@ -4055,7 +4055,7 @@ html {
   background: var(--apc-primary-teal) !important;
   border: 1px solid var(--apc-primary-teal);
   border-radius: 999px;
-  box-shadow: 0 10px 24px rgba(15, 118, 110, .16);
+  box-shadow: 0 10px 24px rgba(31, 41, 55, .16);
   color: #fff !important;
   font-size: .92rem !important;
   font-weight: 800 !important;
@@ -4067,7 +4067,7 @@ html {
 .apc-v2 .apc-shell-start:hover {
   transform: translateY(-2px);
   background: var(--apc-dark-teal) !important;
-  box-shadow: 0 14px 28px rgba(7, 55, 52, .18);
+  box-shadow: 0 14px 28px rgba(31, 41, 55, .18);
 }
 
 .apc-v2 .apc-footer-inner {
@@ -4233,7 +4233,7 @@ html {
   }
 
   .apc-v2 .apc-shell-nav a[aria-current="page"] {
-    background: rgba(15, 118, 110, .08);
+    background: rgba(31, 41, 55, .08);
     box-shadow: none;
   }
 
@@ -4319,9 +4319,9 @@ html {
   display: block;
   overflow: hidden;
   background: #fff8ef;
-  border: 1px solid rgba(7, 55, 52, .1);
+  border: 1px solid rgba(31, 41, 55, .1);
   border-radius: 42px 42px 120px 42px;
-  box-shadow: 0 34px 80px rgba(7, 55, 52, .14);
+  box-shadow: 0 34px 80px rgba(31, 41, 55, .14);
 }
 
 .apc-resources-page .resource-visual img {
@@ -4339,7 +4339,7 @@ html {
   display: block;
   border: 5px solid rgba(255, 255, 255, .82);
   border-radius: 50%;
-  box-shadow: 0 16px 36px rgba(7, 55, 52, .18);
+  box-shadow: 0 16px 36px rgba(31, 41, 55, .18);
   animation: apc-resource-float 5.8s ease-in-out infinite;
 }
 
@@ -4612,9 +4612,9 @@ html {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 5px;
   background: rgba(255, 255, 255, .74);
-  border: 1px solid rgba(7, 55, 52, .1);
+  border: 1px solid rgba(31, 41, 55, .1);
   border-radius: 999px;
-  box-shadow: 0 14px 34px rgba(7, 55, 52, .06);
+  box-shadow: 0 14px 34px rgba(31, 41, 55, .06);
   backdrop-filter: blur(14px);
 }
 
@@ -4637,7 +4637,7 @@ html {
 
 .apc-carousel-tabs button[aria-selected="true"] {
   background: var(--apc-dark-teal);
-  box-shadow: 0 9px 22px rgba(7, 55, 52, .18);
+  box-shadow: 0 9px 22px rgba(31, 41, 55, .18);
   color: #fff;
 }
 
@@ -4654,9 +4654,9 @@ html {
   padding: 0;
   place-items: center;
   background: rgba(255, 255, 255, .82);
-  border: 1px solid rgba(7, 55, 52, .14);
+  border: 1px solid rgba(31, 41, 55, .14);
   border-radius: 50%;
-  box-shadow: 0 10px 24px rgba(7, 55, 52, .07);
+  box-shadow: 0 10px 24px rgba(31, 41, 55, .07);
   font-size: 1.15rem;
   transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
@@ -4696,9 +4696,9 @@ html {
   gap: 12px;
   overflow: hidden;
   background: rgba(255, 255, 255, .88) !important;
-  border: 1px solid rgba(7, 55, 52, .1) !important;
+  border: 1px solid rgba(31, 41, 55, .1) !important;
   border-radius: 30px !important;
-  box-shadow: 0 26px 68px rgba(7, 55, 52, .11) !important;
+  box-shadow: 0 26px 68px rgba(31, 41, 55, .11) !important;
   backdrop-filter: blur(16px);
 }
 
@@ -4719,7 +4719,7 @@ html {
   flex-direction: column;
   background:
     radial-gradient(circle at 95% 4%, rgba(45, 212, 191, .26), transparent 12rem),
-    linear-gradient(145deg, #073734 0%, #0b4b46 100%);
+    linear-gradient(145deg, #1F2937 0%, #1F2937 100%);
   border-radius: 21px;
   color: #fff;
 }
@@ -4731,9 +4731,9 @@ html {
   bottom: -92px;
   width: 230px;
   height: 230px;
-  border: 1px solid rgba(143, 232, 220, .3);
+  border: 1px solid rgba(14, 116, 144, .3);
   border-radius: 50%;
-  box-shadow: 0 0 0 24px rgba(143, 232, 220, .055), 0 0 0 58px rgba(143, 232, 220, .035);
+  box-shadow: 0 0 0 24px rgba(14, 116, 144, .055), 0 0 0 58px rgba(14, 116, 144, .035);
   content: "";
   pointer-events: none;
   animation: apc-orbit-drift 8s ease-in-out infinite alternate;
@@ -5026,7 +5026,7 @@ html.apc-site-snap {
   height: 44px;
   min-height: 44px;
   border-color: transparent;
-  background: radial-gradient(circle, #fff 0 3px, rgba(7, 55, 52, .55) 3px 4px, transparent 4px);
+  background: radial-gradient(circle, #fff 0 3px, rgba(31, 41, 55, .55) 3px 4px, transparent 4px);
 }
 
 .section-rail a[aria-current="location"] {
@@ -5453,7 +5453,7 @@ html.apc-site-snap {
     flex-basis: 100%;
     border-color: #2DD4BF;
     background: #2DD4BF;
-    color: #073734 !important;
+    color: #1F2937 !important;
     font-weight: 600;
   }
 
@@ -5471,3 +5471,6 @@ html.apc-site-snap {
     display: none;
   }
 }
+
+/* Legal pages: their old page-wide nav rule painted a light box behind the footer policy links (white text on near-white) */
+.apc-footer nav.apc-footer-policies { position: static !important; background: none !important; backdrop-filter: none !important; border: 0 !important; padding: 0 !important; }

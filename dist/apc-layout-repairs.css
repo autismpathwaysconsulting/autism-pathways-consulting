@@ -5,11 +5,11 @@ body .parent-process{padding:clamp(24px,3.5vw,40px)!important;}
 body .parent-process h2{margin:0 0 24px!important;}
 body .parent-process ol{gap:28px!important;}
 body .parent-process .process-step-top{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
-body .parent-process .process-step-top .apc-section-emblem{display:flex!important;width:64px!important;height:64px!important;border-radius:18px!important;margin:0!important;background:linear-gradient(145deg,#bedaba,#79a48a)!important;color:#073734!important;}
+body .parent-process .process-step-top .apc-section-emblem{display:flex!important;width:64px!important;height:64px!important;border-radius:18px!important;margin:0!important;background:linear-gradient(145deg,#EADFD3,#0E7490)!important;color:#1F2937!important;}
 body .parent-process .apc-section-emblem svg{width:42px;height:42px;}
-body .parent-process .process-step-number{display:block!important;width:auto!important;height:auto!important;border:0!important;background:none!important;box-shadow:none!important;color:#b8d8ce!important;font-size:14px;font-weight:700;letter-spacing:.1em;margin:0!important;}
+body .parent-process .process-step-number{display:block!important;width:auto!important;height:auto!important;border:0!important;background:none!important;box-shadow:none!important;color:#EADFD3!important;font-size:14px;font-weight:700;letter-spacing:.1em;margin:0!important;}
 body .parent-process li:nth-child(2) .apc-section-emblem{background:linear-gradient(145deg,#f6c49f,#df9271)!important;}
-body .parent-process li:nth-child(3) .apc-section-emblem{background:linear-gradient(145deg,#d9eee4,#a1cbb7)!important;}
+body .parent-process li:nth-child(3) .apc-section-emblem{background:linear-gradient(145deg,#FBF3E8,#0E7490)!important;}
 body .parent-process h3{margin:0 0 8px!important;}
 body .parent-process p{margin:0;line-height:1.65;}
 body.apc-blog-page .audience-hero{max-width:none;padding:24px 0 30px;}
@@ -23,7 +23,7 @@ body.apc-blog-page .guide-card-visual{aspect-ratio:16/10;object-fit:cover;max-he
 body.apc-blog-page .audience-card h3{font-size:21px;line-height:1.3;margin:0 0 12px;}
 body.apc-blog-page .audience-card p{font-size:15px;line-height:1.65;margin:0;}
 body.apc-blog-page .audience-author{margin:24px 0 18px;}
-body.apc-blog-page main>.apc-blog-closing{padding:28px!important;margin:0 0 20px;background:#eef4ef;border:1px solid #dbe5df;border-radius:22px;}
+body.apc-blog-page main>.apc-blog-closing{padding:28px!important;margin:0 0 20px;background:#FBF3E8;border:1px solid #EADFD3;border-radius:22px;}
 body.apc-blog-page .apc-blog-closing .apc-section-composition{grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:32px;align-items:start;}
 body.apc-blog-page .apc-blog-closing h2{font-size:clamp(28px,2.8vw,36px)!important;line-height:1.15!important;margin:0 0 16px;}
 body.apc-blog-page .apc-blog-closing .apc-section-photo{aspect-ratio:1/1;}
@@ -48,10 +48,10 @@ body.apc-blog-page section>.audience-grid>.audience-card{
   min-height:100%;
   padding:0 0 24px;
   overflow:hidden;
-  border:1px solid rgba(7,55,52,.13);
+  border:1px solid rgba(31, 41, 55,.13);
   border-radius:24px;
   background:#fffdf9;
-  box-shadow:0 18px 34px -30px rgba(7,55,52,.45);
+  box-shadow:0 18px 34px -30px rgba(31, 41, 55,.45);
 }
 body.apc-blog-page section>.audience-grid>.audience-card .guide-card-visual{
   display:block;
@@ -69,25 +69,25 @@ body.apc-blog-page section>.audience-grid>.audience-card p{
 }
 body.apc-blog-page section>.audience-grid>.audience-card h3{
   margin-bottom:14px;
-  font-family:'DM Serif Display',Georgia,serif!important;
+  font-family:'Outfit',system-ui,sans-serif!important;
   font-size:clamp(1.55rem,2vw,1.95rem);
   font-weight:400!important;
   line-height:1.14;
   letter-spacing:-.02em;
 }
 body.apc-blog-page section>.audience-grid>.audience-card h3 a{
-  color:#073734;
+  color:#1F2937;
   text-decoration:none;
 }
 body.apc-blog-page section>.audience-grid>.audience-card h3 a:hover{
-  color:#0f766e;
+  color:#0E7490;
 }
 body.apc-blog-page section>.audience-grid>.audience-card p{
   margin-top:0;
   margin-bottom:0;
   font-size:1rem;
   line-height:1.7;
-  color:#405550;
+  color:#1F2937;
 }
 @media(max-width:760px){
   body.apc-blog-page section>.audience-grid>.audience-card{
