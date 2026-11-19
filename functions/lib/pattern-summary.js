@@ -16,15 +16,16 @@ export const CRISIS_REPLY = [
   "Please also tell your child's doctor or therapist. When everyone is safe, CJ is happy to talk with you on a free call: " + CALL_URL,
 ].join('\n\n');
 
+// Everyday trigger words (a dead battery, "lampu mati", a hospital visit) are left out on purpose; the model's safety flag is the second net.
 // Harm, danger, abuse and crisis wording in English, Malay and Mandarin. Deliberately broad: a false alarm only shows crisis numbers.
 const CRISIS_PATTERNS = [
-  /\b(suicid\w*|kill(s|ed|ing)?|die|dying|dead|want(s|ed)? to die|end (my|his|her|their) life|self[- ]?harm\w*|cut(s|ting)? (him|her|them|my)self)\b/i,
-  /\b(blood|bleed\w*|broken bone|concussion|unconscious|not breathing|choking|seizure|ambulance|hospital|emergency room|injur\w*)\b/i,
+  /\b(suicid\w*|kill(s|ed|ing)?|want(s|ed)? to die|wish(es|ed)? (he|she|they|I) (was|were) dead|end (my|his|her|their) life|self[- ]?harm\w*|cut(s|ting)? (him|her|them|my)self)\b/i,
+  /\b(blood|bleed\w*|broken bone|concussion|unconscious|not breathing|choking|seizure|ambulance|emergency room|injur\w*)\b/i,
   /\b(abus\w*|molest\w*|neglect\w*|beat(s|ing)? (him|her|them|me)|punch(es|ed)? (my|his|her) (head|face)|chok(e|es|ed) (him|her|me|them))\b/i,
   /\b(weapon|knife|knives|(run|runs|running|ran) (into|onto|towards?) the road|into traffic|jump(s|ed)? (out|off)|window ledge|police)\b/i,
   /\b(head[- ]?bang\w*|bang(s|ing)? (his|her|their) head|bit(e|es|ing) (him|her|them)sel(f|ves) until)\b/i,
-  /\b(bunuh|mati|bunuh diri|cedera|darah|berdarah|dera|didera|penderaan|pisau|lari ke jalan|hospital|kecemasan)\b/i,
-  /(自杀|想死|去死|打伤|流血|虐待|受伤|刀|撞头|急救|医院)/,
+  /\b(bunuh|bunuh diri|nak mati|mahu mati|ingin mati|cedera|darah|berdarah|dera|didera|penderaan|pisau|lari ke jalan|kecemasan)\b/i,
+  /(自杀|想死|去死|打伤|流血|虐待|受伤|刀|撞头|急救)/,
 ];
 
 export function needsCrisisReply(text) {

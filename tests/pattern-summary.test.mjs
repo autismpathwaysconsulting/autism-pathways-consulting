@@ -9,7 +9,7 @@ test('crisis wording in English, Malay and Mandarin is caught', () => {
   for (const t of ['He keeps banging his head on the wall', 'she said she wants to die', 'there was blood on his hand', 'Dia lari ke jalan raya', 'anak saya berdarah', '他说想死', 'he ran into the road']) {
     assert.equal(needsCrisisReply(t), true, t);
   }
-  for (const t of ['He cries when the iPad goes off', 'She refuses to wear shoes', 'Dia menangis bila keluar rumah']) {
+  for (const t of ['He cries when the iPad goes off', 'She refuses to wear shoes', 'Dia menangis bila keluar rumah', 'He screams when the iPad battery is dead', 'Dia menangis bila lampu mati', 'She cries in the hospital waiting room', 'the tablet was dying']) {
     assert.equal(needsCrisisReply(t), false, t);
   }
 });
