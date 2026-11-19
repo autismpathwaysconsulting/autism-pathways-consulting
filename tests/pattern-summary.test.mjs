@@ -6,10 +6,10 @@ import {summarise, onRequest} from '../functions/api/pattern-summary.js';
 const ok = {before: 'We were leaving the playground.', during: 'He dropped to the floor and screamed.', after: 'Calm after 10 minutes at home.', consent: true};
 
 test('crisis wording in English, Malay and Mandarin is caught', () => {
-  for (const t of ['He keeps banging his head on the wall', 'she said she wants to die', 'there was blood on his hand', 'Dia lari ke jalan raya', 'anak saya berdarah', '他说想死', 'he ran into the road']) {
+  for (const t of ['He keeps banging his head on the wall', 'she said she wants to die', 'there was blood on his hand', 'Dia lari ke jalan raya', 'anak saya berdarah', '他说想死', 'he ran into the road', 'he hit his head and was rushed to hospital', 'she bit herself until it bled', 'hampir mati lemas di kolam']) {
     assert.equal(needsCrisisReply(t), true, t);
   }
-  for (const t of ['He cries when the iPad goes off', 'She refuses to wear shoes', 'Dia menangis bila keluar rumah']) {
+  for (const t of ['He cries when the iPad goes off', 'She refuses to wear shoes', 'Dia menangis bila keluar rumah', 'He screams when the iPad battery is dead', 'Dia menangis bila lampu mati', 'She cries in the hospital waiting room', 'the tablet was dying']) {
     assert.equal(needsCrisisReply(t), false, t);
   }
 });
