@@ -93,7 +93,7 @@ export function parseModelReply(text) {
 }
 
 export const FALLBACK = {
-  pattern: 'It may be that this moment asks a lot of your child at once, such as a change, a wait or too much going on around them.',
+  pattern: 'We couldn\'t write your personal summary just now, so here are general first steps. It may be that this moment asks a lot of your child at once, such as a change, a wait or too much going on around them.',
   try: 'For the next 3 days, give a short, calm warning before this moment, with a picture or a simple word, and make the first step a little easier.',
   notice: 'Jot down what happened just before each time. Patterns often show up after a few days.',
 };
