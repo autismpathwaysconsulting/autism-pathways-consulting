@@ -13,7 +13,7 @@ async function askModel(env, input) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json'},
-    body: JSON.stringify({model: MODEL, max_tokens: 400, system: SYSTEM_PROMPT, messages: [{role: 'user', content: buildUserMessage(input)}]}),
+    body: JSON.stringify({model: MODEL, max_tokens: 1000, output_config: {effort: 'low'}, system: SYSTEM_PROMPT, messages: [{role: 'user', content: buildUserMessage(input)}]}),
     signal: AbortSignal.timeout(20000),
   });
   if (!res.ok) throw new Error('model ' + res.status);
