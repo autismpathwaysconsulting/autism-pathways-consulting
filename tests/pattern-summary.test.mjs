@@ -41,6 +41,7 @@ test('a model failure falls back to a safe generic summary with the call invite'
   assert.equal(r.kind, 'summary');
   assert.match(r.invite, /first-step-call/);
   assert.match(r.label, /not a diagnosis/);
+  assert.match(r.pattern, /^We couldn't write your personal summary/);
 });
 
 test('the tool stays closed without its switch, key and security check, and needs a passed check', async () => {
