@@ -183,3 +183,20 @@ html body.apc-v2 :is(.apc-shell-start, .cf-hero .cf-btn) { background: #0E7490 !
 
 /* Parents hero: AI-looking photo removed until CJ's real photos arrive; caption sits as plain text, bigger CJ photo */
 html body.apc-v2 .parent-hero-cj img { width: 72px !important; height: 72px !important; }
+/* Site tidy, 20 Nov 2026: one section rhythm, fewer text sizes, quieter Pause control */
+html body.apc-v2 main > :is(section, aside):not([hidden]) { margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 48px !important; padding-bottom: 48px !important; }
+@media (max-width: 700px) { html body.apc-v2 main > :is(section, aside):not([hidden]) { padding-top: 40px !important; padding-bottom: 40px !important; } }
+html body.apc-v2 main > :is(section, aside):not([hidden]) + :is(section, aside):not([hidden]) { border-top: 1px solid rgba(31, 41, 55, 0.08) !important; }
+html body.apc-v2 main :is(p, li, dd, summary) { font-size: 17px; line-height: 1.6; }
+html body.apc-v2 main .parent-small { font-size: 16px !important; color: #4B5563; }
+/* Session labels replace big step numbers */
+html body.apc-v2 .four-n { display: block; font: 600 15px/1.2 'Work Sans', system-ui, sans-serif !important; color: #0E7490 !important; margin: 0 0 4px; }
+html body.apc-v2 .four-steps li::before, html body.apc-v2 .four-steps li::after { display: none !important; }
+html body.apc-v2.apc-home-page .cf-step-n { display: none !important; }
+/* Pause stays for motion-sensitive visitors, as a small icon in the hero corner */
+html body.apc-v2 .cf-hero { position: relative; }
+html body.apc-v2 .cf-pause { position: absolute !important; top: 8px; right: 0; width: 36px; height: 36px; padding: 0 !important; border-radius: 50% !important; border: 1px solid #EADFD3 !important; background: #fff !important; text-decoration: none !important; display: grid !important; place-items: center; }
+html body.apc-v2 .cf-pause span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html body.apc-v2.apc-home-page .cf-steps .cf-step { grid-template-columns: 1fr !important; }
+html body.apc-v2.apc-home-page .cf-steps .cf-step > div { grid-column: 1 / -1 !important; width: auto !important; max-width: none !important; }
+html body.apc-v2 .cf-pause { right: 8px; }
