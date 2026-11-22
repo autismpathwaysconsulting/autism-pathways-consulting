@@ -235,3 +235,7 @@ html body.apc-v2 main .cf-sheet .cf-sample :is(p, b, h3) { color: #1F2937 !impor
 html body.apc-v2 main .cf-sheet .cf-sample .cf-sample-note { color: #4B5563 !important; }
 html body.apc-v2 main .cf-sheet .cf-sample .cf-strip b { color: #B4603F !important; }
 html body.apc-v2 .cf-say h2 { margin-bottom: 20px !important; }
+html body.apc-v2 main .cf-sheet .cf-promise { max-width: 560px; margin: 28px auto 0; border-top: 1px solid rgb(255 255 255 / .25); padding-top: 20px; text-align: left; }
+html body.apc-v2 main .cf-sheet .cf-promise h3 { color: #FFF9F1 !important; margin: 0 0 8px !important; }
+html body.apc-v2 main .cf-sheet .cf-promise ul { margin: 0 !important; padding-left: 20px !important; }
+html body.apc-v2 main .cf-sheet .cf-promise li { color: #E5E7EB !important; margin: 6px 0; font-size: 17px; }
