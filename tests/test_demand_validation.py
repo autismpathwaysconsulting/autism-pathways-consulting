@@ -6,7 +6,7 @@ PAY='CJ confirms fit and availability first, then sends payment details privatel
 class DemandValidationTests(unittest.TestCase):
  def test_home_is_call_first(self):
   s=(R/'index.html').read_text();hero=s.split('id="home"')[1].split('</section>')[0]
-  self.assertIn('Same meltdown, shutdown, school refusal or big reaction, every day?',hero)
+  self.assertIn('Same meltdown, every day?',hero)
   self.assertIn('Talk it through with CJ. Free, 15 minutes, online.',hero)
   self.assertEqual(hero.count('href="/go/first-step-call">Book a free call'),1)
   self.assertEqual(s.count('<section '),5)
