@@ -240,8 +240,9 @@ html body.apc-v2 main .cf-sheet .cf-promise h3 { color: #FFF9F1 !important; marg
 html body.apc-v2 main .cf-sheet .cf-promise ul { margin: 0 !important; padding-left: 20px !important; }
 html body.apc-v2 main .cf-sheet .cf-promise li { color: #E5E7EB !important; margin: 6px 0; font-size: 17px; }
 /* 24 Nov test: big photo of CJ beside the headline (desktop), under the credentials line (phone) */
-html body.apc-v2 .cf-hero-photo { margin: 24px auto 0; max-width: 340px; }
-html body.apc-v2 .cf-hero-photo img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; object-position: 50% 25%; border-radius: 20px; }
+html body.apc-v2 .cf-hero-photo { margin: 20px auto 0; max-width: 300px; }
+html body.apc-v2 .cf-hero-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 40%; border-radius: 20px; }
+@media (min-width: 900px) { html body.apc-v2 .cf-hero-photo img { aspect-ratio: 1; } }
 html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip img { display: none; }
 html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip span { text-align: center; }
 @media (min-width: 900px) {
