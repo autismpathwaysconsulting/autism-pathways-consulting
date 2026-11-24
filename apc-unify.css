@@ -25,8 +25,8 @@ html body.apc-v2 main :is(.cf-btn, .audience-primary, a.button) {
   font-weight: 600 !important; font-size: 1rem !important; box-shadow: none !important; text-decoration: none !important;
 }
 html body.apc-v2 main .cf-btn > i, html body.apc-v2 main .audience-primary > span[aria-hidden="true"] { display: none !important; }
-html body.apc-v2 .apc-site-header .apc-shell-start { background: #E8997A !important; color: #1F2937 !important; box-shadow: none !important; border-radius: 999px !important; min-height: 44px; }
-html body.apc-v2 main :is(.cf-final, .cf-sheet, #first-step-call, #start .final-card) :is(.cf-btn, .audience-primary, a.button) { background: #E8997A !important; color: var(--u-dark) !important; }
+html body.apc-v2 .apc-site-header .apc-shell-start { background: #0E7490 !important; color: #FFFFFF !important; box-shadow: none !important; border-radius: 999px !important; min-height: 44px; }
+html body.apc-v2 main :is(.cf-final, .cf-sheet, #first-step-call, #start .final-card) :is(.cf-btn, .audience-primary, a.button) { background: #2DD4BF !important; color: var(--u-dark) !important; }
 
 /* 4. One box: each section sits in its own rounded panel, nothing boxed inside it */
 html body.apc-v2.apc-home-page main > section:is(#on-the-call, #what-parents-say),
@@ -179,7 +179,7 @@ html body.apc-v2 .audience-hero-visual > img { border-radius: 16px; }
 html body.apc-v2.apc-parent-minimal main > section:is(#sound-familiar, #parent-process, #quick-check, #page-section-6, #parent-questions), html body.apc-v2.apc-parent-minimal main aside.parent-guide { background: transparent !important; box-shadow: none !important; border: 0 !important; border-radius: 0 !important; }
 html body.apc-v2.apc-parent-minimal main > section:is(#sound-familiar, #parent-process, #quick-check, #page-section-6, #parent-questions) + section { border-top: 1px solid rgba(31, 41, 55, 0.1) !important; }
 /* One button colour: deep teal everywhere on cream (bright teal stays on the dark band) */
-html body.apc-v2 :is(.apc-shell-start, .cf-hero .cf-btn) { background: #E8997A !important; color: #1F2937 !important; }
+html body.apc-v2 :is(.apc-shell-start, .cf-hero .cf-btn) { background: #0E7490 !important; color: #FFFFFF !important; }
 
 /* Parents hero: AI-looking photo removed until CJ's real photos arrive; caption sits as plain text, bigger CJ photo */
 html body.apc-v2 .parent-hero-cj img { width: 72px !important; height: 72px !important; }
@@ -201,8 +201,8 @@ html body.apc-v2.apc-home-page .cf-steps .cf-step { grid-template-columns: 1fr !
 html body.apc-v2.apc-home-page .cf-steps .cf-step > div { grid-column: 1 / -1 !important; width: auto !important; max-width: none !important; }
 html body.apc-v2 .cf-pause { right: 8px; }
 /* 22 Nov test (REF-120 to REF-139): one coral call button, one call card, labelled promise rows, 16px labels, left-aligned paragraphs */
-html body.apc-v2 main a.cf-btn, html body.apc-v2 .apc-site-header a.apc-shell-start, html body.apc-v2 main a.audience-primary[href*="first-step-call"] { background: #E8997A !important; color: #1F2937 !important; border-color: #E8997A !important; }
-html body.apc-v2 a.cf-btn:hover, html body.apc-v2 a.apc-shell-start:hover, html body.apc-v2 a.audience-primary[href*="first-step-call"]:hover { background: #E08A69 !important; }
+html body.apc-v2 main a.cf-btn, html body.apc-v2 .apc-site-header a.apc-shell-start, html body.apc-v2 main a.audience-primary[href*="first-step-call"] { background: #0E7490 !important; color: #FFFFFF !important; border-color: #0E7490 !important; }
+html body.apc-v2 a.cf-btn:hover, html body.apc-v2 a.apc-shell-start:hover, html body.apc-v2 a.audience-primary[href*="first-step-call"]:hover { background: #0B5E75 !important; }
 html body.apc-v2 a.audience-primary:not([href*="first-step-call"]) { background: transparent !important; color: #0E7490 !important; border: 1px solid rgb(14 116 144 / .5) !important; }
 html body.apc-v2 .cf-callcard { max-width: 640px; margin: 0 auto; background: #fff; border: 1px solid rgb(0 0 0 / .12); border-radius: 16px; padding: 28px 24px; text-align: left; }
 html body.apc-v2 .cf-callcard h2 { margin-bottom: 6px !important; text-align: left !important; }
@@ -254,3 +254,6 @@ html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip span { text-align
   html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-wrap > p { margin-left: 0 !important; margin-right: auto !important; text-align: left !important; }
   html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip span { text-align: left; }
 }
+/* 24 Nov colour test: deep teal call button won 3.94 vs coral 3.73; labels on the dark panel in coral so they do not read as green; CJ Lim link in ink so the button is the only teal block in the hero */
+html body.apc-v2 .cf-sheet :is(.cf-side, .cf-step b, .four-n) { color: #E8997A !important; }
+html body.apc-v2 .cf-hero .apc-proof-strip a { color: #1F2937 !important; }
