@@ -6,7 +6,7 @@
   // Headline word and photo captions are CSS loops; the script only starts them and runs Pause.
   var hero = document.querySelector(".cf-hero"), pause = hero.querySelector(".cf-pause");
   hero.classList.add("cf-loop");
-  pause.addEventListener("click", function () {
+  if (pause) pause.addEventListener("click", function () {
     var paused = hero.classList.toggle("cf-paused"), word = paused ? "Play" : "Pause";
     pause.lastChild.textContent = word;
     pause.setAttribute("aria-label", word + " the moving headline and photo captions");
@@ -58,7 +58,9 @@
   }, { passive: true });
 
   // Reviews: one card at a time. Swipe is native scroll snap; arrows and dots move it. No auto-advance.
-  var track = document.querySelector(".cf-track"), cards = [].slice.call(track.children);
+  var track = document.querySelector(".cf-track");
+  if (!track) return;
+  var cards = [].slice.call(track.children);
   var dots = [].slice.call(document.querySelectorAll(".cf-rdots button")), shown = 0, settle = 0;
   var mark = function (n) {
     shown = n;

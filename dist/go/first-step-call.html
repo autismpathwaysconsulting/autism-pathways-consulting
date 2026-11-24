@@ -4,27 +4,60 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Opening the booking page | Autism Pathways Consulting</title>
-  <meta http-equiv="refresh" content="2; url=https://cal.com/autismpathwaysconsulting/first-step-call">
+  <title>Book your free 15-minute call | Autism Pathways Consulting</title>
+  <meta name="description" content="Pick a time for a free 15-minute call with CJ Lim, special needs educator.">
   <link rel="icon" type="image/png" href="/favicon-32x32.png">
+  <link rel="preload" href="/outfit-latin-v15.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/work-sans-latin-v24.woff2" as="font" type="font/woff2" crossorigin>
   <style>
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FFF9F1;color:#073734;font-family:'DM Sans',system-ui,sans-serif;text-align:center;padding:24px}
-    main{max-width:28rem}
-    p{font-size:1.05rem;line-height:1.6;margin:0 0 16px}
-    a{color:#0f766e;font-weight:700;text-underline-offset:3px}
+    @font-face{font-family:'Outfit';font-weight:100 900;font-display:swap;src:url('/outfit-latin-v15.woff2') format('woff2')}
+    @font-face{font-family:'Work Sans';font-weight:100 900;font-display:swap;src:url('/work-sans-latin-v24.woff2') format('woff2')}
+    *{box-sizing:border-box}
+    body{margin:0;background:#FFF9F1;color:#1F2937;font:400 17px/1.6 'Work Sans',system-ui,sans-serif}
+    header{background:#fff;border-bottom:1px solid #EADFD3}
+    .bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+    .bar img{display:block;height:52px;width:auto}
+    .bar a.back{color:#0E7490;font-weight:600;text-decoration:none}
+    main{max-width:880px;margin:0 auto;padding:40px 16px 48px}
+    h1{font:700 clamp(1.9rem,4.5vw,2.6rem)/1.15 'Outfit',system-ui,sans-serif;letter-spacing:-.015em;margin:0 0 12px}
+    .lead{margin:0 0 20px;max-width:38rem}
+    .who{display:flex;align-items:center;gap:14px;margin:0 0 28px}
+    .who img{width:64px;height:64px;border-radius:50%;object-fit:cover}
+    .steps{margin:0 0 28px;padding:0;list-style:none;display:grid;gap:10px}
+    .steps li{padding-left:28px;position:relative}
+    .steps li::before{content:"";position:absolute;left:4px;top:.62em;width:10px;height:10px;border-radius:50%;background:#E8997A}
+    #cal-inline{width:100%;min-height:640px;background:#fff;border:1px solid #EADFD3;border-radius:12px;overflow:auto}
+    .fallback{margin:16px 0 0;font-size:16px}
+    .fallback a,.who a{color:#0E7490;font-weight:600;text-underline-offset:3px}
+    footer{max-width:880px;margin:0 auto;padding:0 16px 40px;font-size:14px;color:#4B5563}
+    footer p{margin:4px 0}
   </style>
-  <script>
-    (function(){
-      var destination='https://cal.com/autismpathwaysconsulting/first-step-call';
-      var go=function(){setTimeout(function(){window.location.replace(destination);},300);};
-      if(document.readyState==='complete'){go();}else{window.addEventListener('load',go);}
-    })();
-  </script>
 </head>
 <body>
+  <header><div class="bar"><a href="/" aria-label="Autism Pathways Consulting home"><img src="/apc-logo-clear.webp" width="175" height="90" alt="Autism Pathways Consulting"></a><a class="back" href="/parents">← Back</a></div></header>
   <main id="main-content">
-    <p>Opening the booking page for the Free 15-Min First Step Call.</p>
-    <p><a href="https://cal.com/autismpathwaysconsulting/first-step-call">Continue to the booking page</a> if it does not open on its own.</p>
+    <h1>Book your free 15-minute call</h1>
+    <p class="lead">Pick a time that suits you. Times show in your own time zone.</p>
+    <p class="who"><img src="/cj-photo-224.webp" width="224" height="224" alt="CJ Lim"><span><a href="/about">CJ Lim</a>, special needs educator since 2016<br>MA Special and Inclusive Education</span></p>
+    <ul class="steps">
+      <li>You tell me about one hard moment at home, in your own words.</li>
+      <li>I share one way to look at it and one small step to try this week.</li>
+      <li>If coaching fits, I tell you honestly, and fees are shared privately. Nothing is paid on the call.</li>
+    </ul>
+    <div id="cal-inline" aria-label="Booking calendar"></div>
+    <p class="fallback">Calendar not showing? <a href="https://cal.com/autismpathwaysconsulting/first-step-call">Open the booking page</a>, or <a href="https://wa.me/601172998168">message me on WhatsApp</a>.</p>
   </main>
+  <footer>
+    <p>Parent and educator education, not therapy, diagnosis or a regulated health service in any country. APC works with you, not instead of the therapists your child is already seeing.</p>
+    <p>CJ Special and Inclusive Consultancy (003030209-T) · Reg. 201903282307 · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+  </footer>
+  <script>
+    (function (C, A, L) { var p = function (a, ar) { a.q.push(ar); }; var d = C.document; C.Cal = C.Cal || function () { var cal = C.Cal; var ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { var api = function () { p(api, arguments); }; var namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    Cal("init", "first-step-call", { origin: "https://cal.com" });
+    Cal.ns["first-step-call"]("inline", { elementOrSelector: "#cal-inline", calLink: "autismpathwaysconsulting/first-step-call", config: { layout: "month_view" } });
+    Cal.ns["first-step-call"]("ui", { cssVarsPerTheme: { light: { "cal-brand": "#0E7490" } }, hideEventTypeDetails: false, layout: "month_view" });
+    // If the calendar cannot load (blocked network, slow phone), show the links inside the box instead of a blank space.
+    setTimeout(function () { var box = document.getElementById("cal-inline"); if (box && !box.querySelector("iframe")) { box.innerHTML = '<p style="padding:24px;margin:0">The calendar is taking a while to load. <a href="https://cal.com/autismpathwaysconsulting/first-step-call">Open the booking page</a>, or <a href="https://wa.me/601172998168">message me on WhatsApp</a>.</p>'; box.style.minHeight = "0"; var f = document.querySelector(".fallback"); if (f) f.hidden = true; } }, 8000);
+  </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6c750908318848459fde353678a080a6"}'></script><!-- End Cloudflare Web Analytics --></body>
 </html>

@@ -25,8 +25,8 @@ html body.apc-v2 main :is(.cf-btn, .audience-primary, a.button) {
   font-weight: 600 !important; font-size: 1rem !important; box-shadow: none !important; text-decoration: none !important;
 }
 html body.apc-v2 main .cf-btn > i, html body.apc-v2 main .audience-primary > span[aria-hidden="true"] { display: none !important; }
-html body.apc-v2 .apc-site-header .apc-shell-start { background: var(--u-teal) !important; color: #FFFFFF !important; box-shadow: none !important; border-radius: 999px !important; min-height: 44px; }
-html body.apc-v2 main :is(.cf-final, .cf-sheet, #first-step-call, #start .final-card) :is(.cf-btn, .audience-primary, a.button) { background: #2DD4BF !important; color: var(--u-dark) !important; }
+html body.apc-v2 .apc-site-header .apc-shell-start { background: #E8997A !important; color: #1F2937 !important; box-shadow: none !important; border-radius: 999px !important; min-height: 44px; }
+html body.apc-v2 main :is(.cf-final, .cf-sheet, #first-step-call, #start .final-card) :is(.cf-btn, .audience-primary, a.button) { background: #E8997A !important; color: var(--u-dark) !important; }
 
 /* 4. One box: each section sits in its own rounded panel, nothing boxed inside it */
 html body.apc-v2.apc-home-page main > section:is(#on-the-call, #what-parents-say),
@@ -160,7 +160,7 @@ html body.apc-v2 :is(h3, h4) { font-weight: 600 !important; letter-spacing: -0.0
 html body.apc-v2 .cf-sheet :is(h2, h3), html body.apc-v2 [class*="dark"] :is(h2, h3) { color: #FFF9F1; }
 /* Flat sections on cream instead of white boxes on cream */
 html body.apc-v2.apc-home-page main > section:is(#on-the-call, #what-parents-say, #contact).cf-band, html body.apc-v2.apc-home-page main > section#contact .cf-faq { background: transparent !important; box-shadow: none !important; border: 0 !important; }
-html body.apc-v2.apc-home-page main > section.cf-sheet#home-support p:not(.cf-side) { color: rgba(255, 249, 241, 0.86) !important; }
+html body.apc-v2.apc-home-page main > section.cf-sheet#home-support p:not(.cf-side):not(.cf-sample p) { color: rgba(255, 249, 241, 0.86) !important; }
 html body.apc-v2 .cf-band.cf-sheet { border-radius: 0 !important; box-shadow: none !important; }
 /* Step numbers as plain bold figures, no circles or glow */
 html body.apc-v2 :is(.cf-num, .cf-step-n) { position: static !important; display: block; width: auto !important; height: auto !important; margin: 0 0 6px; padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; animation: none !important; font: 700 2.25rem/1 'Outfit', system-ui, sans-serif !important; color: #E8997A !important; transform: none !important; }
@@ -179,7 +179,78 @@ html body.apc-v2 .audience-hero-visual > img { border-radius: 16px; }
 html body.apc-v2.apc-parent-minimal main > section:is(#sound-familiar, #parent-process, #quick-check, #page-section-6, #parent-questions), html body.apc-v2.apc-parent-minimal main aside.parent-guide { background: transparent !important; box-shadow: none !important; border: 0 !important; border-radius: 0 !important; }
 html body.apc-v2.apc-parent-minimal main > section:is(#sound-familiar, #parent-process, #quick-check, #page-section-6, #parent-questions) + section { border-top: 1px solid rgba(31, 41, 55, 0.1) !important; }
 /* One button colour: deep teal everywhere on cream (bright teal stays on the dark band) */
-html body.apc-v2 :is(.apc-shell-start, .cf-hero .cf-btn) { background: #0E7490 !important; color: #FFFFFF !important; }
+html body.apc-v2 :is(.apc-shell-start, .cf-hero .cf-btn) { background: #E8997A !important; color: #1F2937 !important; }
 
 /* Parents hero: AI-looking photo removed until CJ's real photos arrive; caption sits as plain text, bigger CJ photo */
 html body.apc-v2 .parent-hero-cj img { width: 72px !important; height: 72px !important; }
+/* Site tidy, 20 Nov 2026: one section rhythm, fewer text sizes, quieter Pause control */
+html body.apc-v2 main > :is(section, aside):not([hidden]) { margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 48px !important; padding-bottom: 48px !important; }
+@media (max-width: 700px) { html body.apc-v2 main > :is(section, aside):not([hidden]) { padding-top: 40px !important; padding-bottom: 40px !important; } }
+html body.apc-v2 main > :is(section, aside):not([hidden]) + :is(section, aside):not([hidden]) { border-top: 1px solid rgba(31, 41, 55, 0.08) !important; }
+html body.apc-v2 main :is(p, li, dd, summary) { font-size: 17px; line-height: 1.6; }
+html body.apc-v2 main .parent-small { font-size: 16px !important; color: #4B5563; }
+/* Session labels replace big step numbers */
+html body.apc-v2 .four-n { display: block; font: 600 15px/1.2 'Work Sans', system-ui, sans-serif !important; color: #0E7490 !important; margin: 0 0 4px; }
+html body.apc-v2 .four-steps li::before, html body.apc-v2 .four-steps li::after { display: none !important; }
+html body.apc-v2.apc-home-page .cf-step-n { display: none !important; }
+/* Pause stays for motion-sensitive visitors, as a small icon in the hero corner */
+html body.apc-v2 .cf-hero { position: relative; }
+html body.apc-v2 .cf-pause { position: absolute !important; top: 8px; right: 0; width: 36px; height: 36px; padding: 0 !important; border-radius: 50% !important; border: 1px solid #EADFD3 !important; background: #fff !important; text-decoration: none !important; display: grid !important; place-items: center; }
+html body.apc-v2 .cf-pause span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html body.apc-v2.apc-home-page .cf-steps .cf-step { grid-template-columns: 1fr !important; }
+html body.apc-v2.apc-home-page .cf-steps .cf-step > div { grid-column: 1 / -1 !important; width: auto !important; max-width: none !important; }
+html body.apc-v2 .cf-pause { right: 8px; }
+/* 22 Nov test (REF-120 to REF-139): one coral call button, one call card, labelled promise rows, 16px labels, left-aligned paragraphs */
+html body.apc-v2 main a.cf-btn, html body.apc-v2 .apc-site-header a.apc-shell-start, html body.apc-v2 main a.audience-primary[href*="first-step-call"] { background: #E8997A !important; color: #1F2937 !important; border-color: #E8997A !important; }
+html body.apc-v2 a.cf-btn:hover, html body.apc-v2 a.apc-shell-start:hover, html body.apc-v2 a.audience-primary[href*="first-step-call"]:hover { background: #E08A69 !important; }
+html body.apc-v2 a.audience-primary:not([href*="first-step-call"]) { background: transparent !important; color: #0E7490 !important; border: 1px solid rgb(14 116 144 / .5) !important; }
+html body.apc-v2 .cf-callcard { max-width: 640px; margin: 0 auto; background: #fff; border: 1px solid rgb(0 0 0 / .12); border-radius: 16px; padding: 28px 24px; text-align: left; }
+html body.apc-v2 .cf-callcard h2 { margin-bottom: 6px !important; text-align: left !important; }
+html body.apc-v2 .cf-callcard-sub { margin: 0 0 20px; font-size: 17px; }
+html body.apc-v2 .cf-callcard .cf-call { margin-bottom: 24px !important; }
+html body.apc-v2 .cf-callcard-note { margin: 14px 0 0; font-size: 16px; color: #4B5563; }
+html body.apc-v2 .four-n { font-size: 16px !important; }
+html body.apc-v2.apc-parent-minimal .parent-intro, html body.apc-v2.apc-parent-minimal .parent-small, html body.apc-v2.apc-parent-minimal .four-after { text-align: left !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats { grid-template-columns: 1fr !important; gap: 0 !important; max-width: 560px; margin: 0 auto !important; }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats li { display: grid; grid-template-columns: 7.5rem 1fr; align-items: baseline; gap: 16px; text-align: left !important; padding: 14px 0 !important; border-top: 1px solid rgb(0 0 0 / .12); }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats li:last-child { border-bottom: 1px solid rgb(0 0 0 / .12); }
+html body.apc-v2.apc-parent-minimal #home-support .parent-promises ol.promise-stats b { font-size: 1.25rem !important; margin: 0 !important; }
+html body.apc-v2 .cf-hero h1 { text-wrap: balance; }
+/* 22 Nov round 3: real quotes shown together, a sample of session 1 */
+html body.apc-v2 .cf-quotes { display: grid; gap: 16px; max-width: 760px; margin: 0 auto; }
+@media (min-width: 760px) { html body.apc-v2 .cf-quotes { grid-template-columns: 1fr 1fr; } }
+html body.apc-v2 main .cf-quotes .cf-q { margin: 0 !important; min-height: 0 !important; height: auto !important; padding: 20px !important; background: #fff !important; border: 1px solid rgb(0 0 0 / .12) !important; border-radius: 12px !important; text-align: left; display: block !important; }
+html body.apc-v2 .cf-quotes blockquote::before { font-size: 3rem !important; margin-bottom: 0 !important; }
+html body.apc-v2 .cf-quotes figcaption { display: block !important; margin-top: 8px !important; }
+html body.apc-v2 .cf-quotes blockquote { margin: 0 0 10px; font-size: 17px; line-height: 1.55; color: #1F2937; }
+html body.apc-v2 .cf-quotes figcaption { font-size: 16px; color: #4B5563; }
+html body.apc-v2 .cf-sample { margin: 28px auto 8px; max-width: 560px; background: #FFF9F1; color: #1F2937; border-radius: 12px; padding: 22px 20px; text-align: left; }
+html body.apc-v2 .cf-sample h3 { color: #1F2937 !important; margin: 0 0 4px !important; }
+html body.apc-v2 .cf-sample p { color: #1F2937 !important; margin: 0 0 12px; font-size: 16px; }
+html body.apc-v2 .cf-strip { list-style: none; margin: 0 0 14px !important; padding: 0 !important; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+html body.apc-v2 .cf-strip li { background: #fff; border: 2px solid #1F2937; border-radius: 10px; padding: 12px 8px; text-align: center; font-size: 17px; color: #1F2937 !important; }
+html body.apc-v2 .cf-strip b { display: block; font-family: 'Outfit', system-ui, sans-serif; font-size: 14px; color: #B4603F; margin-bottom: 4px; }
+html body.apc-v2 .cf-sample-note { color: #4B5563 !important; margin: 0 !important; }
+html body.apc-v2 main .cf-sheet .cf-sample :is(p, b, h3) { color: #1F2937 !important; }
+html body.apc-v2 main .cf-sheet .cf-sample .cf-sample-note { color: #4B5563 !important; }
+html body.apc-v2 main .cf-sheet .cf-sample .cf-strip b { color: #B4603F !important; }
+html body.apc-v2 .cf-say h2 { margin-bottom: 20px !important; }
+html body.apc-v2 main .cf-sheet .cf-promise { max-width: 560px; margin: 28px auto 0; border-top: 1px solid rgb(255 255 255 / .25); padding-top: 20px; text-align: left; }
+html body.apc-v2 main .cf-sheet .cf-promise h3 { color: #FFF9F1 !important; margin: 0 0 8px !important; }
+html body.apc-v2 main .cf-sheet .cf-promise ul { margin: 0 !important; padding-left: 20px !important; }
+html body.apc-v2 main .cf-sheet .cf-promise li { color: #E5E7EB !important; margin: 6px 0; font-size: 17px; }
+/* 24 Nov test: big photo of CJ beside the headline (desktop), under the credentials line (phone) */
+html body.apc-v2 .cf-hero-photo { margin: 20px auto 0; max-width: 300px; }
+html body.apc-v2 .cf-hero-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 40%; border-radius: 20px; }
+@media (min-width: 900px) { html body.apc-v2 .cf-hero-photo img { aspect-ratio: 1; } }
+html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip img { display: none; }
+html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip span { text-align: center; }
+@media (min-width: 900px) {
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 420px; column-gap: 56px; align-items: center; text-align: left; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-wrap > :not(.cf-hero-photo) { grid-column: 1; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-hero-photo { grid-column: 2; grid-row: 1 / span 6; margin: 0; max-width: none; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) :is(.cf-cta, .apc-proof-strip) { justify-content: flex-start; margin-left: 0; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) h1 { font-size: clamp(2.75rem, 5vw, 4.5rem); }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-wrap > p { margin-left: 0 !important; margin-right: auto !important; text-align: left !important; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip span { text-align: left; }
+}

@@ -210,6 +210,7 @@ export const PUBLIC_FILES = Object.freeze([
   "apple-touch-icon.png",
   "cj-photo.JPG",
   "cj-photo.webp",
+  "cj-hero-talking.jpg",
   "favicon-32x32.png",
   "hero-clarity-path-v1.png",
   "hero-clarity-path-v1.webp",
