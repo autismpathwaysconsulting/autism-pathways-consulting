@@ -239,3 +239,17 @@ html body.apc-v2 main .cf-sheet .cf-promise { max-width: 560px; margin: 28px aut
 html body.apc-v2 main .cf-sheet .cf-promise h3 { color: #FFF9F1 !important; margin: 0 0 8px !important; }
 html body.apc-v2 main .cf-sheet .cf-promise ul { margin: 0 !important; padding-left: 20px !important; }
 html body.apc-v2 main .cf-sheet .cf-promise li { color: #E5E7EB !important; margin: 6px 0; font-size: 17px; }
+/* 24 Nov test: big photo of CJ beside the headline (desktop), under the credentials line (phone) */
+html body.apc-v2 .cf-hero-photo { margin: 24px auto 0; max-width: 340px; }
+html body.apc-v2 .cf-hero-photo img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; object-position: 50% 25%; border-radius: 20px; }
+html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip img { display: none; }
+html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip span { text-align: center; }
+@media (min-width: 900px) {
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 420px; column-gap: 56px; align-items: center; text-align: left; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-wrap > :not(.cf-hero-photo) { grid-column: 1; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-hero-photo { grid-column: 2; grid-row: 1 / span 6; margin: 0; max-width: none; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) :is(.cf-cta, .apc-proof-strip) { justify-content: flex-start; margin-left: 0; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) h1 { font-size: clamp(2.75rem, 5vw, 4.5rem); }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .cf-wrap > p { margin-left: 0 !important; margin-right: auto !important; text-align: left !important; }
+  html body.apc-v2 .cf-hero:has(.cf-hero-photo) .apc-proof-strip span { text-align: left; }
+}
