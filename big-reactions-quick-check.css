@@ -80,6 +80,6 @@ body.apc-quick-check-page{margin:0}
 .quick-hero-grid>*,.inside-grid>*{min-width:0}.apc-quick-check-page main :is(h1,h2){overflow-wrap:break-word;hyphens:auto}.apc-quick-check-page .quick-inside{overflow-x:clip}.apc-quick-check-page .hero-actions .button{white-space:normal;max-width:100%}
 /* 24 Nov tidy: no small capital labels, one coral call-to-action, no box around the Brevo box */
 .apc-quick-check-page .eyebrow{display:none}
-.apc-v2.apc-quick-check-page :is(.button.primary, .apc-site-header a[href='/go/first-step-call']){background:#E8997A !important;border-color:#E8997A !important;color:#1F2937 !important;box-shadow:none}
-.apc-v2.apc-quick-check-page :is(.button.primary, .apc-site-header a[href='/go/first-step-call']):hover{background:#E08A69 !important}
+.apc-v2.apc-quick-check-page :is(.button.primary, .apc-site-header a[href='/go/first-step-call']){background:#0E7490 !important;border-color:#0E7490 !important;color:#FFFFFF !important;box-shadow:none}
+.apc-v2.apc-quick-check-page :is(.button.primary, .apc-site-header a[href='/go/first-step-call']):hover{background:#0B5E75 !important}
 .form-panel{padding:0;border:0;background:transparent;box-shadow:none}
